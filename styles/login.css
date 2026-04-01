@@ -1,0 +1,45 @@
+body{
+    background-color: var(--primary-normal);
+}
+
+.login-section{
+    height: 100%;
+    width: 100%;
+    padding: 0 2rem;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    border-radius: 1.5rem;
+}
+
+.logo{
+    height: 6rem;
+    flex-shrink: 0;
+}
+
+.form{
+    background-color: white;
+    width: 500px;
+    padding: 1.25rem 1.8rem 2.5rem 1.8rem;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.form-inputs{
+    align-self: stretch;
+    gap: 0.5rem;
+}
+
+.signup-text{
+    align-items: flex-start;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.signin-link{
+    gap: 0.25rem
+}
+.signin-link a{
+    color: var(--accent-normal-active);
+    text-decoration: none;
+}
