@@ -1,9 +1,5 @@
-body{
-    background-color: var(--primary-normal);
-}
-
-.login-section{
-    height: 100%;
+.auth-section{
+    height: 100vh;
     width: 100%;
     padding: 0 2rem;
     justify-content: center;
@@ -19,7 +15,7 @@ body{
 
 .form{
     background-color: white;
-    width: 500px;
+    width: 400px;
     padding: 1.25rem 1.8rem 2.5rem 1.8rem;
     align-items: flex-start;
     gap: 1.5rem;
@@ -30,16 +26,40 @@ body{
     gap: 0.5rem;
 }
 
-.signup-text{
+.auth-text{
     align-items: flex-start;
     gap: 0.5rem;
     align-items: stretch;
 }
 
-.signin-link{
-    gap: 0.25rem
-}
-.signin-link a{
+.auth-link a{
     color: var(--accent-normal-active);
     text-decoration: none;
+}
+
+.divider{
+    align-self: stretch;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.google-login{
+    background-color: var(--primary-normal);
+    padding: 0.9rem 0;
+    justify-content: center;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.google-login img{
+    width: 1.25rem;
+}
+
+.google-login h1{
+    color: var(--secondary-normal);
+}
+
+.wrap-forgot-pass{
+    gap: 0.5rem;
+    align-items: stretch;
 }

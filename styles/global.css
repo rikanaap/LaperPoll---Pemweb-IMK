@@ -148,3 +148,108 @@
 .flex-row{
     flex-direction: row;
 }
+
+/* Gap Class */
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-5 { gap: 1.25rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-7 { gap: 1.75rem; }
+.gap-8 { gap: 2rem; }
+
+/* Color Class */
+/* PRIMARY COLOR */
+.text-primary-light { color: var(--primary-light); }
+.text-primary-light-hover { color: var(--primary-light-hover); }
+.text-primary-light-active { color: var(--primary-light-active); }
+.text-primary-normal { color: var(--primary-normal); }
+.text-primary-normal-hover { color: var(--primary-normal-hover); }
+.text-primary-normal-active { color: var(--primary-normal-active); }
+.text-primary-dark { color: var(--primary-dark); }
+.text-primary-dark-hover { color: var(--primary-dark-hover); }
+.text-primary-dark-active { color: var(--primary-dark-active); }
+.text-primary-darker { color: var(--primary-darker); }
+.bg-primary-light { background-color: var(--primary-light); }
+.bg-primary-light-hover { background-color: var(--primary-light-hover); }
+.bg-primary-light-active { background-color: var(--primary-light-active); }
+.bg-primary-normal { background-color: var(--primary-normal); }
+.bg-primary-normal-hover { background-color: var(--primary-normal-hover); }
+.bg-primary-normal-active { background-color: var(--primary-normal-active); }
+.bg-primary-dark { background-color: var(--primary-dark); }
+.bg-primary-dark-hover { background-color: var(--primary-dark-hover); }
+.bg-primary-dark-active { background-color: var(--primary-dark-active); }
+.bg-primary-darker { background-color: var(--primary-darker); }
+
+/* SECONDARY COLOR */
+.text-secondary-light { color: var(--secondary-light); }
+.text-secondary-light-hover { color: var(--secondary-light-hover); }
+.text-secondary-light-active { color: var(--secondary-light-active); }
+.text-secondary-normal { color: var(--secondary-normal); }
+.text-secondary-normal-hover { color: var(--secondary-normal-hover); }
+.text-secondary-normal-active { color: var(--secondary-normal-active); }
+.text-secondary-dark { color: var(--secondary-dark); }
+.text-secondary-dark-hover { color: var(--secondary-dark-hover); }
+.text-secondary-dark-active { color: var(--secondary-dark-active); }
+.text-secondary-darker { color: var(--secondary-darker); }
+.bg-secondary-light { background-color: var(--secondary-light); }
+.bg-secondary-light-hover { background-color: var(--secondary-light-hover); }
+.bg-secondary-light-active { background-color: var(--secondary-light-active); }
+.bg-secondary-normal { background-color: var(--secondary-normal); }
+.bg-secondary-normal-hover { background-color: var(--secondary-normal-hover); }
+.bg-secondary-normal-active { background-color: var(--secondary-normal-active); }
+.bg-secondary-dark { background-color: var(--secondary-dark); }
+.bg-secondary-dark-hover { background-color: var(--secondary-dark-hover); }
+.bg-secondary-dark-active { background-color: var(--secondary-dark-active); }
+.bg-secondary-darker { background-color: var(--secondary-darker); }
+
+/* ACCENT COLOR */
+.text-accent-light { color: var(--accent-light); }
+.text-accent-light-hover { color: var(--accent-light-hover); }
+.text-accent-light-active { color: var(--accent-light-active); }
+.text-accent-normal { color: var(--accent-normal); }
+.text-accent-normal-hover { color: var(--accent-normal-hover); }
+.text-accent-normal-active { color: var(--accent-normal-active); }
+.text-accent-dark { color: var(--accent-dark); }
+.text-accent-dark-hover { color: var(--accent-dark-hover); }
+.text-accent-dark-active { color: var(--accent-dark-active); }
+.text-accent-darker { color: var(--accent-darker); }
+.bg-accent-light { background-color: var(--accent-light); }
+.bg-accent-light-hover { background-color: var(--accent-light-hover); }
+.bg-accent-light-active { background-color: var(--accent-light-active); }
+.bg-accent-normal { background-color: var(--accent-normal); }
+.bg-accent-normal-hover { background-color: var(--accent-normal-hover); }
+.bg-accent-normal-active { background-color: var(--accent-normal-active); }
+.bg-accent-dark { background-color: var(--accent-dark); }
+.bg-accent-dark-hover { background-color: var(--accent-dark-hover); }
+.bg-accent-dark-active { background-color: var(--accent-dark-active); }
+.bg-accent-darker { background-color: var(--accent-darker); }
+
+/* ORANGE COLOR */
+.text-orange-light { color: var(--orange-light); }
+.text-orange-light-hover { color: var(--orange-light-hover); }
+.text-orange-light-active { color: var(--orange-light-active); }
+.text-orange-normal { color: var(--orange-normal); }
+.text-orange-normal-hover { color: var(--orange-normal-hover); }
+.text-orange-normal-active { color: var(--orange-normal-active); }
+.text-orange-dark { color: var(--orange-dark); }
+.text-orange-dark-hover { color: var(--orange-dark-hover); }
+.text-orange-dark-active { color: var(--orange-dark-active); }
+.text-orange-darker { color: var(--orange-darker); }
+.bg-orange-light { background-color: var(--orange-light); }
+.bg-orange-light-hover { background-color: var(--orange-light-hover); }
+.bg-orange-light-active { background-color: var(--orange-light-active); }
+.bg-orange-normal { background-color: var(--orange-normal); }
+.bg-orange-normal-hover { background-color: var(--orange-normal-hover); }
+.bg-orange-normal-active { background-color: var(--orange-normal-active); }
+.bg-orange-dark { background-color: var(--orange-dark); }
+.bg-orange-dark-hover { background-color: var(--orange-dark-hover); }
+.bg-orange-dark-active { background-color: var(--orange-dark-active); }
+.bg-orange-darker { background-color: var(--orange-darker); }
+
+/* OFFCOLOR CLASS */
+.text-black { color: black; }
+.text-white { color: white; }
+.bg-black { background-color: black; }
+.bg-white { background-color: white;}

@@ -21,7 +21,8 @@ input::-ms-clear {
 }
 
 .horizontal-line {
-    width: 1px;
+    height: 1px;
+    flex-grow: 1;
     background-color: var(--secondary-normal);
     border-radius: 50%;
 }
@@ -30,6 +31,10 @@ input::-ms-clear {
     flex-grow: 1;
     border: 0;
     background-color: transparent;
+}
+
+.input-data:focus{
+    outline: none;
 }
 
 .input-data::placeholder{
