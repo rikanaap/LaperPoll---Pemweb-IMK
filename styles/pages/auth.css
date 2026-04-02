@@ -1,4 +1,4 @@
-.auth-section{
+.auth-section {
     height: 100vh;
     width: 100%;
     padding: 0 2rem;
@@ -8,12 +8,12 @@
     border-radius: 1.5rem;
 }
 
-.logo{
+.logo {
     height: 6rem;
     flex-shrink: 0;
 }
 
-.form{
+.form {
     background-color: white;
     width: 400px;
     padding: 1.25rem 1.8rem 2.5rem 1.8rem;
@@ -21,29 +21,29 @@
     gap: 1.5rem;
 }
 
-.form-inputs{
+.form-inputs {
     align-self: stretch;
     gap: 0.5rem;
 }
 
-.auth-text{
+.auth-text {
     align-items: flex-start;
     gap: 0.5rem;
     align-items: stretch;
 }
 
-.auth-link a{
+.auth-link a {
     color: var(--accent-normal-active);
     text-decoration: none;
 }
 
-.divider{
+.divider {
     align-self: stretch;
     align-items: center;
     gap: 0.6rem;
 }
 
-.google-login{
+.google-login {
     background-color: var(--primary-normal);
     padding: 0.9rem 0;
     justify-content: center;
@@ -51,15 +51,47 @@
     gap: 0.9rem;
 }
 
-.google-login img{
+.google-login img {
     width: 1.25rem;
 }
 
-.google-login h1{
+.google-login h1 {
     color: var(--secondary-normal);
 }
 
-.wrap-forgot-pass{
+.wrap-forgot-pass {
     gap: 0.5rem;
     align-items: stretch;
+}
+
+.input-tokens {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-tokens input {
+    font-size: 24px;
+    letter-spacing: 22px;
+    /* Atur angka ini sampai pas dengan jarak garis */
+    width: 250px;
+    z-index: 2;
+    padding-left: 10px;
+}
+
+.lines {
+    position: absolute;
+    bottom: -5px;
+    display: flex;
+    gap: 12px;
+    /* Jarak antar garis bawah */
+    z-index: 1;
+}
+
+.lines span {
+    display: block;
+    width: 30px;
+    /* Lebar satu garis */
+    height: 2px;
+    background-color: #555;
 }
