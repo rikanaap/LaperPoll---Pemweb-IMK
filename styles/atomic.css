@@ -11,7 +11,7 @@
 
 input::-ms-reveal,
 input::-ms-clear {
-  display: none;
+    display: none;
 }
 
 .vertical-line {
@@ -27,22 +27,22 @@ input::-ms-clear {
     border-radius: 50%;
 }
 
-.input-data{
+.input-data {
     flex-grow: 1;
     border: 0;
     background-color: transparent;
 }
 
-.input-data:focus{
+.input-data:focus {
     outline: none;
 }
 
-.input-data::placeholder{
+.input-data::placeholder {
     color: var(--primary-dark-hover);
 }
 
 
-.input-submit{
+.input-submit {
     display: flex;
     background-color: var(--orange-normal);
     justify-content: center;
@@ -52,8 +52,95 @@ input::-ms-clear {
     border-radius: 0.75rem;
 }
 
-.input-submit h1{
+.input-submit h1 {
     color: var(--primary-normal);
     font-weight: 400;
     font-size: 1rem;
+}
+
+.navbar {
+    display: flex;
+    padding: 0.25rem 1rem;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+}
+
+.navbar>span {
+    color: var(--accent-normal);
+}
+
+.navbar>.logo {
+    height: 4rem;
+}
+
+.navbar>.profile {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--accent-normal);
+}
+
+.resep-menus {
+    display: flex;
+    align-self: stretch;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    flex-direction: column;
+}
+
+.resep {
+    display: flex;
+    border-radius: 1.25rem;
+    border: 0.05rem solid #F2E2D9;
+    background-color: white;
+    padding: 0.9rem 0.75rem;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+}
+
+.resep-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.resep-logo {
+    display: flex;
+    width: 4.3rem;
+    height: 4.3rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 1rem;
+    background-color: #FEE7C3;
+}
+
+.resep-content-detail {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.resep-content-detail>div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.verified_logo {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+}
+
+.verified_logo>span {
+    font-size: 0.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
 }
