@@ -136,6 +136,10 @@
   padding: 28px 30px;
   border: 1px solid;
   border-color: var(--orange-light-active);
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
 }
  
 .step-item {
@@ -161,13 +165,12 @@
 }
  
 .step-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--warm-dark);
   margin-bottom: 4px;
 }
 .step-text {
   font-size: 14px;
-  color: var(--muted);
-  line-height: 1.65;
+  line-height: 1.5;
 }
