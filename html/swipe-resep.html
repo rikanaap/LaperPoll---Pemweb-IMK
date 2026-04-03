@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/atomic.css">
+    <link rel="stylesheet" href="../styles/pages/swipe-resep.css">
+    <link rel="icon" href="../assets/Logo_Laperpoll.png">
+
+    <title>Laperpoll</title>
+</head>
+<body class="font-jakarta">
+    
+    <main class="main-content flex flex-col gap-4">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <span class="material-icons-round text-h4">arrow_back</span>
+        <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
+        <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+    </nav>
+
+    <!-- Swipe Container -->
+    <div class="swipe-container">
+
+        <div class="swipe-cards" id="swipeCards">
+
+            <div class="swipe-card bg-accent-normal text-white">
+                <!-- <img src="../assets/asin.png"> -->
+                <h3 class="text-title1 font-semibold">ASIN GURIH</h3>
+                <p class="text-body">"Lagi pengen yang asin gurih dan nagih?"</p>
+            </div>
+
+            <div class="swipe-card bg-orange-normal text-white">
+                <!-- <img src="../assets/pedas.png"> -->
+                <h3 class="text-title1 font-semibold">PEDAS</h3>
+                <p class="text-body">"Suka sensasi pedas yang nampol?"</p>
+            </div>
+
+            <div class="swipe-card bg-secondary-normal text-white">
+                <!-- <img src="../assets/asam.png"> -->
+                <h3 class="text-title1 font-semibold">ASAM SEGAR</h3>
+                <p class="text-body">"Lagi pengen yang asem seger-seger?"</p>
+            </div>
+
+            <div class="swipe-card bg-accent-dark text-white">
+                <!-- <img src="../assets/manis.png"> -->
+                <h3 class="text-title1 font-semibold">MANIS BUAH</h3>
+                <p class="text-body">"Suka manis alami dari buah buahan?"</p>
+            </div>
+
+            <div class="swipe-card bg-accent-dark text-white">
+                <!-- <img src="../assets/manis.png"> -->
+                <h3 class="text-title1 font-semibold">UMAMI</h3>
+                <p class="text-body">"Suka rasa gurih khas yang dalam (umami)?"</p>
+            </div>
+
+            <div class="swipe-card bg-accent-dark text-white">
+                <!-- <img src="../assets/manis.png"> -->
+                <h3 class="text-title1 font-semibold">PAHIT</h3>
+                <p class="text-body">"Berani sama rasa pahit yang khas?"</p>
+            </div>
+
+            <div class="swipe-card bg-accent-dark text-white">
+                <!-- <img src="../assets/manis.png"> -->
+                <h3 class="text-title1 font-semibold">ASAM MANIS</h3>
+                <p class="text-body">"Lagi pengen yang asam tapi manis?"</p>
+            </div>
+
+            <div class="swipe-card bg-accent-dark text-white">
+                <!-- <img src="../assets/manis.png"> -->
+                <h3 class="text-title1 font-semibold">GURIH</h3>
+                <p class="text-body">"Lagi pengen yang enak dimakan setiap waktu?"</p>
+            </div>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="swipe-buttons">
+            <button id="dislike">
+                <span class="material-icons-round">close</span>
+            </button>
+
+            <button id="like">
+                <span class="material-icons-round">favorite</span>
+            </button>
+        </div>
+
+    </div>
+    </main>
+
+<script src="../js/swipe-resep.js"></script>
+</body>
+</html>
