@@ -2,7 +2,6 @@
     padding: 0rem 0.7rem;
 }
 
-/* SEARCH INPUT */
 .input {
     display: flex;
     align-items: center;
@@ -107,4 +106,5 @@
     border: 1px solid #F2E2D9;
     color: var(--orange-normal);
     cursor: pointer;
+    text-decoration: none;
 }

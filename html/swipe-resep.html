@@ -10,68 +10,62 @@
 
     <title>Laperpoll</title>
 </head>
+
 <body class="font-jakarta">
-    
     <main class="main-content flex flex-col gap-4">
     <!-- NAVBAR -->
     <nav class="navbar">
-        <span class="material-icons-round text-h4">arrow_back</span>
+         <a href="pencarian-resep.html" class="back-btn" aria-label="Kembali">
+                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+        </a>
         <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
         <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
     </nav>
 
     <!-- Swipe Container -->
     <div class="swipe-container">
+     <div class="swipe-cards" id="swipeCards">
 
-        <div class="swipe-cards" id="swipeCards">
-
-            <div class="swipe-card bg-accent-normal text-white">
-                <!-- <img src="../assets/asin.png"> -->
-                <h3 class="text-title1 font-semibold">ASIN GURIH</h3>
-                <p class="text-body">"Lagi pengen yang asin gurih dan nagih?"</p>
-            </div>
-
-            <div class="swipe-card bg-orange-normal text-white">
-                <!-- <img src="../assets/pedas.png"> -->
-                <h3 class="text-title1 font-semibold">PEDAS</h3>
-                <p class="text-body">"Suka sensasi pedas yang nampol?"</p>
-            </div>
-
-            <div class="swipe-card bg-secondary-normal text-white">
-                <!-- <img src="../assets/asam.png"> -->
-                <h3 class="text-title1 font-semibold">ASAM SEGAR</h3>
-                <p class="text-body">"Lagi pengen yang asem seger-seger?"</p>
-            </div>
-
-            <div class="swipe-card bg-accent-dark text-white">
-                <!-- <img src="../assets/manis.png"> -->
-                <h3 class="text-title1 font-semibold">MANIS BUAH</h3>
-                <p class="text-body">"Suka manis alami dari buah buahan?"</p>
-            </div>
-
-            <div class="swipe-card bg-accent-dark text-white">
-                <!-- <img src="../assets/manis.png"> -->
-                <h3 class="text-title1 font-semibold">UMAMI</h3>
-                <p class="text-body">"Suka rasa gurih khas yang dalam (umami)?"</p>
-            </div>
-
-            <div class="swipe-card bg-accent-dark text-white">
-                <!-- <img src="../assets/manis.png"> -->
-                <h3 class="text-title1 font-semibold">PAHIT</h3>
-                <p class="text-body">"Berani sama rasa pahit yang khas?"</p>
-            </div>
-
-            <div class="swipe-card bg-accent-dark text-white">
-                <!-- <img src="../assets/manis.png"> -->
-                <h3 class="text-title1 font-semibold">ASAM MANIS</h3>
-                <p class="text-body">"Lagi pengen yang asam tapi manis?"</p>
-            </div>
-
-            <div class="swipe-card bg-accent-dark text-white">
-                <!-- <img src="../assets/manis.png"> -->
-                <h3 class="text-title1 font-semibold">GURIH</h3>
-                <p class="text-body">"Lagi pengen yang enak dimakan setiap waktu?"</p>
-            </div>
+        <div class="swipe-card bg-accent-normal text-white">
+            <span class="material-icons-round swipe-icon">ramen_dining</span>
+            <h3 class="text-title1 font-semibold">ASIN GURIH</h3>
+            <p class="text-body">"Lagi pengen yang asin gurih dan nagih?"</p>
+        </div>
+        <div class="swipe-card bg-orange-normal text-white">
+            <span class="material-icons-round swipe-icon">local_fire_department</span>
+            <h3 class="text-title1 font-semibold">PEDAS</h3>
+            <p class="text-body">"Suka sensasi pedas yang nampol?"</p>
+        </div>
+        <div class="swipe-card bg-secondary-normal text-white">
+            <span class="material-icons-round swipe-icon">emoji_food_beverage</span>
+            <h3 class="text-title1 font-semibold">ASAM SEGAR</h3>
+            <p class="text-body">"Lagi pengen yang asem seger-seger?"</p>
+        </div>
+        <div class="swipe-card bg-accent-dark text-white">
+            <span class="material-icons-round swipe-icon">apple</span>
+            <h3 class="text-title1 font-semibold">MANIS BUAH</h3>
+            <p class="text-body">"Suka manis alami dari buah buahan?"</p>
+        </div>
+        <div class="swipe-card bg-accent-dark text-white">
+            <span class="material-icons-round swipe-icon">restaurant</span>
+            <h3 class="text-title1 font-semibold">UMAMI</h3>
+            <p class="text-body">"Suka rasa gurih khas yang dalam (umami)?"</p>
+        </div>
+        <div class="swipe-card bg-accent-dark text-white">
+            <span class="material-icons-round swipe-icon">coffee</span>
+            <h3 class="text-title1 font-semibold">PAHIT</h3>
+            <p class="text-body">"Berani sama rasa pahit yang khas?"</p>
+        </div>
+        <div class="swipe-card bg-accent-dark text-white">
+            <span class="material-icons-round swipe-icon">icecream</span>
+            <h3 class="text-title1 font-semibold">ASAM MANIS</h3>
+            <p class="text-body">"Lagi pengen yang asam tapi manis?"</p>
+        </div>
+        <div class="swipe-card bg-accent-dark text-white">
+            <span class="material-icons-round swipe-icon">lunch_dining</span>
+            <h3 class="text-title1 font-semibold">GURIH</h3>
+            <p class="text-body">"Lagi pengen yang enak dimakan setiap waktu?"</p>
+        </div>
 
         </div>
 
@@ -80,13 +74,12 @@
             <button id="dislike">
                 <span class="material-icons-round">close</span>
             </button>
-
             <button id="like">
                 <span class="material-icons-round">favorite</span>
             </button>
         </div>
 
-    </div>
+     </div>
     </main>
 
 <script src="../js/swipe-resep.js"></script>
