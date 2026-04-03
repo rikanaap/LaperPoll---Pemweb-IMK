@@ -1,9 +1,3 @@
-/* =============================================
-   tambah-bahan.css
-   Page-specific styles untuk halaman Tambah Bahan
-   ============================================= */
-
-/* ---------- LAYOUT ---------- */
 .main-content {
     max-width: 100%;
     margin: 0 auto;
@@ -13,7 +7,6 @@
     gap: 0;
 }
 
-/* ---------- NAVBAR ---------- */
 .navbar {
     background-color: #f4f5f7;
     margin: 0 -0.7rem;
@@ -27,7 +20,6 @@
     align-items: center;
 }
 
-/* ---------- FORM WRAPPER ---------- */
 .form-wrapper {
     background-color: white;
     border-radius: 1.25rem;
@@ -35,22 +27,18 @@
     margin-top: 1rem;
 }
 
-/* ---------- FORM TITLE ---------- */
 .form-title p {
     margin-top: 0.15rem;
 }
 
-/* ---------- FORM GROUP ---------- */
 .form-group label {
     display: block;
 }
 
-/* ---------- SEARCH WRAPPER ---------- */
 .search-wrapper {
     position: relative;
 }
 
-/* ---------- DROPDOWN ---------- */
 .bahan-dropdown {
     display: none;
     position: absolute;
@@ -84,7 +72,6 @@
     color: var(--primary-darker);
 }
 
-/* ---------- SATUAN SELECT ---------- */
 .satuan-input select {
     appearance: none;
     -webkit-appearance: none;
@@ -97,7 +84,6 @@
     font-style: italic;
 }
 
-/* ---------- JUMLAH +/- ---------- */
 .jumlah-input {
     justify-content: space-between;
     align-items: center;
@@ -107,7 +93,7 @@
     text-align: center;
     font-weight: 600;
     width: 3rem;
-    -moz-appearance: textfield;
+    --moz-appearance: textfield;
 }
 
 .jumlah-field::-webkit-outer-spin-button,
@@ -136,7 +122,6 @@
     color: var(--orange-dark);
 }
 
-/* ---------- EXPIRED CHIPS ---------- */
 .expired-options {
     flex-wrap: wrap;
 }
@@ -161,7 +146,6 @@
     border-color: #8C2A1A;
 }
 
-/* ---------- SUBMIT BUTTON ---------- */
 .input-submit {
     border: none;
     cursor: pointer;
@@ -181,11 +165,6 @@
     background-color: var(--orange-normal-active);
 }
 
-/* ---------- FORM ROW ---------- */
 .form-row {
     align-items: flex-start;
 }
-
-/* =============================================
-   RESPONSIVE - media query ada di media.css
-   ============================================= */

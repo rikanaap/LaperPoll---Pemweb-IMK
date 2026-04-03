@@ -13,8 +13,6 @@
 
 <body>
     <main class="main-content flex flex-col">
-
-        <!-- NAVBAR -->
         <nav class="navbar">
             <a href="kulkas-digital.html" class="back-btn" aria-label="Kembali">
                 <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
@@ -23,16 +21,12 @@
             <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
         </nav>
 
-        <!-- FORM WRAPPER -->
         <div class="form-wrapper flex flex-col gap-6">
-
-            <!-- JUDUL -->
             <div class="form-title flex flex-col gap-1">
                 <h1 class="font-jakarta font-bold text-h5" style="color: #8C2A1A;">Tambah Bahan</h1>
                 <p class="font-jakarta font-regular text-body text-primary-darker">Isi detail bahan yang ingin kamu tambahkan ke kulkas.</p>
             </div>
 
-            <!-- FIELD: NAMA BAHAN -->
             <div class="form-group flex flex-col gap-2">
                 <label class="font-jakarta font-semibold text-body text-secondary-normal" for="searchBahan">Nama Bahan</label>
                 <div class="search-wrapper">
@@ -50,11 +44,9 @@
                     <ul class="bahan-dropdown flex flex-col" id="bahanDropdown" role="listbox" aria-label="Pilih bahan"></ul>
                 </div>
 
-                <!-- Selected bahan chip -->
                 <div class="selected-bahan flex flex-row gap-2" id="selectedBahan" style="display:none !important;"></div>
             </div>
 
-            <!-- FIELD: SATUAN & JUMLAH -->
             <div class="form-row flex flex-row gap-3">
                 <div class="form-group flex flex-col gap-2" style="flex: 1;">
                     <label class="font-jakarta font-semibold text-body text-secondary-normal" for="satuanBahan">Satuan</label>
@@ -88,7 +80,6 @@
                 </div>
             </div>
 
-            <!-- FIELD: TANGGAL EXPIRED -->
             <div class="form-group flex flex-col gap-2">
                 <label class="font-jakarta font-semibold text-body text-secondary-normal" for="expiredDate">Tanggal Expired</label>
                 <div class="expired-options flex flex-row gap-2" id="expiredChips">
@@ -108,7 +99,6 @@
                 <p class="font-jakarta text-caption text-primary-darker">Pilih estimasi cepat atau atur tanggal manual.</p>
             </div>
 
-            <!-- TOMBOL SUBMIT -->
             <button class="input-submit font-jakarta font-semibold text-title2" id="btnTambahBahan">
                 Tambah Bahan
             </button>
@@ -117,7 +107,6 @@
     </main>
 
     <script>
-        // ── DATA BAHAN ──────────────────────────────────────────────
         const dataBahan = [
             { nama: "Telur", satuan: ["butir", "gram"] },
             { nama: "Susu", satuan: ["ml", "liter"] },
@@ -153,7 +142,6 @@
             { nama: "Santan", satuan: ["ml", "liter"] },
         ];
 
-        // ── ELEMENTS ─────────────────────────────────────────────────
         const searchInput   = document.getElementById('searchBahan');
         const dropdown      = document.getElementById('bahanDropdown');
         const clearBtn      = document.getElementById('clearSearch');
@@ -165,7 +153,6 @@
 
         let selectedBahan = null;
 
-        // ── SEARCH ───────────────────────────────────────────────────
         searchInput.addEventListener('input', () => {
             const q = searchInput.value.trim().toLowerCase();
             clearBtn.style.display = q ? 'block' : 'none';
@@ -210,7 +197,6 @@
             populateSatuan(bahan.satuan);
         }
 
-        // ── SATUAN ───────────────────────────────────────────────────
         function populateSatuan(satuanList) {
             satuanSelect.innerHTML = '';
             satuanList.forEach((s, i) => {
@@ -229,7 +215,6 @@
             satuanHint.style.display = 'none';
         }
 
-        // ── JUMLAH +/- ───────────────────────────────────────────────
         document.getElementById('btnPlus').addEventListener('click', () => {
             jumlahInput.value = parseInt(jumlahInput.value || 0) + 1;
         });
@@ -238,7 +223,6 @@
             if (val > 1) jumlahInput.value = val - 1;
         });
 
-        // ── EXPIRED CHIPS ────────────────────────────────────────────
         document.querySelectorAll('.expired-chip').forEach(chip => {
             chip.addEventListener('click', () => {
                 document.querySelectorAll('.expired-chip').forEach(c => c.classList.remove('active'));
@@ -250,10 +234,8 @@
             });
         });
 
-        // set min date to today
         expiredInput.min = new Date().toISOString().split('T')[0];
 
-        // ── SUBMIT ───────────────────────────────────────────────────
         document.getElementById('btnTambahBahan').addEventListener('click', () => {
             if (!selectedBahan) {
                 alert('Pilih nama bahan terlebih dahulu!');
@@ -272,7 +254,6 @@
                 return;
             }
 
-            // Hitung sisa hari
             const today = new Date();
             const exp = new Date(expiredInput.value);
             const diffDays = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
@@ -281,7 +262,6 @@
             window.location.href = 'kulkas-digital.html';
         });
 
-        // tutup dropdown kalau klik di luar
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.search-wrapper')) {
                 dropdown.style.display = 'none';
@@ -289,5 +269,4 @@
         });
     </script>
 </body>
-
 </html>

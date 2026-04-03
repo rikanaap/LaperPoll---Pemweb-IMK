@@ -13,15 +13,12 @@
 
 <body>
     <main class="main-content flex flex-col">
-
-        <!-- NAVBAR -->
         <nav class="navbar">
             <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
             <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
         </nav>
 
-        <!-- HEADER -->
         <section class="kulkas-header flex flex-row">
             <h1 class="font-jakarta font-bold text-h5" style="color: #8C2A1A;">Kulkas Digital</h1>
             <button class="kulkas-add-btn" id="btnTambah" aria-label="Tambah bahan">
@@ -29,7 +26,6 @@
             </button>
         </section>
 
-        <!-- FILTER TABS -->
         <div class="filter-tabs flex flex-row" role="tablist">
             <button class="filter-tab active font-jakarta font-semibold text-body" data-filter="semua" role="tab" aria-selected="true">Semua</button>
             <button class="filter-tab font-jakarta font-medium text-body" data-filter="tersedia" role="tab" aria-selected="false">Tersedia</button>
@@ -37,9 +33,7 @@
             <button class="filter-tab font-jakarta font-medium text-body" data-filter="expired" role="tab" aria-selected="false">Expired</button>
         </div>
 
-        <!-- BAHAN GRID -->
         <section class="bahan-grid" id="bahanGrid">
-
             <div class="bahan-card" data-status="tersedia">
                 <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Bawang Putih</h2>
                 <p class="font-jakarta font-regular text-caption text-primary-darker">6 siung · 3 hari</p>
@@ -136,8 +130,6 @@
                 <span class="status-badge badge-expired font-jakarta font-medium text-caption">Habis</span>
             </div>
         </section>
-
-        <!-- RESEP SUGGESTION -->
         <section class="resep-suggestion flex flex-col gap-3">
             <div class="resep-suggestion-header flex flex-row gap-2">
                 <span class="sparkle-icon">✨</span>
@@ -166,7 +158,6 @@
     </main>
 
     <script>
-        // Filter tabs logic
         const tabs = document.querySelectorAll('.filter-tab');
         const cards = document.querySelectorAll('.bahan-card');
 
@@ -190,11 +181,9 @@
             });
         });
 
-        // Tambah bahan button (placeholder)
         document.getElementById('btnTambah').addEventListener('click', () => {
             window.location.href = 'tambah-bahan.html';
         });
     </script>
 </body>
-
 </html>
