@@ -1,5 +1,6 @@
 .main-content {
-      max-width: 100%;
+    max-width: 100%;
+    padding: 0rem 0.7rem;
     margin: 0 auto;
     min-height: 100vh;
     padding-bottom: 2rem;
@@ -17,7 +18,7 @@
 .kulkas-header {
     justify-content: space-between;
     align-items: center;
-     padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem;
     background-color: #ffffff;
     margin: 0 -0.7rem;
 }
@@ -100,13 +101,13 @@ css.kulkas-header h1 {
     border-radius: 1rem;
     background-color: white;
     border: 1px solid var(--primary-normal);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
     min-height: 6.5rem;
     transition: box-shadow 0.2s ease;
 }
 
 .bahan-card:hover {
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .status-badge {
@@ -137,7 +138,7 @@ css.kulkas-header h1 {
     border-radius: 1.25rem;
     padding: 1rem;
     border: 1px solid var(--primary-normal);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .resep-suggestion-header {

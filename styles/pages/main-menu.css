@@ -1,0 +1,69 @@
+.main-content {
+    padding: 0rem 0.7rem;
+}
+
+.bottom-menus {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    padding: 1rem 0.6rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border: 0.05rem solid #F2E2D9;
+    background-color: white;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.bottom-filters {
+    display: flex;
+    overflow-x: auto;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: stretch;
+}
+
+.bottom-filter {
+    display: flex;
+    padding: 0.5rem 1.25rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 0.7rem;
+    border: 0.05rem solid #F2E2D9;
+}
+
+.bottom-text {
+    display: flex;
+    align-self: stretch;
+    justify-content: flex-end;
+}
+
+.bottom-filters-used {
+    display: flex;
+    overflow-x: auto;
+    /* justify-content: flex-end; */
+    align-items: center;
+    align-self: stretch;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.bottom-filters-used > p{
+    position: sticky;
+    left: 0;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    flex-shrink: 0;
+    background-color: white;
+}
+
+.bottom-filter-used {
+    display: flex;
+    padding: 0.3rem 0.6rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 0.2rem;
+    background-color: var(--orange-normal);
+}

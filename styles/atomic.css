@@ -59,6 +59,10 @@ input::-ms-clear {
 }
 
 .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
     display: flex;
     padding: 0.25rem 1rem;
     justify-content: space-between;
@@ -94,6 +98,7 @@ input::-ms-clear {
     border-radius: 1.25rem;
     border: 0.05rem solid #F2E2D9;
     background-color: white;
+    max-width: 24rem;
     padding: 0.9rem 0.75rem;
     justify-content: space-between;
     align-items: center;
@@ -130,6 +135,12 @@ input::-ms-clear {
     gap: 0.5rem;
 }
 
+.resep-verified {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 .verified_logo {
     position: relative;
     width: 1rem;
@@ -142,5 +153,4 @@ input::-ms-clear {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-
 }

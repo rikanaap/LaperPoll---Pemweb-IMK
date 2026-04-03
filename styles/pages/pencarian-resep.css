@@ -1,3 +1,7 @@
+.main-content {
+    padding: 0rem 0.7rem;
+}
+
 /* SEARCH INPUT */
 .input {
     display: flex;
@@ -5,7 +9,7 @@
     gap: 0.6rem;
     padding: 0.81rem 0.70rem;
     border-radius: 0.8rem;
-    background-color: var(--orange-normal); 
+    background-color: var(--orange-normal);
 }
 
 .input span {
@@ -24,7 +28,7 @@
 }
 
 .input-data::placeholder {
-    color: rgba(255,255,255,0.7);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* SCROLL AREA */
@@ -82,7 +86,7 @@
 /* text atau */
 .atau-text {
     color: #9E9E9E;
-    transform: translateY(-1px); 
+    transform: translateY(-1px);
 }
 
 /* CHECKBOX */
