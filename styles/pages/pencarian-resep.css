@@ -1,0 +1,106 @@
+/* SEARCH INPUT */
+.input {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.81rem 0.70rem;
+    border-radius: 0.8rem;
+    background-color: var(--orange-normal); 
+}
+
+.input span {
+    color: white;
+}
+
+.input-data {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    color: white;
+}
+
+.input-data:focus {
+    outline: none;
+}
+
+.input-data::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+/* SCROLL AREA */
+.bahan-wrapper {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* SCROLLBAR */
+.bahan-wrapper::-webkit-scrollbar {
+    width: 4px;
+}
+
+.bahan-wrapper::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+/* LIST ITEM */
+.bahan-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 1rem;
+    border: 1px solid #F2E2D9;
+    background-color: white;
+}
+
+.bahan-left {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.bahan-icon {
+    width: 3rem;
+    height: 3rem;
+    background-color: #FEE7C3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.8rem;
+}
+
+.bahan-icon span {
+    color: var(--orange-normal);
+}
+
+.horizontal-line {
+    background-color: #D6D6D6;
+}
+
+/* text atau */
+.atau-text {
+    color: #9E9E9E;
+    transform: translateY(-1px); 
+}
+
+/* CHECKBOX */
+.bahan-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--orange-normal);
+}
+
+/* SWIPE BUTTON */
+.swipe-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem;
+    border-radius: 0.8rem;
+    border: 1px solid #F2E2D9;
+    color: var(--orange-normal);
+    cursor: pointer;
+}
