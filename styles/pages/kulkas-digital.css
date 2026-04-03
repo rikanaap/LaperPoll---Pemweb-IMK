@@ -1,0 +1,189 @@
+.main-content {
+      max-width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding-bottom: 2rem;
+    gap: 1rem;
+    background-color: #FFF8F5;
+}
+
+.navbar {
+    background-color: #f4f5f7;
+    margin: 0 -0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.kulkas-header {
+    justify-content: space-between;
+    align-items: center;
+     padding: 0.75rem 1rem;
+    background-color: #ffffff;
+    margin: 0 -0.7rem;
+}
+
+css.kulkas-header h1 {
+    color: var(--kulkas-title);
+}
+
+.kulkas-add-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    background-color: var(--orange-light);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.kulkas-add-btn span {
+    color: var(--orange-normal);
+    font-size: 1.4rem;
+}
+
+.kulkas-add-btn:hover {
+    background-color: var(--orange-light-hover);
+}
+
+.kulkas-add-btn:active {
+    background-color: var(--orange-light-active);
+}
+
+.filter-tabs {
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+}
+
+.filter-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-tab {
+    padding: 0.45rem 1rem;
+    border-radius: 2rem;
+    border: 1px solid var(--primary-normal-hover);
+    background-color: transparent;
+    color: var(--secondary-normal);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.18s ease;
+}
+
+.filter-tab:hover {
+    background-color: var(--primary-normal);
+}
+
+.filter-tab.active {
+    background-color: #8c2a1a;
+    color: var(--primary-light);
+    border-color: #8c2a1a;
+}
+
+.bahan-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.bahan-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    padding: 1rem 0.85rem;
+    border-radius: 1rem;
+    background-color: white;
+    border: 1px solid var(--primary-normal);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    min-height: 6.5rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.bahan-card:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2rem;
+    margin-top: 0.25rem;
+}
+
+.badge-tersedia {
+    background-color: var(--accent-light);
+    color: var(--accent-dark);
+}
+
+.badge-hampir {
+    background-color: var(--orange-light);
+    color: var(--orange-dark);
+}
+
+.badge-expired {
+    background-color: var(--primary-normal);
+    color: var(--primary-darker);
+}
+
+.resep-suggestion {
+    background-color: white;
+    border-radius: 1.25rem;
+    padding: 1rem;
+    border: 1px solid var(--primary-normal);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.resep-suggestion-header {
+    align-items: center;
+}
+
+.sparkle-icon {
+    font-size: 1.1rem;
+}
+
+.resep-suggestion-item {
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.35rem 0;
+}
+
+.resep-suggestion-item::before {
+    content: '';
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background-color: var(--accent-normal);
+    flex-shrink: 0;
+    margin-right: 0.6rem;
+    align-self: center;
+}
+
+.resep-nama {
+    flex: 1;
+}
+
+.resep-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 0.25rem 0.65rem;
+    border-radius: 2rem;
+    white-space: nowrap;
+}
+
+.badge-complete {
+    background-color: var(--orange-normal);
+    color: var(--primary-light);
+}
+
+.badge-partial {
+    background-color: var(--orange-light-active);
+    color: var(--orange-normal);
+}

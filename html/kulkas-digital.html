@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/atomic.css">
+    <link rel="stylesheet" href="../styles/pages/kulkas-digital.css">
+    <link rel="stylesheet" href="../styles/media.css">
+    <title>Laperpoll - Kulkas Digital</title>
+</head>
+
+<body>
+    <main class="main-content flex flex-col">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+            <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+        </nav>
+
+        <!-- HEADER -->
+        <section class="kulkas-header flex flex-row">
+            <h1 class="font-jakarta font-bold text-h5" style="color: #8C2A1A;">Kulkas Digital</h1>
+            <button class="kulkas-add-btn" id="btnTambah" aria-label="Tambah bahan">
+                <span class="material-icons-round">add</span>
+            </button>
+        </section>
+
+        <!-- FILTER TABS -->
+        <div class="filter-tabs flex flex-row" role="tablist">
+            <button class="filter-tab active font-jakarta font-semibold text-body" data-filter="semua" role="tab" aria-selected="true">Semua</button>
+            <button class="filter-tab font-jakarta font-medium text-body" data-filter="tersedia" role="tab" aria-selected="false">Tersedia</button>
+            <button class="filter-tab font-jakarta font-medium text-body" data-filter="hampir-habis" role="tab" aria-selected="false">Hampir Habis</button>
+            <button class="filter-tab font-jakarta font-medium text-body" data-filter="expired" role="tab" aria-selected="false">Expired</button>
+        </div>
+
+        <!-- BAHAN GRID -->
+        <section class="bahan-grid" id="bahanGrid">
+
+            <div class="bahan-card" data-status="tersedia">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Bawang Putih</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">6 siung · 3 hari</p>
+                <span class="status-badge badge-tersedia font-jakarta font-medium text-caption">Tersedia</span>
+            </div>
+
+            <div class="bahan-card" data-status="tersedia">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Telur</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">6 butir · 3 hari</p>
+                <span class="status-badge badge-tersedia font-jakarta font-medium text-caption">Tersedia</span>
+            </div>
+
+            <div class="bahan-card" data-status="tersedia">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Bawang Merah</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">5 siung · 7 hari</p>
+                <span class="status-badge badge-tersedia font-jakarta font-medium text-caption">Tersedia</span>
+            </div>
+
+            <div class="bahan-card" data-status="tersedia">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Ketumbar bubuk</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">10 gram · 7 hari</p>
+                <span class="status-badge badge-tersedia font-jakarta font-medium text-caption">Tersedia</span>
+            </div>
+
+            <div class="bahan-card" data-status="tersedia">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Kunyit bubuk</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">25 gram · 7 hari</p>
+                <span class="status-badge badge-tersedia font-jakarta font-medium text-caption">Tersedia</span>
+            </div>
+
+            <div class="bahan-card" data-status="tersedia">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Ketumbar bubuk</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">10 gram · 7 hari</p>
+                <span class="status-badge badge-tersedia font-jakarta font-medium text-caption">Tersedia</span>
+            </div>
+
+            <div class="bahan-card" data-status="hampir-habis">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Susu</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">200 ml · 1 hari</p>
+                <span class="status-badge badge-hampir font-jakarta font-medium text-caption">Segera Habis</span>
+            </div>
+
+             <div class="bahan-card" data-status="hampir-habis">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Toge</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">100 gram · 1 hari</p>
+                <span class="status-badge badge-hampir font-jakarta font-medium text-caption">Segera Habis</span>
+            </div>
+
+            <div class="bahan-card" data-status="hampir-habis">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Tomat</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">5 buah · 1 hari</p>
+                <span class="status-badge badge-hampir font-jakarta font-medium text-caption">Segera Habis</span>
+            </div>
+
+            <div class="bahan-card" data-status="hampir-habis">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Kwetiau</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">100 gram · 1 hari</p>
+                <span class="status-badge badge-hampir font-jakarta font-medium text-caption">Segera Habis</span>
+            </div>
+
+            <div class="bahan-card" data-status="hampir-habis">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Daging Ayam</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">500 gram · 1 hari</p>
+                <span class="status-badge badge-hampir font-jakarta font-medium text-caption">Segera Habis</span>
+            </div>
+
+            <div class="bahan-card" data-status="expired">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Cabai Merah</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">0 buah</p>
+                <span class="status-badge badge-expired font-jakarta font-medium text-caption">Habis</span>
+            </div>
+
+            <div class="bahan-card" data-status="expired">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Mie</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">0 gram</p>
+                <span class="status-badge badge-expired font-jakarta font-medium text-caption">Habis</span>
+            </div>
+
+            <div class="bahan-card" data-status="expired">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Beras</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">0 liter</p>
+                <span class="status-badge badge-expired font-jakarta font-medium text-caption">Habis</span>
+            </div>
+
+            <div class="bahan-card" data-status="expired">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Santen</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">0 ml</p>
+                <span class="status-badge badge-expired font-jakarta font-medium text-caption">Habis</span>
+            </div>
+
+            <div class="bahan-card" data-status="expired">
+                <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">Jeruk</h2>
+                <p class="font-jakarta font-regular text-caption text-primary-darker">0 buah</p>
+                <span class="status-badge badge-expired font-jakarta font-medium text-caption">Habis</span>
+            </div>
+        </section>
+
+        <!-- RESEP SUGGESTION -->
+        <section class="resep-suggestion flex flex-col gap-3">
+            <div class="resep-suggestion-header flex flex-row gap-2">
+                <span class="sparkle-icon">✨</span>
+                <h3 class="font-jakarta font-semibold text-title2 text-secondary-normal">Resep dari bahan yang ada</h3>
+            </div>
+            <div class="resep-list flex flex-col gap-2">
+
+                <div class="resep-suggestion-item flex flex-row">
+                    <p class="font-jakarta font-medium text-body text-secondary-normal resep-nama">Scrambled Egg</p>
+                    <span class="resep-badge badge-complete font-jakarta font-bold text-caption">3/3 bahan ✓</span>
+                </div>
+
+                <div class="resep-suggestion-item flex flex-row">
+                    <p class="font-jakarta font-medium text-body text-secondary-normal resep-nama">Nasi Goreng</p>
+                    <span class="resep-badge badge-partial font-jakarta font-bold text-caption">4/6 bahan</span>
+                </div>
+
+                <div class="resep-suggestion-item flex flex-row">
+                    <p class="font-jakarta font-medium text-body text-secondary-normal resep-nama">Mie Goreng Spesial</p>
+                    <span class="resep-badge badge-partial font-jakarta font-bold text-caption">3/4 bahan</span>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Filter tabs logic
+        const tabs = document.querySelectorAll('.filter-tab');
+        const cards = document.querySelectorAll('.bahan-card');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+
+                const filter = tab.dataset.filter;
+                cards.forEach(card => {
+                    if (filter === 'semua' || card.dataset.status === filter) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Tambah bahan button (placeholder)
+        document.getElementById('btnTambah').addEventListener('click', () => {
+            window.location.href = 'tambah-bahan.html';
+        });
+    </script>
+</body>
+
+</html>
