@@ -1,0 +1,187 @@
+/* =============================================
+   nota-belanja.css
+   ============================================= */
+
+/* ---------- LAYOUT ---------- */
+.main-content {
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #FFF8F5;
+    padding-bottom: 2rem;
+    gap: 0.75rem;
+}
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    background-color: #f4f5f7;
+    margin: 0 -0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.back-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.header-card {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--primary-normal);
+}
+
+/* ---------- NOTA WRAPPER ---------- */
+.nota-wrapper {
+    background-color: transparent;
+    padding: 0;
+    margin-top: 0;
+    gap: 0.75rem;
+}
+
+/* ---------- TITLE ROW ---------- */
+.nota-title-row {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nota-date {
+    align-items: center;
+    background-color: var(--orange-light);
+    padding: 0.3rem 0.75rem;
+    border-radius: 2rem;
+}
+
+/* ---------- PROGRESS CARD ---------- */
+.progress-card {
+    background-color: white;
+    border: 1px solid var(--primary-normal);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.progress-header {
+    align-items: center;
+}
+
+.progress-bar-track {
+    width: 100%;
+    height: 0.5rem;
+    background-color: var(--accent-light);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--accent-normal);
+    border-radius: 2rem;
+}
+
+/* ---------- KATEGORI CARD ---------- */
+.belanja-kategori {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--primary-normal);
+}
+
+.kategori-label {
+    color: var(--orange-normal);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.25rem;
+}
+
+/* ---------- BELANJA ITEM ---------- */
+.belanja-item {
+    align-items: center;
+    cursor: pointer;
+    padding: 0.35rem 0;
+    position: relative;
+}
+
+/* hide native checkbox */
+.belanja-check {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* custom checkmark */
+.checkmark {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.3rem;
+    border: 1.5px solid var(--primary-normal-hover);
+    background-color: white;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.belanja-check:checked + .checkmark {
+    background-color: #8C2A1A;
+    border-color: #8C2A1A;
+}
+
+.belanja-check:checked + .checkmark::after {
+    content: '';
+    display: block;
+    width: 0.35rem;
+    height: 0.6rem;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+}
+
+.item-nama {
+    flex: 1;
+}
+
+.belanja-check:checked ~ .item-nama {
+    text-decoration: line-through;
+    color: var(--primary-darker);
+}
+
+/* ---------- DIVIDER (tidak dipakai) ---------- */
+.divider {
+    display: none;
+}
+
+/* ---------- BELUM DIBELI ---------- */
+.belum-dibeli {
+    background-color: var(--orange-light);
+    border-radius: 1rem;
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (min-width: 768px) {
+    .main-content {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .navbar {
+        margin: 0 -2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .nota-wrapper {
+        max-width: 560px;
+        margin: 0 auto;
+    }
+}

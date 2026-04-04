@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/atomic.css">
+    <link rel="stylesheet" href="../styles/pages/nota-belanja.css">
+    <link rel="stylesheet" href="../styles/media.css">
+    <title>Laperpoll - Nota Belanja</title>
+</head>
+
+<body>
+    <main class="main-content flex flex-col">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="meal-planner.html" class="back-btn">
+                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+            </a>
+            <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+        </nav>
+
+        <!-- KONTEN UTAMA -->
+        <div class="nota-konten flex flex-col gap-3">
+
+            <!-- HEADER CARD: judul + tanggal -->
+            <div class="header-card flex flex-row">
+                <h1 class="font-jakarta font-bold text-h5" style="color: #8C2A1A;">Nota Belanja</h1>
+                <div class="nota-date flex flex-row gap-1">
+                    <span class="material-icons-round" style="font-size:1rem; color: var(--orange-normal);">calendar_today</span>
+                    <p class="font-jakarta font-medium text-caption" style="color: var(--orange-normal);">Senin</p>
+                </div>
+            </div>
+
+            <!-- PROGRESS CARD -->
+            <div class="progress-card flex flex-col gap-2">
+                <div class="progress-header flex flex-row gap-2">
+                    <span class="material-icons-round" style="font-size:1.2rem; color: var(--orange-normal);">shopping_cart</span>
+                    <p class="font-jakarta font-bold text-title2 text-secondary-normal" style="flex:1;">Daftar Belanja</p>
+                    <p class="font-jakarta font-bold text-title2" style="color: #8C2A1A;">3/8 ✓</p>
+                </div>
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" style="width: 37.5%;"></div>
+                </div>
+                <p class="font-jakarta font-regular text-caption text-primary-darker" style="text-align:right;">37.5% selesai</p>
+            </div>
+
+            <!-- KATEGORI: KARBOHIDRAT -->
+            <div class="belanja-kategori flex flex-col gap-2">
+                <p class="font-jakarta font-bold text-caption kategori-label">KARBOHIDRAT</p>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check" checked>
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Beras</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">200 gram</span>
+                </label>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check" checked>
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Tepung Ketan</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">150 gram</span>
+                </label>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check">
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Roti Tawar</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">4 lembar</span>
+                </label>
+            </div>
+
+            <!-- KATEGORI: PROTEIN -->
+            <div class="belanja-kategori flex flex-col gap-2">
+                <p class="font-jakarta font-bold text-caption kategori-label">PROTEIN</p>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check" checked>
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Telur</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">3 butir</span>
+                </label>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check">
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Ayam</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">500 gram</span>
+                </label>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check">
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Tempe</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">1 papan</span>
+                </label>
+            </div>
+
+            <!-- KATEGORI: SAYURAN -->
+            <div class="belanja-kategori flex flex-col gap-2">
+                <p class="font-jakarta font-bold text-caption kategori-label">SAYURAN</p>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check" checked>
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Daun Bawang</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">2 batang</span>
+                </label>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check">
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Bayam</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">1 ikat</span>
+                </label>
+            </div>
+
+            <!-- KATEGORI: BUMBU -->
+            <div class="belanja-kategori flex flex-col gap-2">
+                <p class="font-jakarta font-bold text-caption kategori-label">BUMBU</p>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check">
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Bawang Merah</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">50 gram</span>
+                </label>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check">
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Bawang Putih</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">30 gram</span>
+                </label>
+                <label class="belanja-item flex flex-row gap-3">
+                    <input type="checkbox" class="belanja-check">
+                    <span class="checkmark"></span>
+                    <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Cabai Merah</span>
+                    <span class="font-jakarta font-regular text-body text-primary-darker item-qty">5 buah</span>
+                </label>
+            </div>
+
+            <!-- BELUM DIBELI — paling bawah -->
+            <div class="belum-dibeli flex flex-row">
+                <p class="font-jakarta font-medium text-body text-primary-darker">Item belum dibeli</p>
+                <p class="font-jakarta font-bold text-body" style="color: #8C2A1A;">5 item</p>
+            </div>
+
+        </div>
+
+    </main>
+</body>
+
+</html>
