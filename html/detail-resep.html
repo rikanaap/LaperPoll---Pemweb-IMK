@@ -18,7 +18,7 @@
 
         <!-- Hero Section -->
         <section class="recipe-hero">
-            <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=800&q=80" alt="Roti Bakar Keju" class="hero-image">
+            <img src="https://images.unsplash.com/photo-1581574303858-f00f95088f7b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Roti Bakar Keju" class="hero-image">
             <div class="hero-overlay">
                 <span class="material-icons-round favorite-icon">favorite_border</span>
                 <span class="material-icons-round play-icon">play_circle_outline</span>
@@ -30,67 +30,70 @@
             </div>
         </section>
 
-        
-
         <!-- Bahan-bahan -->
-        <section>
-            <div class="sidebar-card">
+        <section class="sidebar-card flex-flex-col">
             <div class="sidebar-card-header">
-              <span class="sidebar-section-title">Bahan-bahan</span>
-              <button class="unit-toggle">
-                &#9878; Gram &#9660;
-              </button>
+              <span class="sidebar-section-title font-jakarta font-semibold">Bahan-bahan</span>
+              <div class="unit-toggle wrapper font-jakarta">
+                <span class="unit-icon">&#9878</span>
+                <select class="unit-select">
+                  <option value="gram">Gram</option>
+                  <option value="miligram">Miligram</option>
+                  <option value="kilogram">Kilogram</option>
+                </select>
+              </div>
             </div>
             <div class="chips-grid">
-              <div class="chip"><span class="amt">100g</span> Tepung Protein Tinggi</div>
-              <div class="chip"><span class="amt">23g</span> Tepung Terigu</div>
-              <div class="chip"><span class="amt">89g</span> Mentega</div>
-              <div class="chip"><span class="amt">78g</span> Keju Parut</div>
-              <div class="chip"><span class="amt">66g</span> Air</div>
-              <div class="chip"><span class="amt">20g</span> Telur</div>
-              <div class="chip"><span class="amt">45g</span> Kacang Almond</div>
-              <div class="chip"><span class="amt">60g</span> Madu</div>
-              <div class="chip"><span class="amt">12g</span> Coklat Bubuk</div>
-              <div class="chip"><span class="amt">34g</span> Susu Bubuk</div>
+              <div class="chip font-jakarta"><span class="amt">100g</span> Tepung Protein Tinggi</div>
+              <div class="chip font-jakarta"><span class="amt">23g</span> Tepung Terigu</div>
+              <div class="chip font-jakarta"><span class="amt">89g</span> Mentega</div>
+              <div class="chip font-jakarta"><span class="amt">78g</span> Keju Parut</div>
+              <div class="chip font-jakarta"><span class="amt">66g</span> Air</div>
+              <div class="chip font-jakarta"><span class="amt">20g</span> Telur</div>
+              <div class="chip-none font-jakarta"><span class="amt">45g</span> Kacang Almond</div>
+              <div class="chip-none font-jakarta"><span class="amt">60g</span> Madu</div>
+              <div class="chip font-jakarta"><span class="amt">12g</span> Coklat Bubuk</div>
+              <div class="chip-none font-jakarta"><span class="amt">34g</span> Susu Bubuk</div>
             </div>
         </section>
 
         <!-- Cara Membuat -->
-         <div class="steps-card">
-        <h2 class="section-title">Cara Membuat</h2>
- 
-        <div class="step-item">
-          <div class="step-num">1</div>
-          <div class="step-body">
-            <div class="step-title">Siapkan roti</div>
-            <p class="step-text">Oles roti dengan margarine di kedua sisinya secara merata. Pastikan seluruh permukaan roti terlapisi agar hasil panggang lebih sempurna dan tidak kering.</p>
+        <section>
+          <div class="steps-card">
+          <h2 class="section-title font-jakarta font-semibold">Cara Membuat</h2>
+          
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Siapkan roti</div>
+              <p class="step-text">Oles roti dengan margarine di kedua sisinya secara merata. Pastikan seluruh permukaan roti terlapisi agar hasil panggang lebih sempurna dan tidak kering.</p>
+            </div>
           </div>
-        </div>
- 
-        <div class="step-item">
-          <div class="step-num">2</div>
-          <div class="step-body">
-            <div class="step-title">Panggang roti</div>
-            <p class="step-text">Panaskan pan anti lengket di atas api sedang. Panggang roti di atas pan hingga kecoklatan di kedua sisinya. Ulangi hingga semua roti matang dengan warna yang merata.</p>
+        
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Panggang roti</div>
+              <p class="step-text">Panaskan pan anti lengket di atas api sedang. Panggang roti di atas pan hingga kecoklatan di kedua sisinya. Ulangi hingga semua roti matang dengan warna yang merata.</p>
+            </div>
           </div>
-        </div>
- 
-        <div class="step-item">
-          <div class="step-num">3</div>
-          <div class="step-body">
-            <div class="step-title">Tambahkan keju dan madu</div>
-            <p class="step-text">Taburi keju parut di atas roti yang masih panas, kemudian oleskan madu secukupnya untuk memberikan sentuhan manis yang alami dan aroma yang menggugah selera.</p>
+        
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Tambahkan keju dan madu</div>
+              <p class="step-text">Taburi keju parut di atas roti yang masih panas, kemudian oleskan madu secukupnya untuk memberikan sentuhan manis yang alami dan aroma yang menggugah selera.</p>
+            </div>
           </div>
-        </div>
- 
-        <div class="step-item">
-          <div class="step-num">4</div>
-          <div class="step-body">
-            <div class="step-title">Sajikan</div>
-            <p class="step-text">Pindahkan roti bakar ke piring saji. Taburi kembali dengan keju parut, hiasi dengan kacang almond yang dicincang kasar, serta taburan coklat bubuk dan susu bubuk di atasnya. Sajikan selagi hangat.</p>
+        
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Sajikan</div>
+              <p class="step-text">Pindahkan roti bakar ke piring saji. Taburi kembali dengan keju parut, hiasi dengan kacang almond yang dicincang kasar, serta taburan coklat bubuk dan susu bubuk di atasnya. Sajikan selagi hangat.</p>
+            </div>
           </div>
-        </div>
-
+        </section>
         <!-- Sticky Bottom Button -->
         
 
