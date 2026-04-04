@@ -13,8 +13,6 @@
 
 <body>
     <main class="main-content flex flex-col">
-
-        <!-- NAVBAR -->
         <nav class="navbar">
             <a href="meal-planner.html" class="back-btn">
                 <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
@@ -23,32 +21,27 @@
             <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
         </nav>
 
-        <!-- KONTEN UTAMA -->
         <div class="nota-konten flex flex-col gap-3">
-
-            <!-- HEADER CARD: judul + tanggal -->
             <div class="header-card flex flex-row">
                 <h1 class="font-jakarta font-bold text-h5" style="color: #8C2A1A;">Nota Belanja</h1>
                 <div class="nota-date flex flex-row gap-1">
                     <span class="material-icons-round" style="font-size:1rem; color: var(--orange-normal);">calendar_today</span>
-                    <p class="font-jakarta font-medium text-caption" style="color: var(--orange-normal);">Senin</p>
+                    <p class="font-jakarta font-medium text-caption" style="color: var(--orange-normal);">Senin, 7 Apr</p>
                 </div>
             </div>
 
-            <!-- PROGRESS CARD -->
             <div class="progress-card flex flex-col gap-2">
                 <div class="progress-header flex flex-row gap-2">
                     <span class="material-icons-round" style="font-size:1.2rem; color: var(--orange-normal);">shopping_cart</span>
                     <p class="font-jakarta font-bold text-title2 text-secondary-normal" style="flex:1;">Daftar Belanja</p>
-                    <p class="font-jakarta font-bold text-title2" style="color: #8C2A1A;">3/8 ✓</p>
+                    <p class="font-jakarta font-bold text-title2" style="color: #8C2A1A;">3/11 ✓</p>
                 </div>
                 <div class="progress-bar-track">
-                    <div class="progress-bar-fill" style="width: 37.5%;"></div>
+                    <div class="progress-bar-fill" style="width: 27.27%;"></div>
                 </div>
-                <p class="font-jakarta font-regular text-caption text-primary-darker" style="text-align:right;">37.5% selesai</p>
+                <p class="font-jakarta font-regular text-caption text-primary-darker" style="text-align:right;">27.27% selesai</p>
             </div>
 
-            <!-- KATEGORI: KARBOHIDRAT -->
             <div class="belanja-kategori flex flex-col gap-2">
                 <p class="font-jakarta font-bold text-caption kategori-label">KARBOHIDRAT</p>
                 <label class="belanja-item flex flex-row gap-3">
@@ -71,7 +64,6 @@
                 </label>
             </div>
 
-            <!-- KATEGORI: PROTEIN -->
             <div class="belanja-kategori flex flex-col gap-2">
                 <p class="font-jakarta font-bold text-caption kategori-label">PROTEIN</p>
                 <label class="belanja-item flex flex-row gap-3">
@@ -94,11 +86,10 @@
                 </label>
             </div>
 
-            <!-- KATEGORI: SAYURAN -->
             <div class="belanja-kategori flex flex-col gap-2">
                 <p class="font-jakarta font-bold text-caption kategori-label">SAYURAN</p>
                 <label class="belanja-item flex flex-row gap-3">
-                    <input type="checkbox" class="belanja-check" checked>
+                    <input type="checkbox" class="belanja-check" check>
                     <span class="checkmark"></span>
                     <span class="font-jakarta font-medium text-body text-secondary-normal item-nama">Daun Bawang</span>
                     <span class="font-jakarta font-regular text-body text-primary-darker item-qty">2 batang</span>
@@ -111,7 +102,6 @@
                 </label>
             </div>
 
-            <!-- KATEGORI: BUMBU -->
             <div class="belanja-kategori flex flex-col gap-2">
                 <p class="font-jakarta font-bold text-caption kategori-label">BUMBU</p>
                 <label class="belanja-item flex flex-row gap-3">
@@ -134,15 +124,11 @@
                 </label>
             </div>
 
-            <!-- BELUM DIBELI — paling bawah -->
             <div class="belum-dibeli flex flex-row">
                 <p class="font-jakarta font-medium text-body text-primary-darker">Item belum dibeli</p>
                 <p class="font-jakarta font-bold text-body" style="color: #8C2A1A;">5 item</p>
             </div>
-
         </div>
-
     </main>
 </body>
-
 </html>
