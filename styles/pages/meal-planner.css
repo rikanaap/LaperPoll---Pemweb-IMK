@@ -1,0 +1,203 @@
+.main-content {
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #FFF8F5;
+    padding-bottom: 6rem;
+    gap: 1rem;
+}
+
+.navbar {
+    background-color: #f4f5f7;
+    margin: 0 -0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.back-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.page-header {
+    background-color: #ffffff;
+    padding: 0.75rem 1rem;
+    margin: 0 -0.7rem;
+}
+
+
+.hari-tabs input[type="radio"] {
+    display: none;
+}
+
+.hari-labels {
+    gap: 0.4rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0.25rem;
+}
+
+.hari-labels::-webkit-scrollbar {
+    display: none;
+}
+
+.hari-label {
+    padding: 0.45rem 0.9rem;
+    border-radius: 2rem;
+    border: 1px solid var(--primary-normal-hover);
+    color: var(--secondary-normal);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.18s ease;
+    user-select: none;
+}
+
+.hari-label:hover {
+    background-color: var(--primary-normal);
+}
+
+#tab-sen:checked ~ .hari-labels label[for="tab-sen"],
+#tab-sel:checked ~ .hari-labels label[for="tab-sel"],
+#tab-rab:checked ~ .hari-labels label[for="tab-rab"],
+#tab-kam:checked ~ .hari-labels label[for="tab-kam"],
+#tab-jum:checked ~ .hari-labels label[for="tab-jum"],
+#tab-sab:checked ~ .hari-labels label[for="tab-sab"],
+#tab-min:checked ~ .hari-labels label[for="tab-min"] {
+    background-color: #8C2A1A;
+    color: #ffffff;
+    border-color: #8C2A1A;
+}
+
+.hari-content {
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+#tab-sen:checked ~ #content-sen,
+#tab-sel:checked ~ #content-sel,
+#tab-rab:checked ~ #content-rab,
+#tab-kam:checked ~ #content-kam,
+#tab-jum:checked ~ #content-jum,
+#tab-sab:checked ~ #content-sab,
+#tab-min:checked ~ #content-min {
+    display: flex;
+}
+
+.meal-section {
+    background-color: white;
+    border-radius: 1.25rem;
+    padding: 1rem;
+    border: 1px solid var(--primary-normal);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.meal-section-header {
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.meal-icon {
+    font-size: 1rem;
+    color: var(--orange-normal);
+}
+
+.meal-label {
+    flex: 1;
+    color: var(--orange-normal);
+    letter-spacing: 0.05em;
+}
+
+.meal-action {
+    color: #8C2A1A;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    font-size: 0.7rem;
+    transition: opacity 0.15s;
+}
+
+.meal-action:hover {
+    opacity: 0.7;
+}
+
+.meal-card {
+    align-items: center;
+}
+
+.meal-img-placeholder {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--primary-normal);
+    flex-shrink: 0;
+}
+
+.meal-info {
+    justify-content: center;
+}
+
+.generate-btn {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 1.4rem);
+    max-width: calc(var(--mobile-width) - 1.4rem);
+    background-color: var(--accent-normal);
+    color: white;
+    text-decoration: none;
+    border-radius: 2rem;
+    padding: 1rem 1.5rem;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 16px rgba(236, 68, 72, 0.35);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.generate-btn:hover {
+    background-color: var(--accent-normal-hover);
+    box-shadow: 0 6px 20px rgba(236, 68, 72, 0.45);
+}
+
+.generate-btn span.material-icons-round {
+    font-size: 1.3rem;
+}
+
+@media (min-width: 768px) {
+    .main-content {
+        max-width: 100%;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .navbar {
+        margin: 0 -2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .hari-content {
+        display: none;
+        display: none;
+    }
+
+    #tab-sen:checked ~ #content-sen,
+    #tab-sel:checked ~ #content-sel,
+    #tab-rab:checked ~ #content-rab,
+    #tab-kam:checked ~ #content-kam,
+    #tab-jum:checked ~ #content-jum,
+    #tab-sab:checked ~ #content-sab,
+    #tab-min:checked ~ #content-min {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .generate-btn {
+        max-width: 480px;
+    }
+}
