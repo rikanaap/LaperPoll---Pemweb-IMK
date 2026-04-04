@@ -227,6 +227,8 @@
 }
 
 .button{
+  display: flex;
+  gap: 8px;
   position: fixed;
   bottom: 1.25rem;
   left: 50%;
