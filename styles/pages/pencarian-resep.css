@@ -1,12 +1,14 @@
+/* MAIN */
 .main-content {
-    padding: 0rem 0.7rem;
+    padding: 0 0.7rem;
 }
 
+/* SEARCH INPUT */
 .input {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.81rem 0.70rem;
+    padding: 0.8rem 0.7rem;
     border-radius: 0.8rem;
     background-color: var(--orange-normal);
     text-decoration: none;
@@ -17,7 +19,7 @@
 }
 
 .input-data {
-    flex-grow: 1;
+    flex: 1;
     border: none;
     background: transparent;
     color: white;
@@ -66,24 +68,24 @@
 }
 
 .bahan-icon {
-    width: 3rem;
-    height: 3rem;
-    background-color: #FEE7C3;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 3rem;
+    height: 3rem;
     border-radius: 0.8rem;
+    background-color: #FEE7C3;
 }
 
 .bahan-icon span {
     color: var(--orange-normal);
 }
 
+/* DIVIDER "ATAU" */
 .horizontal-line {
     background-color: #D6D6D6;
 }
 
-/* text atau */
 .atau-text {
     color: #9E9E9E;
     transform: translateY(-1px);
@@ -106,6 +108,6 @@
     border-radius: 0.8rem;
     border: 1px solid #F2E2D9;
     color: var(--orange-normal);
-    cursor: pointer;
     text-decoration: none;
+    cursor: pointer;
 }

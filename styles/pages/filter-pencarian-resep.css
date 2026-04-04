@@ -1,12 +1,22 @@
+/* MAIN LAYOUT */
 .main-content {
-    padding: 0rem 0.7rem;
+    padding: 0 0.7rem;
 }
 
+/* TOP SECTION (sticky navbar + search + filter) */
+.top-section {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+}
+
+/* SEARCH INPUT */
 .input {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.81rem 0.70rem;
+    padding: 0.8rem 0.7rem;
     border-radius: 0.8rem;
     background-color: var(--orange-normal);
 }
@@ -16,7 +26,7 @@
 }
 
 .input-data {
-    flex-grow: 1;
+    flex: 1; /* lebih clean dari flex-grow */
     border: none;
     background: transparent;
     color: white;
@@ -30,39 +40,44 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
+/* FILTER CHIP */
 .filter-wrapper {
     display: flex;
     gap: 8px;
+    padding: 8px;
     flex-wrap: wrap;
 }
 
-/* CHIP BASE */
 .chip {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 12px;
+    padding: 6px 14px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 500;
+    white-space: nowrap;
 }
 
-/* CHIP OUTLINE */
-.chip-outline {
-    border: 1px solid #ddd;
-    color: #777;
+/* CHIP UTAMA */
+.chip-main {
+    background-color: var(--orange-normal);
+    color: white;
+}
+
+/* ANGKA DI CHIP */
+.chip-count {
+    background-color: white;
+    color: var(--orange-normal);
+    border-radius: 999px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* CHIP AKTIF */
+.chip-active {
+    border: 1px solid var(--orange-normal);
+    color: var(--orange-normal);
     background-color: white;
 }
-
-/* CHIP ACTIVE */
-.chip-active {
-    background-color: #FFF3E0;
-    color: var(--orange-normal);
-}
-
-/* ICON CLOSE */
-.chip-close {
-    font-size: 16px;
-    cursor: pointer;
-}
-
