@@ -151,7 +151,7 @@
 }
 
 .stars {
-    color: #EA580C; /* Warna oranye pekat */
+    color: #EA580C; 
     font-size: 16px;
     display: flex;
     gap: 3px;

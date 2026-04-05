@@ -51,11 +51,15 @@
                     <img src="../assets/Image_DummyProfile.png" alt="Author" class="author-avatar">
                 </div>
                 <div class="rating-section">
-                    <div class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <span class="rating-score">4.5</span>
+                <div class="stars">
+                    <span class="material-icons-round">star</span>
+                    <span class="material-icons-round">star</span>
+                    <span class="material-icons-round">star</span>
+                    <span class="material-icons-round">star</span>
+                    <span class="material-icons-round">star_half</span> 
                 </div>
+                <span class="rating-score">4.5</span>
+            </div>
             </div>
         </div>
 
@@ -134,43 +138,7 @@
         </div>
         </section>
 
-        <script>
-          
-
-          const dropdownSelect = document.querySelector('.unit-select');
-          const amountSpans = document.querySelectorAll('.amt');
-
-          amountSpans.forEach(span => {
-              const baseValue = parseFloat(span.innerText.replace('g', '').trim());
-              span.dataset.baseGram = baseValue; 
-          });
-        
-          dropdownSelect.addEventListener('change', function() {
-              const satuanPilihan = this.value;
-              amountSpans.forEach(span => {
-                  
-                  const baseGram = parseFloat(span.dataset.baseGram);
-                  let hasilHitung = 0;
-                  let simbolSatuan = '';
-      
-                  if (satuanPilihan === 'gram') {
-                    hasilHitung = baseGram;
-                    simbolSatuan = 'g';
-                  } else if (satuanPilihan === 'mililiter') {
-                    hasilHitung = baseGram; 
-                    simbolSatuan = 'ml';
-                  } else if (satuanPilihan === 'sendok_makan') {
-                     hasilHitung = baseGram / 15; 
-                     simbolSatuan = ' sdm';
-                  } else if (satuanPilihan === 'kilogram') {
-                    hasilHitung = baseGram / 1000;
-                    simbolSatuan = 'kg';
-                }
-
-                  span.innerText = `${hasilHitung}${simbolSatuan}`;
-              });
-          });
-      </script>
+        <script src="../js/detail-resep.js"></script>
     </main>
 </body>
 </html>
