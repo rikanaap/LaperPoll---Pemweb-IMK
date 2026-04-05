@@ -9,7 +9,7 @@
     <title>Laperpoll</title>
 </head>
 <body>
-    <main class="main-content flex flex-col">
+    <main class="main-content flex flex-col font-jakarta">
         <nav class="navbar">
             <span class="material-icons-round text-h4">arrow_back</span>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
@@ -28,6 +28,40 @@
                 <span class="dot"></span>
             </div>
         </section>
+        
+        <div class="recipe-header-container">
+            <div class="header-left">
+                <h1 class="recipe-title">Roti Bakar Keju</h1>
+                <div class="recipe-meta">
+                  <span class="meta-item">
+                    <span class="material-icons-round">timer</span> 15 mins
+                  </span>
+                  <span class="meta-item">
+                    <span class="material-icons-round">icecream</span> Dessert
+                  </span>
+            </div>
+            </div>
+          
+            <div class="header-right">
+                <div class="author-section">
+                    <div class="author-text">
+                        <span class="created-by font-jakarta">Dibuat oleh</span>
+                        <span class="author-username font-jakarta font-semibold">@RotiRoni</span>
+                    </div>
+                    <img src="../assets/Image_DummyProfile.png" alt="Author" class="author-avatar">
+                </div>
+                <div class="rating-section">
+                <div class="stars">
+                    <span class="material-icons-round">star</span>
+                    <span class="material-icons-round">star</span>
+                    <span class="material-icons-round">star</span>
+                    <span class="material-icons-round">star</span>
+                    <span class="material-icons-round">star_half</span> 
+                </div>
+                <span class="rating-score">4.5</span>
+            </div>
+            </div>
+        </div>
 
         <section class="sidebar-card flex-flex-col">
             <div class="sidebar-card-header">
@@ -94,53 +128,17 @@
         </section>
         
         <section>
+            <a href="timer-resep.html">
             <button class="button font-jakarta font-semibold ">
               Buat sekarang
-              <span class="material-icons-round ">arrow_forward</span>       
+            <span class="arrow-forward material-icons-round">arrow_forward</span>       
             </button>
+            </a>
           </div>
         </div>
         </section>
 
-        <script>
-          document.getElementById('button').addEventListener('click', () => {
-            window.location.href = 'timer-resep.html';
-          });
-
-          const dropdownSelect = document.querySelector('.unit-select');
-          const amountSpans = document.querySelectorAll('.amt');
-
-          amountSpans.forEach(span => {
-              const baseValue = parseFloat(span.innerText.replace('g', '').trim());
-              span.dataset.baseGram = baseValue; 
-          });
-        
-          dropdownSelect.addEventListener('change', function() {
-              const satuanPilihan = this.value;
-              amountSpans.forEach(span => {
-                  
-                  const baseGram = parseFloat(span.dataset.baseGram);
-                  let hasilHitung = 0;
-                  let simbolSatuan = '';
-      
-                  if (satuanPilihan === 'gram') {
-                    hasilHitung = baseGram;
-                    simbolSatuan = 'g';
-                  } else if (satuanPilihan === 'mililiter') {
-                    hasilHitung = baseGram; 
-                    simbolSatuan = 'ml';
-                  } else if (satuanPilihan === 'sendok_makan') {
-                     hasilHitung = baseGram / 15; 
-                     simbolSatuan = ' sdm';
-                  } else if (satuanPilihan === 'kilogram') {
-                    hasilHitung = baseGram / 1000;
-                    simbolSatuan = 'kg';
-                }
-
-                  span.innerText = `${hasilHitung}${simbolSatuan}`;
-              });
-          });
-      </script>
+        <script src="../js/detail-resep.js"></script>
     </main>
 </body>
 </html>

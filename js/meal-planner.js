@@ -71,9 +71,36 @@ function renderSemuaSlot() {
         btn.addEventListener("click", (e) => {
             const key = e.target.dataset.key;
             localStorage.removeItem(key);
-            renderSemuaSlot(); // re-render
+            renderSemuaSlot();
+            cekTombolGenerate();
         });
     });
 }
 
+function cekTombolGenerate() {
+    const generateBtn = document.querySelector(".generate-btn");
+
+    const activeTab = document.querySelector('input[name="hari"]:checked');
+    const hariAktif = activeTab.id.replace("tab-", "");
+
+    const adaData = ["sarapan", "siang", "malam"].some(waktu =>
+        localStorage.getItem(`meal_${hariAktif}-${waktu}`)
+    );
+
+    if (adaData) {
+        generateBtn.style.opacity = "1";
+        generateBtn.style.pointerEvents = "auto";
+    } else {
+        generateBtn.style.opacity = "0.5";
+        generateBtn.style.pointerEvents = "none";
+    }
+}
+
 renderSemuaSlot();
+cekTombolGenerate();
+
+document.querySelectorAll('input[name="hari"]').forEach(radio => {
+    radio.addEventListener("change", () => {
+        cekTombolGenerate();
+    });
+})

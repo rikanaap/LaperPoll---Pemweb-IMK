@@ -23,7 +23,7 @@
 
         <div class="form-wrapper flex flex-col gap-6">
             <div class="form-title flex flex-col gap-1">
-                <h1 class="font-jakarta font-bold text-h5" style="color: #8C2A1A;">Tambah Bahan</h1>
+                <h1 class="font-jakarta font-bold text-h5 kulkas-title">Tambah Bahan</h1>
                 <p class="font-jakarta font-regular text-body text-primary-darker">Isi detail bahan yang ingin kamu tambahkan ke kulkas.</p>
             </div>
 
@@ -32,23 +32,15 @@
                 <div class="search-wrapper">
                     <div class="input">
                         <span class="material-icons-round text-body text-primary-darker">search</span>
-                        <input
-                            id="searchBahan"
-                            class="input-data font-jakarta text-body"
-                            type="text"
-                            placeholder="Cari bahan..."
-                            autocomplete="off"
-                        />
-                        <span class="material-icons-round text-body text-primary-darker" id="clearSearch" style="cursor:pointer; display:none;">close</span>
+                        <input id="searchBahan" class="input-data font-jakarta text-body" type="text" placeholder="Cari bahan..." autocomplete="off"/>
+                        <span class="material-icons-round text-body text-primary-darker" id="clearSearch">close</span>
                     </div>
                     <ul class="bahan-dropdown flex flex-col" id="bahanDropdown" role="listbox" aria-label="Pilih bahan"></ul>
                 </div>
-
-                <div class="selected-bahan flex flex-row gap-2" id="selectedBahan" style="display:none !important;"></div>
             </div>
 
             <div class="form-row flex flex-row gap-3">
-                <div class="form-group flex flex-col gap-2" style="flex: 1;">
+                <div class="form-group flex flex-col gap-2 form-col">
                     <label class="font-jakarta font-semibold text-body text-secondary-normal" for="satuanBahan">Satuan</label>
                     <div class="input satuan-input">
                         <span class="material-icons-round text-body text-primary-darker">straighten</span>
@@ -56,24 +48,17 @@
                             <option value="" disabled selected>Pilih satuan</option>
                         </select>
                     </div>
-                    <p class="satuan-hint font-jakarta text-caption text-primary-darker" id="satuanHint" style="display:none;"></p>
+                    <p class="satuan-hint font-jakarta text-caption text-primary-darker" id="satuanHint"></p>
                 </div>
 
-                <div class="form-group flex flex-col gap-2" style="flex: 1;">
+                <div class="form-group flex flex-col gap-2 form-col">
                     <label class="font-jakarta font-semibold text-body text-secondary-normal" for="jumlahBahan">Jumlah</label>
                     <div class="input jumlah-input">
-                        <button class="jumlah-btn" id="btnMinus" aria-label="Kurang">
+                        <button class="jumlah-btn" id="btnMinus" aria-label="Kurang" type="button">
                             <span class="material-icons-round">remove</span>
                         </button>
-                        <input
-                            id="jumlahBahan"
-                            class="input-data font-jakarta text-body jumlah-field"
-                            type="number"
-                            min="1"
-                            value="1"
-                            placeholder="0"
-                        />
-                        <button class="jumlah-btn" id="btnPlus" aria-label="Tambah">
+                        <input id="jumlahBahan" class="input-data font-jakarta text-body jumlah-field" type="number" min="1" value="1"/>
+                        <button class="jumlah-btn" id="btnPlus" aria-label="Tambah" type="button">
                             <span class="material-icons-round">add</span>
                         </button>
                     </div>
@@ -82,191 +67,26 @@
 
             <div class="form-group flex flex-col gap-2">
                 <label class="font-jakarta font-semibold text-body text-secondary-normal" for="expiredDate">Tanggal Expired</label>
-                <div class="expired-options flex flex-row gap-2" id="expiredChips">
-                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="3">3 hari</button>
-                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="7">7 hari</button>
-                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="14">14 hari</button>
-                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="30">30 hari</button>
+                <div class="expired-options flex flex-row gap-2">
+                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="3" type="button">3 hari</button>
+                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="7" type="button">7 hari</button>
+                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="14" type="button">14 hari</button>
+                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="30" type="button">30 hari</button>
                 </div>
                 <div class="input">
                     <span class="material-icons-round text-body text-primary-darker">calendar_today</span>
-                    <input
-                        id="expiredDate"
-                        class="input-data font-jakarta text-body"
-                        type="date"
-                    />
+                    <input id="expiredDate" class="input-data font-jakarta text-body" type="date"/>
                 </div>
                 <p class="font-jakarta text-caption text-primary-darker">Pilih estimasi cepat atau atur tanggal manual.</p>
             </div>
 
-            <button class="input-submit font-jakarta font-semibold text-title2" id="btnTambahBahan">
+            <button class="input-submit font-jakarta font-semibold text-title2" id="btnTambahBahan" type="button">
                 Tambah Bahan
             </button>
 
         </div>
     </main>
 
-    <script>
-        const dataBahan = [
-            { nama: "Telur", satuan: ["butir", "gram"] },
-            { nama: "Susu", satuan: ["ml", "liter"] },
-            { nama: "Bawang Merah", satuan: ["gram", "kg", "siung"] },
-            { nama: "Bawang Putih", satuan: ["gram", "kg", "siung"] },
-            { nama: "Cabai Merah", satuan: ["gram", "buah"] },
-            { nama: "Cabai Rawit", satuan: ["gram", "buah"] },
-            { nama: "Tomat", satuan: ["gram", "buah"] },
-            { nama: "Kentang", satuan: ["gram", "kg", "buah"] },
-            { nama: "Wortel", satuan: ["gram", "kg", "buah"] },
-            { nama: "Bayam", satuan: ["gram", "ikat"] },
-            { nama: "Kangkung", satuan: ["gram", "ikat"] },
-            { nama: "Tahu", satuan: ["gram", "buah", "potong"] },
-            { nama: "Tempe", satuan: ["gram", "papan"] },
-            { nama: "Ayam", satuan: ["gram", "kg", "potong"] },
-            { nama: "Daging Sapi", satuan: ["gram", "kg"] },
-            { nama: "Ikan Lele", satuan: ["gram", "ekor"] },
-            { nama: "Udang", satuan: ["gram", "ekor"] },
-            { nama: "Tepung Terigu", satuan: ["gram", "kg"] },
-            { nama: "Gula Pasir", satuan: ["gram", "kg", "sdm"] },
-            { nama: "Garam", satuan: ["gram", "sdt", "sdm"] },
-            { nama: "Minyak Goreng", satuan: ["ml", "liter", "sdm"] },
-            { nama: "Kecap Manis", satuan: ["ml", "sdm"] },
-            { nama: "Saus Tiram", satuan: ["ml", "sdm"] },
-            { nama: "Mentega", satuan: ["gram", "sdm"] },
-            { nama: "Keju", satuan: ["gram"] },
-            { nama: "Nasi", satuan: ["gram", "porsi"] },
-            { nama: "Mie", satuan: ["gram", "bungkus"] },
-            { nama: "Jahe", satuan: ["gram", "ruas"] },
-            { nama: "Kunyit", satuan: ["gram", "ruas"] },
-            { nama: "Serai", satuan: ["gram", "batang"] },
-            { nama: "Daun Salam", satuan: ["lembar"] },
-            { nama: "Santan", satuan: ["ml", "liter"] },
-        ];
-
-        const searchInput   = document.getElementById('searchBahan');
-        const dropdown      = document.getElementById('bahanDropdown');
-        const clearBtn      = document.getElementById('clearSearch');
-        const satuanSelect  = document.getElementById('satuanBahan');
-        const satuanHint    = document.getElementById('satuanHint');
-        const jumlahInput   = document.getElementById('jumlahBahan');
-        const expiredInput  = document.getElementById('expiredDate');
-        const selectedDiv   = document.getElementById('selectedBahan');
-
-        let selectedBahan = null;
-
-        searchInput.addEventListener('input', () => {
-            const q = searchInput.value.trim().toLowerCase();
-            clearBtn.style.display = q ? 'block' : 'none';
-
-            if (!q) { dropdown.style.display = 'none'; return; }
-
-            const results = dataBahan.filter(b => b.nama.toLowerCase().includes(q));
-            renderDropdown(results);
-        });
-
-        clearBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            clearBtn.style.display = 'none';
-            dropdown.style.display = 'none';
-            resetSatuan();
-            selectedBahan = null;
-        });
-
-        function renderDropdown(results) {
-            dropdown.innerHTML = '';
-            if (!results.length) {
-                dropdown.innerHTML = '<li class="dropdown-empty font-jakarta text-caption text-primary-darker">Bahan tidak ditemukan</li>';
-                dropdown.style.display = 'block';
-                return;
-            }
-            results.forEach(b => {
-                const li = document.createElement('li');
-                li.className = 'dropdown-item font-jakarta text-body';
-                li.textContent = b.nama;
-                li.setAttribute('role', 'option');
-                li.addEventListener('click', () => selectBahan(b));
-                dropdown.appendChild(li);
-            });
-            dropdown.style.display = 'block';
-        }
-
-        function selectBahan(bahan) {
-            selectedBahan = bahan;
-            searchInput.value = bahan.nama;
-            dropdown.style.display = 'none';
-            clearBtn.style.display = 'block';
-            populateSatuan(bahan.satuan);
-        }
-
-        function populateSatuan(satuanList) {
-            satuanSelect.innerHTML = '';
-            satuanList.forEach((s, i) => {
-                const opt = document.createElement('option');
-                opt.value = s;
-                opt.textContent = s;
-                if (i === 0) opt.selected = true;
-                satuanSelect.appendChild(opt);
-            });
-            satuanHint.textContent = `Satuan tersedia: ${satuanList.join(', ')}`;
-            satuanHint.style.display = 'block';
-        }
-
-        function resetSatuan() {
-            satuanSelect.innerHTML = '<option value="" disabled selected>Pilih satuan</option>';
-            satuanHint.style.display = 'none';
-        }
-
-        document.getElementById('btnPlus').addEventListener('click', () => {
-            jumlahInput.value = parseInt(jumlahInput.value || 0) + 1;
-        });
-        document.getElementById('btnMinus').addEventListener('click', () => {
-            const val = parseInt(jumlahInput.value || 1);
-            if (val > 1) jumlahInput.value = val - 1;
-        });
-
-        document.querySelectorAll('.expired-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('.expired-chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                const days = parseInt(chip.dataset.days);
-                const d = new Date();
-                d.setDate(d.getDate() + days);
-                expiredInput.value = d.toISOString().split('T')[0];
-            });
-        });
-
-        expiredInput.min = new Date().toISOString().split('T')[0];
-
-        document.getElementById('btnTambahBahan').addEventListener('click', () => {
-            if (!selectedBahan) {
-                alert('Pilih nama bahan terlebih dahulu!');
-                return;
-            }
-            if (!satuanSelect.value) {
-                alert('Pilih satuan terlebih dahulu!');
-                return;
-            }
-            if (!jumlahInput.value || jumlahInput.value < 1) {
-                alert('Masukkan jumlah yang valid!');
-                return;
-            }
-            if (!expiredInput.value) {
-                alert('Pilih tanggal expired terlebih dahulu!');
-                return;
-            }
-
-            const today = new Date();
-            const exp = new Date(expiredInput.value);
-            const diffDays = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
-
-            alert(`Bahan berhasil ditambahkan!\n\n${selectedBahan.nama} — ${jumlahInput.value} ${satuanSelect.value}\nExpired: ${diffDays} hari lagi`);
-            window.location.href = 'kulkas-digital.html';
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.search-wrapper')) {
-                dropdown.style.display = 'none';
-            }
-        });
-    </script>
+    <script src="../js/tambah-bahan.js"></script>
 </body>
 </html>

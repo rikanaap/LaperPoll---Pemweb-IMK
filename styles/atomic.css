@@ -92,6 +92,7 @@ input::-ms-clear {
 
 .resep-menus {
     display: flex;
+    height: 100vh;
     align-self: stretch;
     gap: 0.6rem;
     flex-shrink: 0;

@@ -35,4 +35,7 @@
     .bottom-menus > .input{
         display: flex;
     }
+    .bottom-text{
+        display: none;
+    }
 }
