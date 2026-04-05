@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/atomic.css">
+    <link rel="stylesheet" href="../styles/pages/profile.css">
+    <link rel="stylesheet" href="../styles/media.css">
+    <title>Laperpoll - Profile</title>
+</head>
+
+<body class="font-jakarta">
+    <main class="main-content flex flex-col">
+        <nav class="navbar">
+            <a href="main-menu.html" class="back-btn">
+                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+            </a>
+            <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
+            <button class="upload-resep-btn flex flex-row gap-1">
+                <span class="material-icons-round" style="font-size: 1rem;">add</span>
+                <span class="font-jakarta font-semibold text-caption">Upload Resep</span>
+            </button>
+        </nav>
+
+        <section class="profile-section flex flex-col gap-4">
+            <div class="profile-top flex flex-row gap-3">
+                <div class="avatar-wrapper">
+                    <img src="../assets/Image_DummyProfile.png" alt="Foto Profil" class="avatar">
+                </div>
+                <div class="profile-info flex flex-col gap-1">
+                    <h1 class="font-jakarta font-bold text-title1 text-secondary-normal">Chef Moni</h1>
+                    <p class="font-jakarta font-regular text-body text-primary-darker">@masterchefmoni</p>
+                </div>
+                <button class="edit-btn" aria-label="Edit profil">
+                    <span class="material-icons-round">edit</span>
+                </button>
+            </div>
+
+            <div class="profile-stats flex flex-row">
+                <div class="stat-item flex flex-col gap-1">
+                    <p class="font-jakarta font-bold text-title1 text-secondary-normal">4</p>
+                    <p class="font-jakarta font-regular text-caption text-primary-darker">Resep</p>
+                </div>
+                <div class="stat-divider"></div>
+                <a href="koneksi.html?tab=pengikut" class="stat-item flex flex-col gap-1 stat-link">
+                    <p class="font-jakarta font-bold text-title1 text-secondary-normal">2,4 rb</p>
+                    <p class="font-jakarta font-regular text-caption text-primary-darker">Pengikut</p>
+                </a>
+                <div class="stat-divider"></div>
+                <a href="koneksi.html?tab=mengikuti" class="stat-item flex flex-col gap-1 stat-link">
+                    <p class="font-jakarta font-bold text-title1 text-secondary-normal">87</p>
+                    <p class="font-jakarta font-regular text-caption text-primary-darker">Mengikuti</p>
+                </a>
+            </div>
+
+        </section>
+
+        <section class="resep-grid-section flex flex-col gap-3">
+
+            <div class="resep-card-grid">
+                <div class="resep-card">
+                    <div class="resep-card-header flex flex-row gap-2">
+                        <div class="resep-card-avatar">CM</div>
+                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
+                        <span class="material-icons-round verified-icon">check_circle</span>
+                    </div>
+                    <div class="resep-card-img">
+                        <span class="material-icons-round resep-card-emoji">lunch_dining</span>
+                    </div>
+                    <div class="resep-card-info flex flex-col gap-1">
+                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Rendang Daging Sapi</p>
+                        <div class="resep-card-meta flex flex-row gap-3">
+                            <span class="meta-item font-jakarta text-caption">⭐ 5.0</span>
+                            <span class="meta-item font-jakarta text-caption">🕐 90 mnt</span>
+                        </div>
+                        <div class="resep-card-footer flex flex-row">
+                            <span class="font-jakarta text-caption text-primary-darker">👁 312</span>
+                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resep-card">
+                    <div class="resep-card-header flex flex-row gap-2">
+                        <div class="resep-card-avatar">CM</div>
+                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
+                        <span class="material-icons-round verified-icon">check_circle</span>
+                    </div>
+                    <div class="resep-card-img">
+                        <span class="material-icons-round resep-card-emoji">eco</span>
+                    </div>
+                    <div class="resep-card-info flex flex-col gap-1">
+                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Gado-Gado Spesial</p>
+                        <div class="resep-card-meta flex flex-row gap-3">
+                            <span class="meta-item font-jakarta text-caption">⭐ 4.8</span>
+                            <span class="meta-item font-jakarta text-caption">🕐 30 mnt</span>
+                        </div>
+                        <div class="resep-card-footer flex flex-row">
+                            <span class="font-jakarta text-caption text-primary-darker">👁 189</span>
+                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resep-card">
+                    <div class="resep-card-header flex flex-row gap-2">
+                        <div class="resep-card-avatar">CM</div>
+                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
+                        <span class="material-icons-round verified-icon">check_circle</span>
+                    </div>
+                    <div class="resep-card-img">
+                        <span class="material-icons-round resep-card-emoji">ramen_dining</span>
+                    </div>
+                    <div class="resep-card-info flex flex-col gap-1">
+                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Soto Ayam Lamongan</p>
+                        <div class="resep-card-meta flex flex-row gap-3">
+                            <span class="meta-item font-jakarta text-caption">⭐ 5.0</span>
+                            <span class="meta-item font-jakarta text-caption">🕐 60 mnt</span>
+                        </div>
+                        <div class="resep-card-footer flex flex-row">
+                            <span class="font-jakarta text-caption text-primary-darker">👁 445</span>
+                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resep-card">
+                    <div class="resep-card-header flex flex-row gap-2">
+                        <div class="resep-card-avatar">CM</div>
+                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
+                        <span class="material-icons-round verified-icon">check_circle</span>
+                    </div>
+                    <div class="resep-card-img">
+                        <span class="material-icons-round resep-card-emoji">cake</span>
+                    </div>
+                    <div class="resep-card-info flex flex-col gap-1">
+                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Bolu Kukus Pelangi</p>
+                        <div class="resep-card-meta flex flex-row gap-3">
+                            <span class="meta-item font-jakarta text-caption">⭐ 4.9</span>
+                            <span class="meta-item font-jakarta text-caption">🕐 45 mnt</span>
+                        </div>
+                        <div class="resep-card-footer flex flex-row">
+                            <span class="font-jakarta text-caption text-primary-darker">👁 98</span>
+                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resep-card">
+                    <div class="resep-card-header flex flex-row gap-2">
+                        <div class="resep-card-avatar ">CM</div>
+                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
+                        <span class="material-icons-round verified-icon">check_circle</span>
+                    </div>
+                    <div class="resep-card-img">
+                        <span class="material-icons-round resep-card-emoji">rice_bowl</span>
+                    </div>
+                    <div class="resep-card-info flex flex-col gap-1">
+                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Nasi Goreng Kampung</p>
+                        <div class="resep-card-meta flex flex-row gap-3">
+                            <span class="meta-item font-jakarta text-caption">⭐ 4.7</span>
+                            <span class="meta-item font-jakarta text-caption">🕐 20 mnt</span>
+                        </div>
+                        <div class="resep-card-footer flex flex-row">
+                            <span class="font-jakarta text-caption text-primary-darker">👁 203</span>
+                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resep-card">
+                    <div class="resep-card-header flex flex-row gap-2">
+                        <div class="resep-card-avatar ">CM</div>
+                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
+                        <span class="material-icons-round verified-icon">check_circle</span>
+                    </div>
+                    <div class="resep-card-img">
+                        <span class="material-icons-round resep-card-emoji">breakfast_dining</span>
+                    </div>
+                    <div class="resep-card-info flex flex-col gap-1">
+                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Pancake Coklat</p>
+                        <div class="resep-card-meta flex flex-row gap-3">
+                            <span class="meta-item font-jakarta text-caption">⭐ 4.6</span>
+                            <span class="meta-item font-jakarta text-caption">🕐 25 mnt</span>
+                        </div>
+                        <div class="resep-card-footer flex flex-row">
+                            <span class="font-jakarta text-caption text-primary-darker">👁 157</span>
+                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <div class="fab-overlay" id="fabOverlay"></div>
+
+    <div class="fab-container" id="fabContainer">
+        <div class="fab-menu" id="fabMenu">
+            <a href="kulkas-digital.html" class="fab-item flex flex-row gap-3">
+                <span class="fab-item-label font-jakarta font-semibold text-body">Kulkas Digital</span>
+                <div class="fab-item-icon">
+                    <span class="material-icons-round">kitchen</span>
+                </div>
+            </a>
+            <a href="nota-belanja.html" class="fab-item flex flex-row gap-3">
+                <span class="fab-item-label font-jakarta font-semibold text-body">Nota Belanja</span>
+                <div class="fab-item-icon">
+                    <span class="material-icons-round">receipt_long</span>
+                </div>
+            </a>
+            <a href="meal-planner.html" class="fab-item flex flex-row gap-3">
+                <span class="fab-item-label font-jakarta font-semibold text-body">Meal Planner</span>
+                <div class="fab-item-icon">
+                    <span class="material-icons-round">calendar_month</span>
+                </div>
+            </a>
+        </div>
+
+        <button class="fab-btn" id="fabBtn" aria-label="Menu">
+            <span class="material-icons-round fab-icon" id="fabIcon">add</span>
+        </button>
+
+    </div>
+
+    <script src="../js/profile.js"></script>
+</body>
+</html>
