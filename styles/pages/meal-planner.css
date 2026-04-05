@@ -21,11 +21,8 @@
 }
 
 .page-header {
-    background-color: #ffffff;
-    padding: 0.75rem 1rem;
-    margin: 0 -0.7rem;
+    padding: 0 0.25rem;
 }
-
 
 .hari-tabs input[type="radio"] {
     display: none;
@@ -115,9 +112,14 @@
 .meal-action {
     color: #8C2A1A;
     text-decoration: none;
-    letter-spacing: 0.03em;
     font-size: 0.7rem;
     transition: opacity 0.15s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-jakarta);
+    font-weight: 700;
+    letter-spacing: 0.03em;
 }
 
 .meal-action:hover {
@@ -140,6 +142,30 @@
     justify-content: center;
 }
 
+.slot-kosong {
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    border: 1.5px dashed var(--primary-normal-hover);
+    text-decoration: none;
+    transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.slot-kosong:hover {
+    border-color: #8C2A1A;
+    background-color: var(--orange-light);
+}
+
+.slot-kosong-icon {
+    font-size: 1.5rem;
+    color: var(--primary-darker);
+}
+
+.slot-kosong:hover .slot-kosong-icon {
+    color: #8C2A1A;
+}
+
 .generate-btn {
     position: fixed;
     bottom: 1.25rem;
@@ -155,12 +181,11 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 4px 16px rgba(236, 68, 72, 0.35);
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
 .generate-btn:hover {
     background-color: var(--accent-normal-hover);
-    box-shadow: 0 6px 20px rgba(236, 68, 72, 0.45);
 }
 
 .generate-btn span.material-icons-round {
@@ -169,7 +194,6 @@
 
 @media (min-width: 768px) {
     .main-content {
-        max-width: 100%;
         padding-left: 2rem;
         padding-right: 2rem;
     }
@@ -178,11 +202,6 @@
         margin: 0 -2rem;
         padding-left: 2rem;
         padding-right: 2rem;
-    }
-
-    .hari-content {
-        display: none;
-        display: none;
     }
 
     #tab-sen:checked ~ #content-sen,

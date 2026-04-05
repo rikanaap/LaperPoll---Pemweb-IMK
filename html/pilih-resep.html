@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/atomic.css">
+    <link rel="stylesheet" href="../styles/pages/pilih-resep.css">
+    <link rel="icon" href="../assets/Logo_Laperpoll.png">
+    <title>Laperpoll - Pilih Resep</title>
+</head>
+
+<body class="font-jakarta">
+    <main class="main-content flex flex-col gap-4">
+
+        <nav class="navbar">
+            <a href="meal-planner.html" class="back-btn" aria-label="Kembali">
+                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+            </a>
+            <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+        </nav>
+
+        <div class="slot-info flex flex-col gap-1">
+            <h1 class="font-jakarta font-bold text-h5" style="color: #8C2A1A;">Pilih Resep</h1>
+            <p class="font-jakarta font-regular text-body text-primary-darker" id="slotLabel">Memilih untuk...</p>
+        </div>
+
+        <div class="input">
+            <span class="material-icons-round">search</span>
+            <input type="text" class="input-data" placeholder="Cari nama resep..." id="searchResep">
+        </div>
+
+        <section class="resep-menus" id="resepList"></section>
+
+    </main>
+    <script src="../js/pilih-resep.js"></script>
+</body>
+
+</html>
