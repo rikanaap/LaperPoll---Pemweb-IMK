@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/atomic.css">
+    <link rel="stylesheet" href="../styles/pages/edit-profile.css">
+    <link rel="icon" href="../assets/Logo_Laperpoll.png">
+    <title>Laperpoll</title>
+</head>
+<body>
+    <main class="main-content flex flex-col font-jakarta">
+        <nav class="navbar">
+            <span class="material-icons-round text-h4">arrow_back</span>
+            <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
+        </nav>
+
+        <div class="mobile-container">
+        <div class="header">
+            <div style="width: 24px;"></div>
+        </div>  
+
+        <div class="avatar-section">
+            <div class="avatar-wrapper">
+                <img src="https://via.placeholder.com/100" alt="Avatar" class="avatar-img" id="avatarPreview">
+                
+                <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
+                
+                <label for="photoInput" class="edit-photo-btn">
+                    &#9998; </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="namaLengkap">Nama Lengkap</label>
+                    <input type="text" id="namaLengkap" class="form-control" placeholder="Nama Lengkap" value="Chef Moni Ganteng">
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Username" value="@masterchefmoni">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Email" value="mastermoni@gmail.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Password" value="********">
+                </div>
+            </form>
+        </div>
+
+        <div class="button-section">
+            <button type="submit" form="editProfileForm" class="update-btn">Update</button>
+        </div>
+    </div>
+    </main>
+</body>
+</html>

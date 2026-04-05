@@ -1,0 +1,128 @@
+        /* HEADER */
+        .header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .back-arrow {
+            font-size: 24px;
+            color: #ff5722;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo {
+            font-family: 'Verdana', sans-serif; 
+            font-weight: bold;
+            font-size: 20px;
+            color: #d84315;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+   
+        .avatar-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+
+        
+        .edit-photo-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: #ff5722;
+            font-size: 16px;
+        }
+
+    
+        #photoInput {
+            display: none;
+        }
+
+       
+        .form-section {
+            padding: 0 25px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            margin-left: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ff5722;
+            background-color: #fff;
+        }
+
+ 
+        .button-section {
+            padding: 20px 25px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .update-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff5722; 
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .update-btn:hover {
+            background-color: #e64a19;
+        } 
