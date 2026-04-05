@@ -1,10 +1,12 @@
 .main-content {
     padding: 0rem 0.7rem;
+    gap: 0.2rem;
 }
 
 .bottom-menus {
     display: flex;
     position: sticky;
+    align-items: end;
     bottom: 0;
     padding: 1rem 0.6rem;
     flex-direction: column;
@@ -66,4 +68,18 @@
     gap: 0.6rem;
     border-radius: 0.2rem;
     background-color: var(--orange-normal);
+}
+
+.bottom-menus > .input{
+    display: none;
+    background-color: var(--orange-light-active);
+}
+.bottom-menus > .input > span {
+    color: var(--orange-normal);
+}
+.bottom-menus > .input > .input-data  {
+    color: var(--orange-normal-active);
+}
+.bottom-menus > .input > .input-data::placeholder  {
+    color: var(--orange-normal);
 }

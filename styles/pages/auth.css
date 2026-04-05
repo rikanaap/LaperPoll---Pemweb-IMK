@@ -15,7 +15,6 @@
 
 .form {
     background-color: white;
-    width: 400px;
     padding: 1.25rem 1.8rem 2.5rem 1.8rem;
     align-items: flex-start;
     gap: 1.5rem;
@@ -92,3 +91,41 @@
     height: 2px;
     background-color: #555;
 }
+
+.input-token {
+    letter-spacing: 2.5em;
+    padding-left: 0.5rem;
+    text-transform: uppercase;
+}
+
+.otp-container {
+    display: flex;
+    gap: 12px; /* Jarak antar garis */
+    align-items: center;
+}
+
+.otp-container > input{
+    text-transform: uppercase;
+}
+
+.otp-input {
+    width: 30px;
+    height: 40px;
+    text-align: center;
+    font-family: 'Jakarta Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+    /* Ini yang membuat tampilan garis bawah */
+    border-bottom: 2px solid #757575; 
+    outline: none;
+    transition: all 0.2s;
+    color: #212121;
+}
+
+/* Highlight saat input sedang diisi */
+.otp-input:focus {
+    color: var(--secondary-normal);
+}
+

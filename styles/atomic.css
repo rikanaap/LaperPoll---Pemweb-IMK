@@ -51,6 +51,7 @@ input::-ms-clear {
     align-items: center;
     padding: 0.9rem 0;
     align-self: stretch;
+    border: none;
     border-radius: 0.75rem;
 }
 
@@ -74,6 +75,8 @@ input::-ms-clear {
 
 .navbar>span {
     color: var(--accent-normal);
+    cursor: pointer;
+    user-select: none;
 }
 
 .navbar>.logo {
