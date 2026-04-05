@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/atomic.css">
     <link rel="stylesheet" href="../styles/pages/pencarian-resep.css">
@@ -12,34 +13,43 @@
 </head>
 
 <body class="font-jakarta">
+
 <main class="main-content flex flex-col gap-4">
+
     <!-- NAVBAR -->
     <nav class="navbar">
         <a href="main-menu.html" class="back-btn" aria-label="Kembali">
-                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+            <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
         </a>
         <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
         <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
     </nav>
 
-    <!-- SEARCH INPUT -->
-    <a href="filter-pencarian-resep.html" class="input">
+    <!-- SEARCH -->
+    <div class="input" id="searchWrapper">
         <span class="material-icons-round">search</span>
-        <input type="text" class="input-data" placeholder="Cari Bahan / Nama Resep">
-    </a>
+        <input 
+            type="text" 
+            id="searchInput"
+            class="input-data" 
+            placeholder="Cari Bahan / Nama Resep"
+        >
+    </div>
 
     <!-- TITLE -->
     <p class="text-body font-medium">Bahan Populer Minggu Ini</p>
 
-    <!-- LIST BAHAN -->
-    <div class="bahan-wrapper">
+     <!-- LIST BAHAN -->
+    <section class="bahan-wrapper">
         <div class="bahan-list flex flex-col gap-3">
+
+            <!-- ITEM -->
             <div class="bahan-item">
                 <div class="bahan-left">
                     <div class="bahan-icon">
                         <span class="material-icons-round">restaurant</span>
                     </div>
-                    <span>Mie</span>
+                    <span class="bahan-nama">Mie</span>
                 </div>
                 <input type="checkbox">
             </div>
@@ -49,7 +59,7 @@
                     <div class="bahan-icon">
                         <span class="material-icons-round">restaurant</span>
                     </div>
-                    <span>Ayam</span>
+                    <span class="bahan-nama">Ayam</span>
                 </div>
                 <input type="checkbox">
             </div>
@@ -59,7 +69,7 @@
                     <div class="bahan-icon">
                         <span class="material-icons-round">restaurant</span>
                     </div>
-                    <span>Coklat</span>
+                    <span class="bahan-nama">Coklat</span>
                 </div>
                 <input type="checkbox">
             </div>
@@ -69,7 +79,7 @@
                     <div class="bahan-icon">
                         <span class="material-icons-round">restaurant</span>
                     </div>
-                    <span>Telur</span>
+                    <span class="bahan-nama">Telur</span>
                 </div>
                 <input type="checkbox">
             </div>
@@ -79,36 +89,35 @@
                     <div class="bahan-icon">
                         <span class="material-icons-round">restaurant</span>
                     </div>
-                    <span>Nasi</span>
+                    <span class="bahan-nama">Sapi</span>
                 </div>
                 <input type="checkbox">
             </div>
 
         </div>
-    </div>
+    </section>
     
-    <!-- tombol terapkan  -->
-     <button id="terapkanBtn" class="terapkan-btn">
+    <!-- BUTTON TERAPKAN -->
+    <button id="terapkanBtn" class="terapkan-btn">
         Terapkan
     </button>
 
-    <!-- Line Atau -->
+    <!-- DIVIDER -->
     <div class="flex flex-row gap-2 items-center">
-        <div class="horizontal-line"></div>
+        <div class="horizontal-line flex-1"></div>
         <span class="text-caption atau-text">Atau</span>
-        <div class="horizontal-line"></div>
+        <div class="horizontal-line flex-1"></div>
     </div>
-    
 
-    <!-- BUTTON SWIPE -->
+    <!-- SWIPE BUTTON -->
     <a href="swipe-resep.html" class="swipe-btn">
-    <span class="material-icons-round">swap_horiz</span>
-    <span>Swipe Untuk Mencari</span>
+        <span class="material-icons-round">swap_horiz</span>
+        <span>Swipe Untuk Mencari</span>
     </a>
-
 
 </main>
 
 <script src="../scripts/pages/pencarian-resep.js"></script>
+
 </body>
 </html>

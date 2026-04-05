@@ -1,9 +1,7 @@
-/* MAIN LAYOUT */
 .main-content {
     padding: 0 0.7rem;
 }
 
-/* TOP SECTION (sticky navbar + search + filter) */
 .top-section {
     position: sticky;
     top: 0;
@@ -11,7 +9,6 @@
     background: white;
 }
 
-/* SEARCH INPUT */
 .input {
     display: flex;
     align-items: center;
@@ -26,7 +23,7 @@
 }
 
 .input-data {
-    flex: 1; /* lebih clean dari flex-grow */
+    flex: 1; 
     border: none;
     background: transparent;
     color: white;
@@ -40,11 +37,10 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* FILTER CHIP */
 .filter-wrapper {
     display: flex;
     gap: 8px;
-    padding: 8px;
+    padding: 8px 0;
     flex-wrap: wrap;
 }
 
@@ -59,13 +55,11 @@
     white-space: nowrap;
 }
 
-/* CHIP UTAMA */
 .chip-main {
     background-color: var(--orange-normal);
     color: white;
 }
 
-/* ANGKA DI CHIP */
 .chip-count {
     background-color: white;
     color: var(--orange-normal);
@@ -75,9 +69,26 @@
     font-weight: bold;
 }
 
-/* CHIP AKTIF */
 .chip-active {
     border: 1px solid var(--orange-normal);
     color: var(--orange-normal);
     background-color: white;
+}
+
+.resep-menus {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+@media (min-width: 768px){
+    .resep-menus{
+        display: grid;
+        column-gap: 1rem;
+        grid-template-columns: repeat(3, 1fr);
+        height: fit-content;
+    }
+    .resep{
+        max-width: 100%;
+    }
 }

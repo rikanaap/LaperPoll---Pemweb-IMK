@@ -1,11 +1,4 @@
 
-// <button id="dislike">
-// <span class="material-icons-round">close</span>
-// </button>
-// <button id="like">
-// <span class="material-icons-round">favorite</span>
-// </button>
-
 //mengambil id "like" dan "dislike"
 
 const likeBtn = document.getElementById("like");

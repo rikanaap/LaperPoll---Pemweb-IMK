@@ -1,9 +1,7 @@
-/* MAIN */
 .main-content {
     padding: 0 0.7rem;
 }
 
-/* SEARCH INPUT */
 .input {
     display: flex;
     align-items: center;
@@ -11,10 +9,10 @@
     padding: 0.8rem 0.7rem;
     border-radius: 0.8rem;
     background-color: var(--orange-normal);
-    text-decoration: none;
+    cursor: pointer;
 }
 
-.input span {   
+.input span {
     color: white;
 }
 
@@ -23,6 +21,7 @@
     border: none;
     background: transparent;
     color: white;
+    cursor: pointer;
 }
 
 .input-data:focus {
@@ -33,14 +32,12 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* SCROLL AREA */
 .bahan-wrapper {
     max-height: 250px;
     overflow-y: auto;
     padding-right: 4px;
 }
 
-/* SCROLLBAR */
 .bahan-wrapper::-webkit-scrollbar {
     width: 4px;
 }
@@ -50,7 +47,6 @@
     border-radius: 10px;
 }
 
-/* LIST ITEM */
 .bahan-item {
     display: flex;
     justify-content: space-between;
@@ -81,24 +77,21 @@
     color: var(--orange-normal);
 }
 
-/* DIVIDER "ATAU" */
-.horizontal-line {
-    background-color: #D6D6D6;
-}
-
-.atau-text {
-    color: #9E9E9E;
-    transform: translateY(-1px);
-}
-
-/* CHECKBOX */
 .bahan-item input[type="checkbox"] {
     width: 18px;
     height: 18px;
     accent-color: var(--orange-normal);
 }
 
-/* SWIPE BUTTON */
+.horizontal-line {
+    height: 1px;
+    background-color: #D6D6D6;
+}
+
+.atau-text {
+    color: #9E9E9E;
+}
+
 .swipe-btn {
     display: flex;
     justify-content: center;
@@ -108,14 +101,13 @@
     border-radius: 0.8rem;
     border: 1px solid #F2E2D9;
     text-decoration: none;
-    cursor: pointer;
 }
 
 .swipe-btn span {
     color: var(--orange-normal);
 }
 
-.terapkan-btn{
+.terapkan-btn {
     width: 100%;
     padding: 14px;
     border-radius: 12px;
@@ -123,5 +115,5 @@
     background-color: var(--orange-normal);
     color: white;
     font-weight: 600;
-    display: none; 
+    display: none;
 }

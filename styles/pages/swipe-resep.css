@@ -1,9 +1,7 @@
-/* MAIN */
 .main-content {
     padding: 0 0.7rem;
 }
 
-/* CONTAINER */
 .swipe-container {
     margin-top: 1rem;
     display: flex;
@@ -11,14 +9,12 @@
     align-items: center;
 }
 
-/* CARD WRAPPER */
 .swipe-cards {
     position: relative;
     width: 260px;
     height: 360px;
 }
 
-/* CARD */
 .swipe-card {
     position: absolute;
     width: 100%;
@@ -37,7 +33,6 @@
     transition: 0.3s ease;
 }
 
-/* STACK POSITION */
 .swipe-card:nth-last-child(1) {
     transform: translateY(0) scale(1);
     z-index: 3;
@@ -58,7 +53,6 @@
     z-index: 0;
 }
 
-/* CARD COLORS */
 .swipe-card:nth-child(1) { background: #5B79F2; }
 .swipe-card:nth-child(2) { background: #DB6868; }
 .swipe-card:nth-child(3) { background: #F0D53C; }
@@ -104,7 +98,6 @@
     transform: scale(0.9);
 }
 
-/* BUTTON VARIANT */
 #like {
     background: #ffe5e5;
 }
