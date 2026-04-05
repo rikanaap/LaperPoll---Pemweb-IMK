@@ -1,6 +1,5 @@
 .main-content {
     max-width: 100%;
-    padding: 0rem 0.7rem;
     margin: 0 auto;
     min-height: 100vh;
     padding-bottom: 2rem;
@@ -23,8 +22,8 @@
     margin: 0 -0.7rem;
 }
 
-css.kulkas-header h1 {
-    color: var(--kulkas-title);
+.kulkas-title {
+    color: #8C2A1A;
 }
 
 .kulkas-add-btn {
@@ -45,13 +44,8 @@ css.kulkas-header h1 {
     font-size: 1.4rem;
 }
 
-.kulkas-add-btn:hover {
-    background-color: var(--orange-light-hover);
-}
-
-.kulkas-add-btn:active {
-    background-color: var(--orange-light-active);
-}
+.kulkas-add-btn:hover { background-color: var(--orange-light-hover); }
+.kulkas-add-btn:active { background-color: var(--orange-light-active); }
 
 .filter-tabs {
     gap: 0.5rem;
@@ -61,9 +55,7 @@ css.kulkas-header h1 {
     scrollbar-width: none;
 }
 
-.filter-tabs::-webkit-scrollbar {
-    display: none;
-}
+.filter-tabs::-webkit-scrollbar { display: none; }
 
 .filter-tab {
     padding: 0.45rem 1rem;
@@ -76,14 +68,12 @@ css.kulkas-header h1 {
     transition: all 0.18s ease;
 }
 
-.filter-tab:hover {
-    background-color: var(--primary-normal);
-}
+.filter-tab:hover { background-color: var(--primary-normal); }
 
 .filter-tab.active {
-    background-color: #8c2a1a;
+    background-color: #8C2A1A;
     color: var(--primary-light);
-    border-color: #8c2a1a;
+    border-color: #8C2A1A;
 }
 
 .bahan-grid {
@@ -106,9 +96,7 @@ css.kulkas-header h1 {
     transition: box-shadow 0.2s ease;
 }
 
-.bahan-card:hover {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
+.bahan-card:hover { box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); }
 
 .status-badge {
     display: inline-flex;
@@ -118,20 +106,9 @@ css.kulkas-header h1 {
     margin-top: 0.25rem;
 }
 
-.badge-tersedia {
-    background-color: var(--accent-light);
-    color: var(--accent-dark);
-}
-
-.badge-hampir {
-    background-color: var(--orange-light);
-    color: var(--orange-dark);
-}
-
-.badge-expired {
-    background-color: var(--primary-normal);
-    color: var(--primary-darker);
-}
+.badge-tersedia { background-color: var(--accent-light); color: var(--accent-dark); }
+.badge-hampir { background-color: var(--orange-light); color: var(--orange-dark); }
+.badge-expired { background-color: var(--primary-normal); color: var(--primary-darker); }
 
 .resep-suggestion {
     background-color: white;
@@ -141,13 +118,8 @@ css.kulkas-header h1 {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
-.resep-suggestion-header {
-    align-items: center;
-}
-
-.sparkle-icon {
-    font-size: 1.1rem;
-}
+.resep-suggestion-header { align-items: center; }
+.sparkle-icon { font-size: 1.1rem; }
 
 .resep-suggestion-item {
     justify-content: space-between;
@@ -167,9 +139,7 @@ css.kulkas-header h1 {
     align-self: center;
 }
 
-.resep-nama {
-    flex: 1;
-}
+.resep-nama { flex: 1; }
 
 .resep-badge {
     display: inline-flex;
@@ -179,12 +149,25 @@ css.kulkas-header h1 {
     white-space: nowrap;
 }
 
-.badge-complete {
-    background-color: var(--orange-normal);
-    color: var(--primary-light);
-}
+.badge-complete { background-color: var(--orange-normal); color: var(--primary-light); }
+.badge-partial { background-color: var(--orange-light-active); color: var(--orange-normal); }
 
-.badge-partial {
-    background-color: var(--orange-light-active);
-    color: var(--orange-normal);
+@media (min-width: 768px) {
+    .main-content {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    .navbar {
+        margin: 0 -2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    .kulkas-header {
+        margin: 0 -2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    .bahan-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
