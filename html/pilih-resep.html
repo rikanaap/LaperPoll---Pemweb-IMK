@@ -15,11 +15,11 @@
     <main class="main-content flex flex-col gap-4">
 
         <nav class="navbar">
-            <a href="meal-planner.html" class="back-btn" aria-label="Kembali">
+            <a href="meal-planner.html" class="back-btn" aria-label="Kembali" onclick="changePage('meal-planner')">
                 <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
             </a>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile" onclick="changePage('profile')">
         </nav>
 
         <div class="slot-info flex flex-col gap-1">
@@ -37,5 +37,6 @@
     </main>
     <script src="../js/pilih-resep.js"></script>
 </body>
+<script src="../scripts/global.js"></script>
 
 </html>
