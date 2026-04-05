@@ -1,0 +1,330 @@
+.main-content {
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #FFF8F5;
+    padding-bottom: 6rem;
+    gap: 0;
+}
+
+.navbar {
+    background-color: #f4f5f7;
+    margin: 0 -0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.back-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.upload-resep-btn {
+    align-items: center;
+    padding: 0.45rem 0.85rem;
+    border-radius: 2rem;
+    border: 1.5px solid var(--accent-normal);
+    background-color: transparent;
+    color: var(--accent-normal);
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.upload-resep-btn:hover {
+    background-color: var(--accent-light);
+}
+
+.profile-section {
+    background-color: white;
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--primary-normal);
+}
+
+.profile-top {
+    align-items: center;
+}
+
+.avatar-wrapper {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 2px solid var(--accent-normal);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex: 1;
+    justify-content: center;
+}
+
+.edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    background-color: var(--orange-light);
+    border: none;
+    cursor: pointer;
+    color: var(--orange-normal);
+    flex-shrink: 0;
+}
+
+.edit-btn .material-icons-round {
+    font-size: 1.1rem;
+}
+
+.profile-stats {
+    gap: 0;
+}
+
+.stat-item {
+    flex: 1;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-link {
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+
+.stat-link:hover {
+    opacity: 0.7;
+}
+
+.stat-divider {
+    width: 1px;
+    background-color: var(--primary-normal);
+    margin: 0.25rem 0;
+}
+
+.resep-grid-section {
+    padding: 1rem 0;
+}
+
+.resep-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.resep-card {
+    background-color: white;
+    border-radius: 1rem;
+    border: 1px solid var(--primary-normal);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.resep-card-header {
+    align-items: center;
+    padding: 0.5rem 0.6rem;
+    gap: 0.35rem;
+}
+
+.resep-card-avatar {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background-color: #8C2A1A;
+    color: white;
+    font-size: 0.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--font-jakarta);
+}
+
+.resep-card-avatar.cm {
+    background-color: var(--orange-normal);
+}
+
+.resep-card-header p {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.verified-icon {
+    font-size: 0.75rem;
+    color: #0186FF;
+}
+
+.resep-card-img {
+    background-color: var(--accent-light);
+    height: 5.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resep-card-emoji {
+    font-size: 2rem;
+    color: var(--accent-dark);
+    opacity: 0.6;
+}
+
+.resep-card-info {
+    padding: 0.6rem;
+}
+
+.resep-card-meta {
+    align-items: center;
+}
+
+.meta-item {
+    color: var(--primary-darker);
+}
+
+.resep-card-footer {
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.15rem;
+}
+
+.bookmark-icon {
+    font-size: 1rem;
+    color: var(--primary-darker);
+    cursor: pointer;
+}
+
+.fab-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    z-index: 90;
+}
+
+.fab-overlay.active {
+    display: block;
+}
+
+.fab-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+    z-index: 100;
+}
+
+.fab-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    align-items: flex-end;
+    opacity: 0;
+    transform: translateY(1rem);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.fab-menu.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.fab-item {
+    align-items: center;
+    text-decoration: none;
+    gap: 0.75rem;
+}
+
+.fab-item-label {
+    background-color: white;
+    color: var(--secondary-normal);
+    padding: 0.4rem 0.85rem;
+    border-radius: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    white-space: nowrap;
+}
+
+.fab-item-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+}
+
+.fab-item-icon .material-icons-round {
+    font-size: 1.25rem;
+    color: var(--accent-normal);
+}
+
+.fab-btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: var(--accent-normal);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(236, 68, 72, 0.45);
+    transition: background-color 0.2s ease;
+}
+
+.fab-btn:hover {
+    background-color: var(--accent-normal-hover);
+}
+
+.fab-icon {
+    color: white;
+    font-size: 1.75rem;
+    transition: transform 0.3s ease;
+}
+
+.fab-icon.rotated {
+    transform: rotate(45deg);
+}
+
+@media (min-width: 768px) {
+    .main-content {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .navbar {
+        margin: 0 -2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .profile-section {
+        border-radius: 1rem;
+        margin-top: 1rem;
+        border: 1px solid var(--primary-normal);
+    }
+
+    .resep-card-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .fab-container {
+        right: 2rem;
+    }
+}
