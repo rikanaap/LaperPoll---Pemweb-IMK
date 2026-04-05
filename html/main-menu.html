@@ -14,9 +14,9 @@
 
 <body>
     <nav class="navbar">
-        <span id="searchButton" class="material-icons-round text-h4">search</span>
+        <span id="searchButton" class="material-icons-round text-h4" onclick="changePage('search')">search</span>
         <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-        <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+        <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile" onclick="changePage('profile')">
     </nav>
     <div class="desktop-menus">
         <section class="resep-menus">
@@ -439,7 +439,7 @@
         </section>
     </div>
 </body>
-
+<script src="../scripts/global.js"></script>
 <script src="../scripts/pages/main-menu.js" type="module"></script>
 
 </html>

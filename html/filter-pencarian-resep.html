@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,594 +16,602 @@
 
 <body class="font-jakarta">
 
-<main class="main-content flex flex-col gap-4">
+    <main class="main-content flex flex-col gap-4">
 
-    <!-- NAVBAR + SEARCH + FILTER -->
-    <section class="top-section">
+        <!-- NAVBAR + SEARCH + FILTER -->
+        <section class="top-section">
 
-        <!-- NAVBAR -->
-        <nav class="navbar">
-            <a href="pencarian-resep.html" class="back-btn" aria-label="Kembali">
-                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
-            </a>
+            <!-- NAVBAR -->
+            <nav class="navbar">
+                <a href="pencarian-resep.html" class="back-btn" aria-label="Kembali" onclick="changePage('search')">
+                    <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+                </a>
 
-            <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
-        </nav>
+                <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
+                <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+            </nav>
 
-        <!-- SEARCH -->
-        <div class="input">
-            <span class="material-icons-round">search</span>
-            <input type="text" class="input-data" placeholder="Sapi">
-        </div>
-
-        <!-- FILTER -->
-        <div class="filter-wrapper">
-            <div class="chip chip-main">
-                <span class="chip-count">1</span>
-                Bahan
-            </div>
-            <div class="chip chip-active">Sapi</div>
-        </div>
-
-    </section>
-
-
-    <!-- LIST RESEP -->
-    <section class="resep-menus flex flex-col gap-3">
-
-        <!-- ITEM RESEP -->
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
-                    </div>
-
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- SEARCH -->
+            <div class="input">
+                <span class="material-icons-round">search</span>
+                <input type="text" class="input-data" placeholder="Sapi">
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
+            <!-- FILTER -->
+            <div class="filter-wrapper">
+                <div class="chip chip-main">
+                    <span class="chip-count">1</span>
+                    Bahan
                 </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
-                    </div>
-
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="chip chip-active">Sapi</div>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
+        </section>
 
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
 
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+        <!-- LIST RESEP -->
+        <section class="resep-menus flex flex-col gap-3">
 
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
+            <!-- ITEM RESEP -->
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">30 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium">Bahan Tersedia</p>
-                        </div>
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@soriansori</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-
-        <!-- ITEM RESEP (CONTOH KURANG) -->
-        <div class="resep">
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="text-title2 font-regular">Roti Bakar Cokelat</h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-medium">15 mins</p>
-                        </div>
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-medium text-accent-normal-active">
-                                Bahan Kurang
-                            </p>
-                        </div>
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex gap-2">
-                        <p class="text-body font-medium">@roti_manis</p>
-                        <div class="verified_logo">
-                            <span class="material-icons-round text-body text-white">check</span>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
-        </div>
-        <div class="resep">
-            <div class="resep-content">
-
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="font-jakarta text-title2 text-black font-regular">
-                        Rendang
-                    </h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-jakarta font-medium text-black">30 mins</p>
-                        </div>
-
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-jakarta font-medium text-black">
-                                Bahan Tersedia
-                            </p>
-                        </div>
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex flex-row gap-2">
-                        <p class="font-jakarta font-medium text-body">@soriansori</p>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Pancake Amerika Serikat</h1>
 
-                        <div class="verified_logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-                                <path d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
-                                      fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-body text-white">check</span>
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">30 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium">Bahan Tersedia</p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@soriansori</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
-
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">
-                arrow_forward_ios
-            </span>
-        </div>
-        <div class="resep">
-            <div class="resep-content">
-
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="font-jakarta text-title2 text-black font-regular">
-                        Rendang
-                    </h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-jakarta font-medium text-black">30 mins</p>
-                        </div>
-
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-jakarta font-medium text-black">
-                                Bahan Tersedia
-                            </p>
-                        </div>
+            <!-- ITEM RESEP (CONTOH KURANG) -->
+            <div class="resep">
+                <div class="resep-content">
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
                     </div>
 
-                    <div class="resep-verified flex flex-row gap-2">
-                        <p class="font-jakarta font-medium text-body">@soriansori</p>
+                    <div class="resep-detail">
+                        <h1 class="text-title2 font-regular">Roti Bakar Cokelat</h1>
 
-                        <div class="verified_logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-                                <path d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
-                                      fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-body text-white">check</span>
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-medium">15 mins</p>
+                            </div>
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-medium text-accent-normal-active">
+                                    Bahan Kurang
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex gap-2">
+                            <p class="text-body font-medium">@roti_manis</p>
+                            <div class="verified_logo">
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
                         </div>
                     </div>
-
                 </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
+            </div>
+            <div class="resep">
+                <div class="resep-content">
+
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
+                    </div>
+
+                    <div class="resep-detail">
+                        <h1 class="font-jakarta text-title2 text-black font-regular">
+                            Rendang
+                        </h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-jakarta font-medium text-black">30 mins</p>
+                            </div>
+
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-jakarta font-medium text-black">
+                                    Bahan Tersedia
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex flex-row gap-2">
+                            <p class="font-jakarta font-medium text-body">@soriansori</p>
+
+                            <div class="verified_logo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                                    <path
+                                        d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
+                                        fill="#0186FF" />
+                                </svg>
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">
+                    arrow_forward_ios
+                </span>
+            </div>
+            <div class="resep">
+                <div class="resep-content">
+
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
+                    </div>
+
+                    <div class="resep-detail">
+                        <h1 class="font-jakarta text-title2 text-black font-regular">
+                            Rendang
+                        </h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-jakarta font-medium text-black">30 mins</p>
+                            </div>
+
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-jakarta font-medium text-black">
+                                    Bahan Tersedia
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex flex-row gap-2">
+                            <p class="font-jakarta font-medium text-body">@soriansori</p>
+
+                            <div class="verified_logo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                                    <path
+                                        d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
+                                        fill="#0186FF" />
+                                </svg>
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">
+                    arrow_forward_ios
+                </span>
+            </div>
+            <div class="resep">
+                <div class="resep-content">
+
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
+                    </div>
+
+                    <div class="resep-detail">
+                        <h1 class="font-jakarta text-title2 text-black font-regular">
+                            Rendang
+                        </h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-jakarta font-medium text-black">30 mins</p>
+                            </div>
+
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-jakarta font-medium text-black">
+                                    Bahan Tersedia
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex flex-row gap-2">
+                            <p class="font-jakarta font-medium text-body">@soriansori</p>
+
+                            <div class="verified_logo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                                    <path
+                                        d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
+                                        fill="#0186FF" />
+                                </svg>
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">
+                    arrow_forward_ios
+                </span>
+            </div>
+            <div class="resep">
+                <div class="resep-content">
+
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
+                    </div>
+
+                    <div class="resep-detail">
+                        <h1 class="font-jakarta text-title2 text-black font-regular">
+                            Rendang
+                        </h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-jakarta font-medium text-black">30 mins</p>
+                            </div>
+
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-jakarta font-medium text-black">
+                                    Bahan Tersedia
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex flex-row gap-2">
+                            <p class="font-jakarta font-medium text-body">@soriansori</p>
+
+                            <div class="verified_logo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                                    <path
+                                        d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
+                                        fill="#0186FF" />
+                                </svg>
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">
+                    arrow_forward_ios
+                </span>
+            </div>
+            <div class="resep">
+                <div class="resep-content">
+
+                    <div class="resep-logo">
+                        <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
+                    </div>
+
+                    <div class="resep-detail">
+                        <h1 class="font-jakarta text-title2 text-black font-regular">
+                            Rendang
+                        </h1>
+
+                        <div class="resep-content-detail">
+                            <div>
+                                <span class="material-icons-round text-title2">watch_later</span>
+                                <p class="text-body font-jakarta font-medium text-black">30 mins</p>
+                            </div>
+
+                            <div>
+                                <span class="material-icons-round text-title2">menu_book</span>
+                                <p class="text-body font-jakarta font-medium text-black">
+                                    Bahan Tersedia
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="resep-verified flex flex-row gap-2">
+                            <p class="font-jakarta font-medium text-body">@soriansori</p>
+
+                            <div class="verified_logo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                                    <path
+                                        d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
+                                        fill="#0186FF" />
+                                </svg>
+                                <span class="material-icons-round text-body text-white">check</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <span class="material-icons-round text-h4 text-secondary-normal">
+                    arrow_forward_ios
+                </span>
             </div>
 
-            <span class="material-icons-round text-h4 text-secondary-normal">
-                arrow_forward_ios
-            </span>
-        </div>
-        <div class="resep">
-            <div class="resep-content">
+        </section>
 
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="font-jakarta text-title2 text-black font-regular">
-                        Rendang
-                    </h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-jakarta font-medium text-black">30 mins</p>
-                        </div>
-
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-jakarta font-medium text-black">
-                                Bahan Tersedia
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="resep-verified flex flex-row gap-2">
-                        <p class="font-jakarta font-medium text-body">@soriansori</p>
-
-                        <div class="verified_logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-                                <path d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
-                                      fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-body text-white">check</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <span class="material-icons-round text-h4 text-secondary-normal">
-                arrow_forward_ios
-            </span>
-        </div>
-        <div class="resep">
-            <div class="resep-content">
-
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="font-jakarta text-title2 text-black font-regular">
-                        Rendang
-                    </h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-jakarta font-medium text-black">30 mins</p>
-                        </div>
-
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-jakarta font-medium text-black">
-                                Bahan Tersedia
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="resep-verified flex flex-row gap-2">
-                        <p class="font-jakarta font-medium text-body">@soriansori</p>
-
-                        <div class="verified_logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-                                <path d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
-                                      fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-body text-white">check</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <span class="material-icons-round text-h4 text-secondary-normal">
-                arrow_forward_ios
-            </span>
-        </div>
-        <div class="resep">
-            <div class="resep-content">
-
-                <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-                </div>
-
-                <div class="resep-detail">
-                    <h1 class="font-jakarta text-title2 text-black font-regular">
-                        Rendang
-                    </h1>
-
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
-                            <p class="text-body font-jakarta font-medium text-black">30 mins</p>
-                        </div>
-
-                        <div>
-                            <span class="material-icons-round text-title2">menu_book</span>
-                            <p class="text-body font-jakarta font-medium text-black">
-                                Bahan Tersedia
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="resep-verified flex flex-row gap-2">
-                        <p class="font-jakarta font-medium text-body">@soriansori</p>
-
-                        <div class="verified_logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-                                <path d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
-                                      fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-body text-white">check</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <span class="material-icons-round text-h4 text-secondary-normal">
-                arrow_forward_ios
-            </span>
-        </div>
-
-    </section>
-
-</main>
+    </main>
 
 </body>
+
+<script src="../scripts/global.js"></script>
+
 </html>
