@@ -301,6 +301,9 @@
 .fab-icon.rotated {
     transform: rotate(45deg);
 }
+.upload-icon {
+    font-size: 1rem;
+}
 
 @media (min-width: 768px) {
     .main-content {
