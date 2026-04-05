@@ -1,103 +1,116 @@
+/* MAIN */
 .main-content {
-    padding: 0rem 0.7rem;
-}
-.swipe-container{
-    margin-top:1rem;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+    padding: 0 0.7rem;
 }
 
-.swipe-cards{
-    position:relative;
-    width:260px;
-    height:360px;
+/* CONTAINER */
+.swipe-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.swipe-card{
-    position:absolute;
-    width:100%;
-    height:100%;
-    border-radius:1.5rem;
-    padding:2rem 1rem;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    transition:0.3s ease;
-    cursor:grab;
-    user-select:none;
+/* CARD WRAPPER */
+.swipe-cards {
+    position: relative;
+    width: 260px;
+    height: 360px;
+}
+
+/* CARD */
+.swipe-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 2rem 1rem;
+    border-radius: 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    cursor: grab;
+    user-select: none;
+    transition: 0.3s ease;
 }
 
 /* STACK POSITION */
-.swipe-card:nth-last-child(1){
-    transform:translateY(0) scale(1);
-    z-index:3;
+.swipe-card:nth-last-child(1) {
+    transform: translateY(0) scale(1);
+    z-index: 3;
 }
 
-.swipe-card:nth-last-child(2){
-    transform:translateY(12px) scale(0.96);
-    z-index:2;
+.swipe-card:nth-last-child(2) {
+    transform: translateY(12px) scale(0.96);
+    z-index: 2;
 }
 
-.swipe-card:nth-last-child(3){
-    transform:translateY(24px) scale(0.92);
-    z-index:1;
+.swipe-card:nth-last-child(3) {
+    transform: translateY(24px) scale(0.92);
+    z-index: 1;
 }
 
-.swipe-card:nth-last-child(n+4){
-    transform:translateY(24px) scale(0.92);
-    z-index:0;
+.swipe-card:nth-last-child(n+4) {
+    transform: translateY(24px) scale(0.92);
+    z-index: 0;
 }
 
-.swipe-card:nth-child(1){ background:#5B79F2; }
-.swipe-card:nth-child(2){ background:#DB6868; }
-.swipe-card:nth-child(3){ background:#F0D53C; }
-.swipe-card:nth-child(4){ background:#65D565; }
-.swipe-card:nth-child(5){ background:#F062DD; }
-.swipe-card:nth-child(6){ background:#535353; }
-.swipe-card:nth-child(7){ background:#D2C09A; }
-.swipe-card:nth-child(8){ background:#5BD1A6; }
+/* CARD COLORS */
+.swipe-card:nth-child(1) { background: #5B79F2; }
+.swipe-card:nth-child(2) { background: #DB6868; }
+.swipe-card:nth-child(3) { background: #F0D53C; }
+.swipe-card:nth-child(4) { background: #65D565; }
+.swipe-card:nth-child(5) { background: #F062DD; }
+.swipe-card:nth-child(6) { background: #535353; }
+.swipe-card:nth-child(7) { background: #D2C09A; }
+.swipe-card:nth-child(8) { background: #5BD1A6; }
 
-.swipe-icon{
-    font-size:80px;
-    margin-bottom:1rem;
-    color:white;
+/* ICON */
+.swipe-icon {
+    font-size: 80px;
+    margin-bottom: 1rem;
+    color: white;
 }
 
-.swipe-buttons{
-    margin-top:3.5rem;
-    display:flex;
-    gap:2.5rem;
+/* BUTTONS */
+.swipe-buttons {
+    margin-top: 3.5rem;
+    display: flex;
+    gap: 2.5rem;
 }
 
-.swipe-buttons button{
-    width:75px;
-    height:75px;
-    border-radius:50%;
-    border:none;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    box-shadow:0 8px 20px rgba(0,0,0,0.15);
-    transition:0.2s;
+.swipe-buttons button {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: 0.2s;
 }
 
-.swipe-buttons button span{
-    font-size:42px;
+.swipe-buttons button span {
+    font-size: 42px;
 }
 
-.swipe-buttons button:active{
-    transform:scale(0.9);
+.swipe-buttons button:active {
+    transform: scale(0.9);
 }
 
-#dislike{
-    background:black;
-    color:white;
+/* BUTTON VARIANT */
+#dislike {
+    background: black;
+    color: white;
 }
 
-#like{
-    background:#ffe5e5;
-    color:red;
+#like {
+    background: #ffe5e5;
+    color: red;
 }
