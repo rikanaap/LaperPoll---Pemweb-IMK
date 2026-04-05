@@ -402,25 +402,13 @@
         <section class="bottom-menus">
             <div class="input">
                 <span class="material-icons-round">search</span>
-                <input class="input-data text-body font-jakarta font-semibold" type="text" placeholder="Telusuri filter yang ada">
+                <input id="search-filter" class="input-data text-body font-jakarta font-semibold" type="text" placeholder="Telusuri filter yang ada">
             </div>
-            <div class="bottom-filters-used">
+            <div class="bottom-filters-used" style="display: none;">
                 <p class="font-jakarta text-body font-semibold text-secondary-normal">Filter saat ini:</p>
-                <div class="bottom-filter-used">
-                    <p class="font-jakarta text-body font-semibold text-secondary-light">Makanan</p>
-                    <span class="material-icons-round text-title2 text-white">cancel</span>
-                </div>
-                <div class="bottom-filter-used">
-                    <p class="font-jakarta text-body font-semibold text-secondary-light">Berkuah</p>
-                    <span class="material-icons-round text-title2 text-white">cancel</span>
-                </div>
-                <div class="bottom-filter-used">
-                    <p class="font-jakarta text-body font-semibold text-secondary-light">Pedas</p>
-                    <span class="material-icons-round text-title2 text-white">cancel</span>
-                </div>
             </div>
             <div class="bottom-filters">
-                <div class="bottom-filter" onclick="chooseFilter(this)">
+                <div class="bottom-filter">
                     <p class="font-jakarta text-body font-regular">Makanan</p>
                 </div>
                 <div class="bottom-filter">
@@ -445,7 +433,7 @@
                     <p class="font-jakarta text-body font-regular">Makan Malam</p>
                 </div>
             </div>
-            <div class="bottom-text" style="display: none;">
+            <div class="bottom-text">
                 <p class="font-jakarta text-body font-semibold">Tekan untuk memfilter hasil!</p>
             </div>
         </section>

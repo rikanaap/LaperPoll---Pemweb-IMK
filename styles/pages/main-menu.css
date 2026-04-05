@@ -5,9 +5,11 @@
 
 .bottom-menus {
     display: flex;
-    position: sticky;
     align-items: end;
+    position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     padding: 1rem 0.6rem;
     flex-direction: column;
     justify-content: center;
@@ -36,6 +38,10 @@
     border: 0.05rem solid #F2E2D9;
 }
 
+.bottom-filter>p {
+    width: max-content;
+}
+
 .bottom-text {
     display: flex;
     align-self: stretch;
@@ -52,7 +58,7 @@
     margin-bottom: 0.5rem;
 }
 
-.bottom-filters-used > p{
+.bottom-filters-used>p {
     position: sticky;
     left: 0;
     padding: 0.5rem 0.5rem 0.5rem 0;
@@ -62,6 +68,7 @@
 
 .bottom-filter-used {
     display: flex;
+    min-height: 2rem;
     padding: 0.3rem 0.6rem;
     justify-content: center;
     align-items: center;
@@ -70,16 +77,23 @@
     background-color: var(--orange-normal);
 }
 
-.bottom-menus > .input{
+.bottom-filter-used>p {
+    width: max-content;
+}
+
+.bottom-menus>.input {
     display: none;
     background-color: var(--orange-light-active);
 }
-.bottom-menus > .input > span {
+
+.bottom-menus>.input>span {
     color: var(--orange-normal);
 }
-.bottom-menus > .input > .input-data  {
+
+.bottom-menus>.input>.input-data {
     color: var(--orange-normal-active);
 }
-.bottom-menus > .input > .input-data::placeholder  {
+
+.bottom-menus>.input>.input-data::placeholder {
     color: var(--orange-normal);
 }
