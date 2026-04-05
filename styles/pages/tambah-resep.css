@@ -1,0 +1,244 @@
+.main-content {
+    padding: 0rem 0.7rem;
+    position: relative;
+}
+
+.resep-forms {
+    justify-content: space-between;
+    align-self: stretch;
+    align-items: center;
+}
+
+.forms {
+    align-self: stretch;
+}
+
+.form-indicator {
+    align-self: stretch;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.indicator-wrapper {
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.indicator {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background-color: var(--accent-normal);
+}
+
+.i-enable {
+    background-color: var(--accent-light);
+}
+
+.input-wrapper {
+    gap: 0.5rem;
+    align-self: stretch;
+}
+
+.form {
+    display: flex;
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    align-self: stretch;
+    border-radius: 0.6rem;
+    border: 0.05rem solid #F2E2D9;
+    background-color: white;
+}
+
+.input-submit {
+    position: sticky;
+    bottom: 1rem;
+}
+
+.input-submit:focus-within+.input-number {
+    display: none;
+}
+
+body:has(.input-number:focus) .input-submit {
+    display: none;
+}
+
+.input-scale {
+    justify-content: space-between;
+}
+
+.input-scale-text {
+    flex-grow: 1;
+    align-items: center;
+}
+
+.input-scale-input {
+    width: fit-content;
+}
+
+.input-number {
+    width: 3rem;
+    border: 0;
+    border-bottom: 2px solid black;
+    text-align: center;
+    background: transparent;
+}
+
+.input-number:focus {
+    outline: none;
+}
+
+.results {
+    display: flex;
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    align-self: stretch;
+    border-radius: 50%rem;
+    border: 0.05rem solid #F2E2D9;
+    background-color: white;
+}
+
+.wrapper-result {
+    overflow-x: auto;
+    align-self: stretch;
+    gap: 0.2rem;
+}
+
+.result-data {
+    padding: 0.3rem 1rem;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 1.2rem;
+    background-color: var(--accent-light-hover);
+}
+
+.result-data>p {
+    width: max-content;
+}
+
+.long-input {
+    display: flex;
+    border: 0;
+    width: 100%;
+    outline: none;
+    resize: none;
+    border-radius: 0.3rem;
+    background-color: var(--primary-normal);
+    padding: 0.4rem;
+    margin-bottom: 1.5rem;
+    min-height: 6.25rem;
+}
+
+.long-input::placeholder {
+    color: var(--primary-dark);
+}
+
+.horizontal-line {
+    background-color: var(--orange-normal);
+}
+
+.input-time {
+    padding: 1rem;
+    font-size: 1.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.6rem;
+    color: var(--secondary-normal);
+    border: 0.67px solid var(--orange-normal);
+}
+
+.input-checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.3rem;
+    border: 1px solid #EA580C;
+    background-color: white;
+}
+
+.result-bahan {
+    width: 100%;
+    align-self: stretch;
+    padding: 0.8rem 0.6rem;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0.3rem;
+    background-color: var(--primary-normal);
+    justify-content: space-between;
+}
+
+.upload-container {
+    width: 100%;
+    padding: 1rem;
+}
+
+.upload-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 10rem;
+
+    border: 1px dashed var(--accent-normal);
+    border-radius: 0.4rem;
+    background-color: #fff;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-box:hover {
+    background-color: rgba(229, 57, 53, 0.05);
+    border-color: var(--accent-normal-hover);
+}
+
+.upload-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.add-icon {
+    font-size: 1.5rem;
+    color: var(--orange-normal);
+}
+
+.upload-content p {
+    color: var(--primary-dark-active);
+    margin: 0;
+}
+
+.upload-wrapper {
+    gap: 0.3rem;
+    align-self: stretch;
+    align-items: center;
+}
+
+.upload-data {
+    background-image: url('../../assets/Image_DummyResep.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 5rem;
+    border-radius: 0.25rem;
+    aspect-ratio: 17/10;
+}
+
+.upload-default {
+    width: 5rem;
+    aspect-ratio: 17/10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--accent-normal);
+    border-radius: 0.4rem;
+    background-color: #fff;
+}

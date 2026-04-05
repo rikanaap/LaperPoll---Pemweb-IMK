@@ -105,12 +105,18 @@
 }
 
 /* BUTTON VARIANT */
-#dislike {
-    background: black;
-    color: white;
-}
-
 #like {
     background: #ffe5e5;
+}
+
+#like span {
     color: red;
+}
+
+#dislike {
+    background: black;
+}
+
+#dislike span {
+    color: white;
 }

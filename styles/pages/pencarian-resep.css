@@ -14,7 +14,7 @@
     text-decoration: none;
 }
 
-.input span {
+.input span {   
     color: white;
 }
 
@@ -107,9 +107,12 @@
     padding: 0.9rem;
     border-radius: 0.8rem;
     border: 1px solid #F2E2D9;
-    color: var(--orange-normal);
     text-decoration: none;
     cursor: pointer;
+}
+
+.swipe-btn span {
+    color: var(--orange-normal);
 }
 
 .terapkan-btn{

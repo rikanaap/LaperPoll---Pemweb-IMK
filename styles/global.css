@@ -5,12 +5,54 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+body{
+  height: 100vh;
 }
 
 *::-webkit-scrollbar {
-    display: none;             /* Chrome, Safari, and Opera */
+  display: none;
+  /* Chrome, Safari, and Opera */
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator{
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type=time] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Untuk Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+form{
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+  border: none;
+  background: none;
+}
+
+.material-icons-round {
+  color: var(--secondary-normal);
 }
 
 :root {
@@ -58,7 +100,7 @@
   /*? Accent Color */
   --accent-light: #FDECED;
   --accent-light-hover: #FCE3E4;
-  --accent-light-active: #B7BEBB;
+  --accent-light-active: ##F9C5C6;
   --accent-normal: #EC4448;
   --accent-normal-hover: #D43D41;
   --accent-normal-active: #BD363A;
@@ -67,18 +109,18 @@
   --accent-dark-active: #6A1F20;
   --accent-darker: #531819;
 
-    /*? Orange Color */
-    --orange-light: #FDEEE6;
-    --orange-light-hover: #FBE5D9;
-    --orange-light-active: #F7C9B0;
-    --orange-normal: #E65100;
-    --orange-normal-hover: #CF4900;
-    --orange-normal-active: #B84100;
-    --orange-dark: #AD3D00;
-    --orange-dark-hover: #8A3100;
-    --orange-dark-active: #672400;
-    --orange-darker: #511C00;
-    --kulkas-title: #8C2A1A;
+  /*? Orange Color */
+  --orange-light: #FDEEE6;
+  --orange-light-hover: #FBE5D9;
+  --orange-light-active: #F7C9B0;
+  --orange-normal: #E65100;
+  --orange-normal-hover: #CF4900;
+  --orange-normal-active: #B84100;
+  --orange-dark: #AD3D00;
+  --orange-dark-hover: #8A3100;
+  --orange-dark-active: #672400;
+  --orange-darker: #511C00;
+  --kulkas-title: #8C2A1A;
 
   /*! Device Max-Width */
   --mobile-width: 412px
@@ -140,6 +182,10 @@
 }
 
 /* font weight */
+.font-thin {
+  font-weight: 100;
+}
+
 .font-regular {
   font-weight: 400;
 }
@@ -544,10 +590,11 @@
   background-color: white;
 }
 
-.bg-makanan-resep{
+.bg-makanan-resep {
   background-color: #FEE7C3;
 }
-.bg-minuman-resep{
+
+.bg-minuman-resep {
   background-color: #B7E7F3;
 }
 

@@ -1,0 +1,38 @@
+@media (min-width: 768px){
+    .main-content{
+        display: grid;
+        column-gap: 1rem;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .resep-menus{
+        flex-grow: 1;
+    }
+    body{
+        display: flex;
+        flex-direction: column;
+    }
+    .desktop-menus{
+        display: flex;
+        padding: 0.75rem;
+        align-self: stretch;
+        flex-direction: row;
+    }
+    .bottom-menus{
+        top: 0;
+        justify-content: start;
+        width: 25rem;
+    }
+    .bottom-filters{
+        flex-wrap: wrap;
+    }
+    .resep{
+        max-width: 100%;
+    }
+    .bottom-filters-used{
+        overflow-x:scroll ;
+        flex-wrap: wrap;
+    }
+    .bottom-menus > .input{
+        display: flex;
+    }
+}
