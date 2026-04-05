@@ -1,0 +1,212 @@
+
+:root {
+    --primary: #E65100;    /* Oranye */
+    --secondary: #FF4D4D;  /* Merah */
+    --bg-app: #fce4e4;      /* Pink Muda */
+    --bg-card: #ffffff;
+    --text-main: #333333;
+    --text-sub: #666666;
+    --border: #FFCCBC;     /* Oranye Muda */
+    --font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-app);
+    font-family: var(--font-family);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+
+/* Stars Picker */
+.stars-picker {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.star-icon {
+    font-size: 2.5rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.star-icon:hover {
+    transform: scale(1.1);
+    color: var(--primary);
+}
+
+.star-icon.selected {
+    color: var(--primary);
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+/* Textarea */
+.textarea-wrapper {
+    position: relative;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    flex: 1;
+    background: #f9f9f9;
+}
+
+textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 150px;
+    border: none;
+    outline: none;
+    background: transparent;
+    resize: none;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.btn-upload-img {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-sub);
+    cursor: pointer;
+}
+
+/* Image Zone (Preview) */
+.review-image-zone {
+    flex: 1.2;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.image-frame {
+    width: 100%;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.recipe-img-preview {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(230, 81, 0, 0.8); /* Primary color overlay */
+    color: white;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+}
+
+/* --- SIDEBAR CARD (Rizht - Konsisten dengan Control Card) --- */
+.control-card.review-sidebar {
+    flex: 1; /* Lebih sempit */
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.brand-logo {
+    font-size: 2rem;
+    font-weight: 800;
+    font-style: italic;
+}
+
+.orange-text { color: var(--primary); }
+.red-text { color: var(--secondary); }
+
+.status{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.status-icon {
+    font-size: 4rem;
+    color: #4CAF50; /* Hijau Sukses */
+    margin-bottom: 15px;
+}
+
+.status-zone p {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--text-main);
+}
+
+.status-subtitle {
+    color: var(--text-sub);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.action-zone {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Buttons Desktop Style */
+.btn-primary-desktop {
+    width: 100%;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 18px;
+    margin: 0 auto;
+    border-radius: 12px;
+    font-weight: 700;
+    font-family: var(--font-family);
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(230, 81, 0, 0.2);
+}
+
+.btn-outline-desktop {
+    width: 100%;
+    background: none;
+    border: 2px solid #ddd;
+    color: var(--text-sub);
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: var(--font-family);
+    cursor: pointer;
+}

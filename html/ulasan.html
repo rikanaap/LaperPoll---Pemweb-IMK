@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/atomic.css">
+    <link rel="stylesheet" href="../styles/pages/ulasan.css">
+    <link rel="icon" href="../assets/Logo_Laperpoll.png">
+    <title>Laperpoll</title>
+</head>
+<body>
+        <main class="review-main-card">
+            <div class="review-image-zone">
+                    <div class="image-frame">
+                        <img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=600" alt="Preview Masakan" class="recipe-img-preview">
+                    </div>
+                </div>
+            <div class="review-content-flex">
+                <div class="review-form-zone">
+                    <div class="rating-group">
+                        <h2 class="info-label">
+                            <span class="material-icons-round">star</span> Rating Resep
+                        </h2>
+                        <div class="stars-picker" id="starsPicker">
+                            <span class="material-icons-round star-icon" data-value="1">star_outline</span>
+                            <span class="material-icons-round star-icon" data-value="2">star_outline</span>
+                            <span class="material-icons-round star-icon" data-value="3">star_outline</span>
+                            <span class="material-icons-round star-icon" data-value="4">star_outline</span>
+                            <span class="material-icons-round star-icon" data-value="5">star_outline</span>
+                        </div>
+                    </div>  
+                    <hr class="divider">    
+                    <div class="comment-group">
+                        <h2 class="info-label">
+                            <span class="material-icons-round">rate_review</span> Tulis Ulasan
+                        </h2>
+                        <div class="textarea-wrapper">
+                            <textarea id="reviewText" placeholder="Bagaimana pengalaman memasak Anda dengan resep ini?"></textarea>
+                            <button class="btn-upload-img">
+                                <span class="material-icons-round">add_a_photo</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="action-zone">
+                <button id="btn-submit-review" class="btn-primary-desktop" onclick="submitReview()">
+                    KIRIM ULASAN
+                </button>
+                <button class="btn-outline-desktop" onclick="window.location.href='detail-resep.html'">
+                    LEWATI
+                </button>
+                </div>
+                </div>  
+            </div>
+    <script>
+        const stars = document.querySelectorAll('.star-icon');
+        const btnSubmit = document.getElementById("btn-submit-review"); 
+        let currentRating = 0;
+
+        // 1. Logika Klik Bintang
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                currentRating = this.getAttribute('data-value');
+
+                // Update UI Bintang
+                stars.forEach((s, index) => {
+                    if (index < currentRating) {
+                        s.innerText = 'star'; 
+                        s.classList.add('selected');
+                    } else {
+                        s.innerText = 'star_outline'; 
+                        s.classList.remove('selected');
+                    }
+                });
+                console.log("Rating terpilih:", currentRating);
+            });
+        });
+
+        
+        if (btnSubmit) {
+            btnSubmit.addEventListener('click', function(e) {
+                e.preventDefault(); 
+
+                if (currentRating == 0) {
+                    alert("Mohon pilih rating bintang terlebih dahulu!");
+                } else {
+                    alert("Terima kasih! Ulasan Anda berhasil dikirim.");
+                   
+                    window.location.href = 'detail-resep.html';
+                }
+            });
+        } else {
+            console.error("Tombol dengan ID 'btn-submit-review' tidak ditemukan!");
+        }
+    </script>
+</body>
+</html>
