@@ -14,11 +14,10 @@
 <body>
     <main class="main-content flex flex-col">
         <nav class="navbar">
-            <span class="material-icons-round text-h4">arrow_back</span>
+            <span class="material-icons-round text-h4" onclick="changePage('profile')">arrow_back</span>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-            <a href="profile.html" class="profile-link">
-                <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
-            </a>
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile"
+                onclick="changePage('profile')">
         </nav>
 
         <section class="resep-forms flex flex-col">
@@ -33,7 +32,7 @@
                 </div>
 
                 <!-- Form 1 Start -->
-                <div class="form" style="display: none;">
+                <div class="form" id="form-1">
                     <div class="input-wrapper flex flex-col">
                         <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Sebutkan nama resep</h5>
                         <div class="input">
@@ -47,11 +46,11 @@
                         <div class="input-dropdown">
                             <div class="input">
                                 <span class="material-icons-round">search</span>
-                                <input class="input-data text-body font-jakarta font-semibold" type="text"
-                                    placeholder="Cari Kategori">
+                                <input id="searchKategori" class="input-data text-body font-jakarta font-semibold"
+                                    type="text" placeholder="Cari Kategori">
                                 <span class="material-icons-round">expand_circle_down</span>
                             </div>
-                            <div class="dropdown-datas">
+                            <div id="listKategori" class="dropdown-datas">
                                 <div class="dropdown-data">
                                     <p class="font-jakarta font-semibold text-body text-primary-dark-active">Makanan</p>
                                 </div>
@@ -75,8 +74,7 @@
                                 </div>
                                 <div class="dropdown-data">
                                     <p class="font-jakarta font-semibold text-body text-primary-dark-active">Hidangan
-                                        Utama
-                                        Merah</p>
+                                        Utama</p>
                                 </div>
                                 <div class="dropdown-data">
                                     <p class="font-jakarta font-semibold text-body text-primary-dark-active">Tradisional
@@ -92,7 +90,7 @@
                 <!-- Form 1 End -->
 
                 <!-- Form 2 Start -->
-                <div class="results" style="display: none;">
+                <div class="results" id="result-2" style="display: none;">
                     <div class="input-wrapper flex flex-col">
                         <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Bahan yang digunakan
                         </h5>
@@ -120,7 +118,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form" style="display: none;">
+                <div class="form" id="form-2" style="display: none;">
                     <div class="input-wrapper flex flex-col">
                         <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Pilih bahan
                         </h5>
@@ -152,12 +150,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="input">
+                        <div id="JudulBahan" style="display: none;" class="input">
                             <span class="material-icons-round">menu_book</span>
                             <input class="input-data text-body font-jakarta font-semibold" type="text"
                                 placeholder="Cari Bahan" value="Ayam Kampung" readonly>
                         </div>
-                        <div class="input input-scale">
+                        <div id="InputBerat" style="display: none;" class="input input-scale">
                             <div class="input-scale-text flex flex-row gap-4">
                                 <span class="material-icons-round text-secondary-normal">scale</span>
                                 <div class="vertical-line bg-secondary-normal"></div>
@@ -175,7 +173,7 @@
                 <!-- Form 2 End -->
 
                 <!-- Form 3 Start -->
-                <div class="results" style="display: none;">
+                <div class="results" id="result-3" style="display: none;">
                     <div class="input-wrapper flex flex-col">
                         <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Bahan yang digunakan
                         </h5>
@@ -200,7 +198,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form" style="display: none;">
+                <div class="form" id="form-3" style="display: none;">
                     <div class="input-wrapper flex flex-col">
                         <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Pilih filterisasi resep
                         </h5>
@@ -232,9 +230,8 @@
                 </div>
                 <!-- Form 3 End -->
 
-
                 <!-- Form 4 Start -->
-                <div class="results" style="display: none;" id="result-4-1">
+                <div class="results" id="result-4-1" style="display: none;">
                     <div class="wrapper-result flex flex-col">
                         <div class="result-bahan flex flex-row">
                             <p class="font-jakarta font-regular text-body">Masukan roti dan sagu kedalam mangkuk</p>
@@ -328,7 +325,7 @@
                 <!-- Form 4 End -->
 
                 <!-- Form 5 Start -->
-                <div class="form">
+                <div class="form" id="form-5" style="display: none;">
                     <div class="input-wrapper flex flex-col">
                         <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Tambahkan Foto/Video
                         </h5>
@@ -344,7 +341,8 @@
                             </div>
                             <div class="upload-wrapper flex flex-row">
                                 <div class="upload-data"></div>
-                                <div class="upload-default"> <span class="material-icons-round add-icon">add_circle_outline</span> </div>
+                                <div class="upload-default"> <span
+                                        class="material-icons-round add-icon">add_circle_outline</span> </div>
                             </div>
                         </div>
                     </div>
@@ -359,5 +357,7 @@
 </body>
 
 <script src="../scripts/pages/tambah-resep.js"></script>
+<script src="../scripts/global.js"></script>
+
 
 </html>

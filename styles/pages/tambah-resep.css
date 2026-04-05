@@ -11,6 +11,7 @@
 .resep-forms {
     justify-content: space-between;
     align-self: stretch;
+    height: 100vh;
     align-items: center;
 }
 
@@ -33,7 +34,7 @@
 .indicator {
     width: 0.75rem;
     height: 0.75rem;
-    border-radius: 50%;
+    border-radius: 5rem;
     background-color: var(--accent-normal);
 }
 
@@ -246,4 +247,12 @@ body:has(.input-number:focus) .input-submit {
     border: 1px dashed var(--accent-normal);
     border-radius: 0.4rem;
     background-color: #fff;
+}
+
+.choosen {
+    background-color: var(--orange-normal);
+}
+
+.choosen>p {
+    color: white;
 }

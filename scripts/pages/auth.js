@@ -1,28 +1,24 @@
-import { changePage } from "../global";
-
 const MODES = ["signup", "signin", "forgot"]
-
 
 const signupSection = document.getElementById("signupForm")
 const signinSection = document.getElementById("signinForm")
 const forgotSection = document.getElementById("forgotForm")
 const inputsOTP = document.querySelectorAll('.otp-input');
 
-
 let mode = "signup"
 
 inputsOTP.forEach((input, index) => {
     input.addEventListener('input', (e) => {
         const value = e.target.value;
-        if (value.length === 1 && index < inputs.length - 1) {
-            inputs[index + 1].focus();
+        if (value.length === 1 && index < inputsOTP.length - 1) {
+            inputsOTP[index + 1].focus();
         }
     });
 
     input.addEventListener('keydown', (e) => {
         if (e.key === "Backspace") {
             if (input.value === "" && index > 0) {
-                inputs[index - 1].focus();
+                inputsOTP[index - 1].focus();
             }
         }
     });
@@ -82,3 +78,7 @@ function kirimData(modeName) {
 
     }
 }
+
+window.kirimData = kirimData;
+window.changeMode = changeMode;
+window.togglePassword = togglePassword;

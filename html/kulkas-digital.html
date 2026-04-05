@@ -15,12 +15,12 @@
     <main class="main-content flex flex-col">
         <nav class="navbar">
             <a href="profile.html" class="back-btn">
-                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+                <span class="material-icons-round text-h4 text-accent-normal"
+                    onclick="changePage('profile')">arrow_back</span>
             </a>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-            <a href="profile.html" class="profile-link">
-                <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
-            </a>
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile"
+                onclick="changePage('profile')">
         </nav>
 
         <section class="kulkas-header flex flex-row">
@@ -31,10 +31,14 @@
         </section>
 
         <div class="filter-tabs flex flex-row" role="tablist">
-            <button class="filter-tab active font-jakarta font-semibold text-body" data-filter="semua" role="tab" aria-selected="true">Semua</button>
-            <button class="filter-tab font-jakarta font-medium text-body" data-filter="tersedia" role="tab" aria-selected="false">Tersedia</button>
-            <button class="filter-tab font-jakarta font-medium text-body" data-filter="hampir-habis" role="tab" aria-selected="false">Hampir Habis</button>
-            <button class="filter-tab font-jakarta font-medium text-body" data-filter="expired" role="tab" aria-selected="false">Expired</button>
+            <button class="filter-tab active font-jakarta font-semibold text-body" data-filter="semua" role="tab"
+                aria-selected="true">Semua</button>
+            <button class="filter-tab font-jakarta font-medium text-body" data-filter="tersedia" role="tab"
+                aria-selected="false">Tersedia</button>
+            <button class="filter-tab font-jakarta font-medium text-body" data-filter="hampir-habis" role="tab"
+                aria-selected="false">Hampir Habis</button>
+            <button class="filter-tab font-jakarta font-medium text-body" data-filter="expired" role="tab"
+                aria-selected="false">Expired</button>
         </div>
 
         <section class="bahan-grid" id="bahanGrid"></section>
@@ -53,14 +57,16 @@
                     <span class="resep-badge badge-partial font-jakarta font-bold text-caption">4/6 bahan</span>
                 </div>
                 <div class="resep-suggestion-item flex flex-row">
-                    <p class="font-jakarta font-medium text-body text-secondary-normal resep-nama">Mie Goreng Spesial</p>
+                    <p class="font-jakarta font-medium text-body text-secondary-normal resep-nama">Mie Goreng Spesial
+                    </p>
                     <span class="resep-badge badge-partial font-jakarta font-bold text-caption">3/4 bahan</span>
                 </div>
             </div>
         </section>
 
     </main>
-
+    <script src="../scripts/global.js"></script>
     <script src="../js/kulkas-digital.js"></script>
 </body>
+
 </html>

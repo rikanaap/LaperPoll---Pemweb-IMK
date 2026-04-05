@@ -1,5 +1,3 @@
-import { changePage } from "../global.js";
-
 let filterMode = 1;
 let choosedFilter = [];
 
@@ -11,7 +9,7 @@ const filters = document.querySelectorAll(".bottom-filter");
 const searchInput = document.getElementById("search-filter")
 
 searchIcon.addEventListener("click", () => changePage('search'));
-searchInput.addEventListener("input", (data) => { searchFilter(searchInput.value) })
+searchInput.addEventListener("input", (data) => { searchFilter(searchInput.value.toLowerCase()) })
 filters.forEach((filter) => { filter.addEventListener("click", () => chooseFilter(filter)) })
 
 function changeFilterData(mode) {
@@ -68,10 +66,8 @@ function chooseFilter(data) {
 }
 
 function searchFilter(data) {
-    console.log("Makanan", data)
     filters.forEach(filter => {
         const text = filter.querySelector('p').innerText.toLowerCase()
-        console.log(text)
         if (text.includes(data)) {
             filter.style.display = "flex"; 
         } else {

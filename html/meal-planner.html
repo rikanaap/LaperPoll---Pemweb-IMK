@@ -14,14 +14,12 @@
 <body>
     <main class="main-content flex flex-col">
         <nav class="navbar">
-            <a href="profile.html" class="back-btn">
-                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
-            </a>
+            <span class="material-icons-round text-h4 text-accent-normal"
+                onclick="changePage('profile')">arrow_back</span>
             </a>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-            <a href="profile.html" class="profile-link">
-                <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
-            </a>
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile"
+                onclick="changePage('profile')">
         </nav>
 
         <div class="page-header flex flex-col gap-1">
@@ -63,7 +61,7 @@
         </a>
 
     </main>
-
+    <script src="../scripts/global.js"></script>
     <script src="../js/meal-planner.js"></script>
 </body>
 

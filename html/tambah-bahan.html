@@ -18,32 +18,36 @@
                 <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
             </a>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-            <a href="profile.html" class="profile-link">
-                <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
-            </a>
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile"
+                onclick="changePage('profile')">
         </nav>
 
         <div class="form-wrapper flex flex-col gap-6">
             <div class="form-title flex flex-col gap-1">
                 <h1 class="font-jakarta font-bold text-h5 kulkas-title">Tambah Bahan</h1>
-                <p class="font-jakarta font-regular text-body text-primary-darker">Isi detail bahan yang ingin kamu tambahkan ke kulkas.</p>
+                <p class="font-jakarta font-regular text-body text-primary-darker">Isi detail bahan yang ingin kamu
+                    tambahkan ke kulkas.</p>
             </div>
 
             <div class="form-group flex flex-col gap-2">
-                <label class="font-jakarta font-semibold text-body text-secondary-normal" for="searchBahan">Nama Bahan</label>
+                <label class="font-jakarta font-semibold text-body text-secondary-normal" for="searchBahan">Nama
+                    Bahan</label>
                 <div class="search-wrapper">
                     <div class="input">
                         <span class="material-icons-round text-body text-primary-darker">search</span>
-                        <input id="searchBahan" class="input-data font-jakarta text-body" type="text" placeholder="Cari bahan..." autocomplete="off"/>
+                        <input id="searchBahan" class="input-data font-jakarta text-body" type="text"
+                            placeholder="Cari bahan..." autocomplete="off" />
                         <span class="material-icons-round text-body text-primary-darker" id="clearSearch">close</span>
                     </div>
-                    <ul class="bahan-dropdown flex flex-col" id="bahanDropdown" role="listbox" aria-label="Pilih bahan"></ul>
+                    <ul class="bahan-dropdown flex flex-col" id="bahanDropdown" role="listbox" aria-label="Pilih bahan">
+                    </ul>
                 </div>
             </div>
 
             <div class="form-row flex flex-row gap-3">
                 <div class="form-group flex flex-col gap-2 form-col">
-                    <label class="font-jakarta font-semibold text-body text-secondary-normal" for="satuanBahan">Satuan</label>
+                    <label class="font-jakarta font-semibold text-body text-secondary-normal"
+                        for="satuanBahan">Satuan</label>
                     <div class="input satuan-input">
                         <span class="material-icons-round text-body text-primary-darker">straighten</span>
                         <select id="satuanBahan" class="input-data font-jakarta text-body">
@@ -54,12 +58,14 @@
                 </div>
 
                 <div class="form-group flex flex-col gap-2 form-col">
-                    <label class="font-jakarta font-semibold text-body text-secondary-normal" for="jumlahBahan">Jumlah</label>
+                    <label class="font-jakarta font-semibold text-body text-secondary-normal"
+                        for="jumlahBahan">Jumlah</label>
                     <div class="input jumlah-input">
                         <button class="jumlah-btn" id="btnMinus" aria-label="Kurang" type="button">
                             <span class="material-icons-round">remove</span>
                         </button>
-                        <input id="jumlahBahan" class="input-data font-jakarta text-body jumlah-field" type="number" min="1" value="1"/>
+                        <input id="jumlahBahan" class="input-data font-jakarta text-body jumlah-field" type="number"
+                            min="1" value="1" />
                         <button class="jumlah-btn" id="btnPlus" aria-label="Tambah" type="button">
                             <span class="material-icons-round">add</span>
                         </button>
@@ -68,18 +74,24 @@
             </div>
 
             <div class="form-group flex flex-col gap-2">
-                <label class="font-jakarta font-semibold text-body text-secondary-normal" for="expiredDate">Tanggal Expired</label>
+                <label class="font-jakarta font-semibold text-body text-secondary-normal" for="expiredDate">Tanggal
+                    Expired</label>
                 <div class="expired-options flex flex-row gap-2">
-                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="3" type="button">3 hari</button>
-                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="7" type="button">7 hari</button>
-                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="14" type="button">14 hari</button>
-                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="30" type="button">30 hari</button>
+                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="3" type="button">3
+                        hari</button>
+                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="7" type="button">7
+                        hari</button>
+                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="14" type="button">14
+                        hari</button>
+                    <button class="expired-chip font-jakarta font-medium text-caption" data-days="30" type="button">30
+                        hari</button>
                 </div>
                 <div class="input">
                     <span class="material-icons-round text-body text-primary-darker">calendar_today</span>
-                    <input id="expiredDate" class="input-data font-jakarta text-body" type="date"/>
+                    <input id="expiredDate" class="input-data font-jakarta text-body" type="date" />
                 </div>
-                <p class="font-jakarta text-caption text-primary-darker">Pilih estimasi cepat atau atur tanggal manual.</p>
+                <p class="font-jakarta text-caption text-primary-darker">Pilih estimasi cepat atau atur tanggal manual.
+                </p>
             </div>
 
             <button class="input-submit font-jakarta font-semibold text-title2" id="btnTambahBahan" type="button">
@@ -88,7 +100,9 @@
 
         </div>
     </main>
+    <script src="../scripts/global.js"></script>
 
     <script src="../js/tambah-bahan.js"></script>
 </body>
+
 </html>
