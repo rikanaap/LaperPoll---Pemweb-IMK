@@ -14,9 +14,10 @@
 <body>
     <main class="main-content flex flex-col">
         <nav class="navbar">
-            <span class="material-icons-round text-h4">arrow_back</span>
+            <span class="material-icons-round text-h4" onclick="changePage('profile')">arrow_back</span>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile"
+                onclick="changePage('profile')">
         </nav>
         <section class="resep-forms flex flex-col">
             <div class="forms flex flex-col gap-2">
@@ -355,5 +356,7 @@
 </body>
 
 <script src="../scripts/pages/tambah-resep.js"></script>
+<script src="../scripts/global.js"></script>
+
 
 </html>

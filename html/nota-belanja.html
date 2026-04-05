@@ -15,10 +15,10 @@
     <main class="main-content flex flex-col">
         <nav class="navbar">
             <a href="meal-planner.html" class="back-btn">
-                <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+                <span class="material-icons-round text-h4 text-accent-normal" onclick="changePage('profile')">arrow_back</span>
             </a>
             <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile">
+            <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile" onclick="changePage('profile')">
         </nav>
 
         <div class="nota-konten flex flex-col gap-3">
@@ -131,4 +131,6 @@
         </div>
     </main>
 </body>
+<script src="../scripts/global.js"></script>
+
 </html>

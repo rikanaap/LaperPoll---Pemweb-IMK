@@ -5,7 +5,9 @@ const PAGE_PATH = {
     "profile": "profile.html",
     "detail-resep": "detail-resep.html",
     "search": "pencarian-resep.html",
-    
+    "swipe": "swipe-resep.html",
+    "meal-planner": "meal-planner.html",
+    "tambah-resep": "tambah-resep.html"
 }
 
 function changePage(pageName) {
