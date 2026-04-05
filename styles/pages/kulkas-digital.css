@@ -14,6 +14,11 @@
     padding-right: 1rem;
 }
 
+.profile-link {
+    display: flex;
+    align-items: center;
+}
+
 .kulkas-header {
     justify-content: space-between;
     align-items: center;

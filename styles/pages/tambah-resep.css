@@ -3,6 +3,11 @@
     position: relative;
 }
 
+.profile-link {
+    display: flex;
+    align-items: center;
+}
+
 .resep-forms {
     justify-content: space-between;
     align-self: stretch;

@@ -90,6 +90,13 @@ input::-ms-clear {
     border: 1px solid var(--accent-normal);
 }
 
+.navbar>.profile-link>.profile {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--accent-normal);
+}
+
 .resep-menus {
     display: flex;
     height: 100vh;
