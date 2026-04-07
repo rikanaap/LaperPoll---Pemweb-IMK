@@ -129,6 +129,8 @@ function showForm() {
     case 5:
       document.getElementById('form-5').style.display = 'flex';
       break;
+    default:
+      window.location.href = "profile.html"
   }
 }
 
