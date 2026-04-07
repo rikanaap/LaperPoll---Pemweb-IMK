@@ -21,7 +21,7 @@ function changePage(pageName) {
 }
 
 document.querySelectorAll(".resep").forEach((resep) => {
-    console.log(resep)
+    if(window.location.pathname.includes("pilih-resep.html")) return
     resep.addEventListener('click', () => {
         changePage('detail-resep')
     })
