@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('tanggal');
             $table->integer('max_calorie')->nullable();
+            $table->timestamps();
+
         });
     }
 

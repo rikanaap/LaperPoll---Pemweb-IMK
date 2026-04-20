@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->integer('level')->nullable();
             $table->string('description')->nullable();
+            $table->timestamps();
+
         });
     }
 

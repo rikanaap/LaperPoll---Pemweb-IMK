@@ -18,6 +18,8 @@ return new class extends Migration
             $table->text('payload')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->dateTime('expired_date');
+            $table->timestamps();
+            
         });
     }
 

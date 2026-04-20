@@ -18,6 +18,8 @@ return new class extends Migration
             $table->dateTime('expired_date')->nullable();
             $table->dateTime('bought_date')->nullable();
             $table->string('jumlah');
+            $table->timestamps();
+
         });
     }
 

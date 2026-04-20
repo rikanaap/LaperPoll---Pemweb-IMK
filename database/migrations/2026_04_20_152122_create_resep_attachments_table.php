@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('resep_id')->constrained('reseps')->cascadeOnDelete();
             $table->string('mimetype');
             $table->string('path');
+            $table->timestamps();
+
         });
     }
 

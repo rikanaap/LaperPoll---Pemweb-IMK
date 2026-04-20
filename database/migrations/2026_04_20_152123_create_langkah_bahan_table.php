@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('langkah_id')->constrained('langkah_reseps')->cascadeOnDelete();
             $table->foreignId('resep_bahan_id')->constrained('resep_bahan')->cascadeOnDelete();
             $table->integer('gram_total');
+            $table->timestamps();
+
         });
     }
 

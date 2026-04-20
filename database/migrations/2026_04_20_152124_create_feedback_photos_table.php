@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('feedback_id')->constrained('feedbacks')->cascadeOnDelete();
             $table->string('path');
+            $table->timestamps();
+
         });
     }
 

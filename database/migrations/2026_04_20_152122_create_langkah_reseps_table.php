@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('step_order');
             $table->time('step_duration')->nullable();
             $table->text('description');
+            $table->timestamps();
+
         });
     }
 

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('meal_planner_id')->constrained('meal_planner')->cascadeOnDelete();
             $table->foreignId('resep_id')->constrained('reseps')->cascadeOnDelete();
             $table->enum('meal_time', ['SA','SI','MA']);
+            $table->timestamps();
+
         });
     }
 

@@ -16,6 +16,8 @@ return new class extends Migration
         $table->foreignId('resep_id')->constrained('reseps')->cascadeOnDelete();
         $table->foreignId('bahan_id')->constrained('bahans')->cascadeOnDelete();
         $table->integer('gram_total');
+        $table->timestamps();
+
     });
     }
 

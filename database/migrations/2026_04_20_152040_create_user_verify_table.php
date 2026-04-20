@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('payment_token')->nullable()->unique();
             $table->dateTime('expired_date');
             $table->boolean('is_active')->default(false);
+            $table->timestamps();
+
         });
     }
 
