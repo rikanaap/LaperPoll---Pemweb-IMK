@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/atomic.css">
-    <link rel="stylesheet" href="../styles/global.css">
-    <link rel="stylesheet" href="../styles/pages/main-menu.css">
-    <link rel="stylesheet" href="../styles/medias/main-menu.css">
-    <link rel="icon" href="../assets/Logo_Laperpoll.png">
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/atomic.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pages/main-menu.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/medias/main-menu.css') }}">
+    <link rel="icon" href="{{ asset('assets/images/Logo_Laperpoll.png') }}">
     <title>Laperpoll</title>
 </head>
 
