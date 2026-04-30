@@ -9,6 +9,8 @@ class Feedback extends Model
 {
     use HasFactory;
 
+    protected $table = 'feedbacks';
+
     protected $fillable = [
         'resep_id',
         'user_id',
@@ -17,7 +19,7 @@ class Feedback extends Model
     ];
 
     protected $casts = [
-        'rating' => 'float',
+        'rating' => 'decimal:1',
     ];
 
 

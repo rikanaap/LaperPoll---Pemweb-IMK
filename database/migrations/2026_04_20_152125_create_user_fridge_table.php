@@ -13,13 +13,23 @@ return new class extends Migration
     {
         Schema::create('user_fridge', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('bahan_id')->constrained('bahans')->cascadeOnDelete();
+
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('bahan_id')
+                ->constrained('bahans')
+                ->cascadeOnDelete();
+
             $table->dateTime('expired_date')->nullable();
             $table->dateTime('bought_date')->nullable();
+
             $table->string('jumlah');
+
             $table->timestamps();
 
+            $table->unique(['user_id', 'bahan_id']);
         });
     }
 

@@ -12,9 +12,13 @@ class ResepAttachment extends Model
     protected $table = 'resep_attachments';
 
     protected $fillable = [
-        'resep_id',
+        'resep_id', 
         'mimetype',
         'path'
+    ];
+
+    protected $casts = [
+    'resep_id' => 'integer',
     ];
 
 

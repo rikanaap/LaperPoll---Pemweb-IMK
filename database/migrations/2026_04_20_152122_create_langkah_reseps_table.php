@@ -13,12 +13,20 @@ return new class extends Migration
     {
         Schema::create('langkah_reseps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('resep_id')->constrained('reseps')->cascadeOnDelete();
+
+            $table->foreignId('resep_id')
+                ->constrained('reseps')
+                ->cascadeOnDelete();
+
             $table->integer('step_order');
+
             $table->time('step_duration')->nullable();
+
             $table->text('description');
+
             $table->timestamps();
 
+            $table->unique(['resep_id', 'step_order']);
         });
     }
 

@@ -11,6 +11,7 @@ return new class extends Migration // Jangan diubah baris ini
         Schema::create('bahans', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->integer('expired_expectancy_day')->nullable();
             $table->timestamps();
         });
     }

@@ -12,13 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('resep_bahan', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('resep_id')->constrained('reseps')->cascadeOnDelete();
-        $table->foreignId('bahan_id')->constrained('bahans')->cascadeOnDelete();
-        $table->integer('gram_total');
-        $table->timestamps();
+            $table->id();
 
-    });
+            $table->foreignId('resep_id')->constrained('reseps')->cascadeOnDelete();
+            $table->foreignId('bahan_id')->constrained('bahans')->cascadeOnDelete();
+
+            $table->integer('gram_total');
+
+            $table->timestamps();
+
+            $table->unique(['resep_id', 'bahan_id']);
+        });
     }
 
     /**

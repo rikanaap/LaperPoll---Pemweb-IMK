@@ -19,6 +19,7 @@ class UserCart extends Model
     ];
 
     protected $casts = [
+        'gram_total' => 'integer',
         'is_done' => 'boolean',
     ];
 

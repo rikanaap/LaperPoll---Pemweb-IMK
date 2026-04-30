@@ -18,7 +18,9 @@ class MealPlanner extends Model
     ];
 
     protected $casts = [
+        'user_id' => 'integer',
         'tanggal' => 'date',
+        'max_calorie' => 'integer',
     ];
 
     public function user()

@@ -6,24 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('feedbacks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('resep_id')->constrained('reseps')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->float('rating');
-            $table->string('description')->nullable();
+
+            $table->foreignId('resep_id')
+                  ->constrained('reseps')
+                  ->cascadeOnDelete();
+
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
+
+            $table->decimal('rating', 2, 1);
+
+            $table->text('description')->nullable();
+
             $table->timestamps();
+
+            $table->unique(['resep_id', 'user_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('feedbacks');

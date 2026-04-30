@@ -17,6 +17,12 @@ class ResepBahan extends Model
         'gram_total'
     ];
 
+    protected $casts = [
+        'resep_id' => 'integer',
+        'bahan_id' => 'integer',
+        'gram_total' => 'integer',
+    ];      
+
 
     public function resep()
     {

@@ -17,6 +17,11 @@ class MealPlannerDetail extends Model
         'meal_time',
     ];
 
+    protected $casts = [
+        'meal_planner_id' => 'integer',
+        'resep_id' => 'integer',
+    ];
+
 
     public function mealPlanner()
     {

@@ -10,7 +10,8 @@ class Bahan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama'
+        'nama',
+        'expired_expectancy_day'
     ];
 
 

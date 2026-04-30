@@ -19,7 +19,8 @@ class LangkahResep extends Model
     ];
 
     protected $casts = [
-        'step_duration' => 'datetime:H:i:s',
+        'step_order' => 'integer',
+        'step_duration' => 'string',
     ];
 
     public function resep()

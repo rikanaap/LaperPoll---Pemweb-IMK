@@ -20,6 +20,8 @@ class UserFridge extends Model
     ];
 
     protected $casts = [
+        'user_id' => 'integer',
+        'bahan_id' => 'integer',
         'expired_date' => 'datetime',
         'bought_date' => 'datetime',
     ];

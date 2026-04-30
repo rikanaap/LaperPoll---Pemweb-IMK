@@ -13,11 +13,18 @@ return new class extends Migration
     {
         Schema::create('meal_planner', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->date('tanggal');
+
             $table->integer('max_calorie')->nullable();
+
             $table->timestamps();
 
+            $table->unique(['user_id', 'tanggal']);
         });
     }
 
