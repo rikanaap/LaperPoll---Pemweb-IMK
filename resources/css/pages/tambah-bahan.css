@@ -1,0 +1,201 @@
+.main-content {
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #FFF8F5;
+    padding-bottom: 2rem;
+    gap: 0;
+}
+
+.navbar {
+    background-color: #f4f5f7;
+    margin: 0 -0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+}
+
+.back-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.form-wrapper {
+    background-color: white;
+    border-radius: 1.25rem;
+    padding: 1.5rem 1.25rem;
+    margin-top: 1rem;
+}
+
+.kulkas-title {
+    color: #8C2A1A;
+}
+
+.form-title p {
+    margin-top: 0.15rem;
+}
+
+.form-group label {
+    display: block;
+}
+
+.form-col {
+    flex: 1;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+#clearSearch {
+    cursor: pointer;
+    display: none;
+}
+
+.bahan-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid var(--primary-normal-hover);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    max-height: 14rem;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0.4rem 0;
+}
+
+.dropdown-item {
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    color: var(--secondary-normal);
+    transition: background-color 0.15s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--primary-normal);
+}
+
+.dropdown-empty {
+    padding: 0.65rem 1rem;
+    color: var(--primary-darker);
+}
+
+.satuan-input select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.satuan-hint {
+    color: var(--primary-darker);
+    font-style: italic;
+    display: none;
+}
+
+.jumlah-input {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.jumlah-field {
+    text-align: center;
+    font-weight: 600;
+    width: 3rem;
+    --moz-appearance: textfield;
+}
+
+.jumlah-field::-webkit-outer-spin-button,
+.jumlah-field::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.jumlah-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--orange-normal);
+    padding: 0;
+    transition: color 0.15s;
+}
+
+.jumlah-btn span {
+    font-size: 1.25rem;
+}
+
+.jumlah-btn:hover {
+    color: var(--orange-dark);
+}
+
+.expired-options {
+    flex-wrap: wrap;
+}
+
+.expired-chip {
+    padding: 0.35rem 0.85rem;
+    border-radius: 2rem;
+    border: 1px solid var(--primary-normal-hover);
+    background-color: transparent;
+    color: var(--secondary-normal);
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.expired-chip:hover {
+    background-color: var(--primary-normal);
+}
+
+.expired-chip.active {
+    background-color: #8C2A1A;
+    color: #ffffff;
+    border-color: #8C2A1A;
+}
+
+.input-submit {
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-radius: 0.75rem;
+    padding: 0.9rem 0;
+    background-color: var(--orange-normal);
+    color: white;
+    width: 100%;
+}
+
+.input-submit:hover { background-color: var(--orange-normal-hover); }
+.input-submit:active { background-color: var(--orange-normal-active); }
+
+.form-row {
+    align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+    .main-content {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    .navbar {
+        margin: 0 -2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    .form-wrapper {
+        max-width: 560px;
+        margin: 1rem auto;
+        padding: 2rem;
+    }
+}

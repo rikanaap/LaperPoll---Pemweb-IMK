@@ -1,0 +1,131 @@
+.auth-section {
+    height: 100vh;
+    padding: 0rem 0.7rem;
+    padding: 0 2rem;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    border-radius: 1.5rem;
+}
+
+.logo {
+    height: 6rem;
+    flex-shrink: 0;
+}
+
+.form {
+    background-color: white;
+    padding: 1.25rem 1.8rem 2.5rem 1.8rem;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.form-inputs {
+    align-self: stretch;
+    gap: 0.5rem;
+}
+
+.auth-text {
+    align-items: flex-start;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.auth-link a {
+    color: var(--accent-normal-active);
+    text-decoration: none;
+}
+
+.divider {
+    align-self: stretch;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.google-login {
+    background-color: var(--primary-normal);
+    padding: 0.9rem 0;
+    justify-content: center;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.google-login img {
+    width: 1.25rem;
+}
+
+.google-login h1 {
+    color: var(--secondary-normal);
+}
+
+.wrap-forgot-pass {
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.input-tokens {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-tokens input {
+    width: 15rem;
+    z-index: 2;
+    padding-left: 10px;
+}
+
+.lines {
+    position: absolute;
+    bottom: -5px;
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+    gap: 2rem;
+    z-index: 1;
+}
+
+.lines span {
+    display: block;
+    width: 1.7rem;
+    height: 2px;
+    background-color: #555;
+}
+
+.input-token {
+    letter-spacing: 2.5em;
+    padding-left: 0.5rem;
+    text-transform: uppercase;
+}
+
+.otp-container {
+    display: flex;
+    gap: 12px; /* Jarak antar garis */
+    align-items: center;
+}
+
+.otp-container > input{
+    text-transform: uppercase;
+}
+
+.otp-input {
+    width: 30px;
+    height: 40px;
+    text-align: center;
+    font-family: 'Jakarta Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+    /* Ini yang membuat tampilan garis bawah */
+    border-bottom: 2px solid #757575; 
+    outline: none;
+    transition: all 0.2s;
+    color: #212121;
+}
+
+/* Highlight saat input sedang diisi */
+.otp-input:focus {
+    color: var(--secondary-normal);
+}
+
