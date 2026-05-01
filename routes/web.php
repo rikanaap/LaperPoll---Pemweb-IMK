@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Resep;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -15,5 +16,6 @@ Route::get('/detail-resep', function () {
 });
 
 Route::get('/main-menu', function () {
-    return view('pages.main-menu.main-menu');
+    $reseps = Resep::with('user')->get();
+    return view('pages.main-menu.main-menu', compact('reseps'));
 });
