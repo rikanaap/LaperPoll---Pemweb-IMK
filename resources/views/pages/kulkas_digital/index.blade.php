@@ -1,0 +1,69 @@
+@extends('layouts.app')
+
+@section('title', 'Kulkas Digital - LaperPoll')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/pages/kulkas-digital.css') }}">
+@endpush
+
+@section('content')
+<main class="main-content flex flex-col">
+
+    {{-- NAVBAR --}}
+    <nav class="navbar">
+        <a href="{{ route('profile.index') }}" class="back-btn">
+            <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
+        </a>
+        <img src="{{ asset('assets/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
+        <a href="{{ route('profile.index') }}" class="profile-link">
+            <img src="{{ asset('assets/Image_DummyProfile.png') }}" alt="Profil Foto" class="profile">
+        </a>
+    </nav>
+
+    {{-- HEADER --}}
+    <section class="kulkas-header flex flex-row">
+        <h1 class="font-jakarta font-bold text-h5 kulkas-title">Kulkas Digital</h1>
+        <a href="{{ route('kulkas.tambah') }}" class="kulkas-add-btn" id="btnTambah" aria-label="Tambah bahan">
+            <span class="material-icons-round">add</span>
+        </a>
+    </section>
+
+    {{-- FILTER TABS --}}
+    <div class="filter-tabs flex flex-row" role="tablist">
+        <button class="filter-tab active font-jakarta font-semibold text-body" data-filter="semua" role="tab" aria-selected="true">Semua</button>
+        <button class="filter-tab font-jakarta font-medium text-body" data-filter="tersedia" role="tab" aria-selected="false">Tersedia</button>
+        <button class="filter-tab font-jakarta font-medium text-body" data-filter="hampir-habis" role="tab" aria-selected="false">Hampir Habis</button>
+        <button class="filter-tab font-jakarta font-medium text-body" data-filter="expired" role="tab" aria-selected="false">Expired</button>
+    </div>
+
+    {{-- BAHAN GRID --}}
+    <section class="bahan-grid" id="bahanGrid"></section>
+
+    {{-- RESEP SUGGESTION --}}
+    <section class="resep-suggestion flex flex-col gap-3">
+        <div class="resep-suggestion-header flex flex-row gap-2">
+            <span class="sparkle-icon">✨</span>
+            <h3 class="font-jakarta font-semibold text-title2 text-secondary-normal">Resep dari bahan yang ada</h3>
+        </div>
+        <div class="resep-list flex flex-col gap-2">
+            <div class="resep-suggestion-item flex flex-row">
+                <p class="font-jakarta font-medium text-body text-secondary-normal resep-nama">Scrambled Egg</p>
+                <span class="resep-badge badge-complete font-jakarta font-bold text-caption">3/3 bahan ✓</span>
+            </div>
+            <div class="resep-suggestion-item flex flex-row">
+                <p class="font-jakarta font-medium text-body text-secondary-normal resep-nama">Nasi Goreng</p>
+                <span class="resep-badge badge-partial font-jakarta font-bold text-caption">4/6 bahan</span>
+            </div>
+            <div class="resep-suggestion-item flex flex-row">
+                <p class="font-jakarta font-medium text-body text-secondary-normal resep-nama">Mie Goreng Spesial</p>
+                <span class="resep-badge badge-partial font-jakarta font-bold text-caption">3/4 bahan</span>
+            </div>
+        </div>
+    </section>
+
+</main>
+@endsection
+
+@push('scripts')
+    <script src="{{ asset('js/pages/kulkas-digital.js') }}"></script>
+@endpush
