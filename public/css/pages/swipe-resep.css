@@ -1,29 +1,47 @@
+/* ======================================
+   Swipe Resep
+====================================== */
+
 .main-content {
     padding: 0 0.7rem;
 }
 
-.profile-link {
-    display: flex;
-    align-items: center;
-}
+
+/* ======================================
+   Container
+====================================== */
 
 .swipe-container {
     margin-top: 1rem;
+
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+
+/* ======================================
+   Card Area
+====================================== */
+
 .swipe-cards {
     position: relative;
+
     width: 260px;
     height: 360px;
 }
 
+
+/* ======================================
+   Card
+====================================== */
+
 .swipe-card {
     position: absolute;
+
     width: 100%;
     height: 100%;
+
     padding: 2rem 1rem;
     border-radius: 1.5rem;
 
@@ -35,9 +53,12 @@
     text-align: center;
     cursor: grab;
     user-select: none;
+
     transition: 0.3s ease;
 }
 
+
+/* Layer Card */
 .swipe-card:nth-last-child(1) {
     transform: translateY(0) scale(1);
     z-index: 3;
@@ -58,6 +79,11 @@
     z-index: 0;
 }
 
+
+/* ======================================
+   Card Color
+====================================== */
+
 .swipe-card:nth-child(1) { background: #5B79F2; }
 .swipe-card:nth-child(2) { background: #DB6868; }
 .swipe-card:nth-child(3) { background: #F0D53C; }
@@ -67,16 +93,25 @@
 .swipe-card:nth-child(7) { background: #D2C09A; }
 .swipe-card:nth-child(8) { background: #5BD1A6; }
 
-/* ICON */
+
+/* ======================================
+   Icon
+====================================== */
+
 .swipe-icon {
     font-size: 80px;
-    margin-bottom: 1rem;
     color: white;
+    margin-bottom: 1rem;
 }
 
-/* BUTTONS */
+
+/* ======================================
+   Buttons
+====================================== */
+
 .swipe-buttons {
     margin-top: 3.5rem;
+
     display: flex;
     gap: 2.5rem;
 }
@@ -84,25 +119,30 @@
 .swipe-buttons button {
     width: 75px;
     height: 75px;
-    border-radius: 50%;
+
     border: none;
+    border-radius: 50%;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    transition: 0.2s;
-}
+    cursor: pointer;
 
-.swipe-buttons button span {
-    font-size: 42px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transition: 0.2s;
 }
 
 .swipe-buttons button:active {
     transform: scale(0.9);
 }
 
+.swipe-buttons span {
+    font-size: 42px;
+}
+
+
+/* Like */
 #like {
     background: #ffe5e5;
 }
@@ -111,6 +151,8 @@
     color: red;
 }
 
+
+/* Dislike */
 #dislike {
     background: black;
 }

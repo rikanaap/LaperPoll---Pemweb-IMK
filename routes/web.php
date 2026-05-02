@@ -21,3 +21,8 @@ Route::get('/main-menu', function () {
     return view('pages.main-menu.main-menu', compact('reseps'));
 });
 
+
+//Ikbal - link untuk akses swipe rasa 
+Route::get('/swipe-rasa', function () {
+    return view('pages.swipe_resep.index');
+});
