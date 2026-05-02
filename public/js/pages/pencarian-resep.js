@@ -1,59 +1,56 @@
-// ambil elemen
 const searchInput = document.getElementById('searchInput');
-const searchWrapper = document.getElementById('searchWrapper');
-const bahanItems = document.querySelectorAll('.bahan-item');
-const checkboxes = document.querySelectorAll('.bahan-item input[type="checkbox"]');
-const terapkanBtn = document.getElementById('terapkanBtn');
+const bahanItems  = document.querySelectorAll('.bahan-item');
+const checkboxes  = document.querySelectorAll('.bahan-item input');
+const btnApply    = document.getElementById('terapkanBtn');
 
-searchInput.addEventListener('input', () => {
-    const keyword = searchInput.value.toLowerCase();
+/* SEARCH */
+searchInput.addEventListener('input', function () {
+    const keyword = this.value.toLowerCase();
 
     bahanItems.forEach(item => {
         const nama = item.querySelector('.bahan-nama').textContent.toLowerCase();
 
-        if (nama.includes(keyword)) {
-            item.style.display = "flex";
-        } else {
-            item.style.display = "none";
-        }
+        item.style.display = nama.includes(keyword)
+            ? 'flex'
+            : 'none';
     });
 });
 
-checkboxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-
-        const checked = document.querySelectorAll('.bahan-item input[type="checkbox"]:checked');
-
-        terapkanBtn.style.display = checked.length > 0 ? "block" : "none";
-    });
+/* CHECKBOX */
+checkboxes.forEach(box => {
+    box.addEventListener('change', toggleButton);
 });
 
-function getSelectedBahan() {
-    const selected = [];
-
-    checkboxes.forEach(cb => {
-        if (cb.checked) {
-            const nama = cb.closest('.bahan-item')
-                           .querySelector('.bahan-nama')
-                           .textContent;
-
-            selected.push(nama);
-        }
-    });
-
-    return selected;
+function toggleButton(){
+    const checked = document.querySelectorAll('.bahan-item input:checked');
+    btnApply.style.display = checked.length ? 'block' : 'none';
 }
 
-terapkanBtn.addEventListener("click", () => {
-    const bahan = getSelectedBahan();
-    const query = bahan.join(",");
+/* AMBIL DATA */
+function selectedBahan(){
+    const data = [];
 
-    window.location.href = `filter-pencarian-resep.html?bahan=${query}`;
+    document.querySelectorAll('.bahan-item input:checked').forEach(box => {
+        const nama = box.closest('.bahan-item')
+            .querySelector('.bahan-nama')
+            .textContent;
+
+        data.push(nama);
+    });
+
+    return data;
+}
+
+/* BUTTON */
+btnApply.addEventListener('click', () => {
+    const query = selectedBahan().join(',');
+    window.location.href = `/filter-resep?bahan=${query}`;
 });
 
-searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
+/* ENTER SEARCH */
+searchInput.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
         const keyword = searchInput.value.trim();
-        window.location.href = `filter-pencarian-resep.html?search=${keyword}`;
+        window.location.href = `/filter-resep?search=${keyword}`;
     }
 });

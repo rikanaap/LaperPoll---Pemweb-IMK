@@ -22,7 +22,11 @@ Route::get('/main-menu', function () {
 });
 
 
+//ikbal -> link halaman pencarian resep
+Route::view('/pencarian-resep', 'pages.pencarian-resep.index')
+    ->name('pencarian.resep');
+
+
 //Ikbal - link untuk akses swipe rasa 
-Route::get('/swipe-rasa', function () {
-    return view('pages.swipe_resep.index');
-});
+Route::view('/swipe-rasa', 'pages.swipe_resep.index')
+    ->name('swipe.rasa');
