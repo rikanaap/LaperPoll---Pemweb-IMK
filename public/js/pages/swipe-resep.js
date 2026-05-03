@@ -1,22 +1,38 @@
-// ======================================
-// Swipe Resep - LaperPoll
-// ======================================
-
-const likeButton = document.getElementById("like");
-const dislikeButton = document.getElementById("dislike");
+const likeButton      = document.getElementById("like");
+const dislikeButton   = document.getElementById("dislike");
+const swipeCards      = document.getElementById("swipeCards");
+const counterText     = document.getElementById("counterText");
+const progressBar     = document.getElementById("progressBar");
+const mobileBar       = document.getElementById("mobileProgressBar");
 
 let likeCount = 0;
 const maxLike = 3;
 
+// ======================================
+// Update Status Progress (Desktop & Mobile)
+// ======================================
+function updateProgressUI() {
+    if (counterText) {
+        counterText.textContent = `${likeCount} / ${maxLike}`;
+    }
+    
+    const percentage = (likeCount / maxLike) * 100;
+    
+    if (progressBar) {
+        progressBar.style.width = `${percentage}%`;
+    }
+    if (mobileBar) {
+        mobileBar.style.width = `${percentage}%`;
+    }
+}
 
 // ======================================
 // Ambil Card Paling Atas
 // ======================================
 function getTopCard() {
-    const cards = document.querySelectorAll(".swipe-card");
+    const cards = swipeCards.querySelectorAll(".swipe-card");
     return cards[cards.length - 1];
 }
-
 
 // ======================================
 // Hapus Card Setelah Animasi
@@ -26,7 +42,6 @@ function removeCard(card) {
         card.remove();
     }, 300);
 }
-
 
 // ======================================
 // Redirect Jika Like Sudah 3x
@@ -39,21 +54,20 @@ function checkLikeLimit() {
     }
 }
 
-
 // ======================================
 // Swipe Card
-// direction = right / left
 // ======================================
 function swipeCard(direction) {
     const card = getTopCard();
 
     if (!card) return;
 
-    card.style.transition = "0.3s ease";
+    card.style.transition = "0.3s cubic-bezier(0.16, 1, 0.3, 1)";
 
     if (direction === "right") {
         card.style.transform = "translateX(400px) rotate(20deg)";
         likeCount++;
+        updateProgressUI();
         checkLikeLimit();
     } else {
         card.style.transform = "translateX(-400px) rotate(-20deg)";
@@ -62,13 +76,11 @@ function swipeCard(direction) {
     removeCard(card);
 }
 
-
 // ======================================
 // Event Tombol
 // ======================================
 likeButton.addEventListener("click", () => swipeCard("right"));
 dislikeButton.addEventListener("click", () => swipeCard("left"));
-
 
 // ======================================
 // Drag Swipe
@@ -98,7 +110,7 @@ function enableDrag(card) {
         const diff = currentX - startX;
 
         card.style.transform =
-            `translateX(${diff}px) rotate(${diff / 12}deg)`;
+            `translateX(${diff}px) rotate(${diff / 15}deg)`;
     };
 
     const endDrag = () => {
@@ -113,7 +125,7 @@ function enableDrag(card) {
         } else if (diff < -120) {
             swipeCard("left");
         } else {
-            card.style.transition = "0.3s ease";
+            card.style.transition = "0.3s cubic-bezier(0.16, 1, 0.3, 1)";
             card.style.transform = "";
         }
     };
@@ -129,7 +141,6 @@ function enableDrag(card) {
     card.addEventListener("touchmove", moveDrag);
     card.addEventListener("touchend", endDrag);
 }
-
 
 // ======================================
 // Init Semua Card

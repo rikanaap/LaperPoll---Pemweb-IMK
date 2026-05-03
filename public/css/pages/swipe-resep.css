@@ -1,162 +1,301 @@
-/* ======================================
-   Swipe Resep
-====================================== */
+/* ==================================================
+   MOBILE HINGGA DESKTOP RESPONSIVE STYLE - LAPERPOLL
+   ================================================== */
 
-.main-content {
-    padding: 0 0.7rem;
+.swipe-page {
+    min-height: 100vh;
+    background: #f8fafc; /* Latar belakang creamy light */
+    color: #1e293b;
+    padding-bottom: 2.5rem;
 }
 
+.swipe-wrapper {
+    max-width: 1140px;
+    margin: 1.2rem auto;
+    padding: 1.2rem;
+}
 
-/* ======================================
-   Container
-====================================== */
+.swipe-split-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
 
-.swipe-container {
-    margin-top: 1rem;
+/* Panel Kiri Desktop (Hidden on mobile) */
+.swipe-info-panel {
+    display: none;
+}
 
+/* ==================================================
+   MOBILE HEADER AREA
+   ================================================== */
+
+.mobile-info-header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    margin-bottom: 2.2rem;
 }
 
+.mobile-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #ff7a00;
+    background: #fff0db;
+    padding: 0.35rem 1.1rem;
+    border-radius: 99px;
+    margin-bottom: 0.8rem;
+}
 
-/* ======================================
-   Card Area
-====================================== */
+.mobile-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1.2rem;
+}
+
+.mobile-progress-wrapper {
+    width: 220px;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.mobile-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff922e, #ff7a00);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+}
+
+/* ==================================================
+   AREA CARD (MOBILE)
+   ================================================== */
+
+.swipe-interaction-panel {
+    width: 100%;
+}
+
+.swipe-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.2rem;
+}
 
 .swipe-cards {
     position: relative;
-
-    width: 260px;
-    height: 360px;
+    width: 295px;
+    height: 410px;
 }
-
-
-/* ======================================
-   Card
-====================================== */
 
 .swipe-card {
     position: absolute;
-
     width: 100%;
     height: 100%;
-
-    padding: 2rem 1rem;
-    border-radius: 1.5rem;
-
+    padding: 2.4rem 1.6rem;
+    border-radius: 32px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     text-align: center;
     cursor: grab;
     user-select: none;
-
-    transition: 0.3s ease;
+    box-shadow: 0 10px 28px rgba(148, 163, 184, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-
-/* Layer Card */
-.swipe-card:nth-last-child(1) {
-    transform: translateY(0) scale(1);
-    z-index: 3;
+.swipe-card:active {
+    cursor: grabbing;
 }
 
-.swipe-card:nth-last-child(2) {
-    transform: translateY(12px) scale(0.96);
-    z-index: 2;
-}
+/* Layering effect */
+.swipe-card:nth-last-child(1) { transform: translateY(0) scale(1); z-index: 3; }
+.swipe-card:nth-last-child(2) { transform: translateY(10px) scale(0.96); z-index: 2; opacity: 0.94; }
+.swipe-card:nth-last-child(3) { transform: translateY(20px) scale(0.92); z-index: 1; opacity: 0.88; }
+.swipe-card:nth-last-child(n+4) { transform: translateY(20px) scale(0.92); z-index: 0; opacity: 0; }
 
-.swipe-card:nth-last-child(3) {
-    transform: translateY(24px) scale(0.92);
-    z-index: 1;
-}
+/* Palet Warna Rasa */
+.swipe-card:nth-child(1) { background: linear-gradient(135deg, #475569 0%, #1e293b 100%); }
+.swipe-card:nth-child(2) { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
+.swipe-card:nth-child(3) { background: linear-gradient(135deg, #eab308 0%, #a16207 100%); }
+.swipe-card:nth-child(4) { background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
+.swipe-card:nth-child(5) { background: linear-gradient(135deg, #d946ef 0%, #a21caf 100%); }
+.swipe-card:nth-child(6) { background: linear-gradient(135deg, #64748b 0%, #334155 100%); }
+.swipe-card:nth-child(7) { background: linear-gradient(135deg, #ca8a04 0%, #854d0e 100%); }
+.swipe-card:nth-child(8) { background: linear-gradient(135deg, #f97316 0%, #c2410c 100%); }
 
-.swipe-card:nth-last-child(n+4) {
-    transform: translateY(24px) scale(0.92);
-    z-index: 0;
-}
-
-
-/* ======================================
-   Card Color
-====================================== */
-
-.swipe-card:nth-child(1) { background: #5B79F2; }
-.swipe-card:nth-child(2) { background: #DB6868; }
-.swipe-card:nth-child(3) { background: #F0D53C; }
-.swipe-card:nth-child(4) { background: #65D565; }
-.swipe-card:nth-child(5) { background: #F062DD; }
-.swipe-card:nth-child(6) { background: #535353; }
-.swipe-card:nth-child(7) { background: #D2C09A; }
-.swipe-card:nth-child(8) { background: #5BD1A6; }
-
-
-/* ======================================
-   Icon
-====================================== */
-
-.swipe-icon {
-    font-size: 80px;
-    color: white;
-    margin-bottom: 1rem;
-}
-
-
-/* ======================================
-   Buttons
-====================================== */
-
-.swipe-buttons {
-    margin-top: 3.5rem;
-
-    display: flex;
-    gap: 2.5rem;
-}
-
-.swipe-buttons button {
-    width: 75px;
-    height: 75px;
-
-    border: none;
-    border-radius: 50%;
-
+.swipe-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+}
 
+.swipe-icon-wrapper span { font-size: 42px; color: #ffffff; }
+
+.swipe-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.swipe-desc {
+    font-size: 0.85rem;
+    color: #f1f5f9;
+    line-height: 1.5;
+}
+
+/* ==================================================
+   AREA TOMBOL
+   ================================================== */
+
+.swipe-buttons {
+    display: flex;
+    gap: 1.8rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.swipe-btn {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
-
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    transition: 0.2s;
+    box-shadow: 0 10px 24px rgba(148, 163, 184, 0.3);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.swipe-buttons button:active {
-    transform: scale(0.9);
+.swipe-btn:active { transform: scale(0.9); }
+.swipe-btn:hover { transform: translateY(-3px); }
+
+.dislike-btn {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
 }
 
-.swipe-buttons span {
-    font-size: 42px;
+.dislike-btn span { color: #ef4444; font-size: 32px; }
+
+.like-btn {
+    background: linear-gradient(135deg, #ff922e, #ff7a00);
+    border: none;
 }
 
+.like-btn span { color: #ffffff; font-size: 32px; }
 
-/* Like */
-#like {
-    background: #ffe5e5;
+/* ==================================================
+   RESPONSIVE LAYOUT - DESKTOP & TABLET
+   ================================================== */
+
+@media (min-width: 768px) {
+    .swipe-cards { width: 350px; height: 450px; }
 }
 
-#like span {
-    color: red;
-}
+@media (min-width: 1024px) {
+    .mobile-info-header { display: none; }
+    
+    .swipe-split-layout {
+        display: grid;
+        grid-template-columns: 400px 1fr;
+        gap: 4.5rem;
+        align-items: center;
+        min-height: 72vh;
+    }
 
+    .swipe-info-panel {
+        display: flex;
+        flex-direction: column;
+    }
 
-/* Dislike */
-#dislike {
-    background: black;
-}
+    .info-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 36px;
+        padding: 2.8rem;
+        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.03);
+    }
 
-#dislike span {
-    color: white;
+    .info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-icon { font-size: 36px; color: #ff7a00; }
+
+    .badge-tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #ff7a00;
+        background: #fff0db;
+        padding: 0.35rem 1rem;
+        border-radius: 99px;
+    }
+
+    .info-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 0.8rem;
+    }
+
+    .info-desc {
+        font-size: 0.9rem;
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1.6rem;
+    }
+
+    .divider-line { height: 1px; background: #f1f5f9; margin-bottom: 1.6rem; }
+
+    .progress-box { margin-bottom: 2rem; }
+
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        height: 7px;
+        background: #f1f5f9;
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(135deg, #ff922e, #ff7a00);
+        border-radius: 99px;
+        transition: width 0.3s ease;
+    }
+
+    .tips-box { margin-top: 1.2rem; }
+    .tips-title { font-size: 0.88rem; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; }
+    .tips-title span { color: #f59e0b; }
+    .tips-list {
+        list-style: none; padding: 0; margin: 0;
+        font-size: 0.8rem; color: #64748b; line-height: 1.6;
+    }
 }

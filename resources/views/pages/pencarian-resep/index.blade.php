@@ -1,4 +1,4 @@
- @extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Pencarian Resep')
 
@@ -8,84 +8,88 @@
 
 @section('content')
 
-<main class="main-content flex flex-col gap-4 font-jakarta">
+<main class="search-page font-jakarta">
 
-    {{-- Navbar --}}
     <x-navbar />
 
-    {{-- Search --}}
-    <section>
-        <div class="input" id="searchWrapper">
+    <section class="search-layout">
 
-            <span class="material-icons-round">
-                search
-            </span>
+        {{-- LEFT SIDE --}}
+        <aside class="search-sidebar">
 
-            <input
-                type="text"
-                id="searchInput"
-                class="input-data"
-                placeholder="Cari Bahan / Nama Resep"
-            >
+            {{-- Search Box --}}
+            <div class="input" id="searchWrapper">
+                <span class="material-icons-round">search</span>
+                <input type="text" id="searchInput" class="input-data" placeholder="Cari Bahan / Nama Resep">
+            </div>
 
-        </div>
+            {{-- Title --}}
+            <p class="text-body font-medium section-title">Bahan Populer Minggu Ini</p>
+
+            {{-- Bahan List --}}
+            <section class="bahan-wrapper">
+                <div class="bahan-list flex flex-col gap-5">
+                    
+                    {{-- Pengelompokan Berdasarkan Abjad (Grup A, B, C, dst) --}}
+                    @forelse($bahans as $huruf => $kelompokBahan)
+                        <div class="bahan-group flex flex-col gap-3">
+                            <span class="group-letter">{{ $huruf }}</span>
+                            
+                            @foreach($kelompokBahan as $bahan)
+                                <div class="bahan-item flex justify-between items-center">
+                                    <div class="bahan-left flex items-center gap-3">
+                                        <div class="bahan-icon flex items-center justify-center">
+                                            <span class="material-icons-round">restaurant</span>
+                                        </div>
+                                        <span class="bahan-nama font-medium text-sm text-neutral-900">{{ $bahan->nama }}</span>
+                                    </div>
+                                    <input type="checkbox" name="bahan[]" value="{{ $bahan->id }}">
+                                </div>
+                            @endforeach
+                        </div>
+                    @empty
+                        <p class="text-caption text-center">Tidak ada bahan yang ditemukan.</p>
+                    @endforelse
+
+                </div>
+            </section>
+
+            {{-- Pesan Info Bahan Terpilih --}}
+            <div class="selected-info" id="selectedInfo" style="display: none;">
+                0 bahan terpilih
+            </div>
+
+            {{-- Tombol Aksi (Hapus & Terapkan) --}}
+            <div class="action-buttons-wrapper">
+                <button id="hapusSemuaBtn" class="action-btn hapus-btn" type="button" disabled>Hapus Semua</button>
+                <button id="terapkanBtn" class="action-btn terapkan-btn disabled" type="button" disabled>Terapkan</button>
+            </div>
+
+            {{-- Divider --}}
+            <div class="divider-wrap">
+                <div class="horizontal-line flex-1"></div>
+                <span class="text-caption atau-text">Atau</span>
+                <div class="horizontal-line flex-1"></div>
+            </div>
+
+            {{-- Swipe Button --}}
+            <a href="{{ route('swipe.rasa') }}" class="swipe-btn">
+                <span class="material-icons-round">swap_horiz</span>
+                <span>Swipe Untuk Mencari</span>
+            </a>
+
+        </aside>
+
+        {{-- RIGHT SIDE --}}
+        <section class="search-result">
+            <div class="result-placeholder">
+                <span class="material-icons-round">restaurant_menu</span>
+                <h3>Rekomendasi Resep</h3>
+                <p>Pilih bahan terlebih dahulu untuk melihat hasil resep.</p>
+            </div>
+        </section>
+
     </section>
-
-    {{-- Title --}}
-    <p class="text-body font-medium">
-        Bahan Populer Minggu Ini
-    </p>
-
-    {{-- List Bahan --}}
-    <section class="bahan-wrapper">
-
-        <div class="bahan-list flex flex-col gap-3">
-
-            <x-bahan-item nama="Mie" />
-            <x-bahan-item nama="Ayam" />
-            <x-bahan-item nama="Coklat" />
-            <x-bahan-item nama="Telur" />
-            <x-bahan-item nama="Sapi" />
-
-        </div>
-
-    </section>
-
-    {{-- Button --}}
-    <button
-        id="terapkanBtn"
-        class="terapkan-btn"
-        type="button">
-
-        Terapkan
-
-    </button>
-
-    {{-- Divider --}}
-    <div class="flex flex-row gap-2 items-center">
-
-        <div class="horizontal-line flex-1"></div>
-
-        <span class="text-caption atau-text">
-            Atau
-        </span>
-
-        <div class="horizontal-line flex-1"></div>
-
-    </div>
-
-    {{-- Swipe --}}
-    <a href="{{ route('swipe.rasa') }}" class="swipe-btn">
-
-        <span class="material-icons-round">
-            swap_horiz
-        </span>
-
-        <span>
-            Swipe Untuk Mencari
-        </span>
-
-    </a>
 
 </main>
 
