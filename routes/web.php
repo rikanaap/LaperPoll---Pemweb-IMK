@@ -10,7 +10,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 // Route::get('/', function () {
 //     return view('user.landing');
 // });
@@ -25,15 +24,11 @@ Route::get('/main-menu', function () {
 });
 
 
-//ikbal -> link halaman pencarian resep
-Route::view('/pencarian-resep', 'pages.pencarian-resep.index')
+// Ikbal -> link halaman pencarian resep
+Route::get('/pencarian-resep', [BahanController::class, 'index'])
     ->name('pencarian.resep');
 
-Route::get('/pencarian-resep', [BahanController::class, 'index'])->name('pencarian.resep');
 
-
-//Ikbal - link untuk akses swipe rasa 
-Route::view('/swipe-rasa', 'pages.swipe_resep.index')
+// Ikbal -> link untuk akses swipe rasa
+Route::get('/swipe-rasa', [SwipeResepController::class, 'index'])
     ->name('swipe.rasa');
-
-Route::get('/swipe-rasa', [SwipeResepController::class, 'index'])->name('swipe-resep.index');
