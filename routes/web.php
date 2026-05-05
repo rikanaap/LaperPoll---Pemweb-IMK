@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\BahanController;
 use App\Http\Controllers\SwipeResepController;
+use App\Http\Controllers\KulkasDigitalController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,6 +14,9 @@ Route::get('/', function () {
 // Route::get('/', function () {
 //     return view('user.landing');
 // });
+
+Route::get('/kulkas-digital', [KulkasDigitalController::class, 'index'])
+    ->name('kulkas.index');
 
 Route::get('/detail-resep', function () {
     return view('pages.detail_resep.detail_resep');

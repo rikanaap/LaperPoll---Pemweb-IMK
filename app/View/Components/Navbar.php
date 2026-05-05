@@ -11,10 +11,11 @@ class Navbar extends Component
     /**
      * Create a new component instance.
      */
-    // public $user;
-    public function __construct()
+    public $user;
+    public $back;
+    public function __construct($back = false)
     {
-        // $this->user = $user;
+        $this->back = $back;
     }
 
     /**
