@@ -1,161 +1,184 @@
-const dataBahan = [
-    { nama: "Telur", satuan: ["butir", "gram"] },
-    { nama: "Susu", satuan: ["ml", "liter"] },
-    { nama: "Bawang Merah", satuan: ["gram", "kg", "siung"] },
-    { nama: "Bawang Putih", satuan: ["gram", "kg", "siung"] },
-    { nama: "Cabai Merah", satuan: ["gram", "buah"] },
-    { nama: "Cabai Rawit", satuan: ["gram", "buah"] },
-    { nama: "Tomat", satuan: ["gram", "buah"] },
-    { nama: "Kentang", satuan: ["gram", "kg", "buah"] },
-    { nama: "Wortel", satuan: ["gram", "kg", "buah"] },
-    { nama: "Bayam", satuan: ["gram", "ikat"] },
-    { nama: "Kangkung", satuan: ["gram", "ikat"] },
-    { nama: "Tahu", satuan: ["gram", "buah", "potong"] },
-    { nama: "Tempe", satuan: ["gram", "papan"] },
-    { nama: "Ayam", satuan: ["gram", "kg", "potong"] },
-    { nama: "Daging Sapi", satuan: ["gram", "kg"] },
-    { nama: "Ikan Lele", satuan: ["gram", "ekor"] },
-    { nama: "Udang", satuan: ["gram", "ekor"] },
-    { nama: "Tepung Terigu", satuan: ["gram", "kg"] },
-    { nama: "Gula Pasir", satuan: ["gram", "kg", "sdm"] },
-    { nama: "Garam", satuan: ["gram", "sdt", "sdm"] },
-    { nama: "Minyak Goreng", satuan: ["ml", "liter", "sdm"] },
-    { nama: "Kecap Manis", satuan: ["ml", "sdm"] },
-    { nama: "Saus Tiram", satuan: ["ml", "sdm"] },
-    { nama: "Mentega", satuan: ["gram", "sdm"] },
-    { nama: "Keju", satuan: ["gram"] },
-    { nama: "Nasi", satuan: ["gram", "porsi"] },
-    { nama: "Mie", satuan: ["gram", "bungkus"] },
-    { nama: "Jahe", satuan: ["gram", "ruas"] },
-    { nama: "Kunyit", satuan: ["gram", "ruas"] },
-    { nama: "Serai", satuan: ["gram", "batang"] },
-    { nama: "Daun Salam", satuan: ["lembar"] },
-    { nama: "Santan", satuan: ["ml", "liter"] },
-];
+document.addEventListener('DOMContentLoaded', () => {
 
-const searchInput  = document.getElementById("searchBahan");
-const dropdown     = document.getElementById("bahanDropdown");
-const clearBtn     = document.getElementById("clearSearch");
-const satuanSelect = document.getElementById("satuanBahan");
-const satuanHint   = document.getElementById("satuanHint");
-const jumlahInput  = document.getElementById("jumlahBahan");
-const expiredInput = document.getElementById("expiredDate");
+    // ── AMBIL DATA BAHAN DARI SERVER ─────────────────────────
+    const bahanData = JSON.parse(
+        document.getElementById('bahanData')?.textContent || '[]'
+    );
 
-let selectedBahan = null;
+    // ── ELEMENTS ─────────────────────────────────────────────
+    const searchInput    = document.getElementById('searchBahan');
+    const dropdown       = document.getElementById('bahanDropdown');
+    const clearBtn       = document.getElementById('clearSearch');
+    const bahanIdInput   = document.getElementById('bahanId');
+    const jumlahAngka    = document.getElementById('jumlahAngka');
+    const satuanInput    = document.getElementById('satuanBahan');
+    const boughtDate     = document.getElementById('boughtDate');
+    const expiredDate    = document.getElementById('expiredDate');
+    const expiredSection = document.getElementById('expiredSection');
+    const expiredChips   = document.getElementById('expiredChips');
 
-searchInput.addEventListener("input", () => {
-    const q = searchInput.value.trim().toLowerCase();
-    clearBtn.style.display = q ? "block" : "none";
-    if (!q) { dropdown.style.display = "none"; return; }
-    const results = dataBahan.filter(b => b.nama.toLowerCase().includes(q));
-    renderDropdown(results);
-});
+    let selectedBahan = null;
 
-clearBtn.addEventListener("click", () => {
-    searchInput.value = "";
-    clearBtn.style.display = "none";
-    dropdown.style.display = "none";
-    resetSatuan();
-    selectedBahan = null;
-});
+    // ── SEARCH ────────────────────────────────────────────────
+    searchInput?.addEventListener('input', () => {
+        const q = searchInput.value.trim().toLowerCase();
+        clearBtn.style.display = q ? 'block' : 'none';
+        if (!q) { hideDropdown(); return; }
+        const results = bahanData.filter(b =>
+            b.nama.toLowerCase().includes(q)
+        );
+        renderDropdown(results);
+    });
 
-function renderDropdown(results) {
-    dropdown.innerHTML = "";
-    if (!results.length) {
-        dropdown.innerHTML = '<li class="dropdown-empty font-jakarta text-caption text-primary-darker">Bahan tidak ditemukan</li>';
-        dropdown.style.display = "block";
-        return;
+    clearBtn?.addEventListener('click', () => {
+        searchInput.value  = '';
+        bahanIdInput.value = '';
+        clearBtn.style.display = 'none';
+        hideDropdown();
+        resetExpired();
+        selectedBahan = null;
+    });
+
+    function renderDropdown(results) {
+        dropdown.innerHTML = '';
+        if (!results.length) {
+            dropdown.innerHTML =
+                '<li class="dropdown-empty font-jakarta text-caption text-primary-darker">Bahan tidak ditemukan</li>';
+        } else {
+            results.forEach(b => {
+                const li = document.createElement('li');
+                li.className = 'dropdown-item font-jakarta text-body';
+                li.textContent = b.nama;
+                li.addEventListener('click', () => selectBahan(b));
+                dropdown.appendChild(li);
+            });
+        }
+        dropdown.style.display = 'block';
     }
-    results.forEach(b => {
-        const li = document.createElement("li");
-        li.className = "dropdown-item font-jakarta text-body";
-        li.textContent = b.nama;
-        li.setAttribute("role", "option");
-        li.addEventListener("click", () => selectBahan(b));
-        dropdown.appendChild(li);
+
+    function hideDropdown() { dropdown.style.display = 'none'; }
+
+    function selectBahan(bahan) {
+        selectedBahan       = bahan;
+        searchInput.value   = bahan.nama;
+        bahanIdInput.value  = bahan.id;
+        clearBtn.style.display = 'block';
+        hideDropdown();
+        toggleExpiredSection(bahan);
+    }
+
+    // Tutup dropdown klik luar
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-wrapper')) hideDropdown();
     });
-    dropdown.style.display = "block";
-}
 
-function selectBahan(bahan) {
-    selectedBahan = bahan;
-    searchInput.value = bahan.nama;
-    dropdown.style.display = "none";
-    clearBtn.style.display = "block";
-    populateSatuan(bahan.satuan);
-}
-
-function populateSatuan(satuanList) {
-    satuanSelect.innerHTML = "";
-    satuanList.forEach((s, i) => {
-        const opt = document.createElement("option");
-        opt.value = s;
-        opt.textContent = s;
-        if (i === 0) opt.selected = true;
-        satuanSelect.appendChild(opt);
+    // ── JUMLAH +/- ───────────────────────────────────────────
+    document.getElementById('btnPlus')?.addEventListener('click', () => {
+        jumlahAngka.value = parseInt(jumlahAngka.value || 0) + 1;
+        syncJumlah();
     });
-    satuanHint.textContent = `Satuan tersedia: ${satuanList.join(", ")}`;
-    satuanHint.style.display = "block";
-}
+    document.getElementById('btnMinus')?.addEventListener('click', () => {
+        const val = parseInt(jumlahAngka.value || 1);
+        if (val > 1) { jumlahAngka.value = val - 1; syncJumlah(); }
+    });
 
-function resetSatuan() {
-    satuanSelect.innerHTML = '<option value="" disabled selected>Pilih satuan</option>';
-    satuanHint.style.display = "none";
-}
+    // Sync angka ke field jumlah (nama input form)
+    jumlahAngka?.addEventListener('input', syncJumlah);
 
-document.getElementById("btnPlus").addEventListener("click", () => {
-    jumlahInput.value = parseInt(jumlahInput.value || 0) + 1;
-});
-document.getElementById("btnMinus").addEventListener("click", () => {
-    const val = parseInt(jumlahInput.value || 1);
-    if (val > 1) jumlahInput.value = val - 1;
-});
+    function syncJumlah() {
+        // Ambil satuan dari nama field kalau sudah diisi
+        const currentVal = satuanInput.value.trim();
+        // Coba update angka di depan kalau formatnya "angka satuan"
+        const match = currentVal.match(/^(\d+)\s+(.+)$/);
+        if (match) {
+            satuanInput.value = `${jumlahAngka.value} ${match[2]}`;
+        }
+    }
 
-document.querySelectorAll(".expired-chip").forEach(chip => {
-    chip.addEventListener("click", () => {
-        document.querySelectorAll(".expired-chip").forEach(c => c.classList.remove("active"));
-        chip.classList.add("active");
-        const days = parseInt(chip.dataset.days);
+    // ── EXPIRED SECTION ──────────────────────────────────────
+    function toggleExpiredSection(bahan) {
+        if (bahan.has_expiry && bahan.expired_expectancy_day) {
+            expiredSection.style.removeProperty('display');
+            buildExpiredChips(bahan.expired_expectancy_day);
+            // Auto-set default expired berdasarkan expectancy
+            setExpiredFromDays(bahan.expired_expectancy_day);
+        } else {
+            expiredSection.style.display = 'none !important';
+            expiredDate.value = '';
+            expiredChips.innerHTML = '';
+        }
+    }
+
+    function buildExpiredChips(defaultDays) {
+        expiredChips.innerHTML = '';
+        // Buat chip-chip: default, setengahnya, 2x, dan manual
+        const options = [
+            { label: `${defaultDays} hari (default)`, days: defaultDays },
+            { label: '7 hari', days: 7 },
+            { label: '14 hari', days: 14 },
+            { label: '30 hari', days: 30 },
+        ].filter((v, i, arr) =>
+            arr.findIndex(x => x.days === v.days) === i
+        );
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'expired-chip font-jakarta font-medium text-caption';
+            btn.textContent = opt.label;
+            btn.dataset.days = opt.days;
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.expired-chip')
+                    .forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                setExpiredFromDays(opt.days);
+            });
+            expiredChips.appendChild(btn);
+        });
+
+        // Aktifkan chip default
+        expiredChips.querySelector('.expired-chip')?.classList.add('active');
+    }
+
+    function setExpiredFromDays(days) {
         const d = new Date();
         d.setDate(d.getDate() + days);
-        expiredInput.value = d.toISOString().split("T")[0];
+        expiredDate.value = d.toISOString().split('T')[0];
+    }
+
+    function resetExpired() {
+        expiredSection.style.display = 'none';
+        expiredDate.value = '';
+        expiredChips.innerHTML = '';
+    }
+
+    expiredDate?.addEventListener('input', () => {
+        // Kalau user ganti manual, unset active chip
+        document.querySelectorAll('.expired-chip')
+            .forEach(c => c.classList.remove('active'));
     });
-});
 
-expiredInput.min = new Date().toISOString().split("T")[0];
-
-document.addEventListener("click", (e) => {
-    if (!e.target.closest(".search-wrapper")) {
-        dropdown.style.display = "none";
-    }
-});
-
-document.getElementById("btnTambahBahan").addEventListener("click", () => {
-    if (!selectedBahan) {
-        alert("Pilih nama bahan terlebih dahulu!");
-        return;
-    }
-    if (!satuanSelect.value) {
-        alert("Pilih satuan terlebih dahulu!");
-        return;
-    }
-    if (!jumlahInput.value || jumlahInput.value < 1) {
-        alert("Masukkan jumlah yang valid!");
-        return;
-    }
-    if (!expiredInput.value) {
-        alert("Pilih tanggal expired terlebih dahulu!");
-        return;
-    }
-
-    const existing = JSON.parse(localStorage.getItem("kulkas_bahan") || "[]");
-    existing.unshift({
-        nama: selectedBahan.nama,
-        jumlah: parseInt(jumlahInput.value),
-        satuan: satuanSelect.value,
-        expired: expiredInput.value
+    // Set min date untuk expired = tanggal beli
+    boughtDate?.addEventListener('change', () => {
+        if (expiredDate) expiredDate.min = boughtDate.value;
     });
-    localStorage.setItem("kulkas_bahan", JSON.stringify(existing));
+    if (expiredDate && boughtDate) {
+        expiredDate.min = boughtDate.value;
+    }
 
-    window.location.href = "kulkas-digital.html";
+    // ── VALIDASI SUBMIT ───────────────────────────────────────
+    document.getElementById('formTambahBahan')?.addEventListener('submit', (e) => {
+        if (!bahanIdInput.value) {
+            e.preventDefault();
+            alert('Pilih nama bahan dari daftar terlebih dahulu!');
+            searchInput.focus();
+            return;
+        }
+        if (!satuanInput.value.trim()) {
+            e.preventDefault();
+            alert('Isi jumlah dan satuan bahan!');
+            satuanInput.focus();
+            return;
+        }
+    });
 });
