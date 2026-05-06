@@ -10,9 +10,6 @@ use Carbon\Carbon;
 
 class KulkasDigitalController extends Controller
 {
-    /**
-     * Halaman utama kulkas digital
-     */
     public function index()
     {
         $fridgeItems = UserFridge::with('bahan')
@@ -21,18 +18,20 @@ class KulkasDigitalController extends Controller
             ->orderBy('bought_date', 'desc')
             ->get();
 
+        // Group by bahan_id untuk fitur multi-pembelian + expand card
         $grouped = $fridgeItems->groupBy('bahan_id')->map(function ($items) {
-            $bahan = $items->first()->bahan;
+            $bahan     = $items->first()->bahan;
             $hasExpiry = $bahan->expired_expectancy_day !== null;
 
+            // Tentukan status dari semua pembelian
             $statusFinal = 'tersedia';
-
             foreach ($items as $item) {
                 if ($item->expired_date) {
                     $diff = Carbon::now()->startOfDay()
                         ->diffInDays(Carbon::parse($item->expired_date)->startOfDay(), false);
-
-                    if ($diff <= 3) {
+                    if ($diff <= 0) {
+                        $statusFinal = 'expired';
+                    } elseif ($diff <= 3 && $statusFinal !== 'expired') {
                         $statusFinal = 'hampir-habis';
                     }
                 }
@@ -48,7 +47,6 @@ class KulkasDigitalController extends Controller
                         ? Carbon::now()->startOfDay()
                             ->diffInDays(Carbon::parse($item->expired_date)->startOfDay(), false)
                         : null;
-
                     return [
                         'id'           => $item->id,
                         'jumlah'       => $item->jumlah,
@@ -69,19 +67,12 @@ class KulkasDigitalController extends Controller
         return view('pages.kulkas_digital.index', compact('grouped', 'bahans'));
     }
 
-    /**
-     * Halaman form tambah bahan
-     */
     public function tambah()
     {
         $bahans = Bahan::orderBy('nama')->get();
-
         return view('pages.kulkas_digital.tambah', compact('bahans'));
     }
 
-    /**
-     * Simpan bahan baru ke kulkas user
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -99,14 +90,10 @@ class KulkasDigitalController extends Controller
             'expired_date' => $request->expired_date,
         ]);
 
-        return redirect()
-            ->route('kulkas.index')
+        return redirect()->route('kulkas.index')
             ->with('success', 'Bahan berhasil ditambahkan ke kulkas!');
     }
 
-    /**
-     * Hapus satu pembelian dari kulkas
-     */
     public function destroy($id)
     {
         $item = UserFridge::where('id', $id)
@@ -115,22 +102,7 @@ class KulkasDigitalController extends Controller
 
         $item->delete();
 
-        return redirect()
-            ->route('kulkas.index')
+        return redirect()->route('kulkas.index')
             ->with('success', 'Pembelian berhasil dihapus.');
-    }
-
-    /**
-     * API search bahan (buat autocomplete / dropdown tambah bahan)
-     */
-    public function searchBahan(Request $request)
-    {
-        $q = $request->get('q', '');
-
-        $bahans = Bahan::where('nama', 'like', "%{$q}%")
-            ->orderBy('nama')
-            ->get(['id', 'nama', 'expired_expectancy_day']);
-
-        return response()->json($bahans);
     }
 }

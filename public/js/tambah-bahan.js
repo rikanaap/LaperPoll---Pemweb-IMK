@@ -1,11 +1,9 @@
+// tambah-bahan.js
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── AMBIL DATA BAHAN DARI SERVER ─────────────────────────
-    const bahanData = JSON.parse(
-        document.getElementById('bahanData')?.textContent || '[]'
-    );
+    const bahanData = JSON.parse(document.getElementById('bahanData')?.textContent || '[]');
 
-    // ── ELEMENTS ─────────────────────────────────────────────
     const searchInput    = document.getElementById('searchBahan');
     const dropdown       = document.getElementById('bahanDropdown');
     const clearBtn       = document.getElementById('clearSearch');
@@ -19,125 +17,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let selectedBahan = null;
 
-    // ── SEARCH ────────────────────────────────────────────────
+    // ── SEARCH AUTOCOMPLETE ──────────────────────────────────
     searchInput?.addEventListener('input', () => {
         const q = searchInput.value.trim().toLowerCase();
         clearBtn.style.display = q ? 'block' : 'none';
-        if (!q) { hideDropdown(); return; }
-        const results = bahanData.filter(b =>
-            b.nama.toLowerCase().includes(q)
-        );
-        renderDropdown(results);
+        if (!q) { closeDropdown(); return; }
+        renderDropdown(bahanData.filter(b => b.nama.toLowerCase().includes(q)));
     });
 
     clearBtn?.addEventListener('click', () => {
         searchInput.value  = '';
         bahanIdInput.value = '';
         clearBtn.style.display = 'none';
-        hideDropdown();
-        resetExpired();
+        closeDropdown();
+        hideExpired();
         selectedBahan = null;
     });
 
     function renderDropdown(results) {
         dropdown.innerHTML = '';
         if (!results.length) {
-            dropdown.innerHTML =
-                '<li class="dropdown-empty font-jakarta text-caption text-primary-darker">Bahan tidak ditemukan</li>';
+            dropdown.innerHTML = '<li class="dropdown-empty font-jakarta text-caption text-primary-darker">Bahan tidak ditemukan</li>';
         } else {
             results.forEach(b => {
                 const li = document.createElement('li');
                 li.className = 'dropdown-item font-jakarta text-body';
                 li.textContent = b.nama;
-                li.addEventListener('click', () => selectBahan(b));
+                li.addEventListener('click', () => pick(b));
                 dropdown.appendChild(li);
             });
         }
         dropdown.style.display = 'block';
     }
 
-    function hideDropdown() { dropdown.style.display = 'none'; }
+    function closeDropdown() { dropdown.style.display = 'none'; }
 
-    function selectBahan(bahan) {
-        selectedBahan       = bahan;
-        searchInput.value   = bahan.nama;
-        bahanIdInput.value  = bahan.id;
+    function pick(bahan) {
+        selectedBahan      = bahan;
+        searchInput.value  = bahan.nama;
+        bahanIdInput.value = bahan.id;
         clearBtn.style.display = 'block';
-        hideDropdown();
-        toggleExpiredSection(bahan);
+        closeDropdown();
+        bahan.has_expiry ? showExpired(bahan) : hideExpired();
     }
 
-    // Tutup dropdown klik luar
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.search-wrapper')) hideDropdown();
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.search-wrapper')) closeDropdown();
     });
 
     // ── JUMLAH +/- ───────────────────────────────────────────
     document.getElementById('btnPlus')?.addEventListener('click', () => {
         jumlahAngka.value = parseInt(jumlahAngka.value || 0) + 1;
-        syncJumlah();
     });
     document.getElementById('btnMinus')?.addEventListener('click', () => {
-        const val = parseInt(jumlahAngka.value || 1);
-        if (val > 1) { jumlahAngka.value = val - 1; syncJumlah(); }
+        const v = parseInt(jumlahAngka.value || 1);
+        if (v > 1) jumlahAngka.value = v - 1;
     });
 
-    // Sync angka ke field jumlah (nama input form)
-    jumlahAngka?.addEventListener('input', syncJumlah);
-
-    function syncJumlah() {
-        // Ambil satuan dari nama field kalau sudah diisi
-        const currentVal = satuanInput.value.trim();
-        // Coba update angka di depan kalau formatnya "angka satuan"
-        const match = currentVal.match(/^(\d+)\s+(.+)$/);
-        if (match) {
-            satuanInput.value = `${jumlahAngka.value} ${match[2]}`;
-        }
-    }
-
     // ── EXPIRED SECTION ──────────────────────────────────────
-    function toggleExpiredSection(bahan) {
-        if (bahan.has_expiry && bahan.expired_expectancy_day) {
-            expiredSection.style.removeProperty('display');
-            buildExpiredChips(bahan.expired_expectancy_day);
-            // Auto-set default expired berdasarkan expectancy
-            setExpiredFromDays(bahan.expired_expectancy_day);
-        } else {
-            expiredSection.style.display = 'none !important';
-            expiredDate.value = '';
-            expiredChips.innerHTML = '';
-        }
+    function showExpired(bahan) {
+        expiredSection.style.display = 'flex';
+        buildChips(bahan.expired_expectancy_day);
+        setExpiredFromDays(bahan.expired_expectancy_day);
     }
 
-    function buildExpiredChips(defaultDays) {
+    function hideExpired() {
+        expiredSection.style.display = 'none';
+        expiredDate.value = '';
         expiredChips.innerHTML = '';
-        // Buat chip-chip: default, setengahnya, 2x, dan manual
-        const options = [
-            { label: `${defaultDays} hari (default)`, days: defaultDays },
-            { label: '7 hari', days: 7 },
-            { label: '14 hari', days: 14 },
-            { label: '30 hari', days: 30 },
-        ].filter((v, i, arr) =>
-            arr.findIndex(x => x.days === v.days) === i
-        );
+    }
 
-        options.forEach(opt => {
+    function buildChips(defaultDays) {
+        expiredChips.innerHTML = '';
+        const days = [...new Set([defaultDays, 7, 14, 30])].filter(Boolean).sort((a,b)=>a-b);
+        days.forEach((d, i) => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'expired-chip font-jakarta font-medium text-caption';
-            btn.textContent = opt.label;
-            btn.dataset.days = opt.days;
+            btn.className = 'expired-chip font-jakarta font-medium text-caption' + (i === 0 ? ' active' : '');
+            btn.textContent = d === defaultDays ? `${d} hari (default)` : `${d} hari`;
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.expired-chip')
-                    .forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.expired-chip').forEach(c => c.classList.remove('active'));
                 btn.classList.add('active');
-                setExpiredFromDays(opt.days);
+                setExpiredFromDays(d);
             });
             expiredChips.appendChild(btn);
         });
-
-        // Aktifkan chip default
-        expiredChips.querySelector('.expired-chip')?.classList.add('active');
     }
 
     function setExpiredFromDays(days) {
@@ -146,39 +110,20 @@ document.addEventListener('DOMContentLoaded', () => {
         expiredDate.value = d.toISOString().split('T')[0];
     }
 
-    function resetExpired() {
-        expiredSection.style.display = 'none';
-        expiredDate.value = '';
-        expiredChips.innerHTML = '';
-    }
-
-    expiredDate?.addEventListener('input', () => {
-        // Kalau user ganti manual, unset active chip
-        document.querySelectorAll('.expired-chip')
-            .forEach(c => c.classList.remove('active'));
-    });
-
-    // Set min date untuk expired = tanggal beli
     boughtDate?.addEventListener('change', () => {
         if (expiredDate) expiredDate.min = boughtDate.value;
     });
-    if (expiredDate && boughtDate) {
-        expiredDate.min = boughtDate.value;
-    }
 
-    // ── VALIDASI SUBMIT ───────────────────────────────────────
-    document.getElementById('formTambahBahan')?.addEventListener('submit', (e) => {
+    // ── VALIDASI SEBELUM SUBMIT ───────────────────────────────
+    document.getElementById('formTambahBahan')?.addEventListener('submit', e => {
         if (!bahanIdInput.value) {
             e.preventDefault();
             alert('Pilih nama bahan dari daftar terlebih dahulu!');
             searchInput.focus();
-            return;
-        }
-        if (!satuanInput.value.trim()) {
+        } else if (!satuanInput.value.trim()) {
             e.preventDefault();
             alert('Isi jumlah dan satuan bahan!');
             satuanInput.focus();
-            return;
         }
     });
 });
