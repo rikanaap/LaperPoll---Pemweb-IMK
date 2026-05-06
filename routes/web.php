@@ -8,12 +8,8 @@ use App\Http\Controllers\SwipeResepController;
 use App\Http\Controllers\KulkasDigitalController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
-
-// Route::get('/', function () {
-//     return view('user.landing');
-// });
 
 Route::get('/kulkas-digital', [KulkasDigitalController::class, 'index'])
     ->name('kulkas.index');
