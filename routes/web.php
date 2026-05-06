@@ -11,7 +11,7 @@ use App\Http\Controllers\PilihResepController;
 use App\Http\Controllers\NotaBelAnjaController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 Route::get('/detail-resep', function () {
