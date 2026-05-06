@@ -18,6 +18,9 @@
 
     {{-- Page-specific CSS --}}
     @stack('styles')
+    
+    {{-- Link Specific Page  --}}
+    @stack('links')
 
     <title>@yield('title', 'LaperPoll')</title>
 </head>
