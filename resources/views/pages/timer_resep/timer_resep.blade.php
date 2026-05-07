@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/global.css">
-    <link rel="stylesheet" href="../styles/atomic.css">
-    <link rel="stylesheet" href="../styles/pages/timer-resep.css">
-    <title>Laperpoll</title>
-</head>
+@extends('layouts.app')
+
+@section('title', 'Main Menu - LaperPoll')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/pages/timer-resep.css') }}">
+@endpush
+
 <body>
     <div class="app-container">
         <main class="instruction-card">
@@ -70,6 +68,6 @@
         </aside>
     </div>
 
-    <script src="../js/timer-resep.js"></script>
+    <script src="{{ asset('js/timer-resep.js') }}"></script>
 </body>
 </html>

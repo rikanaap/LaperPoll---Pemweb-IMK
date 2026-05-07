@@ -10,15 +10,7 @@
 <main class="main-content flex flex-col gap-4">
 
     {{-- NAVBAR --}}
-    <nav class="navbar">
-        <a href="{{ route('meal-planner.index') }}" class="back-btn" aria-label="Kembali">
-            <span class="material-icons-round text-h4 text-accent-normal">arrow_back</span>
-        </a>
-        <img src="{{ asset('assets/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
-        <a href="{{ route('profile.index') }}" class="profile-link">
-            <img src="{{ asset('assets/Image_DummyProfile.png') }}" alt="Profil Foto" class="profile">
-        </a>
-    </nav>
+    <x-navbar :back="true"></x-navbar>
 
     {{-- HEADER INFO SLOT --}}
     <div class="slot-info flex flex-col gap-1">
@@ -43,5 +35,5 @@
         // Pass route balik ke meal planner
         window.mealPlannerUrl = "{{ route('meal-planner.index') }}";
     </script>
-    <script src="{{ asset('js/pages/pilih-resep.js') }}"></script>
+    <script src="{{ asset('js/pilih-resep.js') }}"></script>
 @endpush

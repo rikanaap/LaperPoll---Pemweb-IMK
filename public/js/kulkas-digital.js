@@ -1,93 +1,71 @@
-function hitungStatus(expiredDate) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const exp = new Date(expiredDate);
-    exp.setHours(0, 0, 0, 0);
-    const diffDays = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
+// kulkas-digital.js
 
-    if (diffDays <= 0) return { status: "expired", label: "Habis", diffDays };
-    if (diffDays <= 2) return { status: "hampir-habis", label: "Segera Habis", diffDays };
-    return { status: "tersedia", label: "Tersedia", diffDays };
-}
+document.addEventListener('DOMContentLoaded', () => {
 
-function renderBahan() {
-    const grid = document.getElementById("bahanGrid");
-    const bahan = JSON.parse(localStorage.getItem("kulkas_bahan") || "[]");
-    const dummyBahan = [
-        { nama: "Bawang Putih", jumlah: 6, satuan: "siung", expired: offsetDate(3) },
-        { nama: "Telur", jumlah: 6, satuan: "butir", expired: offsetDate(3) },
-        { nama: "Bawang Merah", jumlah: 5, satuan: "siung", expired: offsetDate(7) },
-        { nama: "Ketumbar Bubuk", jumlah: 10, satuan: "gram", expired: offsetDate(7) },
-        { nama: "Kunyit Bubuk", jumlah: 25, satuan: "gram", expired: offsetDate(7) },
-        { nama: "Susu", jumlah: 200, satuan: "ml", expired: offsetDate(1) },
-        { nama: "Toge", jumlah: 100, satuan: "gram", expired: offsetDate(1) },
-        { nama: "Tomat", jumlah: 5, satuan: "buah", expired: offsetDate(1) },
-        { nama: "Cabai Merah", jumlah: 0, satuan: "buah", expired: offsetDate(0) },
-        { nama: "Beras", jumlah: 0, satuan: "liter", expired: offsetDate(0) },
-    ];
-    const semuaBahan = [...bahan, ...dummyBahan];
+    const tabs  = document.querySelectorAll('.filter-tab');
+    const cards = document.querySelectorAll('.bahan-card');
 
-    grid.innerHTML = "";
-
-    semuaBahan.forEach((item, index) => {
-        const { status, label, diffDays } = hitungStatus(item.expired);
-
-        const badgeClass = status === "tersedia" ? "badge-tersedia"
-            : status === "hampir-habis" ? "badge-hampir"
-            : "badge-expired";
-
-        const infoText = item.jumlah > 0
-            ? `${item.jumlah} ${item.satuan} · ${diffDays > 0 ? diffDays + " hari" : "Habis"}`
-            : `0 ${item.satuan}`;
-
-        const card = document.createElement("div");
-        card.className = "bahan-card";
-        card.dataset.status = status;
-        card.innerHTML = `
-            <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">${item.nama}</h2>
-            <p class="font-jakarta font-regular text-caption text-primary-darker">${infoText}</p>
-            <span class="status-badge ${badgeClass} font-jakarta font-medium text-caption">${label}</span>
-        `;
-
-        grid.appendChild(card);
-    });
-
-    pasangFilter();
-}
-
-function offsetDate(days) {
-    const d = new Date();
-    d.setDate(d.getDate() + days);
-    return d.toISOString().split("T")[0];
-}
-
-function pasangFilter() {
-    const tabs = document.querySelectorAll(".filter-tab");
-    const cards = document.querySelectorAll(".bahan-card");
+    // ── FILTER TABS ──────────────────────────────────────────
+    function applyFilter(filter) {
+        const q = document.getElementById('searchKulkas')?.value.trim().toLowerCase() || '';
+        cards.forEach(card => {
+            const statusOk = filter === 'semua' || card.dataset.status === filter;
+            const searchOk = q === '' || (card.dataset.nama || '').includes(q);
+            card.style.display = (statusOk && searchOk) ? 'flex' : 'none';
+        });
+    }
 
     tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            tabs.forEach(t => {
-                t.classList.remove("active");
-                t.setAttribute("aria-selected", "false");
-            });
-            tab.classList.add("active");
-            tab.setAttribute("aria-selected", "true");
-
-            const filter = tab.dataset.filter;
-            cards.forEach(card => {
-                if (filter === "semua" || card.dataset.status === filter) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
-            });
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            applyFilter(tab.dataset.filter);
         });
     });
-}
 
-document.getElementById("btnTambah").addEventListener("click", () => {
-    window.location.href = "tambah-bahan.html";
+    // ── SEARCH ───────────────────────────────────────────────
+    document.getElementById('searchKulkas')?.addEventListener('input', () => {
+        const activeFilter = document.querySelector('.filter-tab.active')?.dataset.filter || 'semua';
+        applyFilter(activeFilter);
+    });
+
+    // ── EXPAND CARD ──────────────────────────────────────────
+    document.getElementById('bahanGrid')?.addEventListener('click', e => {
+        const card = e.target.closest('.bahan-card');
+        if (!card) return;
+        if (e.target.closest('.hapus-btn') || e.target.closest('.hapus-form')) return;
+
+        const isExpanded = card.classList.contains('expanded');
+        document.querySelectorAll('.bahan-card.expanded').forEach(c => collapse(c));
+        if (!isExpanded) expand(card);
+    });
+
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.bahan-card')) {
+            document.querySelectorAll('.bahan-card.expanded').forEach(c => collapse(c));
+        }
+    });
+
+    function expand(card) {
+        card.classList.add('expanded');
+        card.querySelector('.card-collapsed').style.display = 'none';
+        card.querySelector('.card-expanded').style.display  = 'flex';
+    }
+
+    function collapse(card) {
+        card.classList.remove('expanded');
+        card.querySelector('.card-collapsed').style.display = 'flex';
+        card.querySelector('.card-expanded').style.display  = 'none';
+    }
+
+    // ── FLASH AUTO HIDE ──────────────────────────────────────
+    const flash = document.getElementById('flashMsg');
+    if (flash) {
+        setTimeout(() => {
+            flash.style.transition = 'opacity 0.5s';
+            flash.style.opacity = '0';
+            setTimeout(() => flash.remove(), 500);
+        }, 3000);
+    }
 });
-
-renderBahan();

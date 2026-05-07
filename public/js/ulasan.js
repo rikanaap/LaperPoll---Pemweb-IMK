@@ -31,7 +31,7 @@ const stars = document.querySelectorAll('.star-icon');
                 } else {
                     alert("Terima kasih! Ulasan Anda berhasil dikirim.");
                    
-                    window.location.href = 'detail-resep.html';
+                    window.location.href = "/detail-resep";
                 }
             });
         } else {

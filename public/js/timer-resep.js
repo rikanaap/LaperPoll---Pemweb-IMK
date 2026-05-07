@@ -116,7 +116,7 @@ const recipeSteps = [
         
         const konfirmasi = confirm("Selamat! Masakan sudah selesai. Beri ulasan sekarang?");
         if (konfirmasi) {
-            window.location.href = "ulasan.html"; 
+            window.location.href = "/ulasan"; 
         }
     }
     };
