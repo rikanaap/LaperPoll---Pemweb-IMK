@@ -1,148 +1,197 @@
-const likeButton      = document.getElementById("like");
-const dislikeButton   = document.getElementById("dislike");
-const swipeCards      = document.getElementById("swipeCards");
-const counterText     = document.getElementById("counterText");
-const progressBar     = document.getElementById("progressBar");
-const mobileBar       = document.getElementById("mobileProgressBar");
+/**
+ * LaperPoll - Swipe Resep Engine
+ * Optimized for Performance & Memory Management
+ */
 
-let likeCount = 0;
-const maxLike = 3;
+const swipeApp = {
+    // ======================================
+    // ELEMENTS
+    // ======================================
+    ui: {
+        cardsContainer: document.getElementById("swipeCards"),
+        likeBtn: document.getElementById("like"),
+        dislikeBtn: document.getElementById("dislike"),
+        counterText: document.getElementById("counterText"),
+        progressBar: document.getElementById("progressBar"),
+        mobileBar: document.getElementById("mobileProgressBar"),
+        emptyState: document.getElementById("emptyState"),
+    },
 
-// ======================================
-// Update Status Progress (Desktop & Mobile)
-// ======================================
-function updateProgressUI() {
-    if (counterText) {
-        counterText.textContent = `${likeCount} / ${maxLike}`;
-    }
-    
-    const percentage = (likeCount / maxLike) * 100;
-    
-    if (progressBar) {
-        progressBar.style.width = `${percentage}%`;
-    }
-    if (mobileBar) {
-        mobileBar.style.width = `${percentage}%`;
-    }
-}
+    // ======================================
+    // STATE
+    // ======================================
+    state: {
+        likeCount: 0,
+        maxLike: 3,
+        isAnimating: false,
+        threshold: 120, // Jarak minimal untuk trigger swipe
+    },
 
-// ======================================
-// Ambil Card Paling Atas
-// ======================================
-function getTopCard() {
-    const cards = swipeCards.querySelectorAll(".swipe-card");
-    return cards[cards.length - 1];
-}
+    // ======================================
+    // CORE LOGIC
+    // ======================================
+    init() {
+        this.updateUI();
+        this.bindEvents();
+        this.enableDragAll();
+    },
 
-// ======================================
-// Hapus Card Setelah Animasi
-// ======================================
-function removeCard(card) {
-    setTimeout(() => {
-        card.remove();
-    }, 300);
-}
+    bindEvents() {
+        this.ui.likeBtn?.addEventListener("click", () => this.swipe("right"));
+        this.ui.dislikeBtn?.addEventListener("click", () => this.swipe("left"));
+    },
 
-// ======================================
-// Redirect Jika Like Sudah 3x
-// ======================================
-function checkLikeLimit() {
-    if (likeCount >= maxLike) {
-        setTimeout(() => {
-            window.location.href = "/filter-resep-swipe";
-        }, 300);
-    }
-}
+    updateUI() {
+        const percentage = (this.state.likeCount / this.state.maxLike) * 100;
 
-// ======================================
-// Swipe Card
-// ======================================
-function swipeCard(direction) {
-    const card = getTopCard();
-
-    if (!card) return;
-
-    card.style.transition = "0.3s cubic-bezier(0.16, 1, 0.3, 1)";
-
-    if (direction === "right") {
-        card.style.transform = "translateX(400px) rotate(20deg)";
-        likeCount++;
-        updateProgressUI();
-        checkLikeLimit();
-    } else {
-        card.style.transform = "translateX(-400px) rotate(-20deg)";
-    }
-
-    removeCard(card);
-}
-
-// ======================================
-// Event Tombol
-// ======================================
-likeButton.addEventListener("click", () => swipeCard("right"));
-dislikeButton.addEventListener("click", () => swipeCard("left"));
-
-// ======================================
-// Drag Swipe
-// ======================================
-function enableDrag(card) {
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
-
-    const startDrag = (event) => {
-        isDragging = true;
-
-        startX = event.touches
-            ? event.touches[0].clientX
-            : event.clientX;
-
-        card.style.transition = "none";
-    };
-
-    const moveDrag = (event) => {
-        if (!isDragging) return;
-
-        currentX = event.touches
-            ? event.touches[0].clientX
-            : event.clientX;
-
-        const diff = currentX - startX;
-
-        card.style.transform =
-            `translateX(${diff}px) rotate(${diff / 15}deg)`;
-    };
-
-    const endDrag = () => {
-        if (!isDragging) return;
-
-        isDragging = false;
-
-        const diff = currentX - startX;
-
-        if (diff > 120) {
-            swipeCard("right");
-        } else if (diff < -120) {
-            swipeCard("left");
-        } else {
-            card.style.transition = "0.3s cubic-bezier(0.16, 1, 0.3, 1)";
-            card.style.transform = "";
+        if (this.ui.counterText) {
+            this.ui.counterText.textContent = `${this.state.likeCount} / ${this.state.maxLike}`;
         }
-    };
 
-    // Mouse
-    card.addEventListener("mousedown", startDrag);
-    card.addEventListener("mousemove", moveDrag);
-    card.addEventListener("mouseup", endDrag);
-    card.addEventListener("mouseleave", endDrag);
+        [this.ui.progressBar, this.ui.mobileBar].forEach(bar => {
+            if (bar) bar.style.width = `${percentage}%`;
+        });
+    },
 
-    // Touch
-    card.addEventListener("touchstart", startDrag);
-    card.addEventListener("touchmove", moveDrag);
-    card.addEventListener("touchend", endDrag);
-}
+    getTopCard() {
+        const cards = this.ui.cardsContainer.querySelectorAll(".swipe-card");
+        return cards.length > 0 ? cards[cards.length - 1] : null;
+    },
 
-// ======================================
-// Init Semua Card
-// ======================================
-document.querySelectorAll(".swipe-card").forEach(enableDrag);
+    swipe(direction) {
+        if (this.state.isAnimating) return;
+
+        const card = this.getTopCard();
+        if (!card) return;
+
+        this.state.isAnimating = true;
+        const moveX = direction === "right" ? 450 : -450;
+        const rotate = direction === "right" ? 25 : -25;
+
+        // Visual Label (LIKE/SKIP)
+        this.addLabel(card, direction === "right" ? "like" : "nope");
+
+        // Animate Out
+        card.style.transition = "transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s";
+        card.style.transform = `translateX(${moveX}px) rotate(${rotate}deg)`;
+        card.style.opacity = "0";
+
+        if (direction === "right") {
+            this.state.likeCount++;
+            this.updateUI();
+        }
+
+        // Cleanup after animation
+        card.addEventListener("transitionend", () => {
+            card.remove();
+            this.state.isAnimating = false;
+            this.checkEmpty();
+            this.checkLimit();
+        }, { once: true });
+    },
+
+    addLabel(card, type) {
+        // Hapus label preview jika ada
+        const existingLabel = card.querySelector(".swipe-label");
+        if (existingLabel) existingLabel.remove();
+
+        const label = document.createElement("div");
+        label.className = `swipe-label ${type}`;
+        label.innerText = type === "like" ? "LIKE" : "SKIP";
+        card.appendChild(label);
+    },
+
+    checkEmpty() {
+        const remaining = this.ui.cardsContainer.querySelectorAll(".swipe-card");
+        if (remaining.length === 0 && this.ui.emptyState) {
+            this.ui.emptyState.style.display = "block";
+        }
+    },
+
+    checkLimit() {
+        if (this.state.likeCount >= this.state.maxLike) {
+            // Disable tombol agar tidak diklik lagi
+            if (this.ui.likeBtn) this.ui.likeBtn.disabled = true;
+            if (this.ui.dislikeBtn) this.ui.dislikeBtn.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = "/filter-resep-swipe";
+            }, 600);
+        }
+    },
+
+    // ======================================
+    // DRAG FEATURE
+    // ======================================
+    enableDragAll() {
+        const cards = this.ui.cardsContainer.querySelectorAll(".swipe-card");
+        cards.forEach(card => this.setupDrag(card));
+    },
+
+    setupDrag(card) {
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        const onStart = (e) => {
+            if (this.state.isAnimating) return;
+            isDragging = true;
+            startX = e.touches ? e.touches[0].clientX : e.clientX;
+            card.style.transition = "none";
+        };
+
+        const onMove = (e) => {
+            if (!isDragging) return;
+
+            currentX = e.touches ? e.touches[0].clientX : e.clientX;
+            const diff = currentX - startX;
+            const rotate = diff / 15;
+
+            card.style.transform = `translateX(${diff}px) rotate(${rotate}deg)`;
+            
+            // Preview Label Logic
+            if (diff > 50) {
+                card.classList.add("preview-like");
+                card.classList.remove("preview-nope");
+            } else if (diff < -50) {
+                card.classList.add("preview-nope");
+                card.classList.remove("preview-like");
+            } else {
+                card.classList.remove("preview-like", "preview-nope");
+            }
+        };
+
+        const onEnd = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            const diff = currentX - startX;
+
+            card.classList.remove("preview-like", "preview-nope");
+
+            if (diff > this.state.threshold) {
+                this.swipe("right");
+            } else if (diff < -this.state.threshold) {
+                this.swipe("left");
+            } else {
+                // Reset posisi kalau swipe tidak cukup jauh
+                card.style.transition = "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)";
+                card.style.transform = "";
+            }
+        };
+
+        // Desktop Events
+        card.addEventListener("mousedown", onStart);
+        window.addEventListener("mousemove", onMove);
+        window.addEventListener("mouseup", onEnd);
+
+        // Mobile Events
+        card.addEventListener("touchstart", onStart, { passive: true });
+        card.addEventListener("touchmove", onMove, { passive: true });
+        card.addEventListener("touchend", onEnd);
+    }
+};
+
+// Start the App
+document.addEventListener("DOMContentLoaded", () => {
+    swipeApp.init();
+});

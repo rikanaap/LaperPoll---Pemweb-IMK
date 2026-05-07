@@ -4,75 +4,114 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/pages/pencarian-resep.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/resep-card.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/bahan-item.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/chips.css') }}">
 @endpush
 
 @section('content')
 
 <main class="search-page font-jakarta">
 
-    <x-navbar />
+    <nav class="navbar">
+        <a href="#" class="back-btn">
+            <span class="material-icons-round text-h4 text-accent-normal">
+                arrow_back
+            </span>
+        </a>
+
+        <img
+            src="{{ asset('assets/images/Logo_Laperpoll.png') }}"
+            alt="Logo Laperpoll"
+            class="logo"
+        >
+
+        <a href="#" class="profile-link">
+            <img
+                src="{{ asset('assets/images/Image_DummyProfile.png') }}"
+                alt="Profil Foto"
+                class="profile"
+            >
+        </a>
+    </nav>
 
     <section class="search-layout">
 
-        {{-- LEFT SIDE --}}
         <aside class="search-sidebar">
 
-            {{-- Search Box --}}
             <div class="input" id="searchWrapper">
                 <span class="material-icons-round">search</span>
-                <input type="text" id="searchInput" class="input-data" placeholder="Cari Bahan / Nama Resep">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="input-data"
+                    placeholder="Cari Bahan / Nama Resep"
+                >
             </div>
 
-            {{-- Title --}}
-            <p class="text-body font-medium section-title">Bahan Populer Minggu Ini</p>
+            <p class="text-body font-medium section-title">
+                Bahan Populer Minggu Ini
+            </p>
 
-            {{-- Bahan List --}}
             <section class="bahan-wrapper">
-                <div class="bahan-list flex flex-col gap-5">
-                    
-                    {{-- Pengelompokan Berdasarkan Abjad (Grup A, B, C, dst) --}}
+                <div class="bahan-list">
+
                     @forelse($bahans as $huruf => $kelompokBahan)
-                        <div class="bahan-group flex flex-col gap-3">
-                            <span class="group-letter">{{ $huruf }}</span>
-                            
+
+                        <div class="bahan-group">
+
+                            <span class="group-letter">
+                                {{ $huruf }}
+                            </span>
+
                             @foreach($kelompokBahan as $bahan)
-                                <div class="bahan-item flex justify-between items-center">
-                                    <div class="bahan-left flex items-center gap-3">
-                                        <div class="bahan-icon flex items-center justify-center">
-                                            <span class="material-icons-round">restaurant</span>
-                                        </div>
-                                        <span class="bahan-nama font-medium text-sm text-neutral-900">{{ $bahan->nama }}</span>
-                                    </div>
-                                    <input type="checkbox" name="bahan[]" value="{{ $bahan->id }}">
-                                </div>
+                                <x-bahan-item :bahan="$bahan" />
                             @endforeach
+
                         </div>
+
                     @empty
-                        <p class="text-caption text-center">Tidak ada bahan yang ditemukan.</p>
+                        <p class="text-caption text-center">
+                            Tidak ada bahan yang ditemukan.
+                        </p>
                     @endforelse
 
                 </div>
             </section>
 
-            {{-- Pesan Info Bahan Terpilih --}}
             <div class="selected-info" id="selectedInfo" style="display: none;">
                 0 bahan terpilih
             </div>
 
-            {{-- Tombol Aksi (Hapus & Terapkan) --}}
             <div class="action-buttons-wrapper">
-                <button id="hapusSemuaBtn" class="action-btn hapus-btn" type="button" disabled>Hapus Semua</button>
-                <button id="terapkanBtn" class="action-btn terapkan-btn disabled" type="button" disabled>Terapkan</button>
+
+                <button
+                    id="hapusSemuaBtn"
+                    class="action-btn hapus-btn"
+                    type="button"
+                    disabled
+                >
+                    Hapus Semua
+                </button>
+
+                <button
+                    id="terapkanBtn"
+                    class="action-btn terapkan-btn disabled"
+                    type="button"
+                    disabled
+                >
+                    Terapkan
+                </button>
+
             </div>
 
-            {{-- Divider --}}
             <div class="divider-wrap">
-                <div class="horizontal-line flex-1"></div>
+                <div class="horizontal-line"></div>
                 <span class="text-caption atau-text">Atau</span>
-                <div class="horizontal-line flex-1"></div>
+                <div class="horizontal-line"></div>
             </div>
 
-            {{-- Swipe Button --}}
             <a href="{{ route('swipe.rasa') }}" class="swipe-btn">
                 <span class="material-icons-round">swap_horiz</span>
                 <span>Swipe Untuk Mencari</span>
@@ -80,13 +119,37 @@
 
         </aside>
 
-        {{-- RIGHT SIDE --}}
         <section class="search-result">
-            <div class="result-placeholder">
+
+            <div class="result-header-wrapper">
+
+                <p class="result-info-text" id="resultInfoText">
+                    Pilih bahan untuk melihat resep
+                </p>
+
+                <div class="selected-chips-wrapper" id="selectedChips"></div>
+
+            </div>
+
+            <div id="resepContainer" class="resep-container hidden">
+
+                @foreach($reseps as $resep)
+                    <x-resep-card :resep="$resep" />
+                @endforeach
+
+            </div>
+
+            <div id="loadingState" class="loading-state hidden">
+                <div class="loading-spinner"></div>
+                <p>Sedang mencari resep...</p>
+            </div>
+
+            <div class="result-placeholder" id="resultPlaceholder">
                 <span class="material-icons-round">restaurant_menu</span>
                 <h3>Rekomendasi Resep</h3>
                 <p>Pilih bahan terlebih dahulu untuk melihat hasil resep.</p>
             </div>
+
         </section>
 
     </section>

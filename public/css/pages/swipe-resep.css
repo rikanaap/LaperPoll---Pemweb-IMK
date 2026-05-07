@@ -1,41 +1,35 @@
-/* ==================================================
-   MOBILE HINGGA DESKTOP RESPONSIVE STYLE - LAPERPOLL
-   ================================================== */
+/* ======================================
+   LaperPoll - Swipe Resep (Adjusted Position)
+   ====================================== */
 
 .swipe-page {
     min-height: 100vh;
-    background: #f8fafc; /* Latar belakang creamy light */
     color: #1e293b;
-    padding-bottom: 2.5rem;
+    padding-bottom: 3rem;
 }
 
 .swipe-wrapper {
-    max-width: 1140px;
-    margin: 1.2rem auto;
-    padding: 1.2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
 }
 
 .swipe-split-layout {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
 }
 
-/* Panel Kiri Desktop (Hidden on mobile) */
 .swipe-info-panel {
     display: none;
 }
-
-/* ==================================================
-   MOBILE HEADER AREA
-   ================================================== */
 
 .mobile-info-header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 2rem;
     text-align: center;
-    margin-bottom: 2.2rem;
 }
 
 .mobile-badge {
@@ -43,23 +37,23 @@
     font-weight: 700;
     color: #ff7a00;
     background: #fff0db;
-    padding: 0.35rem 1.1rem;
-    border-radius: 99px;
+    padding: 0.4rem 1.2rem;
+    border-radius: 999px;
     margin-bottom: 0.8rem;
 }
 
 .mobile-title {
-    font-size: 1.65rem;
+    font-size: 1.7rem;
     font-weight: 800;
     color: #0f172a;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
 }
 
 .mobile-progress-wrapper {
     width: 220px;
     height: 6px;
     background: #e2e8f0;
-    border-radius: 99px;
+    border-radius: 999px;
     overflow: hidden;
 }
 
@@ -67,37 +61,29 @@
     width: 0%;
     height: 100%;
     background: linear-gradient(135deg, #ff922e, #ff7a00);
-    border-radius: 99px;
     transition: width 0.3s ease;
 }
 
-/* ==================================================
-   AREA CARD (MOBILE)
-   ================================================== */
-
-.swipe-interaction-panel {
-    width: 100%;
-}
-
 .swipe-container {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2.2rem;
+    gap: 2rem;
 }
 
 .swipe-cards {
     position: relative;
-    width: 295px;
-    height: 410px;
+    width: 300px;
+    height: 420px;
+    padding-bottom: 20px;
+    overflow: visible;
 }
 
 .swipe-card {
     position: absolute;
     width: 100%;
     height: 100%;
-    padding: 2.4rem 1.6rem;
+    padding: 2.2rem 1.5rem;
     border-radius: 32px;
     display: flex;
     flex-direction: column;
@@ -106,68 +92,105 @@
     text-align: center;
     cursor: grab;
     user-select: none;
-    box-shadow: 0 10px 28px rgba(148, 163, 184, 0.22);
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 
 .swipe-card:active {
     cursor: grabbing;
 }
 
-/* Layering effect */
-.swipe-card:nth-last-child(1) { transform: translateY(0) scale(1); z-index: 3; }
-.swipe-card:nth-last-child(2) { transform: translateY(10px) scale(0.96); z-index: 2; opacity: 0.94; }
-.swipe-card:nth-last-child(3) { transform: translateY(20px) scale(0.92); z-index: 1; opacity: 0.88; }
-.swipe-card:nth-last-child(n+4) { transform: translateY(20px) scale(0.92); z-index: 0; opacity: 0; }
+.swipe-card:nth-last-child(1) {
+    transform: translateY(0) scale(1);
+    z-index: 3;
+}
 
-/* Palet Warna Rasa */
-.swipe-card:nth-child(1) { background: linear-gradient(135deg, #475569 0%, #1e293b 100%); }
-.swipe-card:nth-child(2) { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
-.swipe-card:nth-child(3) { background: linear-gradient(135deg, #eab308 0%, #a16207 100%); }
-.swipe-card:nth-child(4) { background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
-.swipe-card:nth-child(5) { background: linear-gradient(135deg, #d946ef 0%, #a21caf 100%); }
-.swipe-card:nth-child(6) { background: linear-gradient(135deg, #64748b 0%, #334155 100%); }
-.swipe-card:nth-child(7) { background: linear-gradient(135deg, #ca8a04 0%, #854d0e 100%); }
-.swipe-card:nth-child(8) { background: linear-gradient(135deg, #f97316 0%, #c2410c 100%); }
+.swipe-card:nth-last-child(2) {
+    transform: translateY(12px) scale(0.96);
+    z-index: 2;
+    opacity: 0.95;
+}
+
+.swipe-card:nth-last-child(3) {
+    transform: translateY(24px) scale(0.92);
+    z-index: 1;
+    opacity: 0.85;
+}
+
+.swipe-card:nth-last-child(n+4) {
+    opacity: 0;
+}
+
+@media (hover: hover) {
+    .swipe-card:hover {
+        transform: scale(1.02);
+    }
+}
 
 .swipe-icon-wrapper {
-    width: 80px;
-    height: 80px;
+    width: 85px;
+    height: 85px;
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 1.5rem;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
-.swipe-icon-wrapper span { font-size: 42px; color: #ffffff; }
+.swipe-icon-wrapper span {
+    font-size: 42px;
+    color: #ffffff;
+}
 
 .swipe-title {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 800;
     color: #ffffff;
     margin-bottom: 0.5rem;
 }
 
 .swipe-desc {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #f1f5f9;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
-/* ==================================================
-   AREA TOMBOL
-   ================================================== */
+.swipe-label {
+    position: absolute;
+    top: 20px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.swipe-label.like {
+    right: 20px;
+    color: #22c55e;
+}
+
+.swipe-label.nope {
+    left: 20px;
+    color: #ef4444;
+}
+
+.preview-like {
+    border: 2px solid rgba(34, 197, 94, 0.6);
+}
+
+.preview-nope {
+    border: 2px solid rgba(239, 68, 68, 0.6);
+}
 
 .swipe-buttons {
     display: flex;
     gap: 1.8rem;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
 }
 
 .swipe-btn {
@@ -179,107 +202,190 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    box-shadow: 0 10px 24px rgba(148, 163, 184, 0.3);
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    transition: all 0.25s ease;
 }
 
-.swipe-btn:active { transform: scale(0.9); }
-.swipe-btn:hover { transform: translateY(-3px); }
-
-.dislike-btn {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+.swipe-btn span {
+    font-size: 28px;
 }
-
-.dislike-btn span { color: #ef4444; font-size: 32px; }
 
 .like-btn {
-    background: linear-gradient(135deg, #ff922e, #ff7a00);
-    border: none;
+    background: #ffffff;
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.15);
 }
 
-.like-btn span { color: #ffffff; font-size: 32px; }
-
-/* ==================================================
-   RESPONSIVE LAYOUT - DESKTOP & TABLET
-   ================================================== */
-
-@media (min-width: 768px) {
-    .swipe-cards { width: 350px; height: 450px; }
+.like-btn span {
+    color: #22c55e;
 }
 
+.dislike-btn {
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+}
+
+.dislike-btn span {
+    color: #ef4444;
+}
+
+.like-btn:hover,
+.dislike-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+}
+
+.like-btn:hover {
+    box-shadow: 0 12px 25px rgba(34, 197, 94, 0.25);
+}
+
+.dislike-btn:hover {
+    box-shadow: 0 12px 25px rgba(239, 68, 68, 0.25);
+}
+
+.like-btn:active {
+    transform: scale(0.9);
+    box-shadow: 0 0 25px rgba(255, 120, 80, 0.7);
+}
+
+.dislike-btn:active {
+    transform: scale(0.9);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+.empty-text {
+    font-size: 1rem;
+    color: #64748b;
+    text-align: center;
+}
+
+/* ======================================
+   DESKTOP OPTIMIZATION (Optimized Spacing)
+   ====================================== */
 @media (min-width: 1024px) {
-    .mobile-info-header { display: none; }
-    
-    .swipe-split-layout {
-        display: grid;
-        grid-template-columns: 400px 1fr;
-        gap: 4.5rem;
-        align-items: center;
-        min-height: 72vh;
+    .mobile-info-header {
+        display: none;
     }
 
-    .swipe-info-panel {
+    .swipe-page {
+        height: 100vh;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
     }
 
+    .swipe-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        /* --- DITAMBAHKAN --- */
+        margin-top: 2rem; /* Memberi jarak agar tidak mepet navbar */
+        padding-top: 1rem;
+        padding-bottom: 4rem;
+        /* ------------------ */
+    }
+
+    .swipe-split-layout {
+        display: grid;
+        grid-template-columns: 400px 1fr;
+        gap: 4rem;
+        align-items: stretch;
+        height: 100%;
+        width: 100%;
+    }
+
+    .swipe-info-panel {
+        display: block;
+        height: 100%;
+    }
+
     .info-card {
         background: #ffffff;
+        border-radius: 32px;
+        padding: 2.2rem;
         border: 1px solid #e2e8f0;
-        border-radius: 36px;
-        padding: 2.8rem;
-        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .swipe-interaction-panel {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        height: 100%;
+        overflow: hidden;
+        padding-left: 0;
+        position: relative;
+    }
+
+    .swipe-container {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .swipe-cards {
+        width: 320px;
+        flex: 1;
+        max-height: 100%;
+        perspective: 1000px;
     }
 
     .info-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.2rem;
     }
 
-    .info-icon { font-size: 36px; color: #ff7a00; }
+    .info-icon {
+        font-size: 36px;
+        color: #ff7a00;
+    }
 
     .badge-tag {
         font-size: 0.75rem;
-        font-weight: 700;
-        color: #ff7a00;
+        font-weight: bold;
         background: #fff0db;
-        padding: 0.35rem 1rem;
-        border-radius: 99px;
+        color: #ff7a00;
+        padding: 0.4rem 1rem;
+        border-radius: 999px;
     }
 
     .info-title {
-        font-size: 1.75rem;
+        font-size: 1.6rem;
         font-weight: 800;
-        color: #0f172a;
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.6rem;
     }
 
     .info-desc {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: #64748b;
-        line-height: 1.6;
-        margin-bottom: 1.6rem;
+        margin-bottom: 1.2rem;
     }
 
-    .divider-line { height: 1px; background: #f1f5f9; margin-bottom: 1.6rem; }
-
-    .progress-box { margin-bottom: 2rem; }
+    .divider-line {
+        height: 1px;
+        background: #f1f5f9;
+        margin-bottom: 1.2rem;
+    }
 
     .progress-label {
         display: flex;
         justify-content: space-between;
-        font-size: 0.85rem;
-        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.4rem;
     }
 
     .progress-bar-container {
-        width: 100%;
-        height: 7px;
+        height: 6px;
         background: #f1f5f9;
-        border-radius: 99px;
+        border-radius: 999px;
         overflow: hidden;
     }
 
@@ -287,15 +393,112 @@
         width: 0%;
         height: 100%;
         background: linear-gradient(135deg, #ff922e, #ff7a00);
-        border-radius: 99px;
-        transition: width 0.3s ease;
     }
 
-    .tips-box { margin-top: 1.2rem; }
-    .tips-title { font-size: 0.88rem; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; }
-    .tips-title span { color: #f59e0b; }
+    .tips-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        margin-top: 1.2rem;
+    }
+
     .tips-list {
-        list-style: none; padding: 0; margin: 0;
-        font-size: 0.8rem; color: #64748b; line-height: 1.6;
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-top: 0.4rem;
+        padding-left: 1rem;
+    }
+}
+
+/* ======================================
+   TABLET & MOBILE (No Changes)
+   ====================================== */
+@media (max-width: 767px) {
+    .swipe-page {
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .swipe-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+    }
+
+    .swipe-split-layout {
+        height: 100%;
+        gap: 0.8rem;
+    }
+
+    .mobile-info-header {
+        margin-bottom: 0.5rem;
+    }
+
+    .mobile-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .mobile-progress-wrapper {
+        width: 160px;
+        height: 5px;
+    }
+
+    .swipe-container {
+        flex: 1;
+        justify-content: space-between;
+        gap: 0.8rem;
+    }
+
+    .swipe-cards {
+        width: 260px;
+        max-width: 340px;
+        height: 55vh;
+        max-height: 480px;
+    }
+
+    .swipe-btn {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .swipe-page {
+        min-height: 100vh;
+    }
+
+    .swipe-wrapper {
+        padding: 1.2rem;
+    }
+
+    .swipe-split-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .mobile-title {
+        font-size: 1.5rem;
+    }
+
+    .swipe-container {
+        gap: 1.5rem;
+    }
+
+    .swipe-cards {
+        width: 300px;
+        height: 400px;
+    }
+
+    .swipe-btn {
+        width: 65px;
+        height: 65px;
     }
 }

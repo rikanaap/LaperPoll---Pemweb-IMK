@@ -1,0 +1,89 @@
+/* Navbar Container */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Kiri, tengah, dan kanan terbagi rata */
+    padding: 0.75rem 1.25rem;
+    background-color: #ffffff;
+    
+    /* Sticky biar tetep di atas pas di-scroll */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    
+    /* Ukuran tinggi navbar agar tidak kekecilan */
+    min-height: 80px; 
+    
+    /* Border halus di bawah agar terpisah dari konten */
+    border-bottom: 1px solid #F3F4F6;
+}
+
+/* Tombol Back (Sisi Kiri) */
+.back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    width: 44px; /* Area klik yang luas (Touch Target) */
+    height: 44px;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.back-btn:active {
+    background-color: #FEEEDC; /* Feedback pas dipencet */
+}
+
+.back-btn span {
+    font-size: 28px !important; /* Ukuran icon arrow_back */
+    color: #FF7A00;
+}
+
+/* Logo Laperpoll (Tengah) */
+.logo {
+    height: 38px; /* Ukuran pas, tidak terlalu kecil/besar */
+    width: auto;
+    object-fit: contain;
+    /* Memastikan logo bener-bener di tengah secara visual */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Profile Link (Sisi Kanan) */
+.profile-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.profile {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FFE8D0; /* Frame tipis biar profil lebih stand out */
+    transition: transform 0.2s ease;
+}
+
+.profile:active {
+    transform: scale(0.95); /* Efek klik kecil */
+}
+
+/* Responsif untuk Layar Besar (Desktop) */
+@media (min-width: 1024px) {
+    .navbar {
+        padding: 1rem 2.5rem;
+        min-height: 90px;
+    }
+    
+    .logo {
+        height: 45px;
+    }
+    
+    .profile {
+        width: 48px;
+        height: 48px;
+    }
+}
