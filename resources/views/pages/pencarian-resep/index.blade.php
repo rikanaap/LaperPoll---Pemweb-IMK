@@ -4,7 +4,6 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/pages/pencarian-resep.css') }}">
-<link rel="stylesheet" href="{{ asset('css/components/navbar.css') }}">
 <link rel="stylesheet" href="{{ asset('css/components/resep-card.css') }}">
 <link rel="stylesheet" href="{{ asset('css/components/bahan-item.css') }}">
 <link rel="stylesheet" href="{{ asset('css/components/chips.css') }}">

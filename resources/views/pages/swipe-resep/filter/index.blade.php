@@ -6,24 +6,13 @@
     {{-- Memanggil CSS yang kita buat di bawah --}}
     <link rel="stylesheet" href="{{ asset('css/pages/filter-resep-swipe.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/resep-card.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components/navbar.css') }}">
 @endpush
 
 @section('content')
 <main class="filter-page font-jakarta">
 
     {{-- NAVBAR: Menempel penuh di atas --}}
-    <nav class="navbar">
-        <a href="{{ route('swipe.rasa') }}" class="back-btn">
-            <span class="material-icons-round">arrow_back</span>
-        </a>
-
-        <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" class="logo" alt="Logo Laperpoll">
-
-        <a href="#">
-            <img src="{{ asset('assets/images/Image_DummyProfile.png') }}" class="profile" alt="Profile User">
-        </a>
-    </nav>
+    <x-navbar :backUrl="route('swipe.rasa')" />
 
     {{-- CONTAINER KONTEN --}}
     <div class="main-layout">
