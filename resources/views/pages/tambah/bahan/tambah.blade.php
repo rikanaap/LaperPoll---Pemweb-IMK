@@ -7,12 +7,12 @@
 @endpush
 
 @section('content')
-<main class="main-content flex flex-col">
+<main class="main-content">
 
     {{-- NAVBAR --}}
-    <x-navbar />
+    <x-navbar :back="true" />
 
-    <div class="form-wrapper flex flex-col gap-6">
+    <div class="form-wrapper">
 
         <div class="form-title flex flex-col gap-1">
             <h1 class="font-jakarta font-bold text-h5 kulkas-title">Tambah Bahan</h1>
@@ -23,11 +23,11 @@
 
         {{-- VALIDASI ERROR --}}
         @if($errors->any())
-            <div class="flash-error font-jakarta text-body">
-                <span class="material-icons-round">error_outline</span>
-                <ul style="margin:0; padding-left:1rem;">
+            <div class="flash-error">
+                <span class="material-icons-round" style="flex-shrink:0;">error_outline</span>
+                <ul style="margin:0; padding-left:1rem; list-style:disc;">
                     @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                        <li class="font-jakarta text-body">{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -36,7 +36,7 @@
         <form action="{{ route('kulkas.store') }}" method="POST" id="formTambahBahan">
             @csrf
 
-            {{-- DATA BAHAN DARI SERVER untuk JS autocomplete --}}
+            {{-- Data bahan untuk JS autocomplete --}}
             <script id="bahanData" type="application/json">
                 @json($bahans->map(fn($b) => [
                     'id'                     => $b->id,
@@ -47,7 +47,7 @@
             </script>
 
             {{-- NAMA BAHAN --}}
-            <div class="form-group flex flex-col gap-2">
+            <div class="form-group">
                 <label class="font-jakarta font-semibold text-body text-secondary-normal"
                     for="searchBahan">Nama Bahan</label>
                 <div class="search-wrapper">
@@ -58,7 +58,7 @@
                             type="text"
                             placeholder="Cari bahan..."
                             autocomplete="off"
-                            value="{{ old('bahan_nama') }}"/>
+                            value="{{ old('bahan_nama') }}">
                         <span class="material-icons-round text-body text-primary-darker"
                             id="clearSearch">close</span>
                     </div>
@@ -68,9 +68,11 @@
             </div>
 
             {{-- JUMLAH --}}
-            <div class="form-group flex flex-col gap-2" style="margin-top:1.25rem;">
+            <div class="form-group">
                 <label class="font-jakarta font-semibold text-body text-secondary-normal"
-                    for="jumlahBahan">Jumlah</label>
+                    for="satuanBahan">Jumlah</label>
+
+                {{-- Stepper angka --}}
                 <div class="input jumlah-input">
                     <button class="jumlah-btn" id="btnMinus" type="button" aria-label="Kurang">
                         <span class="material-icons-round">remove</span>
@@ -78,18 +80,20 @@
                     <input id="jumlahAngka"
                         class="input-data font-jakarta text-body jumlah-field"
                         type="number" min="1"
-                        value="{{ old('jumlah_angka', 1) }}"/>
+                        value="{{ old('jumlah_angka', 1) }}">
                     <button class="jumlah-btn" id="btnPlus" type="button" aria-label="Tambah">
                         <span class="material-icons-round">add</span>
                     </button>
                 </div>
+
+                {{-- Teks satuan --}}
                 <div class="input" style="margin-top:0.5rem;">
                     <span class="material-icons-round text-body text-primary-darker">straighten</span>
                     <input id="satuanBahan" name="jumlah"
                         class="input-data font-jakarta text-body"
                         type="text"
                         placeholder="Contoh: 6 butir / 200 gram / 1 liter"
-                        value="{{ old('jumlah') }}"/>
+                        value="{{ old('jumlah') }}">
                 </div>
                 <p class="font-jakarta text-caption text-primary-darker">
                     Tulis jumlah dan satuan lengkap, contoh: <em>6 butir</em>, <em>200 gram</em>
@@ -97,7 +101,7 @@
             </div>
 
             {{-- TANGGAL BELI --}}
-            <div class="form-group flex flex-col gap-2" style="margin-top:1.25rem;">
+            <div class="form-group">
                 <label class="font-jakarta font-semibold text-body text-secondary-normal"
                     for="boughtDate">Tanggal Beli</label>
                 <div class="input">
@@ -106,22 +110,21 @@
                         class="input-data font-jakarta text-body"
                         type="date"
                         value="{{ old('bought_date', date('Y-m-d')) }}"
-                        max="{{ date('Y-m-d') }}"/>
+                        max="{{ date('Y-m-d') }}">
                 </div>
             </div>
 
-            {{-- TANGGAL EXPIRED (muncul otomatis jika bahan has_expiry) --}}
-            <div class="form-group flex flex-col gap-2" id="expiredSection"
-                style="margin-top:1.25rem; display:none;">
+            {{-- TANGGAL EXPIRED (tampil otomatis jika bahan punya expiry) --}}
+            <div class="form-group" id="expiredSection" style="display:none;">
                 <label class="font-jakarta font-semibold text-body text-secondary-normal"
                     for="expiredDate">Tanggal Expired</label>
-                <div class="expired-options flex flex-row gap-2" id="expiredChips"></div>
+                <div class="expired-options" id="expiredChips"></div>
                 <div class="input">
                     <span class="material-icons-round text-body text-primary-darker">calendar_today</span>
                     <input id="expiredDate" name="expired_date"
                         class="input-data font-jakarta text-body"
                         type="date"
-                        value="{{ old('expired_date') }}"/>
+                        value="{{ old('expired_date') }}">
                 </div>
                 <p class="font-jakarta text-caption text-primary-darker">
                     Pilih estimasi cepat atau atur tanggal manual.
@@ -129,13 +132,13 @@
             </div>
 
             {{-- SUBMIT --}}
-            <button class="input-submit font-jakarta font-semibold text-title2"
-                type="submit" style="margin-top:1.5rem;">
+            <button class="input-submit" type="submit">
                 Tambah Bahan
             </button>
 
         </form>
     </div>
+
 </main>
 @endsection
 

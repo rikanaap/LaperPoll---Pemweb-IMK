@@ -31,13 +31,14 @@ Route::get('/pencarian-resep', [BahanController::class, 'index'])
 Route::get('/swipe-rasa', [SwipeResepController::class, 'index'])
     ->name('swipe.rasa');
 
+// Ansori -> Kulkas Digital 
 Route::get('/kulkas-digital', [KulkasDigitalController::class, 'index'])
     ->name('kulkas.index');
  
-Route::get('/kulkas-digital/tambah', [KulkasDigitalController::class, 'tambah'])
+Route::get('/kulkas-digital/tambah',  [KulkasDigitalController::class, 'tambah'])
     ->name('kulkas.tambah');
  
-Route::post('/kulkas-digital/store', [KulkasDigitalController::class, 'store'])
+Route::post('/kulkas-digital', [KulkasDigitalController::class, 'store'])
     ->name('kulkas.store');
  
 Route::delete('/kulkas-digital/{id}', [KulkasDigitalController::class, 'destroy'])

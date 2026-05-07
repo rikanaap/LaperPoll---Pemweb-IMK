@@ -189,3 +189,14 @@ input::-ms-clear {
     border-radius: 0.3rem;
     background-color: var(--primary-normal);
 }
+
+.navbar-back {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+}
+.navbar-back .material-icons-round {
+    color: var(--accent-normal);
+}
