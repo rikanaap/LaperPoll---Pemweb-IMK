@@ -68,6 +68,6 @@
         </aside>
     </div>
 
-    <script src="../js/timer-resep.js"></script>
+    <script src="{{ asset('js/timer-resep.js') }}"></script>
 </body>
 </html>
