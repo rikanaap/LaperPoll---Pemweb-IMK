@@ -18,6 +18,14 @@ Route::get('/detail-resep', function () {
     return view('pages.detail_resep.detail_resep');
 });
 
+Route::get('/timer-resep', function () {
+    return view('pages.timer_resep.timer_resep');
+});
+
+Route::get('/ulasan', function () {
+    return view('pages.ulasan.ulasan');
+});
+
 Route::get('/main-menu', function () {
     $reseps = Resep::with('user')->get();
     return view('pages.main-menu.main-menu', compact('reseps'));

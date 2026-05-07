@@ -1,23 +1,49 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app')
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ asset('css/global.css') }}">
-<link rel="stylesheet" href="{{ asset('css/atomic.css') }}">
-<link rel="stylesheet" href="{{ asset('css/pages/detail_resep.css') }}">
-  <title>Laperpoll</title>
-</head>
+@section('title', 'Detail Resep - LaperPoll')
 
-<body>
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('css/pages/detail-resep.css') }}">
+@endpush
+
   <main class="main-content flex flex-col font-jakarta">
-    <nav class="navbar">
-      <span id="searchButton" class="material-icons-round text-h4" onclick="changePage('main-menu')">arrow_back</span>
-      <img src="../assets/Logo_Laperpoll.png" alt="Logo Laperpoll" class="logo">
-      <img src="../assets/Image_DummyProfile.png" alt="Profil Foto" class="profile" onclick="changePage('profile')">
-    </nav>
+    <x-navbar></x-navbar>
+    <section>
+      <div class="recipe-header-container">
+        <div class="header-left">
+          <h1 class="recipe-title">Roti Bakar Keju</h1>
+          <div class="recipe-meta">
+            <span class="meta-item">
+              <span class="material-icons-round">timer</span> 15 mins
+            </span>
+            <span class="meta-item">
+              <span class="material-icons-round">icecream</span> Dessert
+            </span>
+          </div>
+        </div>
 
+        <div class="header-right">
+          <div class="author-section">
+            <div class="author-text">
+              <span class="created-by font-jakarta">Dibuat oleh</span>
+              <span class="author-username font-jakarta font-semibold">@RotiRoni</span>
+            </div>
+            <img src="../assets/images/Image_DummyProfile.png" alt="Author" class="author-avatar">
+          </div>
+          <div class="rating-section">
+            <div class="stars">
+              <span class="material-icons-round">star</span>
+              <span class="material-icons-round">star</span>
+              <span class="material-icons-round">star</span>
+              <span class="material-icons-round">star</span>
+              <span class="material-icons-round">star_half</span>
+            </div>
+            <span class="rating-score">4.5</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
     <section class="recipe-hero">
       <img
         src="https://images.unsplash.com/photo-1581574303858-f00f95088f7b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -32,40 +58,6 @@
         <span class="dot"></span>
       </div>
     </section>
-
-    <div class="recipe-header-container">
-      <div class="header-left">
-        <h1 class="recipe-title">Roti Bakar Keju</h1>
-        <div class="recipe-meta">
-          <span class="meta-item">
-            <span class="material-icons-round">timer</span> 15 mins
-          </span>
-          <span class="meta-item">
-            <span class="material-icons-round">icecream</span> Dessert
-          </span>
-        </div>
-      </div>
-
-      <div class="header-right">
-        <div class="author-section">
-          <div class="author-text">
-            <span class="created-by font-jakarta">Dibuat oleh</span>
-            <span class="author-username font-jakarta font-semibold">@RotiRoni</span>
-          </div>
-          <img src="../assets/Image_DummyProfile.png" alt="Author" class="author-avatar">
-        </div>
-        <div class="rating-section">
-          <div class="stars">
-            <span class="material-icons-round">star</span>
-            <span class="material-icons-round">star</span>
-            <span class="material-icons-round">star</span>
-            <span class="material-icons-round">star</span>
-            <span class="material-icons-round">star_half</span>
-          </div>
-          <span class="rating-score">4.5</span>
-        </div>
-      </div>
-    </div>
 
     <section class="sidebar-card flex-flex-col">
       <div class="sidebar-card-header">
@@ -137,7 +129,7 @@
     </section>
 
     <section>
-      <a href="timer-resep.html">
+      <a href="{{ url('/timer-resep') }}">
         <button class="button font-jakarta font-semibold ">
           Buat sekarang
           <span class="arrow-forward material-icons-round">arrow_forward</span>
@@ -147,8 +139,9 @@
       </div>
     </section>
   </main>
-</body>
-<script src="../scripts/global.js"></script>
-<script src="../js/detail-resep.js"></script>
+
+
+
+<script src="{{ asset('js/detail-resep.js') }}"></script>
 
 </html>
