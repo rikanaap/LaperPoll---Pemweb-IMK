@@ -7,7 +7,8 @@
 @endpush
 
   <main class="main-content flex flex-col font-jakarta">
-    <x-navbar></x-navbar>
+    <x-navbar :back="true"></x-navbar>
+    
     <section>
       <div class="recipe-header-container">
         <div class="header-left">
