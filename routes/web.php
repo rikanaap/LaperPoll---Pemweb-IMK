@@ -11,6 +11,8 @@ use App\Http\Controllers\BahansController;          // Controller master data ba
 use App\Http\Controllers\MealPlannerController;
 use App\Http\Controllers\PilihResepController;
 use App\Http\Controllers\NotaBelAnjaController;
+use App\Http\Controllers\LandingPage;
+use App\Http\Controllers\MainMenu;
 
 // Harmoni -> Link Landing Page
 Route::get('/', [LandingPage::class, 'index'])

@@ -104,3 +104,19 @@ input::-ms-clear {
 .navbar-back .material-icons-round {
     color: var(--accent-normal);
 }
+
+.resep-logo {
+    display: flex;
+    width: 4.3rem;
+    height: 4.3rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 1rem;
+    background-color: #FEE7C3;
+}
+
+.resep-logo span {
+    font-size: 24px;
+    color: #ff7a00;
+}
