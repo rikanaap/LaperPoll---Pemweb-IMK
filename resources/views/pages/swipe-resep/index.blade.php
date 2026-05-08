@@ -1,19 +1,22 @@
 @extends('layouts.app')
 
-@section('title', 'Swipe Rasa')
+@section('title', 'Swipe Rasa - LaperPoll')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/pages/swipe-resep.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/history-drawer.css') }}">
 @endpush
 
 @section('content')
 <main class="swipe-page font-jakarta">
 
+    {{-- Navbar --}}
     <x-navbar :backUrl="route('pencarian.resep')" />
 
     <div class="swipe-wrapper">
         <div class="swipe-split-layout">
             
+            {{-- Panel Kiri: Informasi Status --}}
             <div class="swipe-info-panel">
                 <div class="info-card">
                     <div class="info-header">
@@ -55,7 +58,10 @@
                 </div>
             </div>
 
+            {{-- Panel Kanan: Area Interaction Swipe --}}
             <div class="swipe-interaction-panel">
+                
+                {{-- Progress Mobile Header --}}
                 <div class="mobile-info-header">
                     <span class="mobile-badge">Pilih 3 Rasa</span>
                     <h1 class="mobile-title">Swipe Rasa Favorit</h1>
@@ -65,64 +71,39 @@
                     </div>
                 </div>
 
-                @php
-                $rasaDummy = [
-                    [
-                        'title' => 'Pedas',
-                        'desc' => 'Cocok buat kamu yang suka tantangan rasa membara 🔥',
-                        'icon' => 'local_fire_department'
-                    ],
-                    [
-                        'title' => 'Manis',
-                        'desc' => 'Rasa lembut yang bikin mood jadi lebih baik 🍰',
-                        'icon' => 'cake'
-                    ],
-                    [
-                        'title' => 'Gurih',
-                        'desc' => 'Favorit semua orang, penuh cita rasa 🤤',
-                        'icon' => 'ramen_dining'
-                    ],
-                    [
-                        'title' => 'Asin',
-                        'desc' => 'Rasa klasik yang nggak pernah gagal 🧂',
-                        'icon' => 'restaurant'
-                    ],
-                    [
-                        'title' => 'Sehat',
-                        'desc' => 'Pilihan ringan dan bergizi untuk tubuh 🥗',
-                        'icon' => 'eco'
-                    ],
-                ];
-                @endphp
-
                 <section class="swipe-container">
                     <div class="swipe-cards" id="swipeCards">
-                        @foreach ($rasaDummy as $index => $item)
-                            @php
-                                $colors = [
-                                    ['#b6ff2e', '#ff7a00'],
-                                    ['#ef4444', '#b91c1c'],
-                                    ['#10b981', '#047857'],
-                                    ['#6366f1', '#4338ca'],
-                                    ['#f59e0b', '#b45309'],
-                                ];
-                                $colorPair = $colors[$index % count($colors)];
-                            @endphp
+                        @php
+                            // Palet warna estetik untuk kartu
+                            $colors = [
+                                ['#b6ff2e', '#ff7a00'],
+                                ['#ef4444', '#b91c1c'],
+                                ['#10b981', '#047857'],
+                                ['#6366f1', '#4338ca'],
+                                ['#f59e0b', '#b45309'],
+                            ];
+                        @endphp
 
+                        {{-- Loop data asli dari Controller --}}
+                       @foreach ($rasaDummy as $index => $item)
                             <x-swipe-card 
                                 :title="strtoupper($item['title'])"
-                                :desc="$item['desc']"
+                                :desc="$item['description']" 
                                 :icon="$item['icon']"
-                                :color_start="$colorPair[0]"
-                                :color_end="$colorPair[1]"
+                                :color_start="$item['gradient'][0]"
+                                :color_end="$item['gradient'][1]"
                             />
                         @endforeach
                     </div>
 
-                    <p id="emptyState" class="empty-text" style="display:none;">
-                        🎉 Udah habis bro, lanjut ke rekomendasi!
-                    </p>
+                    {{-- Tampilan saat kartu habis --}}
+                    <div id="emptyState" class="empty-text" style="display:none;">
+                        <div class="empty-icon">🎉</div>
+                        <p>Udah habis bro, lanjut ke rekomendasi!</p>
+                        <button class="btn-primary mt-3">Lihat Hasil</button>
+                    </div>
 
+                    {{-- Tombol Aksi --}}
                     <div class="swipe-buttons">
                         <button id="dislike" class="swipe-btn dislike-btn" type="button">
                             <span class="material-icons-round">close</span>
@@ -136,6 +117,10 @@
             </div>
         </div>
     </div>
+
+    {{-- Komponen Drawer Riwayat --}}
+    <x-history-drawer title="Riwayat Pilihan Kamu" />
+
 </main>
 @endsection
 

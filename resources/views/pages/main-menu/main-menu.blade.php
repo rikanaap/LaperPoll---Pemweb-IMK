@@ -4,6 +4,8 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/pages/main-menu.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/resep-card.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/chips.css') }}">
 @endpush
 
 @section('content')
@@ -12,7 +14,7 @@
     <section class="resep-menus">
         <main class="main-content flex flex-col">
             @foreach ($reseps as $resep )
-            <x-resep-card :resep="$resep"/>
+            <x-resep-card :resep="$resep" />
             @endforeach
         </main>
     </section>

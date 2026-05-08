@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Resep;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PencarianResepController;
@@ -8,15 +7,34 @@ use App\Http\Controllers\SwipeResepController;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KulkasDigitalController;
+<<<<<<< HEAD
 use App\Http\Controllers\BahansController;          // Controller master data bahan (admin)
+=======
+use App\Http\Controllers\LandingPage;
+use App\Http\Controllers\MainMenu;
+>>>>>>> b4e0b60ae4702ae38d55059f443db7bb7a5bc572
 use App\Http\Controllers\MealPlannerController;
 use App\Http\Controllers\PilihResepController;
 use App\Http\Controllers\NotaBelAnjaController;
 
+// Harmoni -> Link Landing Page
+Route::get('/', [LandingPage::class, 'index'])
+    ->name('landing.index');
 
-Route::get('/', function () {
-    return view('index');
+// Harmoni -> Link Authentication
+Route::get('/auth', function () {
+    return view('pages.auth.auth');
 });
+
+// Harmoni -> Link Main Menu
+Route::get('/main-menu', [MainMenu::class, 'index'])
+    ->name('main-menu.index');
+Route::get('/main-menu?m=favorit', [MainMenu::class, 'favoritPengguna'])
+    ->name('main-menu.favorit');
+Route::get('/main-menu?m=hari', [MainMenu::class, 'resepHariIni'])
+    ->name('main-menu.hari-ini');
+
+
 
 Route::get('/detail-resep', function () {
     return view('pages.detail_resep.detail_resep');
@@ -28,11 +46,6 @@ Route::get('/timer-resep', function () {
 
 Route::get('/ulasan', function () {
     return view('pages.ulasan.ulasan');
-});
-
-Route::get('/main-menu', function () {
-    $reseps = Resep::with('user')->get();
-    return view('pages.main-menu.main-menu', compact('reseps'));
 });
 
 // Ikbal -> link halaman pencarian resep
@@ -52,6 +65,7 @@ Route::get('/filter-resep-swipe', [SwipeResepController::class, 'showFilter'])
 Route::get('/kulkas-digital', [KulkasDigitalController::class, 'index'])
     ->name('kulkas.index');
 
+<<<<<<< HEAD
 // Form tambah bahan ke kulkas → view: pages/tambah/bahan/tambah.blade.php
 Route::get('/kulkas-digital/tambah', [KulkasDigitalController::class, 'tambah'])
     ->name('kulkas.tambah');
@@ -61,6 +75,14 @@ Route::post('/kulkas-digital', [KulkasDigitalController::class, 'store'])
     ->name('kulkas.store');
 
 // Hapus item dari kulkas
+=======
+Route::get('/kulkas-digital/tambah',  [KulkasDigitalController::class, 'tambah'])
+    ->name('kulkas.tambah');
+
+Route::post('/kulkas-digital', [KulkasDigitalController::class, 'store'])
+    ->name('kulkas.store');
+
+>>>>>>> b4e0b60ae4702ae38d55059f443db7bb7a5bc572
 Route::delete('/kulkas-digital/{id}', [KulkasDigitalController::class, 'destroy'])
     ->name('kulkas.destroy');
 
@@ -96,4 +118,8 @@ Route::get('/nota-belanja', [NotaBelAnjaController::class, 'index'])
 // ─── PROFILE ────────────────────────────────────────────────────────────────
 Route::get('/profile', function () {
     return view('pages.profile.index');
+<<<<<<< HEAD
 })->name('profile.index');
+=======
+})->name('profile.index');
+>>>>>>> b4e0b60ae4702ae38d55059f443db7bb7a5bc572

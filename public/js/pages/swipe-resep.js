@@ -1,6 +1,6 @@
 /**
- * LaperPoll - Swipe Resep Engine
- * Optimized for Performance & Memory Management
+ * LaperPoll - Swipe Resep Engine (Pro Version)
+ * Author: Gemini x Ikbal Miftahudin
  */
 
 const swipeApp = {
@@ -15,6 +15,10 @@ const swipeApp = {
         progressBar: document.getElementById("progressBar"),
         mobileBar: document.getElementById("mobileProgressBar"),
         emptyState: document.getElementById("emptyState"),
+        drawer: document.getElementById("historyDrawer"),
+        drawerTrigger: document.getElementById("drawerTrigger"),
+        likedList: document.getElementById("likedHistoryList"),
+        dislikedList: document.getElementById("dislikedHistoryList"),
     },
 
     // ======================================
@@ -24,23 +28,45 @@ const swipeApp = {
         likeCount: 0,
         maxLike: 3,
         isAnimating: false,
-        threshold: 120, // Jarak minimal untuk trigger swipe
+        threshold: 120, // Jarak minimal swipe
+        likedHistory: [],
+        dislikedHistory: [],
+        redirectUrl: "/filter-resep-swipe" // Ganti sesuai route filter lo
     },
 
     // ======================================
-    // CORE LOGIC
+    // INITIALIZATION
     // ======================================
     init() {
         this.updateUI();
         this.bindEvents();
         this.enableDragAll();
+        this.initDrawer();
+        console.log("Swipe Engine Ready, Mas Bro!");
     },
 
     bindEvents() {
+        // Klik Tombol
         this.ui.likeBtn?.addEventListener("click", () => this.swipe("right"));
         this.ui.dislikeBtn?.addEventListener("click", () => this.swipe("left"));
     },
 
+    initDrawer() {
+        if (!this.ui.drawerTrigger || !this.ui.drawer) return;
+
+        this.ui.drawerTrigger.addEventListener("click", () => {
+            this.ui.drawer.classList.toggle("is-open");
+            const arrow = this.ui.drawerTrigger.querySelector(".arrow-icon");
+            if (arrow) {
+                arrow.innerText = this.ui.drawer.classList.contains("is-open") 
+                    ? "expand_more" : "expand_less";
+            }
+        });
+    },
+
+    // ======================================
+    // UI UPDATER
+    // ======================================
     updateUI() {
         const percentage = (this.state.likeCount / this.state.maxLike) * 100;
 
@@ -53,6 +79,39 @@ const swipeApp = {
         });
     },
 
+    renderHistory() {
+        // Render List Like (Bisa diklik untuk redirect)
+        if (this.ui.likedList) {
+            if (this.state.likedHistory.length === 0) {
+                this.ui.likedList.innerHTML = `<p class="empty-history">Belum ada rasa disukai</p>`;
+            } else {
+                this.ui.likedList.innerHTML = this.state.likedHistory.map(item => `
+                    <div class="history-chip liked clickable-history" onclick="window.location.href='${this.state.redirectUrl}'">
+                        <span class="material-icons-round" style="font-size: 16px">${item.icon}</span>
+                        <span>${item.title}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Render List Skip (Hanya tampilan)
+        if (this.ui.dislikedList) {
+            if (this.state.dislikedHistory.length === 0) {
+                this.ui.dislikedList.innerHTML = `<p class="empty-history">Belum ada rasa dilewati</p>`;
+            } else {
+                this.ui.dislikedList.innerHTML = this.state.dislikedHistory.map(item => `
+                    <div class="history-chip disliked">
+                        <span class="material-icons-round" style="font-size: 16px">${item.icon}</span>
+                        <span>${item.title}</span>
+                    </div>
+                `).join('');
+            }
+        }
+    },
+
+    // ======================================
+    // SWIPE CORE LOGIC
+    // ======================================
     getTopCard() {
         const cards = this.ui.cardsContainer.querySelectorAll(".swipe-card");
         return cards.length > 0 ? cards[cards.length - 1] : null;
@@ -65,23 +124,37 @@ const swipeApp = {
         if (!card) return;
 
         this.state.isAnimating = true;
-        const moveX = direction === "right" ? 450 : -450;
-        const rotate = direction === "right" ? 25 : -25;
 
-        // Visual Label (LIKE/SKIP)
+        // Data rasa dari elemen kartu
+        const cardData = {
+            title: card.querySelector('.swipe-title')?.innerText || 'Rasa',
+            icon: card.querySelector('.material-icons-round')?.innerText || 'restaurant'
+        };
+
+        const moveX = direction === "right" ? 500 : -500;
+        const rotate = direction === "right" ? 30 : -30;
+
+        // Munculkan label LIKE/SKIP
         this.addLabel(card, direction === "right" ? "like" : "nope");
 
-        // Animate Out
-        card.style.transition = "transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s";
+        // Animasi keluar
+        card.style.transition = "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s";
         card.style.transform = `translateX(${moveX}px) rotate(${rotate}deg)`;
         card.style.opacity = "0";
 
+        // Logic Simpan
         if (direction === "right") {
             this.state.likeCount++;
+            this.state.likedHistory.push(cardData);
             this.updateUI();
+        } else {
+            // RASA YANG DI-SKIP: Tidak akan pernah muncul lagi karena DOM element dihapus
+            this.state.dislikedHistory.push(cardData);
         }
 
-        // Cleanup after animation
+        this.renderHistory();
+
+        // Bersihkan DOM setelah animasi selesai
         card.addEventListener("transitionend", () => {
             card.remove();
             this.state.isAnimating = false;
@@ -91,7 +164,6 @@ const swipeApp = {
     },
 
     addLabel(card, type) {
-        // Hapus label preview jika ada
         const existingLabel = card.querySelector(".swipe-label");
         if (existingLabel) existingLabel.remove();
 
@@ -110,18 +182,22 @@ const swipeApp = {
 
     checkLimit() {
         if (this.state.likeCount >= this.state.maxLike) {
-            // Disable tombol agar tidak diklik lagi
+            // Kunci tombol
             if (this.ui.likeBtn) this.ui.likeBtn.disabled = true;
             if (this.ui.dislikeBtn) this.ui.dislikeBtn.disabled = true;
 
+            // Feedback: Buka drawer sebentar lalu redirect
             setTimeout(() => {
-                window.location.href = "/filter-resep-swipe";
-            }, 600);
+                this.ui.drawer?.classList.add("is-open");
+                setTimeout(() => {
+                    window.location.href = this.state.redirectUrl;
+                }, 1000);
+            }, 400);
         }
     },
 
     // ======================================
-    // DRAG FEATURE
+    // GESTURE (DRAG) HANDLING
     // ======================================
     enableDragAll() {
         const cards = this.ui.cardsContainer.querySelectorAll(".swipe-card");
@@ -145,15 +221,15 @@ const swipeApp = {
 
             currentX = e.touches ? e.touches[0].clientX : e.clientX;
             const diff = currentX - startX;
-            const rotate = diff / 15;
+            const rotate = diff / 18;
 
             card.style.transform = `translateX(${diff}px) rotate(${rotate}deg)`;
             
-            // Preview Label Logic
-            if (diff > 50) {
+            // Visual feedback saat drag
+            if (diff > 60) {
                 card.classList.add("preview-like");
                 card.classList.remove("preview-nope");
-            } else if (diff < -50) {
+            } else if (diff < -60) {
                 card.classList.add("preview-nope");
                 card.classList.remove("preview-like");
             } else {
@@ -173,25 +249,25 @@ const swipeApp = {
             } else if (diff < -this.state.threshold) {
                 this.swipe("left");
             } else {
-                // Reset posisi kalau swipe tidak cukup jauh
-                card.style.transition = "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)";
+                // Kembalikan ke posisi awal jika tidak cukup jauh
+                card.style.transition = "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
                 card.style.transform = "";
             }
         };
 
-        // Desktop Events
+        // Mouse Events
         card.addEventListener("mousedown", onStart);
         window.addEventListener("mousemove", onMove);
         window.addEventListener("mouseup", onEnd);
 
-        // Mobile Events
+        // Touch Events
         card.addEventListener("touchstart", onStart, { passive: true });
         card.addEventListener("touchmove", onMove, { passive: true });
         card.addEventListener("touchend", onEnd);
     }
 };
 
-// Start the App
+// RUN ENGINE
 document.addEventListener("DOMContentLoaded", () => {
     swipeApp.init();
 });
