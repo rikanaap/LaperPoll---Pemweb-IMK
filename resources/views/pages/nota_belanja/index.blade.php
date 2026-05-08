@@ -10,7 +10,7 @@
 <main class="main-content flex flex-col">
 
     {{-- NAVBAR --}}
-    <x-navbar :back="true"></x-navbar>
+    <x-navbar :backUrl="route('meal-planner.index')" />
 
     {{-- KONTEN UTAMA --}}
     <div class="nota-konten flex flex-col gap-3">

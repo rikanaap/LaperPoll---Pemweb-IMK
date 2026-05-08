@@ -1,205 +1,137 @@
-/* ============================================================
-   tambah-bahan.css — Responsive: mobile → tablet → desktop
-   ============================================================ */
+/* tambah-bahan.css */
 
-/* ── BASE LAYOUT ──────────────────────────────────────────── */
-.main-content {
+.tb-main {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 1rem;
     min-height: 100vh;
     background-color: #FFF8F5;
+    padding: 0 0.7rem 2rem;
+}
+.navbar {
+    margin: 0 -0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
-/* ── FORM WRAPPER ─────────────────────────────────────────── */
-.form-wrapper {
-    background-color: white;
+/* ── FORM CARD ── */
+.tb-card {
+    background: white;
     border-radius: 1.25rem;
     padding: 1.5rem 1.25rem;
-    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    border: 1px solid #F4F5F7;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
 }
 
-.kulkas-title { color: #8C2A1A; }
-.form-title p { margin-top: 0.15rem; }
+.tb-card-header { display: flex; flex-direction: column; gap: 0.25rem; }
+.tb-title    { color: #8C2A1A; font-size: 1.3rem; }
+.tb-subtitle { color: #555656; font-size: 0.875rem; }
 
-/* ── FLASH ERROR ──────────────────────────────────────────── */
-.flash-error {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
+/* ── ERRORS ── */
+.tb-errors {
+    display: flex; align-items: flex-start; gap: 0.5rem;
     padding: 0.75rem 1rem;
+    background: #fee2e2; color: #991b1b;
     border-radius: 0.75rem;
-    background-color: #fee2e2;
-    color: #991b1b;
-    font-size: var(--text-body);
+    font-size: 0.875rem;
 }
+.tb-errors span { font-size: 1rem !important; flex-shrink: 0; margin-top: 0.1rem; }
+.tb-errors ul   { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.2rem; }
 
-/* ── FORM GROUP ───────────────────────────────────────────── */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-.form-group label { display: block; }
+/* ── FORM GROUP ── */
+.tb-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.tb-label { color: #172D23; font-size: 0.875rem; }
 
-/* ── SEARCH AUTOCOMPLETE ──────────────────────────────────── */
-.search-wrapper { position: relative; }
+/* ── SEARCH AUTOCOMPLETE ── */
+.tb-search-wrap { position: relative; }
+.tb-clear { color: #555656; }
 
-#clearSearch { cursor: pointer; display: none; }
-
-.bahan-dropdown {
+.tb-dropdown {
     display: none;
     position: absolute;
-    top: calc(100% + 0.3rem);
-    left: 0; right: 0;
-    background-color: white;
-    border: 1px solid var(--primary-normal-hover);
+    top: calc(100% + 0.3rem); left: 0; right: 0;
+    background: white;
+    border: 1px solid #DCDDDE;
     border-radius: 0.75rem;
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     z-index: 100;
-    max-height: 13rem;
-    overflow-y: auto;
-    list-style: none;
-    padding: 0.4rem 0;
+    max-height: 13rem; overflow-y: auto;
+    list-style: none; padding: 0.4rem 0; margin: 0;
 }
-.dropdown-item {
+.tb-dropdown li {
     padding: 0.65rem 1rem;
     cursor: pointer;
-    color: var(--secondary-normal);
-    transition: background-color 0.15s ease;
     font-family: var(--font-jakarta);
-    font-size: var(--text-body);
+    font-size: 0.875rem;
+    color: #172D23;
+    transition: background 0.12s;
 }
-.dropdown-item:hover { background-color: var(--primary-normal); }
-.dropdown-empty {
-    padding: 0.65rem 1rem;
-    color: var(--primary-darker);
-    font-family: var(--font-jakarta);
-    font-size: var(--text-body);
-}
+.tb-dropdown li:hover { background: #F4F5F7; }
+.tb-dropdown .tb-no-result { color: #555656; cursor: default; }
+.tb-dropdown .tb-no-result:hover { background: none; }
 
-/* ── JUMLAH COUNTER ───────────────────────────────────────── */
-.jumlah-input {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+/* ── JUMLAH ROW ── */
+.tb-jumlah-row { display: flex; flex-direction: row; gap: 0.5rem; }
+.tb-jumlah-input { flex: 0 0 auto; width: 9rem; }
+.tb-satuan-input { flex: 1; }
+.tb-counter-val  { text-align: center; font-weight: 600; width: 3rem; }
+.tb-counter-btn  {
+    background: none; border: none; cursor: pointer;
+    color: #E65100; display: flex; align-items: center;
+    padding: 0.3rem; border-radius: 0.3rem; transition: color 0.15s;
 }
-.jumlah-field {
-    text-align: center;
-    font-weight: 600;
-    width: 3rem;
-    -moz-appearance: textfield;
-    border: 0;
-    background: transparent;
-    color: var(--secondary-normal);
-    font-family: var(--font-jakarta);
-    font-size: var(--text-body);
-}
-.jumlah-field:focus { outline: none; }
-.jumlah-field::-webkit-outer-spin-button,
-.jumlah-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.tb-counter-btn:hover { color: #AD3D00; }
+.tb-counter-btn span  { font-size: 1.2rem; }
 
-.jumlah-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--orange-normal);
-    padding: 0.3rem;
-    border-radius: 0.35rem;
-    transition: color 0.15s, background 0.15s;
-    line-height: 1;
-}
-.jumlah-btn span { font-size: 1.4rem; }
-.jumlah-btn:hover { color: var(--orange-dark); background-color: var(--orange-light); }
+/* ── HINT ── */
+.tb-hint { font-size: 0.75rem; color: #555656; font-style: italic; min-height: 1rem; }
 
-/* ── EXPIRED CHIPS ────────────────────────────────────────── */
-.expired-options {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-.expired-chip {
+/* ── CHIPS ── */
+.tb-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tb-chip-btn {
     padding: 0.35rem 0.85rem;
     border-radius: 2rem;
-    border: 1px solid var(--primary-normal-hover);
-    background-color: transparent;
-    color: var(--secondary-normal);
+    border: 1px solid #DCDDDE;
+    background: transparent;
+    color: #172D23;
     cursor: pointer;
     font-family: var(--font-jakarta);
-    font-size: var(--text-body);
+    font-size: 0.8rem;
     white-space: nowrap;
-    transition: all 0.18s ease;
+    transition: all 0.15s;
 }
-.expired-chip:hover { background-color: var(--primary-normal); }
-.expired-chip.active {
-    background-color: #8C2A1A;
-    color: #ffffff;
-    border-color: #8C2A1A;
-}
+.tb-chip-btn:hover  { background: #F4F5F7; }
+.tb-chip-btn.active { background: #8C2A1A; color: white; border-color: #8C2A1A; }
 
-/* ── SUBMIT BUTTON ────────────────────────────────────────── */
-.input-submit {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    cursor: pointer;
-    border-radius: 0.75rem;
-    padding: 0.9rem 0;
-    background-color: var(--orange-normal);
-    color: white;
+/* ── SUBMIT ── */
+.tb-submit {
     width: 100%;
+    padding: 0.9rem;
+    background: #E65100;
+    color: white;
+    border: none; cursor: pointer;
+    border-radius: 0.75rem;
+    font-size: 1rem;
     font-family: var(--font-jakarta);
-    font-weight: 600;
-    font-size: var(--text-title2);
-    transition: background-color 0.2s ease;
+    transition: background 0.2s;
+    margin-top: 0.25rem;
 }
-.input-submit:hover  { background-color: var(--orange-normal-hover); }
-.input-submit:active { background-color: var(--orange-normal-active); }
+.tb-submit:hover  { background: #CF4900; }
+.tb-submit:active { background: #B84100; }
 
-/* ── MISC ─────────────────────────────────────────────────── */
-.satuan-hint { color: var(--primary-darker); font-style: italic; display: none; }
-.form-col    { flex: 1; }
-.form-row    { align-items: flex-start; }
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-
-/* ── MOBILE (< 768px) ─────────────────────────────────────── */
-/* body tidak punya padding di mobile, kasih ke main-content  */
-@media (max-width: 767px) {
-    .main-content  { padding: 0 1rem 2rem; }
-    .form-wrapper  { border-radius: 0.75rem; }
-}
-
-/* ── TABLET (≥ 768px) ─────────────────────────────────────── */
-/* body { padding: 0 2rem } sudah aktif dari media.css global  */
+/* ── TABLET ── */
 @media (min-width: 768px) {
-    .main-content  { padding-bottom: 2rem; }
-    .form-wrapper  {
-        max-width: 540px;
-        margin: 1.5rem auto;
-        padding: 2rem;
-        border-radius: 1.5rem;
-        box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-    }
+    .tb-main { padding: 0 1.5rem 2rem; }
+    .navbar  { margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+    .tb-card { max-width: 540px; margin: 0 auto; padding: 2rem; }
 }
 
-/* ── DESKTOP (≥ 1024px) ───────────────────────────────────── */
+/* ── DESKTOP ── */
 @media (min-width: 1024px) {
-    .main-content { max-width: 1100px; margin: 0 auto; padding-bottom: 2rem; }
-    .form-wrapper {
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 2.5rem;
-    }
+    .tb-main { max-width: 1100px; margin: 0 auto; padding: 0 2rem 2rem; }
+    .navbar  { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
+    .tb-card { max-width: 580px; padding: 2.5rem; }
 }

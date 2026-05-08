@@ -1,318 +1,173 @@
-/* ============================================================
-   kulkas-digital.css — Responsive: mobile → tablet → desktop
-   ============================================================ */
+/* kulkas-digital.css */
 
-/* ── BASE LAYOUT ──────────────────────────────────────────── */
-.main-content {
+.kd-main {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     min-height: 100vh;
     background-color: #FFF8F5;
-    /* padding diset di media query, bukan di sini */
+    padding: 0 0.7rem 2rem;
 }
 
-/* ── KULKAS HEADER (full-bleed putih) ─────────────────────── */
-.kulkas-header {
+/* navbar full bleed */
+.navbar {
+    margin: 0 -0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* ── HEADER ── */
+.kd-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
-    background-color: #ffffff;
-    border-bottom: 1px solid var(--primary-normal);
-    /* bleed ke luar padding body: dikontrol tiap breakpoint */
 }
-.kulkas-title { color: #8C2A1A; }
+.kd-title { color: #8C2A1A; font-size: 1.4rem; }
 
-.kulkas-add-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
+.kd-add-btn {
+    width: 2.25rem; height: 2.25rem;
     border-radius: 0.5rem;
-    background-color: var(--orange-light);
-    border: none;
-    cursor: pointer;
+    background-color: #FDEEE6;
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
     text-decoration: none;
-    flex-shrink: 0;
     transition: background-color 0.2s;
 }
-.kulkas-add-btn span { color: var(--orange-normal); font-size: 1.4rem; }
-.kulkas-add-btn:hover { background-color: var(--orange-light-hover); }
+.kd-add-btn span { color: #E65100; font-size: 1.4rem; }
+.kd-add-btn:hover { background-color: #FBE5D9; }
 
-/* ── SEARCH ───────────────────────────────────────────────── */
-.kulkas-search { /* inherits horizontal padding dari parent */ }
-
-/* ── FILTER TABS ──────────────────────────────────────────── */
-.filter-tabs {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.25rem;
-    scrollbar-width: none;
+/* ── FLASH ── */
+.kd-flash {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: #FDECED;
+    color: #B13336;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
 }
-.filter-tabs::-webkit-scrollbar { display: none; }
+.kd-flash span { font-size: 1rem !important; }
 
-.filter-tab {
-    padding: 0.45rem 1.1rem;
+/* ── FILTER CHIPS ── */
+.kd-filters {
+    display: flex; flex-direction: row; gap: 0.5rem;
+    overflow-x: auto; scrollbar-width: none;
+    padding-bottom: 0.1rem;
+}
+.kd-filters::-webkit-scrollbar { display: none; }
+
+.kd-chip {
+    padding: 0.4rem 1rem;
     border-radius: 2rem;
-    border: 1px solid var(--primary-normal-hover);
-    background-color: transparent;
-    color: var(--secondary-normal);
+    border: 1px solid #DCDDDE;
+    background: transparent;
+    color: #172D23;
     cursor: pointer;
     white-space: nowrap;
-    flex-shrink: 0;
     font-family: var(--font-jakarta);
-    font-size: var(--text-body);
-    transition: all 0.18s ease;
+    font-size: 0.875rem;
+    transition: all 0.15s;
 }
-.filter-tab:hover { background-color: var(--primary-normal); }
-.filter-tab.active {
-    background-color: #8C2A1A;
-    color: #FEFEFE;
-    border-color: #8C2A1A;
-}
+.kd-chip.active { background: #8C2A1A; color: #fff; border-color: #8C2A1A; }
+.kd-chip:hover:not(.active) { background: #F4F5F7; }
 
-/* ── FLASH MESSAGE ────────────────────────────────────────── */
-.flash-success, .flash-error {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    font-size: var(--text-body);
-}
-.flash-success { background-color: var(--accent-light); color: var(--accent-dark); }
-.flash-error   { background-color: #fee2e2; color: #991b1b; }
-
-/* ── BAHAN GRID ───────────────────────────────────────────── */
-.bahan-grid {
+/* ── GRID ── */
+.kd-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;   /* mobile default: 2 kolom */
+    grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
     align-items: start;
 }
 
-/* ── BAHAN CARD ───────────────────────────────────────────── */
-.bahan-card {
-    display: flex;
-    flex-direction: column;
+/* ── CARD ── */
+.kd-card {
+    background: white;
     border-radius: 1rem;
-    background-color: white;
-    border: 1px solid var(--primary-normal);
+    border: 1px solid #F4F5F7;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     cursor: pointer;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
     overflow: hidden;
-    min-width: 0; /* cegah overflow teks */
+    transition: box-shadow 0.2s, border-color 0.2s;
 }
-.bahan-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
-
-.bahan-card.expanded {
+.kd-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.kd-card.expanded {
     grid-column: span 2;
     border-color: #8C2A1A;
-    box-shadow: 0 4px 16px rgba(140,42,26,0.12);
     cursor: default;
 }
 
-/* ── COLLAPSED VIEW ───────────────────────────────────────── */
-.card-collapsed {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    gap: 0.35rem;
+/* ── COLLAPSED ── */
+.kd-collapsed {
+    display: flex; flex-direction: column;
+    gap: 0.3rem;
     padding: 0.85rem 0.8rem;
-    min-height: 5.75rem;
+    min-height: 5.5rem;
+    justify-content: flex-end;
 }
-/* truncate nama yang terlalu panjang */
-.card-collapsed h2 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.card-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.25rem;
-    gap: 0.25rem;
-    flex-wrap: wrap;
-}
-.expand-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.1rem;
-    font-size: 0.7rem;
-    color: var(--primary-darker);
-}
-.expand-arrow { font-size: 1rem !important; }
+.kd-nama { font-size: 0.9rem; color: #172D23; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kd-sub  { font-size: 0.75rem; color: #555656; }
+.kd-card-footer { display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin-top: 0.2rem; }
+.kd-more { font-size: 0.7rem; color: #555656; display: flex; align-items: center; }
+.kd-arrow { font-size: 0.9rem !important; }
 
-/* ── EXPANDED VIEW ────────────────────────────────────────── */
-.card-expanded {
-    display: none;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1rem 0.85rem;
+/* ── BADGE ── */
+.kd-badge {
+    padding: 0.18rem 0.55rem; border-radius: 2rem;
+    font-size: 0.7rem; white-space: nowrap;
 }
-.expanded-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-.expand-close { font-size: 1.1rem !important; color: var(--primary-darker); }
+.badge-ok   { background: #FDECED; color: #B13336; }
+.badge-warn { background: #FDEEE6; color: #AD3D00; }
+.badge-exp  { background: #F4F5F7; color: #555656; }
 
-/* ── PEMBELIAN DETAIL ─────────────────────────────────────── */
-.pembelian-item { display: flex; flex-direction: column; gap: 0.3rem; }
-.pembelian-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-.pembelian-label {
-    color: #8C2A1A;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-size: 0.7rem;
-    font-family: var(--font-jakarta);
-    font-weight: 600;
-}
-.hapus-form { display: inline; }
-.hapus-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--primary-darker);
-    display: flex;
-    align-items: center;
-    padding: 0.2rem;
-    border-radius: 0.25rem;
-    transition: color 0.15s, background 0.15s;
-}
-.hapus-btn:hover { color: #8C2A1A; background-color: var(--accent-light); }
-.hapus-btn span  { font-size: 1.1rem !important; }
-.pembelian-divider {
-    border: none;
-    border-top: 1px solid var(--primary-normal);
-    margin: 0.25rem 0;
-}
-.icon-sm {
-    font-size: 0.85rem !important;
-    vertical-align: middle;
-    margin-right: 0.2rem;
-    color: var(--primary-darker);
-}
+/* ── EXPANDED ── */
+.kd-expanded { display: none; flex-direction: column; gap: 0.65rem; padding: 1rem 0.85rem; }
+.kd-exp-header { display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+.kd-close { font-size: 1.1rem !important; color: #555656; cursor: pointer; }
 
-/* ── STATUS BADGE ─────────────────────────────────────────── */
-.status-badge {
-    display: inline-flex;
-    align-self: flex-start;
-    padding: 0.2rem 0.55rem;
-    border-radius: 2rem;
-    white-space: nowrap;
-}
-.badge-tersedia { background-color: var(--accent-light);   color: var(--accent-dark);    }
-.badge-hampir   { background-color: var(--orange-light);   color: var(--orange-dark);    }
-.badge-expired  { background-color: var(--primary-normal); color: var(--primary-darker); }
+.kd-beli-item { display: flex; flex-direction: column; gap: 0.25rem; }
+.kd-beli-row  { display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+.kd-beli-label { font-size: 0.7rem; color: #8C2A1A; text-transform: uppercase; letter-spacing: 0.05em; }
+.kd-beli-info  { font-size: 0.8rem; color: #555656; display: flex; align-items: center; gap: 0.25rem; }
+.kd-iicon { font-size: 0.85rem !important; }
+.kd-warn-text { color: #EC4448; }
+.kd-divider { border: none; border-top: 1px solid #F4F5F7; margin: 0.25rem 0; }
 
-/* ── EMPTY STATE ──────────────────────────────────────────── */
-.empty-state {
-    grid-column: span 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.5rem;
-    padding: 2.5rem 1rem;
-    background-color: white;
+.kd-del-btn {
+    background: none; border: none; cursor: pointer;
+    color: #555656; display: flex; align-items: center;
+    padding: 0.2rem; border-radius: 0.25rem; transition: color 0.15s;
+}
+.kd-del-btn:hover { color: #8C2A1A; }
+.kd-del-btn span { font-size: 1rem !important; }
+
+/* ── EMPTY STATE ── full width, isi layar ── */
+.kd-empty {
+    grid-column: 1 / -1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; gap: 0.75rem;
+    min-height: calc(100vh - 18rem);
+    padding: 3rem 1.5rem;
+    background: white;
     border-radius: 1rem;
-    border: 1px solid var(--primary-normal);
+    border: 1px solid #F4F5F7;
 }
-.empty-icon { font-size: 3rem !important; color: var(--primary-darker); opacity: 0.4; }
+.kd-empty-icon  { font-size: 3.5rem !important; color: #B7B8B9; }
+.kd-empty-title { font-size: 1rem; color: #172D23; }
+.kd-empty-sub   { font-size: 0.875rem; color: #555656; }
 
-/* ── RESEP SUGGESTION ─────────────────────────────────────── */
-.resep-suggestion {
-    background-color: white;
-    border-radius: 1.25rem;
-    padding: 1rem;
-    border: 1px solid var(--primary-normal);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.resep-suggestion-header { display: flex; flex-direction: row; align-items: center; gap: 0.5rem; }
-.sparkle-icon { font-size: 1.1rem; flex-shrink: 0; }
-.resep-suggestion-item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.4rem 0;
-    gap: 0.5rem;
-}
-.resep-suggestion-item::before {
-    content: '';
-    display: inline-block;
-    width: 0.45rem; height: 0.45rem;
-    border-radius: 50%;
-    background-color: var(--accent-normal);
-    flex-shrink: 0;
-}
-.resep-nama { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.resep-badge {
-    display: inline-flex;
-    padding: 0.25rem 0.65rem;
-    border-radius: 2rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-.badge-complete { background-color: var(--orange-normal);       color: var(--primary-light); }
-.badge-partial  { background-color: var(--orange-light-active); color: var(--orange-normal); }
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-
-/* ── MOBILE default (body tidak punya padding di sini) ─────── */
-/* body di mobile: tidak ada padding horizontal dari media.css  */
-/* Kita kasih padding ke .main-content langsung                 */
-@media (max-width: 767px) {
-    .main-content   { padding: 0 1rem 2rem; }
-    .kulkas-header  { margin: 0 -1rem; }
-}
-
-/* ── TABLET (≥ 768px) ─────────────────────────────────────── */
-/* media.css global set: body { padding: 0 2rem }              */
-/* jadi .main-content tidak perlu padding sendiri              */
+/* ── TABLET ── */
 @media (min-width: 768px) {
-    .main-content   { padding-bottom: 2rem; }
-    .kulkas-header  { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
-
-    .bahan-grid     { grid-template-columns: repeat(3, 1fr) !important; gap: 1rem; }
-    .bahan-card.expanded { grid-column: span 3; }
-
-    .card-collapsed { min-height: 6.5rem; }
-    .status-badge   { font-size: var(--text-caption); }
+    .kd-main { padding: 0 1.5rem 2rem; }
+    .navbar  { margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+    .kd-grid { grid-template-columns: repeat(3, 1fr); }
+    .kd-card.expanded { grid-column: span 3; }
 }
 
-/* ── DESKTOP (≥ 1024px) ───────────────────────────────────── */
+/* ── DESKTOP ── */
 @media (min-width: 1024px) {
-    .main-content   { max-width: 1100px; margin: 0 auto; padding-bottom: 2rem; }
-    /* body padding 2rem sudah aktif, margin auto center konten */
-
-    .bahan-grid     { grid-template-columns: repeat(4, 1fr) !important; }
-    .bahan-card.expanded { grid-column: span 2; }
-
-    .resep-suggestion { max-width: 500px; }
-}
-
-/* ── WIDE (≥ 1280px) ──────────────────────────────────────── */
-@media (min-width: 1280px) {
-    .main-content { max-width: 1280px; }
-    .bahan-grid   { grid-template-columns: repeat(5, 1fr) !important; }
-    .bahan-card.expanded { grid-column: span 2; }
+    .kd-main { max-width: 1100px; margin: 0 auto; padding: 0 2rem 2rem; }
+    .navbar  { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
+    .kd-grid { grid-template-columns: repeat(4, 1fr); }
+    .kd-card.expanded { grid-column: span 2; }
 }

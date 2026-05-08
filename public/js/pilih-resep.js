@@ -1,42 +1,45 @@
 // pilih-resep.js
-// Slot format: YYYY-MM-DD-waktu  (e.g. 2026-05-06-sarapan)
 
 const labelWaktu = { sarapan: "Sarapan", siang: "Makan Siang", malam: "Makan Malam" };
 const bulan = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
 
 // Ambil slot dari query string
-const params = new URLSearchParams(window.location.search);
-const slot   = params.get("slot");  // e.g. "2026-05-06-sarapan"
+const params   = new URLSearchParams(window.location.search);
+const slot     = params.get("slot");   // format: YYYY-MM-DD-waktu
 
-// Parse slot
-let slotDate = null, slotWaktu = null;
+let slotDate  = null;
+let slotWaktu = null;
+
 if (slot) {
-    const parts = slot.split("-");
-    // format: YYYY-MM-DD-waktu → parts[0..2] = date, parts[3] = waktu
-    if (parts.length === 4) {
-        slotDate  = `${parts[0]}-${parts[1]}-${parts[2]}`;
-        slotWaktu = parts[3];
-    } else {
-        // fallback format lama: sen-sarapan
-        slotDate  = null;
-        slotWaktu = parts[1] || null;
+    // YYYY-MM-DD-sarapan  → split oleh '-' = ['2026','05','06','sarapan']
+    // Ambil 3 bagian pertama sebagai tanggal, sisanya sebagai waktu
+    const firstDash  = slot.indexOf("-");
+    const secondDash = slot.indexOf("-", firstDash + 1);
+    const thirdDash  = slot.indexOf("-", secondDash + 1);
+
+    if (thirdDash !== -1) {
+        slotDate  = slot.substring(0, thirdDash);        // "2026-05-06"
+        slotWaktu = slot.substring(thirdDash + 1);       // "sarapan"
     }
 }
 
-// Tampilkan label slot
+// Tampilkan info slot di header
 const slotLabel = document.getElementById("slotLabel");
 if (slotLabel) {
     if (slotDate && slotWaktu) {
-        const d  = new Date(slotDate + "T00:00:00");
+        const d        = new Date(slotDate + "T00:00:00");
         const hariNama = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][d.getDay()];
-        const tgl = `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+        const tgl      = `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
         slotLabel.textContent = `${hariNama}, ${tgl} · ${labelWaktu[slotWaktu] || slotWaktu}`;
     } else {
         slotLabel.textContent = "Pilih slot di meal planner terlebih dahulu.";
+        // Tampilkan warning banner
+        const warningEl = document.getElementById("slotWarning");
+        if (warningEl) warningEl.style.display = "flex";
     }
 }
 
-// ─── Data Resep (static / bisa diganti fetch API) ───────────
+// ─── Data Resep ──────────────────────────────────────────────
 const dataResep = [
     { id: 1,  nama: "Nasi Goreng Spesial",   waktu: "25 mnt", kalori: "450 kkal", icon: "rice_bowl" },
     { id: 2,  nama: "Ayam Bakar Kecap",       waktu: "40 mnt", kalori: "480 kkal", icon: "lunch_dining" },
@@ -66,48 +69,57 @@ const resepList = document.getElementById("resepList");
 
 function renderResep(data) {
     resepList.innerHTML = "";
+
     if (!data.length) {
         resepList.innerHTML = `<p class="empty-state font-jakarta text-body">Resep tidak ditemukan.</p>`;
         return;
     }
+
     data.forEach(resep => {
         const card = document.createElement("div");
-        card.className = "resep";
+        card.className = "resep" + (!slotDate || !slotWaktu ? " no-slot" : "");
         card.innerHTML = `
             <div class="resep-content">
                 <div class="resep-logo">
-                    <span class="material-icons-round text-h3 text-accent-dark">${resep.icon}</span>
+                    <span class="material-icons-round">${resep.icon}</span>
                 </div>
                 <div class="resep-detail">
-                    <h1 class="font-jakarta text-title2 text-black font-regular">${resep.nama}</h1>
+                    <h1 class="font-jakarta text-title2 text-black font-semibold">${resep.nama}</h1>
                     <div class="resep-content-detail">
                         <div>
-                            <span class="material-icons-round text-title2">watch_later</span>
+                            <span class="material-icons-round">watch_later</span>
                             <p class="text-body font-jakarta font-medium text-black">${resep.waktu}</p>
                         </div>
                         <div>
-                            <span class="material-icons-round text-title2">local_fire_department</span>
+                            <span class="material-icons-round">local_fire_department</span>
                             <p class="text-body font-jakarta font-medium text-black">${resep.kalori}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
+            <span class="material-icons-round arrow-icon">arrow_forward_ios</span>
         `;
-        card.addEventListener("click", () => {
-            if (!slotDate || !slotWaktu) return;
-            const storageKey = `meal_${slotDate}_${slotWaktu}`;
-            localStorage.setItem(storageKey, JSON.stringify({
-                nama: resep.nama, waktu: resep.waktu, kalori: resep.kalori, icon: resep.icon
-            }));
-            window.location.href = window.mealPlannerUrl || "/meal-planner";
-        });
+
+        if (slotDate && slotWaktu) {
+            card.addEventListener("click", () => {
+                const storageKey = `meal_${slotDate}_${slotWaktu}`;
+                localStorage.setItem(storageKey, JSON.stringify({
+                    nama: resep.nama,
+                    waktu: resep.waktu,
+                    kalori: resep.kalori,
+                    icon: resep.icon
+                }));
+                window.location.href = window.mealPlannerUrl || "/meal-planner";
+            });
+        }
+
         resepList.appendChild(card);
     });
 }
 
 renderResep(dataResep);
 
+// ─── Search ──────────────────────────────────────────────────
 document.getElementById("searchResep")?.addEventListener("input", (e) => {
     const q = e.target.value.toLowerCase().trim();
     renderResep(dataResep.filter(r => r.nama.toLowerCase().includes(q)));

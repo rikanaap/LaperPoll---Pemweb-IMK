@@ -2,8 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const bahanData = JSON.parse(document.getElementById('bahanData')?.textContent || '[]');
-
+    const bahanData      = JSON.parse(document.getElementById('bahanData')?.textContent || '[]');
     const searchInput    = document.getElementById('searchBahan');
     const dropdown       = document.getElementById('bahanDropdown');
     const clearBtn       = document.getElementById('clearSearch');
@@ -93,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         days.forEach((d, i) => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'expired-chip font-jakarta font-medium text-caption' + (i === 0 ? ' active' : '');
+            btn.className = 'expired-chip font-jakarta font-medium text-caption' + (d === defaultDays ? ' active' : '');
             btn.textContent = d === defaultDays ? `${d} hari (default)` : `${d} hari`;
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.expired-chip').forEach(c => c.classList.remove('active'));
@@ -105,25 +104,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setExpiredFromDays(days) {
-        const d = new Date();
-        d.setDate(d.getDate() + days);
-        expiredDate.value = d.toISOString().split('T')[0];
+        const base = boughtDate?.value ? new Date(boughtDate.value + 'T00:00:00') : new Date();
+        base.setDate(base.getDate() + days);
+        expiredDate.value = base.toISOString().split('T')[0];
     }
 
     boughtDate?.addEventListener('change', () => {
         if (expiredDate) expiredDate.min = boughtDate.value;
+        // Update expired date kalau bahan punya expiry
+        if (selectedBahan?.has_expiry) {
+            const active = document.querySelector('.expired-chip.active');
+            if (active) setExpiredFromDays(parseInt(active.textContent));
+        }
     });
 
-    // ── VALIDASI SEBELUM SUBMIT ───────────────────────────────
+    // ── VALIDASI + GABUNG ANGKA & SATUAN SEBELUM SUBMIT ──────
     document.getElementById('formTambahBahan')?.addEventListener('submit', e => {
         if (!bahanIdInput.value) {
             e.preventDefault();
             alert('Pilih nama bahan dari daftar terlebih dahulu!');
             searchInput.focus();
-        } else if (!satuanInput.value.trim()) {
-            e.preventDefault();
-            alert('Isi jumlah dan satuan bahan!');
-            satuanInput.focus();
+            return;
         }
+
+        const angka  = parseInt(jumlahAngka.value || 1);
+        const satuan = satuanInput.value.trim();
+
+        if (!satuan) {
+            e.preventDefault();
+            alert('Isi satuan bahan! Contoh: gram, butir, buah, liter');
+            satuanInput.focus();
+            return;
+        }
+
+        // Gabungkan angka + satuan → set ke field name="jumlah"
+        // Field satuanBahan sudah punya name="jumlah", kita set valuenya
+        satuanInput.value = angka + ' ' + satuan;
     });
 });
