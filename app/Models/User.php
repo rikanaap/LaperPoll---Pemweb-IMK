@@ -40,7 +40,8 @@ class User extends Authenticatable
 
     public function favorites()
     {
-        return $this->hasMany(Favorite::class);
+    
+    return $this->belongsToMany(Resep::class, 'favorites', 'user_id', 'resep_id')->withTimestamps();
     }
 
     public function fridge()

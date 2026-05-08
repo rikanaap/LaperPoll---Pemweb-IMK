@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="{{ asset('css/pages/detail-resep.css') }}">
 @endpush
 
-  <main class="main-content flex flex-col font-jakarta">
+  <main class="main-content flex flex-col font-jakarta" data-recipe-id="roti-bakar-keju">
     <x-navbar :back="true"></x-navbar>
     
     <section>
@@ -67,7 +67,7 @@
           <span class="unit-icon">&#9878</span>
           <select class="unit-select">
             <option value="gram">Gram</option>
-            <option value="miligram">Mililiter</option>
+            <option value="miligram">Miligram</option>
             <option value="kilogram">Kilogram</option>
             <option value="sendok_makan">Sdm</option>
           </select>

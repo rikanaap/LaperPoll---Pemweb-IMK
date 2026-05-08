@@ -71,9 +71,9 @@ class Resep extends Model
         return $this->hasMany(ResepAttachment::class);
     }
 
-    public function favorites()
+    public function favoritedBy()
     {
-        return $this->hasMany(Favorite::class);
+    return $this->belongsToMany(User::class, 'favorites', 'resep_id', 'user_id');
     }
 
     public function filters()

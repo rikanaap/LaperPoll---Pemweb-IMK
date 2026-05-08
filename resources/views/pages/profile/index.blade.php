@@ -44,6 +44,15 @@
 
         </section>
 
+        <section class="favorit-shortcut-section">
+        <a href="{{ url('/favorit') }}" class="favorit-shortcut-btn font-jakarta font-semibold">
+            <span class="material-icons-round">favorite</span>
+            Resep Favorit Saya
+            <span class="material-icons-round favorit-shortcut-arrow">chevron_right</span>
+            <span class="favorit-shortcut-badge" id="favorit-badge">0</span>
+        </a>
+        </section>
+        
         <section class="resep-grid-section flex flex-col gap-3">
 
             <div class="resep-card-grid">
