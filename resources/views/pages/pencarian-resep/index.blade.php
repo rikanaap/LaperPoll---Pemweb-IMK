@@ -13,27 +13,7 @@
 
 <main class="search-page font-jakarta">
 
-    <nav class="navbar">
-        <a href="#" class="back-btn">
-            <span class="material-icons-round text-h4 text-accent-normal">
-                arrow_back
-            </span>
-        </a>
-
-        <img
-            src="{{ asset('assets/images/Logo_Laperpoll.png') }}"
-            alt="Logo Laperpoll"
-            class="logo"
-        >
-
-        <a href="#" class="profile-link">
-            <img
-                src="{{ asset('assets/images/Image_DummyProfile.png') }}"
-                alt="Profil Foto"
-                class="profile"
-            >
-        </a>
-    </nav>
+    <x-navbar :backUrl="'back'"></x-navbar>
 
     <section class="search-layout">
 
@@ -45,8 +25,7 @@
                     type="text"
                     id="searchInput"
                     class="input-data"
-                    placeholder="Cari Bahan / Nama Resep"
-                >
+                    placeholder="Cari Bahan / Nama Resep">
             </div>
 
             <p class="text-body font-medium section-title">
@@ -58,22 +37,22 @@
 
                     @forelse($bahans as $huruf => $kelompokBahan)
 
-                        <div class="bahan-group">
+                    <div class="bahan-group">
 
-                            <span class="group-letter">
-                                {{ $huruf }}
-                            </span>
+                        <span class="group-letter">
+                            {{ $huruf }}
+                        </span>
 
-                            @foreach($kelompokBahan as $bahan)
-                                <x-bahan-item :bahan="$bahan" />
-                            @endforeach
+                        @foreach($kelompokBahan as $bahan)
+                        <x-bahan-item :bahan="$bahan" />
+                        @endforeach
 
-                        </div>
+                    </div>
 
                     @empty
-                        <p class="text-caption text-center">
-                            Tidak ada bahan yang ditemukan.
-                        </p>
+                    <p class="text-caption text-center">
+                        Tidak ada bahan yang ditemukan.
+                    </p>
                     @endforelse
 
                 </div>
@@ -89,8 +68,7 @@
                     id="hapusSemuaBtn"
                     class="action-btn hapus-btn"
                     type="button"
-                    disabled
-                >
+                    disabled>
                     Hapus Semua
                 </button>
 
@@ -98,8 +76,7 @@
                     id="terapkanBtn"
                     class="action-btn terapkan-btn disabled"
                     type="button"
-                    disabled
-                >
+                    disabled>
                     Terapkan
                 </button>
 
@@ -133,7 +110,7 @@
             <div id="resepContainer" class="resep-container hidden">
 
                 @foreach($reseps as $resep)
-                    <x-resep-card :resep="$resep" />
+                <x-resep-card :resep="$resep" />
                 @endforeach
 
             </div>
