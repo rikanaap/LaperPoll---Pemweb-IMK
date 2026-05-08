@@ -12,7 +12,7 @@
 <main class="filter-page font-jakarta">
 
     {{-- NAVBAR: Menempel penuh di atas --}}
-    <x-navbar :backUrl="route('swipe.rasa')" />
+    <x-navbar :back-url="route('swipe.rasa')" />
 
     {{-- CONTAINER KONTEN --}}
     <div class="main-layout">

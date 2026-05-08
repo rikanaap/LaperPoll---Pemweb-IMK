@@ -13,7 +13,7 @@
 
 <main class="search-page font-jakarta">
 
-    <x-navbar :backUrl="'back'"></x-navbar>
+    <x-navbar :back-url="route('pencarian.resep')" />
 
     <section class="search-layout">
 

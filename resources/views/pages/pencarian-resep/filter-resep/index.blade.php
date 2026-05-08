@@ -12,7 +12,7 @@
 
 <main class="filter-page font-jakarta">
 
-    <x-navbar :backUrl="route('pencarian.resep')" />
+    <x-navbar :back-url="route('pencarian.resep')" />
 
     <div id="chipsContainer" class="selected-chips-wrapper"></div>
 
