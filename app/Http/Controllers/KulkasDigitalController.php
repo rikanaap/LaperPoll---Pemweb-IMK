@@ -18,13 +18,11 @@ class KulkasDigitalController extends Controller
             ->orderBy('bought_date', 'desc')
             ->get();
 
-        // Group by bahan_id untuk fitur multi-pembelian + expand card
         $grouped = $fridgeItems->groupBy('bahan_id')->map(function ($items) {
             $bahan     = $items->first()->bahan;
             $hasExpiry = $bahan->expired_expectancy_day !== null;
-
-            // Tentukan status dari semua pembelian
             $statusFinal = 'tersedia';
+
             foreach ($items as $item) {
                 if ($item->expired_date) {
                     $diff = Carbon::now()->startOfDay()
@@ -51,22 +49,19 @@ class KulkasDigitalController extends Controller
                         'id'           => $item->id,
                         'jumlah'       => $item->jumlah,
                         'bought_date'  => $item->bought_date
-                            ? Carbon::parse($item->bought_date)->format('d M Y')
-                            : null,
+                            ? Carbon::parse($item->bought_date)->format('d M Y') : null,
                         'expired_date' => $item->expired_date
-                            ? Carbon::parse($item->expired_date)->format('d M Y')
-                            : null,
+                            ? Carbon::parse($item->expired_date)->format('d M Y') : null,
                         'sisa_hari'    => $diff,
                     ];
                 })->values(),
             ];
         })->values();
 
-        $bahans = Bahan::orderBy('nama')->get();
-
-        return view('pages.kulkas_digital.index', compact('grouped', 'bahans'));
+        return view('pages.kulkas_digital.index', compact('grouped'));
     }
 
+    // VIEW: resources/views/pages/kulkas_digital/tambah.blade.php (FILE BARU)
     public function tambah()
     {
         $bahans = Bahan::orderBy('nama')->get();
@@ -99,7 +94,6 @@ class KulkasDigitalController extends Controller
         $item = UserFridge::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
-
         $item->delete();
 
         return redirect()->route('kulkas.index')
