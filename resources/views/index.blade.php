@@ -25,19 +25,21 @@
             <div class="flex flex-row gap-[0.6rem]">
                 @php
                 $features = [
-                ['name' => 'Kulkas Digital', 'icon' => 'inventory_2', 'link' => ''],
-                ['name' => 'Nota Belanja', 'icon' => 'shopping_cart', 'link' => ''],
-                ['name' => 'Meal Planner', 'icon' => 'calendar_month', 'link' => ''],
-                ['name' => 'Swiper Search', 'icon' => 'swipe', 'link' => ''],
+                ['name' => 'Kulkas Digital', 'icon' => 'inventory_2', 'link' => route('kulkas.index')],
+                ['name' => 'Nota Belanja', 'icon' => 'shopping_cart', 'link' => route('nota.index')],
+                ['name' => 'Meal Planner', 'icon' => 'calendar_month', 'link' => route('meal-planner.index')],
+                ['name' => 'Swiper Search', 'icon' => 'swipe', 'link' => route('swipe.rasa')],
                 ];
                 @endphp
                 @foreach ( $features as $feature )
-                <div class="flex flex-col gap-[0.5rem] justify-center items-center">
-                    <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.5rem]]">
-                        <span class="material-icons-round text-2 text-accent-dark">{{ $feature['icon'] }}</span>
+                <a href="{{ $feature['link'] }}">
+                    <div class="flex flex-col gap-[0.5rem] justify-center items-center">
+                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.5rem]]">
+                            <span class="material-icons-round text-2 text-accent-dark">{{ $feature['icon'] }}</span>
+                        </div>
+                        <p class="font-jakarta text-[0.4rem]/[120%] font-semibold text-accent-dark-active">{{ $feature['name'] }}</p>
                     </div>
-                    <p class="font-jakarta text-[0.4rem]/[120%] font-semibold text-accent-dark-active">{{ $feature['name'] }}</p>
-                </div>
+                </a>
                 @endforeach
             </div>
         </div>
@@ -47,7 +49,8 @@
     <div class="flex flex-col items-start self-stretch pl-[1.5rem] pr-[0.75rem] gap-[0.4rem]">
         <div class="flex justify-between items-center self-stretch">
             <h1 class="font-poppins text-[0.7rem]/120% text-orange-normal-active font-medium">Resep Favorit Pengguna</h1>
-            <button class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium">Lihat Semua</button>
+            <!-- TODO: Ganti Routing  -->
+            <a href="{{ route('main-menu.favorit') }}" class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium">Lihat Semua</a>
         </div>
         <div class="flex flex-row items-center gap-[0.3rem] overflow-x-scroll w-full">
             <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
@@ -207,7 +210,8 @@
     <div class="flex flex-col items-start self-stretch pl-[1.5rem] pr-[0.75rem] gap-[0.4rem]">
         <div class="flex justify-between items-center self-stretch">
             <h1 class="font-poppins text-[0.7rem]/120% text-orange-normal-active font-medium">Resep Hari Ini</h1>
-            <button class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium">Lihat Semua</button>
+            <!-- TODO: Ganti Routing  -->
+            <a href="{{ route('main-menu.hari-ini') }}" class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium">Lihat Semua</a>
         </div>
         <div class="flex flex-row items-center gap-[0.3rem] overflow-x-scroll w-full">
             <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
@@ -436,7 +440,7 @@
                         <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
                     </div>
                 </div>
-                <button class="px-[0.4rem] py-[0.4rem] rounded-[0.3rem] bg-orange-light-active text-accent-normal font-poppins text-[0.45rem]/[120%] font-medium">Lihat Semua</button>
+                <a href="{{ route('pencarian.resep') }}" class="px-[0.4rem] py-[0.4rem] rounded-[0.3rem] bg-orange-light-active text-accent-normal font-poppins text-[0.45rem]/[120%] font-medium">Lihat Semua</a>
             </div>
         </div>
     </div>
@@ -518,39 +522,45 @@
             </div>
             <div class="flex flex-col gap-2 w-[20rem]">
                 <!-- FAQ CARD      -->
-                <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
-                    <div class="flex w-full flex-col gap-1 justify-center">
-                        <p class="text-[0.45rem] font-medium font-poppins text-black">Apa itu laperpoll?</p>
-                        <p class="text-[0.45rem] text-black font-light leading-relaxed">
-                            Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
-                        </p>
+                <a>
+                    <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
+                        <div class="flex w-full flex-col gap-1 justify-center">
+                            <p class="text-[0.45rem] font-medium font-poppins text-black">Apa itu laperpoll?</p>
+                            <p class="text-[0.45rem] text-black font-light leading-relaxed">
+                                Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
+                            </p>
+                        </div>
+                        <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
+                            <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
+                        </button>
                     </div>
-                    <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
-                        <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
-                    </button>
-                </div>
-                <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
-                    <div class="flex w-full flex-col gap-1 justify-center">
-                        <p class="text-[0.45rem] font-medium font-poppins text-black">Bagaimana cara menambahkan resep baru ke aplikasi?</p>
-                        <p class="text-[0.45rem] text-black font-light leading-relaxed hidden">
-                            Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
-                        </p>
+                </a>
+                <a>
+                    <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
+                        <div class="flex w-full flex-col gap-1 justify-center">
+                            <p class="text-[0.45rem] font-medium font-poppins text-black">Bagaimana cara menambahkan resep baru ke aplikasi?</p>
+                            <p class="text-[0.45rem] text-black font-light leading-relaxed hidden">
+                                Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
+                            </p>
+                        </div>
+                        <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
+                            <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
+                        </button>
                     </div>
-                    <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
-                        <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
-                    </button>
-                </div>
-                <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
-                    <div class="flex w-full flex-col gap-1 justify-center">
-                        <p class="text-[0.45rem] font-medium font-poppins text-black">Apakah aplikasi ini bisa digunakan secara offline?</p>
-                        <p class="text-[0.45rem] text-black font-light leading-relaxed hidden">
-                            Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
-                        </p>
+                </a>
+                <a>
+                    <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
+                        <div class="flex w-full flex-col gap-1 justify-center">
+                            <p class="text-[0.45rem] font-medium font-poppins text-black">Apakah aplikasi ini bisa digunakan secara offline?</p>
+                            <p class="text-[0.45rem] text-black font-light leading-relaxed hidden">
+                                Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
+                            </p>
+                        </div>
+                        <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
+                            <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
+                        </button>
                     </div>
-                    <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
-                        <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
-                    </button>
-                </div>
+                </a>
             </div>
         </div>
     </div>

@@ -1,99 +1,132 @@
-.main-content {
-    padding: 0 0.7rem;
+/* * LaperPoll - Filter Pencarian Resep Styling
+ * Optimized Spacing & Visual Hierarchy
+ */
+
+.filter-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    /* Memberi jarak aman dari top (navbar) dan bottom */
+    padding: 1.5rem 1rem 5rem; 
+    min-height: 100vh;
+    background-color: #ffffff;
 }
 
-.profile-link {
+/* 1. Jarak Navbar ke Konten */
+.navbar {
+    margin-bottom: 2rem !important; /* Memberi napas lega di bawah logo */
+}
+
+/* 2. Container Chips - Agar tidak nempel ke navbar */
+.selected-chips-wrapper {
     display: flex;
-    align-items: center;
-}
-
-.top-section {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: white;
-}
-
-.input {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.8rem 0.7rem;
-    border-radius: 0.8rem;
-    background-color: var(--orange-normal);
-}
-
-.input span {
-    color: white;
-}
-
-.input-data {
-    flex: 1; 
-    border: none;
-    background: transparent;
-    color: white;
-}
-
-.input-data:focus {
-    outline: none;
-}
-
-.input-data::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.filter-wrapper {
-    display: flex;
-    gap: 8px;
-    padding: 8px 0;
     flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1rem; /* Jarak ke banner info di bawahnya */
+    padding: 0 0.2rem;
 }
 
-.chip {
+/* 3. Info Banner "Menampilkan X Resep" */
+.result-info-text {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 500;
-    white-space: nowrap;
+    /* Diubah ke 100% agar simetris dengan list resep di bawahnya */
+    width: 100%; 
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px; /* Disesuaikan dengan radius card */
+    
+    /* Warna lebih soft & profesional */
+    background: #FFF9F2; 
+    color: #FF7A00;
+    border: 1px solid #FFE8D0;
+    
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 1rem; /* Jarak ke daftar resep */
+    line-height: 1.4;
 }
 
-.chip-main {
-    background-color: var(--orange-normal);
-    color: white;
-}
-
-.chip-count {
-    background-color: white;
-    color: var(--orange-normal);
-    border-radius: 999px;
-    padding: 2px 6px;
-    font-size: 10px;
-    font-weight: bold;
-}
-
-.chip-active {
-    border: 1px solid var(--orange-normal);
-    color: var(--orange-normal);
-    background-color: white;
-}
-
-.resep-menus {
+/* 4. Container Daftar Resep */
+.resep-container {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem; /* Jarak antar card resep */
 }
 
-@media (min-width: 768px){
-    .resep-menus{
-        display: grid;
-        column-gap: 1rem;
-        grid-template-columns: repeat(3, 1fr);
-        height: fit-content;
+/* 5. Placeholder / Empty State */
+.result-placeholder {
+    margin-top: 6rem;
+    text-align: center;
+    color: #9CA3AF;
+    padding: 0 2rem;
+}
+
+.result-placeholder span {
+    font-size: 80px;
+    color: #FFDBB7; /* Warna icon lebih soft */
+    margin-bottom: 1rem;
+}
+
+.result-placeholder h3 {
+    margin: 1rem 0 0.5rem;
+    font-size: 20px;
+    color: #374151;
+}
+
+.result-placeholder p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* 6. Loading State */
+.loading-state {
+    text-align: center;
+    padding: 6rem 1rem;
+}
+
+.loading-state p {
+    margin-top: 1.2rem;
+    font-size: 15px;
+    font-weight: 500;
+    color: #6B7280;
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 4px solid #F3F4F6;
+    border-top-color: #FF7A00;
+    animation: spin .8s linear infinite;
+}
+
+/* Utility */
+.hidden {
+    display: none !important;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 7. Responsif Desktop (Tablet & PC) */
+@media (min-width: 1024px) {
+    .filter-page {
+        padding: 2rem 2rem 6rem;
     }
-    .resep{
-        max-width: 100%;
+
+    .navbar {
+        margin-bottom: 3rem !important;
+    }
+
+    .resep-container:not(.hidden) {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .result-info-text {
+        font-size: 14px;
+        padding: 1rem 1.5rem;
     }
 }

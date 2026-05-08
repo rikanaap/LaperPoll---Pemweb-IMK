@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <link rel="stylesheet" href="{{ asset('css/atomic.css') }}">
     <link rel="stylesheet" href="{{ asset('css/media.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/navbar.css') }}">
 
     {{-- Page-specific CSS --}}
     @stack('styles')

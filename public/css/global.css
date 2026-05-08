@@ -601,5 +601,6 @@ form{
 
 /* DEVELOPER CLASS */
 .hidden {
-  display: none;
+    display: none !important;
 }
+

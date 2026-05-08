@@ -1,0 +1,59 @@
+/* ======================================================
+   BAHAN ITEM COMPONENT
+   ====================================================== */
+
+.bahan-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .8rem;
+    padding: .85rem;
+    border-radius: 16px;
+    border: 1px solid #f4e6da;
+    background: #fffaf6;
+    cursor: pointer;
+    transition: .22s ease;
+}
+
+.bahan-item:hover {
+    transform: translateY(-2px);
+    border-color: #ffd0a8;
+}
+
+.bahan-item.active {
+    background: #fff1e5;
+    border-color: #ffb374;
+}
+
+.bahan-left {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.bahan-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffe7cf;
+}
+
+.bahan-icon span {
+    color: #ff7a00;
+    font-size: 21px;
+}
+
+.bahan-nama {
+    font-weight: 600;
+    font-size: 14px;
+    color: #222;
+}
+
+.bahan-item input {
+    width: 18px;
+    height: 18px;
+    accent-color: #ff7a00;
+}

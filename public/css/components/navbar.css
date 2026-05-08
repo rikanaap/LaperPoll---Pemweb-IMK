@@ -1,0 +1,85 @@
+/* Navbar Container */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    padding: 0.25rem 1rem;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    min-height: 60px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+/* Tombol Back (Sisi Kiri) */
+.back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    width: 44px;
+    cursor: pointer;
+    /* Area klik yang luas (Touch Target) */
+    height: 44px;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.back-btn:active {
+    background-color: #FEEEDC;
+    /* Feedback pas dipencet */
+}
+
+.back-btn span {
+    font-size: 28px !important;
+    /* Ukuran icon arrow_back */
+    color: var(--accent-normal);
+}
+
+/* Logo Laperpoll (Tengah) */
+.logo {
+    height: 4rem;
+    object-fit: contain;
+}
+
+/* Profile Link (Sisi Kanan) */
+.profile-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.profile {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--accent-normal);
+    /* Frame tipis biar profil lebih stand out */
+    transition: transform 0.2s ease;
+}
+
+.profile:active {
+    transform: scale(0.95);
+    /* Efek klik kecil */
+}
+
+/* Responsif untuk Layar Besar (Desktop) */
+@media (min-width: 1024px) {
+    .navbar {
+        padding: 1rem 2.5rem;
+        min-height: 90px;
+    }
+
+    .logo {
+        height: 45px;
+    }
+
+    .profile {
+        width: 48px;
+        height: 48px;
+    }
+}
