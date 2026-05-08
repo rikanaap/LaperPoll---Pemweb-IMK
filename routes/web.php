@@ -7,12 +7,7 @@ use App\Http\Controllers\SwipeResepController;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KulkasDigitalController;
-<<<<<<< HEAD
 use App\Http\Controllers\BahansController;          // Controller master data bahan (admin)
-=======
-use App\Http\Controllers\LandingPage;
-use App\Http\Controllers\MainMenu;
->>>>>>> b4e0b60ae4702ae38d55059f443db7bb7a5bc572
 use App\Http\Controllers\MealPlannerController;
 use App\Http\Controllers\PilihResepController;
 use App\Http\Controllers\NotaBelAnjaController;
@@ -65,7 +60,6 @@ Route::get('/filter-resep-swipe', [SwipeResepController::class, 'showFilter'])
 Route::get('/kulkas-digital', [KulkasDigitalController::class, 'index'])
     ->name('kulkas.index');
 
-<<<<<<< HEAD
 // Form tambah bahan ke kulkas → view: pages/tambah/bahan/tambah.blade.php
 Route::get('/kulkas-digital/tambah', [KulkasDigitalController::class, 'tambah'])
     ->name('kulkas.tambah');
@@ -75,14 +69,6 @@ Route::post('/kulkas-digital', [KulkasDigitalController::class, 'store'])
     ->name('kulkas.store');
 
 // Hapus item dari kulkas
-=======
-Route::get('/kulkas-digital/tambah',  [KulkasDigitalController::class, 'tambah'])
-    ->name('kulkas.tambah');
-
-Route::post('/kulkas-digital', [KulkasDigitalController::class, 'store'])
-    ->name('kulkas.store');
-
->>>>>>> b4e0b60ae4702ae38d55059f443db7bb7a5bc572
 Route::delete('/kulkas-digital/{id}', [KulkasDigitalController::class, 'destroy'])
     ->name('kulkas.destroy');
 
@@ -118,8 +104,4 @@ Route::get('/nota-belanja', [NotaBelAnjaController::class, 'index'])
 // ─── PROFILE ────────────────────────────────────────────────────────────────
 Route::get('/profile', function () {
     return view('pages.profile.index');
-<<<<<<< HEAD
 })->name('profile.index');
-=======
-})->name('profile.index');
->>>>>>> b4e0b60ae4702ae38d55059f443db7bb7a5bc572
