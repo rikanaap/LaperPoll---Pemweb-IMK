@@ -1,51 +1,49 @@
 <div class="resep">
-    <div class="resep-content">
-        <div class="resep-logo">
-            <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
-        </div>
-        <div class="resep-detail">
-            <!-- Judul Resep -->
-            <h1 class="font-jakarta text-title2 text-black font-regular">{{ $resep->title }}</h1>
-
-            <!-- Detail Resep -->
-            <div class="resep-content-detail">
-                <!-- Duration Resep -->
-                <div>
-                    <span class="material-icons-round text-title2">watch_later</span>
-                    <p class="text-body font-jakarta font-medium text-black">{{ $resep->cook_duration }}</p>
-                </div>
-
-                <!-- Resep Tersedia atau Bahan Kurang -->
-                @if ($resep)
-                <div>
-                    <span class="material-icons-round text-title2">menu_book</span>
-                    <p class="text-body font-jakarta font-medium text-black">Bahan Tersedia</p>
-                </div>
-                @else
-                <div>
-                    <span class="material-icons-round text-title2">menu_book</span>
-                    <p class="text-body font-jakarta font-medium text-accent-normal-active">Bahan Kurang
-                    </p>
-                </div>
-                @endif
+    <!-- Banner Image Tetap di Atas -->
+    <div class="resep-banner">
+        @if(isset($resep->thumbnail) && $resep->thumbnail)
+            <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}">
+        @else
+            <div class="resep-banner-placeholder">
+                <span class="material-icons-round">restaurant</span>
             </div>
+        @endif
+    </div>
 
-            <!-- Account Info -->
-            <div class="resep-verified flex flex-row gap-2">
-                <p class="font-jakarta font-medium text-body">{{ $resep->user->name }}</p>
-                @if($resep->user)
-                <div class="verified_logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-                        fill="none">
-                        <path
-                            d="M8 0L9.06375 1.28372L10.4721 0.391548L11.0871 1.94116L12.7023 1.52786L12.8083 3.19167L14.4721 3.29772L14.0588 4.91286L15.6085 5.52786L14.7163 6.93625L16 8L14.7163 9.06375L15.6085 10.4721L14.0588 11.0871L14.4721 12.7023L12.8083 12.8083L12.7023 14.4721L11.0871 14.0588L10.4721 15.6085L9.06375 14.7163L8 16L6.93625 14.7163L5.52786 15.6085L4.91286 14.0588L3.29772 14.4721L3.19167 12.8083L1.52786 12.7023L1.94116 11.0871L0.391548 10.4721L1.28372 9.06375L0 8L1.28372 6.93625L0.391548 5.52786L1.94116 4.91286L1.52786 3.29772L3.19167 3.19167L3.29772 1.52786L4.91286 1.94116L5.52786 0.391548L6.93625 1.28372L8 0Z"
-                            fill="#0186FF" />
-                    </svg>
-                    <span class="material-icons-round text-body text-white">check</span>
+    <!-- Konten Bawah dengan Warna Lebih Hidup -->
+    <div class="resep-container-bottom">
+        <div class="resep-content">
+            <div class="resep-detail">
+                <h1 class="font-jakarta text-black font-bold resep-title">{{ $resep->title }}</h1>
+                
+                <div class="resep-content-detail">
+                    <div class="info-item">
+                        <span class="material-icons-round icon-time">schedule</span>
+                        <p class="font-jakarta">{{ $resep->cook_duration }}</p>
+                    </div>
+                    <div class="info-item">
+                        <span class="material-icons-round icon-star">star</span>
+                        <p class="font-jakarta text-bold">{{ number_format($resep->current_star ?? 0, 1) }}</p>
+                    </div>
                 </div>
-                @endif
+
+                <div class="resep-verified">
+                    <p class="font-jakarta user-name">{{ $resep->user->name ?? 'User' }}</p>
+                    @if(isset($resep->user_id) && in_array($resep->user_id, [1, 3]))
+                    <div class="verified-badge">
+                        <span class="material-icons-round">verified</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="resep-stats-right">
+            <span class="material-icons-round arrow-icon">chevron_right</span>
+            <div class="views-wrapper">
+                <span class="material-icons-round">visibility</span>
+                <span>{{ $resep->views_count ?? 0 }}</span>
             </div>
         </div>
     </div>
-    <span class="material-icons-round text-h4 text-secondary-normal">arrow_forward_ios</span>
 </div>

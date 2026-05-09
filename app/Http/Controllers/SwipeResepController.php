@@ -86,22 +86,14 @@ class SwipeResepController extends Controller
         // Best Practice: Gunakan collection agar bisa diproses seperti data dari DB
         $resepList = collect([
             (object)[
-                'id' => 1,
-                'title' => 'Ayam Goreng Crispy Ala Laperpoll',
-                'cook_duration' => '30 Menit',
-                'user' => (object)['name' => 'Ikbal Miftahudin']
-            ],
-            (object)[
-                'id' => 2,
-                'title' => 'Sambal Bawang Spesial',
-                'cook_duration' => '10 Menit',
-                'user' => (object)['name' => 'Admin']
-            ],
-            (object)[
                 'id' => 3,
-                'title' => 'Nasi Goreng Seafood',
-                'cook_duration' => '20 Menit',
-                'user' => (object)['name' => 'Chef Asep']
+                'user_id' => 3,
+                'title' => 'Nasi Goreng Spesial',
+                'cook_duration' => '20 menit',
+                'current_star' => 4.2,
+                'views_count' => 210,
+                'thumbnail' => 'assets/images/nasi_goreng.jpeg',
+                'user' => (object)['name' => 'Chef Asep'],
             ],
         ]);
 
