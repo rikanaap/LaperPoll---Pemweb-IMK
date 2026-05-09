@@ -45,6 +45,46 @@ class PencarianResepController extends Controller
                 'thumbnail' => 'assets/images/nasi_goreng.jpeg', // <--- Panggil file lo
                 'user' => (object)['name' => 'Chef Asep'],
             ],
+              (object)[
+                'id' => 3,
+                'user_id' => 3,
+                'title' => 'Nasi Goreng Spesial',
+                'cook_duration' => '20 menit',
+                'current_star' => 4.2,
+                'views_count' => 210,
+                'thumbnail' => 'assets/images/nasi_goreng.jpeg', // <--- Panggil file lo
+                'user' => (object)['name' => 'Chef Asep'],
+            ],
+              (object)[
+                'id' => 3,
+                'user_id' => 3,
+                'title' => 'Nasi Goreng Spesial',
+                'cook_duration' => '20 menit',
+                'current_star' => 4.2,
+                'views_count' => 210,
+                'thumbnail' => 'assets/images/nasi_goreng.jpeg', // <--- Panggil file lo
+                'user' => (object)['name' => 'Chef Asep'],
+            ],
+              (object)[
+                'id' => 3,
+                'user_id' => 3,
+                'title' => 'Nasi Goreng Spesial',
+                'cook_duration' => '20 menit',
+                'current_star' => 4.2,
+                'views_count' => 210,
+                'thumbnail' => 'assets/images/nasi_goreng.jpeg', // <--- Panggil file lo
+                'user' => (object)['name' => 'Chef Asep'],
+            ],
+              (object)[
+                'id' => 3,
+                'user_id' => 3,
+                'title' => 'Nasi Goreng Spesial',
+                'cook_duration' => '20 menit',
+                'current_star' => 4.2,
+                'views_count' => 210,
+                'thumbnail' => 'assets/images/nasi_goreng.jpeg', // <--- Panggil file lo
+                'user' => (object)['name' => 'Chef Asep'],
+            ],
         ]);
 
         return view('pages.pencarian-resep.index', compact('bahans', 'reseps'));
