@@ -1,28 +1,15 @@
-/* ======================================
-   FONT
-====================================== */
-
 .font-jakarta {
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* ======================================
-   PAGE
-====================================== */
-
 .filter-page {
     width: 100%;
     min-height: 100vh;
-
     background: #f8fafc;
 
     display: flex;
     flex-direction: column;
 }
-
-/* ======================================
-   MAIN LAYOUT
-====================================== */
 
 .main-layout {
     flex: 1;
@@ -31,7 +18,6 @@
     max-width: 1500px;
 
     margin: 0 auto;
-
     padding: 1.5rem;
 
     display: grid;
@@ -43,10 +29,6 @@
 
     min-height: 0;
 }
-
-/* ======================================
-   SIDEBAR
-====================================== */
 
 .sidebar-filter {
     background: #ffffff;
@@ -63,10 +45,6 @@
 
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
 }
-
-/* ======================================
-   SIDEBAR HEADER
-====================================== */
 
 .sidebar-header {
     margin-bottom: 1.5rem;
@@ -87,10 +65,6 @@
 
     color: #64748b;
 }
-
-/* ======================================
-   CHIPS
-====================================== */
 
 .selected-chips-wrapper {
     display: flex;
@@ -131,10 +105,6 @@
     cursor: pointer;
 }
 
-/* ======================================
-   INFO BOX
-====================================== */
-
 .filter-info-box {
     margin-top: auto;
 
@@ -160,10 +130,6 @@
     font-size: 20px;
 }
 
-/* ======================================
-   CONTENT SECTION
-====================================== */
-
 .content-section {
     background: #ffffff;
 
@@ -181,10 +147,6 @@
 
     min-height: 0;
 }
-
-/* ======================================
-   CONTENT HEADER
-====================================== */
 
 .content-header {
     flex-shrink: 0;
@@ -210,10 +172,6 @@
     line-height: 1.5;
 }
 
-/* ======================================
-   RESEP CONTAINER
-====================================== */
-
 .resep-container {
     flex: 1;
 
@@ -232,10 +190,6 @@
     min-height: 0;
 }
 
-/* ======================================
-   SCROLLBAR
-====================================== */
-
 .resep-container::-webkit-scrollbar {
     width: 8px;
 }
@@ -253,10 +207,6 @@
     background: #94a3b8;
 }
 
-/* ======================================
-   RESEP CARD FIX
-====================================== */
-
 .resep-container .resep {
     width: 100%;
     max-width: 100%;
@@ -272,10 +222,6 @@
 
     flex-shrink: 0;
 }
-
-/* ======================================
-   BANNER
-====================================== */
 
 .resep-container .resep-banner {
     width: 100%;
@@ -295,10 +241,6 @@
     display: block;
 }
 
-/* ======================================
-   CARD BOTTOM
-====================================== */
-
 .resep-container .resep-container-bottom {
     display: flex;
 
@@ -312,18 +254,10 @@
     background: #ffffff;
 }
 
-/* ======================================
-   LEFT CONTENT
-====================================== */
-
 .resep-container .resep-content-left {
     flex: 1;
     min-width: 0;
 }
-
-/* ======================================
-   TITLE
-====================================== */
 
 .resep-container .resep-title {
     font-size: 1rem;
@@ -335,10 +269,6 @@
 
     color: #1e293b;
 }
-
-/* ======================================
-   DETAIL
-====================================== */
 
 .resep-container .resep-content-detail {
     display: flex;
@@ -364,10 +294,6 @@
     color: #64748b;
 }
 
-/* ======================================
-   VERIFIED
-====================================== */
-
 .resep-container .resep-verified {
     display: flex;
     align-items: center;
@@ -384,10 +310,6 @@
 
     margin: 0;
 }
-
-/* ======================================
-   RIGHT CONTENT
-====================================== */
 
 .resep-container .resep-stats-right {
     flex-shrink: 0;
@@ -407,10 +329,6 @@
 .views-wrapper {
     font-size: 0.72rem;
 }
-
-/* ======================================
-   LOADING
-====================================== */
 
 .loading-state {
     text-align: center;
@@ -446,10 +364,6 @@
         transform: rotate(360deg);
     }
 }
-
-/* ======================================
-   EMPTY STATE
-====================================== */
 
 .result-placeholder {
     grid-column: 1 / -1;
@@ -495,17 +409,9 @@
     color: #64748b;
 }
 
-/* ======================================
-   HIDDEN
-====================================== */
-
 .hidden {
     display: none !important;
 }
-
-/* ======================================
-   DESKTOP
-====================================== */
 
 @media (min-width: 1024px) {
 
@@ -518,10 +424,6 @@
         height: calc(100vh - 90px);
     }
 }
-
-/* ======================================
-   TABLET
-====================================== */
 
 @media (min-width: 768px) and (max-width: 1023px) {
 
@@ -557,10 +459,6 @@
     }
 }
 
-/* ======================================
-   MOBILE
-====================================== */
-
 @media (max-width: 767px) {
 
     .filter-page {
@@ -581,10 +479,6 @@
 
         min-height: auto;
     }
-
-    /* ======================================
-       PANEL ATAS
-    ====================================== */
 
     .sidebar-filter {
         border-radius: 22px;
@@ -628,10 +522,6 @@
         font-size: 0.72rem;
     }
 
-    /* ======================================
-       PANEL BAWAH
-    ====================================== */
-
     .content-section {
         border-radius: 22px;
 
@@ -652,10 +542,6 @@
         padding: 0.8rem 1rem;
     }
 
-    /* ======================================
-       RESEP LIST
-    ====================================== */
-
     .resep-container {
         overflow: visible;
 
@@ -666,10 +552,6 @@
 
         padding-right: 0;
     }
-
-    /* ======================================
-       CARD MOBILE
-    ====================================== */
 
     .resep-container .resep {
         width: 100%;
@@ -710,10 +592,6 @@
     .arrow-icon {
         font-size: 1.1rem;
     }
-
-    /* ======================================
-       EMPTY
-    ====================================== */
 
     .result-placeholder {
         min-height: 220px;

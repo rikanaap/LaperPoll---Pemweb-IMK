@@ -11,46 +11,29 @@
 
 <main class="filter-page font-jakarta">
 
-    {{-- =========================================
-         NAVBAR
-    ========================================== --}}
     <x-navbar :back-url="route('swipe.rasa')" />
 
-    {{-- =========================================
-         MAIN LAYOUT
-    ========================================== --}}
     <div class="main-layout">
 
-        {{-- =========================================
-             SIDEBAR FILTER
-        ========================================== --}}
         <aside class="sidebar-filter">
 
-            {{-- HEADER --}}
             <div class="sidebar-header">
 
                 <h2>
                     Riwayat Pilihan
                 </h2>
 
-                <p class="text-muted mt-1">
+                <p class="text-muted">
                     Bahan atau rasa yang sedang Anda saring
                 </p>
 
             </div>
 
-            {{-- =========================================
-                 CHIPS DINAMIS
-            ========================================== --}}
             <div
-                class="selected-chips-wrapper"
                 id="selectedRasaContainer"
-            >
-            </div>
+                class="selected-chips-wrapper"
+            ></div>
 
-            {{-- =========================================
-                 INFO BOX
-            ========================================== --}}
             <div class="filter-info-box">
 
                 <span class="material-icons-round">
@@ -66,12 +49,8 @@
 
         </aside>
 
-        {{-- =========================================
-             CONTENT SECTION
-        ========================================== --}}
         <section class="content-section">
 
-            {{-- HEADER --}}
             <div class="content-header">
 
                 <p class="result-info-text">
@@ -80,7 +59,11 @@
 
                         Terdapat
                         {{ count($resepList) }}
-                        resep pilihan untuk bahan yang tersedia:
+                        resep pilihan untuk bahan yang tersedia
+
+                    @else
+
+                        Belum ada resep yang ditemukan
 
                     @endif
 
@@ -88,9 +71,6 @@
 
             </div>
 
-            {{-- =========================================
-                 RESEP LIST
-            ========================================== --}}
             <div class="resep-container">
 
                 @forelse ($resepList as $resep)
@@ -99,11 +79,7 @@
 
                 @empty
 
-                    {{-- EMPTY STATE --}}
-                    <div
-                        class="result-placeholder"
-                        style="display: block;"
-                    >
+                    <div class="result-placeholder">
 
                         <span class="material-icons-round">
                             restaurant_menu

@@ -8,21 +8,17 @@
 @endpush
 
 @section('content')
+
 <main class="swipe-page font-jakarta">
 
-    {{-- =========================================
-         NAVBAR
-    ========================================== --}}
     <x-navbar :backUrl="route('pencarian.resep')" />
 
     <div class="swipe-wrapper">
 
         <div class="swipe-split-layout">
 
-            {{-- =========================================
-                 PANEL KIRI - INFO
-            ========================================== --}}
-            <div class="swipe-info-panel">
+            {{-- PANEL INFO --}}
+            <aside class="swipe-info-panel">
 
                 <div class="info-card">
 
@@ -49,21 +45,33 @@
 
                     <div class="divider-line"></div>
 
-                    {{-- Progress --}}
+                    {{-- PROGRESS --}}
                     <div class="progress-box">
 
                         <div class="progress-label">
-                            <span>Batas Pilihan</span>
-                            <span id="counterText">0 / 3</span>
+
+                            <span>
+                                Batas Pilihan
+                            </span>
+
+                            <span id="counterText">
+                                0 / 3
+                            </span>
+
                         </div>
 
                         <div class="progress-bar-container">
-                            <div class="progress-bar" id="progressBar"></div>
+
+                            <div
+                                id="progressBar"
+                                class="progress-bar"
+                            ></div>
+
                         </div>
 
                     </div>
 
-                    {{-- Tips --}}
+                    {{-- TIPS --}}
                     <div class="tips-box">
 
                         <h4 class="tips-title">
@@ -77,22 +85,27 @@
                         </h4>
 
                         <ul class="tips-list">
-                            <li>➡ Swipe kanan untuk suka</li>
-                            <li>⬅ Swipe kiri untuk skip</li>
+
+                            <li>
+                                ➡ Swipe kanan untuk suka
+                            </li>
+
+                            <li>
+                                ⬅ Swipe kiri untuk skip
+                            </li>
+
                         </ul>
 
                     </div>
 
                 </div>
 
-            </div>
+            </aside>
 
-            {{-- =========================================
-                 PANEL TENGAH - SWIPE
-            ========================================== --}}
-            <div class="swipe-interaction-panel">
+            {{-- PANEL SWIPE --}}
+            <section class="swipe-interaction-panel">
 
-                {{-- Mobile Header --}}
+                {{-- MOBILE HEADER --}}
                 <div class="mobile-info-header">
 
                     <span class="mobile-badge">
@@ -104,17 +117,26 @@
                     </h1>
 
                     <div class="mobile-progress-wrapper">
-                        <div class="mobile-progress-bar" id="mobileProgressBar"></div>
+
+                        <div
+                            id="mobileProgressBar"
+                            class="mobile-progress-bar"
+                        ></div>
+
                     </div>
 
                 </div>
 
-                <section class="swipe-container">
+                {{-- SWIPE AREA --}}
+                <div class="swipe-container">
 
-                    {{-- Swipe Cards --}}
-                    <div class="swipe-cards" id="swipeCards">
+                    {{-- SWIPE CARDS --}}
+                    <div
+                        id="swipeCards"
+                        class="swipe-cards"
+                    >
 
-                        @foreach ($rasaDummy as $index => $item)
+                        @foreach ($rasaDummy as $item)
 
                             <x-swipe-card
                                 :title="strtoupper($item['title'])"
@@ -128,11 +150,11 @@
 
                     </div>
 
-                    {{-- Empty State --}}
+                    {{-- EMPTY STATE --}}
                     <div
                         id="emptyState"
                         class="empty-text"
-                        style="display:none;"
+                        style="display: none;"
                     >
 
                         <div class="empty-icon">
@@ -143,13 +165,17 @@
                             Udah habis bro, lanjut ke rekomendasi!
                         </p>
 
-                        <button class="btn-primary mt-3">
+                        <button
+                            id="lihatHasilBtn"
+                            class="btn-primary mt-3"
+                            type="button"
+                        >
                             Lihat Hasil
                         </button>
 
                     </div>
 
-                    {{-- Action Buttons --}}
+                    {{-- ACTION BUTTONS --}}
                     <div class="swipe-buttons">
 
                         <button
@@ -157,9 +183,11 @@
                             class="swipe-btn dislike-btn"
                             type="button"
                         >
+
                             <span class="material-icons-round">
                                 close
                             </span>
+
                         </button>
 
                         <button
@@ -167,25 +195,25 @@
                             class="swipe-btn like-btn"
                             type="button"
                         >
+
                             <span class="material-icons-round">
                                 favorite
                             </span>
+
                         </button>
 
                     </div>
 
-                </section>
+                </div>
 
-            </div>
+            </section>
 
-            {{-- =========================================
-                 PANEL KANAN - HISTORY DESKTOP
-            ========================================== --}}
-            <div class="desktop-history-panel">
+            {{-- PANEL HISTORY DESKTOP --}}
+            <aside class="desktop-history-panel">
 
                 <div class="desktop-history-card">
 
-                    {{-- Header --}}
+                    {{-- HEADER --}}
                     <div class="desktop-history-header">
 
                         <span class="material-icons-round">
@@ -198,7 +226,7 @@
 
                     </div>
 
-                    {{-- LIKE --}}
+                    {{-- DISUKAI --}}
                     <div class="history-section">
 
                         <h4 class="section-title">
@@ -209,14 +237,16 @@
                             id="desktopLikedHistory"
                             class="history-flex"
                         >
+
                             <p class="empty-history">
                                 Belum ada rasa disukai
                             </p>
+
                         </div>
 
                     </div>
 
-                    {{-- DISLIKE --}}
+                    {{-- DILEWATI --}}
                     <div class="history-section">
 
                         <h4 class="section-title">
@@ -227,24 +257,24 @@
                             id="desktopDislikedHistory"
                             class="history-flex"
                         >
+
                             <p class="empty-history">
                                 Belum ada rasa dilewati
                             </p>
+
                         </div>
 
                     </div>
 
                 </div>
 
-            </div>
+            </aside>
 
         </div>
 
     </div>
 
-    {{-- =========================================
-         DRAWER ONLY MOBILE & TABLET
-    ========================================== --}}
+    {{-- MOBILE DRAWER --}}
     <div class="mobile-history-wrapper">
 
         <x-history-drawer title="Riwayat Pilihan Kamu" />
@@ -252,6 +282,7 @@
     </div>
 
 </main>
+
 @endsection
 
 @push('scripts')

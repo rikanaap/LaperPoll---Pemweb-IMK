@@ -12,17 +12,10 @@
 
 <main class="filter-page font-jakarta">
 
-    {{-- NAVBAR --}}
     <x-navbar :back-url="route('pencarian.resep')" />
 
-    {{-- ======================================
-         MAIN LAYOUT
-    ======================================= --}}
     <div class="main-layout">
 
-        {{-- ======================================
-             PANEL KIRI / ATAS
-        ======================================= --}}
         <aside class="sidebar-filter">
 
             <div class="sidebar-header">
@@ -37,13 +30,11 @@
 
             </div>
 
-            {{-- Chips --}}
             <div
                 id="chipsContainer"
                 class="selected-chips-wrapper"
             ></div>
 
-            {{-- Info --}}
             <div class="filter-info-box">
 
                 <span class="material-icons-round">
@@ -58,12 +49,8 @@
 
         </aside>
 
-        {{-- ======================================
-             PANEL KANAN / BAWAH
-        ======================================= --}}
         <section class="content-section">
 
-            {{-- Info Result --}}
             <div class="content-header">
 
                 <p
@@ -75,7 +62,6 @@
 
             </div>
 
-            {{-- Loading --}}
             <div
                 id="loadingState"
                 class="loading-state"
@@ -89,7 +75,6 @@
 
             </div>
 
-            {{-- Resep --}}
             <div
                 id="resepList"
                 class="resep-container hidden"
@@ -103,7 +88,6 @@
 
             </div>
 
-            {{-- Empty --}}
             <div
                 id="emptyState"
                 class="result-placeholder hidden"
