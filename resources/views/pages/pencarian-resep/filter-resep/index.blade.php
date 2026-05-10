@@ -12,36 +12,118 @@
 
 <main class="filter-page font-jakarta">
 
+    {{-- NAVBAR --}}
     <x-navbar :back-url="route('pencarian.resep')" />
 
-    <div id="chipsContainer" class="selected-chips-wrapper"></div>
+    {{-- ======================================
+         MAIN LAYOUT
+    ======================================= --}}
+    <div class="main-layout">
 
-    <p id="resultInfo" class="result-info-text">
-        Menampilkan resep...
-    </p>
+        {{-- ======================================
+             PANEL KIRI / ATAS
+        ======================================= --}}
+        <aside class="sidebar-filter">
 
-    <div id="loadingState" class="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Mencari resep terbaik...</p>
-    </div>
+            <div class="sidebar-header">
 
-    <section id="resepList" class="resep-container hidden">
+                <h2>
+                    Riwayat Pilihan
+                </h2>
 
-        @foreach($reseps as $resep)
-            <x-resep-card :resep="$resep" />
-        @endforeach
+                <p class="text-muted">
+                    Bahan yang sedang digunakan untuk mencari resep
+                </p>
 
-    </section>
+            </div>
 
-    <div id="emptyState" class="result-placeholder hidden">
+            {{-- Chips --}}
+            <div
+                id="chipsContainer"
+                class="selected-chips-wrapper"
+            ></div>
 
-        <span class="material-icons-round">
-            restaurant_menu
-        </span>
+            {{-- Info --}}
+            <div class="filter-info-box">
 
-        <h3>Belum ada hasil</h3>
+                <span class="material-icons-round">
+                    info
+                </span>
 
-        <p>Pilih bahan dulu ya</p>
+                <p>
+                    Kamu bisa menghapus bahan untuk memperbarui hasil resep.
+                </p>
+
+            </div>
+
+        </aside>
+
+        {{-- ======================================
+             PANEL KANAN / BAWAH
+        ======================================= --}}
+        <section class="content-section">
+
+            {{-- Info Result --}}
+            <div class="content-header">
+
+                <p
+                    id="resultInfo"
+                    class="result-info-text"
+                >
+                    Menampilkan resep...
+                </p>
+
+            </div>
+
+            {{-- Loading --}}
+            <div
+                id="loadingState"
+                class="loading-state"
+            >
+
+                <div class="loading-spinner"></div>
+
+                <p>
+                    Mencari resep terbaik...
+                </p>
+
+            </div>
+
+            {{-- Resep --}}
+            <div
+                id="resepList"
+                class="resep-container hidden"
+            >
+
+                @foreach($reseps as $resep)
+
+                    <x-resep-card :resep="$resep" />
+
+                @endforeach
+
+            </div>
+
+            {{-- Empty --}}
+            <div
+                id="emptyState"
+                class="result-placeholder hidden"
+            >
+
+                <span class="material-icons-round">
+                    restaurant_menu
+                </span>
+
+                <h3>
+                    Belum ada hasil
+                </h3>
+
+                <p>
+                    Pilih bahan dulu ya
+                </p>
+
+            </div>
+
+        </section>
 
     </div>
 
