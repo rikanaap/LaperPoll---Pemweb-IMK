@@ -30,10 +30,16 @@
             class="logo">
     </a>
 
+    @if($user)
     <a href="{{ route('profile.index') }}">
         <img src="{{ asset('assets/images/Image_DummyProfile.png') }}"
             alt="Profil Foto"
             class="profile">
     </a>
+    @else
+    <a href="{{ route('auth.sign-in') }}">
+        <span class="material-icons-round text-h4 profile text-[#B62925]">person</span>
+    </a>
+    @endif
 
 </nav>

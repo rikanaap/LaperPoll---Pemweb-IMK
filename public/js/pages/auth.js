@@ -24,25 +24,6 @@ inputsOTP.forEach((input, index) => {
     });
 });
 
-function checkMode() {
-    switch (mode) {
-        case "signin":
-            signupSection.style.display = "none";
-            signinSection.style.display = "flex";
-            forgotSection.style.display = "none";
-            break;
-        case "forgot":
-            signupSection.style.display = "none";
-            signinSection.style.display = "none";
-            forgotSection.style.display = "flex";
-            break;
-        default:
-            signupSection.style.display = "flex";
-            signinSection.style.display = "none";
-            forgotSection.style.display = "none";
-    }
-}
-
 function formatMode(modeName) {
     modeName = modeName.toLowerCase()
     mode = (MODES.includes(modeName)) ? modeName : null
@@ -65,20 +46,6 @@ function togglePassword(icon) {
     }
 }
 
-function kirimData(modeName) {
-    modeName = formatMode(modeName);
-    switch (modeName) {
-        case "signup":
-            changePage("main-menu")
-            break
-        case "forgot":
-            break;
-        default:
-            changePage("main-menu")
 
-    }
-}
-
-window.kirimData = kirimData;
 window.changeMode = changeMode;
 window.togglePassword = togglePassword;

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,16 +20,17 @@
 
     {{-- Page-specific CSS --}}
     @stack('styles')
-    
+
     {{-- Link Specific Page  --}}
     @stack('links')
 
     <title>@yield('title', 'LaperPoll')</title>
 </head>
+
 <body>
     @yield('content')
 
-    {{-- Page-specific JS --}}
-    @stack('scripts')
 </body>
+{{-- Page-specific JS --}}
+@stack('scripts')
 </html>

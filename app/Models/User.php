@@ -27,7 +27,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
     public function reseps()
     {
         return $this->hasMany(Resep::class);
@@ -40,8 +39,8 @@ class User extends Authenticatable
 
     public function favorites()
     {
-    
-    return $this->belongsToMany(Resep::class, 'favorites', 'user_id', 'resep_id')->withTimestamps();
+
+        return $this->belongsToMany(Resep::class, 'favorites', 'user_id', 'resep_id')->withTimestamps();
     }
 
     public function fridge()
