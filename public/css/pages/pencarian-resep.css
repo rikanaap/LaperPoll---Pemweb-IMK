@@ -305,7 +305,7 @@ body {
 
 .hidden {
     display: none !important;
-}
+} 
 
 .loading-state {
     display: flex;
@@ -400,3 +400,53 @@ body {
     100% { left: 120%; }
 }
 
+
+/* ======================================
+   LOAD MORE
+====================================== */
+
+.load-more-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 1rem 2rem;
+}
+
+.load-more-btn {
+    border: none;
+    outline: none;
+
+    padding: .95rem 1.4rem;
+
+    border-radius: 16px;
+
+    background: linear-gradient(
+        135deg,
+        #ffb05a,
+        #ff7a00
+    );
+
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+
+    box-shadow:
+        0 12px 24px rgba(
+            255,
+            122,
+            0,
+            .18
+        );
+}
+
+.load-more-btn:hover {
+    transform: translateY(-2px);
+}
+
+.load-more-btn:active {
+    transform: scale(.98);
+}

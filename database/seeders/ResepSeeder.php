@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Resep;
 
@@ -20,7 +19,10 @@ class ResepSeeder extends Seeder
                 'calorie' => 550,
                 'current_star' => 4.8,
                 'views_count' => 120,
-                'thumbnail' => 'nasi-goreng.jpg',
+
+                // STORAGE PATH
+                'thumbnail' => 'reseps/nasi_goreng.jpeg',
+
                 'main_filter_id' => 1,
                 'is_published' => true,
             ],
@@ -33,7 +35,10 @@ class ResepSeeder extends Seeder
                 'calorie' => 480,
                 'current_star' => 4.6,
                 'views_count' => 95,
-                'thumbnail' => 'mie-goreng.jpg',
+
+                // STORAGE PATH
+                'thumbnail' => 'reseps/mie-goreng-jawa.jpg',
+
                 'main_filter_id' => 1,
                 'is_published' => true,
             ],
@@ -46,7 +51,10 @@ class ResepSeeder extends Seeder
                 'calorie' => 300,
                 'current_star' => 4.5,
                 'views_count' => 75,
-                'thumbnail' => 'telur-dadar.jpg',
+
+                // STORAGE PATH
+                'thumbnail' => 'reseps/telur-dadar-crispy.jpg',
+
                 'main_filter_id' => 2,
                 'is_published' => true,
             ],
@@ -59,7 +67,10 @@ class ResepSeeder extends Seeder
                 'calorie' => 620,
                 'current_star' => 4.9,
                 'views_count' => 210,
-                'thumbnail' => 'ayam-kecap.jpg',
+
+                // STORAGE PATH
+                'thumbnail' => 'reseps/ayam-kecap-pedas.jpg',
+
                 'main_filter_id' => 1,
                 'is_published' => true,
             ],
@@ -72,7 +83,10 @@ class ResepSeeder extends Seeder
                 'calorie' => 350,
                 'current_star' => 4.7,
                 'views_count' => 80,
-                'thumbnail' => 'capcay.jpg',
+
+                // STORAGE PATH
+                'thumbnail' => 'reseps/capcay-sayur.jpg',
+
                 'main_filter_id' => 1,
                 'is_published' => true,
             ],
@@ -80,7 +94,17 @@ class ResepSeeder extends Seeder
         ];
 
         foreach ($reseps as $resep) {
-            Resep::create($resep);
+
+            Resep::updateOrCreate(
+
+                [
+                    'title' => $resep['title']
+                ],
+
+                $resep
+
+            );
+
         }
     }
 }

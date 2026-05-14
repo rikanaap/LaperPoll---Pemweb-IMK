@@ -71,19 +71,19 @@ input::-ms-clear {
     flex-direction: column;
 }
 
-.input-dropdown{
+.input-dropdown {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.dropdown-datas{
+.dropdown-datas {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
 }
 
-.dropdown-data{
+.dropdown-data {
     display: flex;
     flex-direction: row;
     padding: 0.81rem 0.70rem;
@@ -101,6 +101,7 @@ input::-ms-clear {
     cursor: pointer;
     user-select: none;
 }
+
 .navbar-back .material-icons-round {
     color: var(--accent-normal);
 }
@@ -114,6 +115,17 @@ input::-ms-clear {
     gap: 0.6rem;
     border-radius: 1rem;
     background-color: #FEE7C3;
+}
+
+.resep-logo-locked {
+    display: flex;
+    width: 4.3rem;
+    height: 4.3rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 1rem;
+    background-color: #B9B8B6;
 }
 
 .resep-logo span {

@@ -25,13 +25,23 @@
             <div class="flex flex-row gap-[0.6rem]">
                 @php
                 $features = [
-                ['name' => 'Kulkas Digital', 'icon' => 'inventory_2', 'link' => route('kulkas.index')],
-                ['name' => 'Nota Belanja', 'icon' => 'shopping_cart', 'link' => route('nota.index')],
-                ['name' => 'Meal Planner', 'icon' => 'calendar_month', 'link' => route('meal-planner.index')],
-                ['name' => 'Swiper Search', 'icon' => 'swipe', 'link' => route('swipe.rasa')],
+                ['name' => 'Kulkas Digital', 'icon' => 'inventory_2', 'link' => route('kulkas.index'), "locked"=>true],
+                ['name' => 'Nota Belanja', 'icon' => 'shopping_cart', 'link' => route('nota.index'), "locked"=>true],
+                ['name' => 'Meal Planner', 'icon' => 'calendar_month', 'link' => route('meal-planner.index'), "locked"=>true],
+                ['name' => 'Swiper Search', 'icon' => 'swipe', 'link' => route('swipe.rasa'), "locked"=>false],
                 ];
                 @endphp
                 @foreach ( $features as $feature )
+                @if($feature['locked'] && !$user)
+                <a href="{{ route('auth.sign-in') }}">
+                    <div class="flex flex-col gap-[0.5rem] justify-center items-center">
+                        <div class="resep-logo-locked w-[2.8rem] h-[2.8rem] rounded-[0.5rem]]">
+                            <span class="material-icons-round text-2 text-accent-dark">lock</span>
+                        </div>
+                        <p class="font-jakarta text-[0.4rem]/[120%] font-semibold text-accent-dark-active">{{ $feature['name'] }}</p>
+                    </div>
+                </a>
+                @else
                 <a href="{{ $feature['link'] }}">
                     <div class="flex flex-col gap-[0.5rem] justify-center items-center">
                         <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.5rem]]">
@@ -40,6 +50,7 @@
                         <p class="font-jakarta text-[0.4rem]/[120%] font-semibold text-accent-dark-active">{{ $feature['name'] }}</p>
                     </div>
                 </a>
+                @endif
                 @endforeach
             </div>
         </div>

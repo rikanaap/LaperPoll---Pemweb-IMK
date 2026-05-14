@@ -1,7 +1,32 @@
 // kulkas-digital.js
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── FILTER CHIPS ──────────────────────────────────────────
+    // ── CHIP COUNTER ─────────────────────────────────────────────────────
+    function updateChipCounts(query = '') {
+        const cards = document.querySelectorAll('.kd-card');
+        const counts = { semua: 0, tersedia: 0, 'hampir-habis': 0 };
+
+        cards.forEach(card => {
+            const status = card.dataset.status;
+            const nama   = card.dataset.nama || '';
+            if (query && !nama.includes(query)) return;
+            counts['semua']++;
+            if (counts[status] !== undefined) counts[status]++;
+        });
+
+        document.querySelectorAll('.kd-chip').forEach(chip => {
+            const filter = chip.dataset.filter;
+            let countEl  = chip.querySelector('.kd-chip-count');
+            if (!countEl) {
+                countEl = document.createElement('span');
+                countEl.className = 'kd-chip-count';
+                chip.appendChild(countEl);
+            }
+            countEl.textContent = counts[filter] ?? 0;
+        });
+    }
+
+    // ── FILTER CHIPS ──────────────────────────────────────────────────────
     const chips = document.querySelectorAll('.kd-chip');
     let activeFilter = 'semua';
 
@@ -14,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── SEARCH ────────────────────────────────────────────────
+    // ── SEARCH ────────────────────────────────────────────────────────────
     document.getElementById('kdSearch')?.addEventListener('input', e => {
         applyFilter(e.target.value.trim().toLowerCase());
     });
@@ -24,22 +49,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let visible = 0;
 
         cards.forEach(card => {
-            const status = card.dataset.status;
-            const nama   = card.dataset.nama || '';
-            const matchFilter = activeFilter === 'semua' || status === activeFilter;
-            const matchSearch = !q || nama.includes(q);
+            const matchFilter = activeFilter === 'semua' || card.dataset.status === activeFilter;
+            const matchSearch = !q || (card.dataset.nama || '').includes(q);
 
-            if (matchFilter && matchSearch) {
-                card.style.display = '';
-                visible++;
-            } else {
-                card.style.display = 'none';
-            }
+            card.style.display = (matchFilter && matchSearch) ? '' : 'none';
+            if (matchFilter && matchSearch) visible++;
         });
 
-        // Tampilkan empty state kalau tidak ada hasil
+        updateChipCounts(q);
+
+        // Empty state saat search tidak ketemu
         const emptyState = document.querySelector('.kd-empty');
-        if (emptyState) return; // sudah ada dari server (0 data)
+        if (emptyState) return;
 
         let noResult = document.getElementById('kdNoResult');
         if (visible === 0) {
@@ -61,47 +82,70 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ── EXPAND / COLLAPSE CARD ────────────────────────────────
+    // ── EXPAND / COLLAPSE CARD ────────────────────────────────────────────
     document.getElementById('kdGrid')?.addEventListener('click', e => {
         const card = e.target.closest('.kd-card');
         if (!card) return;
-
-        // Klik tombol hapus → jangan expand
         if (e.target.closest('form')) return;
 
-        const isExpanded = card.classList.contains('expanded');
-
-        if (isExpanded) {
-            // Klik tombol close
+        if (card.classList.contains('expanded')) {
             if (e.target.closest('.kd-close') || e.target.classList.contains('kd-close')) {
                 collapseCard(card);
             }
         } else {
-            // Collapse semua card lain dulu
             document.querySelectorAll('.kd-card.expanded').forEach(c => collapseCard(c));
             expandCard(card);
         }
     });
 
     function expandCard(card) {
-        const collapsed = card.querySelector('.kd-collapsed');
-        const expanded  = card.querySelector('.kd-expanded');
-        if (!collapsed || !expanded) return;
-        collapsed.style.display = 'none';
-        expanded.style.display  = 'flex';
+        card.querySelector('.kd-collapsed').style.display = 'none';
+        card.querySelector('.kd-expanded').style.display  = 'flex';
         card.classList.add('expanded');
     }
 
     function collapseCard(card) {
-        const collapsed = card.querySelector('.kd-collapsed');
-        const expanded  = card.querySelector('.kd-expanded');
-        if (!collapsed || !expanded) return;
-        collapsed.style.display = '';
-        expanded.style.display  = 'none';
+        card.querySelector('.kd-collapsed').style.display = '';
+        card.querySelector('.kd-expanded').style.display  = 'none';
         card.classList.remove('expanded');
     }
 
-    // Flash message auto-hide
+    // ── MODAL BAHAN KURANG ────────────────────────────────────────────────
+    const modalKurang      = document.getElementById('modalBahanKurang');
+    const modalKurangTitle = document.getElementById('modalKurangTitle');
+    const modalKurangList  = document.getElementById('modalKurangList');
+    const modalKurangClose = document.getElementById('modalKurangClose');
+    const modalKurangOverlay = document.getElementById('modalKurangOverlay');
+
+    document.querySelectorAll('.kd-resep-detail-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const nama   = btn.dataset.nama;
+            const kurang = btn.dataset.kurang;
+
+            modalKurangTitle.textContent = nama;
+            modalKurangList.innerHTML = '';
+
+            kurang.split(', ').forEach(bahan => {
+                const li = document.createElement('li');
+                li.textContent = bahan.trim();
+                modalKurangList.appendChild(li);
+            });
+
+            modalKurang.style.display = 'flex';
+        });
+    });
+
+    function closeModalKurang() {
+        if (modalKurang) modalKurang.style.display = 'none';
+    }
+
+    modalKurangClose?.addEventListener('click', closeModalKurang);
+    modalKurangOverlay?.addEventListener('click', closeModalKurang);
+
+    // ── FLASH AUTO HIDE ───────────────────────────────────────────────────
     const flash = document.querySelector('.kd-flash');
     if (flash) setTimeout(() => flash.style.opacity = '0', 3000);
+
+    // Init
+    updateChipCounts();
 });

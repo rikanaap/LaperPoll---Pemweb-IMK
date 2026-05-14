@@ -1,10 +1,9 @@
 .auth-section {
     height: 100vh;
+    background-color: #F4F5F7;
     padding: 0rem 0.7rem;
-    padding: 0 2rem;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
     border-radius: 1.5rem;
 }
 
@@ -18,6 +17,7 @@
     padding: 1.25rem 1.8rem 2.5rem 1.8rem;
     align-items: flex-start;
     gap: 1.5rem;
+    border-radius: 1rem;
 }
 
 .form-inputs {

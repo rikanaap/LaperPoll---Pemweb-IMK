@@ -3,83 +3,55 @@
 @section('title', 'Pencarian Resep')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/pages/pencarian-resep.css') }}">
-<link rel="stylesheet" href="{{ asset('css/components/resep-card.css') }}">
-<link rel="stylesheet" href="{{ asset('css/components/bahan-item.css') }}">
-<link rel="stylesheet" href="{{ asset('css/components/chips.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pages/pencarian-resep.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/resep-card.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/bahan-item.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/chips.css') }}">
 @endpush
 
 @section('content')
-
-<main class="search-page font-jakarta">
+<main class="search-page font-jakarta" 
+    data-page="search" 
+    data-search-url="{{ url('/api/resep/search') }}" 
+    data-bahan-url="{{ url('/api/bahan/by-ids') }}" 
+    data-filter-url="{{ route('filter.resep') }}" 
+    data-search-page-url="{{ route('pencarian.resep') }}">
 
     <x-navbar :back-url="route('landing.index')" />
 
     <section class="search-layout">
-
+        {{-- SIDEBAR --}}
         <aside class="search-sidebar">
-
+            {{-- SEARCH INPUT --}}
             <div class="input" id="searchWrapper">
                 <span class="material-icons-round">search</span>
-                <input
-                    type="text"
-                    id="searchInput"
-                    class="input-data"
-                    placeholder="Cari Bahan / Nama Resep">
+                <input type="text" id="searchInput" class="input-data" placeholder="Cari bahan..." autocomplete="off">
             </div>
 
-            <p class="text-body font-medium section-title">
-                Bahan Populer Minggu Ini
-            </p>
+            <p class="text-body font-medium section-title">Bahan Populer Minggu Ini</p>
 
-            <section class="bahan-wrapper">
+            {{-- LIST BAHAN --}}
+            <section class="bahan-wrapper" aria-label="Daftar bahan">
                 <div class="bahan-list">
-
                     @forelse($bahans as $huruf => $kelompokBahan)
-
-                    <div class="bahan-group">
-
-                        <span class="group-letter">
-                            {{ $huruf }}
-                        </span>
-
-                        @foreach($kelompokBahan as $bahan)
-                        <x-bahan-item :bahan="$bahan" />
-                        @endforeach
-
-                    </div>
-
+                        <div class="bahan-group">
+                            <span class="group-letter">{{ $huruf }}</span>
+                            @foreach($kelompokBahan as $bahan)
+                                <x-bahan-item :bahan="$bahan" />
+                            @endforeach
+                        </div>
                     @empty
-                    <p class="text-caption text-center">
-                        Tidak ada bahan yang ditemukan.
-                    </p>
+                        <p class="text-caption text-center">Tidak ada bahan ditemukan.</p>
                     @endforelse
-
                 </div>
             </section>
 
-            <div class="selected-info" id="selectedInfo" style="display: none;">
-                0 bahan terpilih
-            </div>
+            <div id="selectedInfo" class="selected-info hidden">0 bahan dipilih</div>
 
+            {{-- ACTION BUTTON --}}
             <div class="action-buttons-wrapper">
-
-                <button
-                    id="hapusSemuaBtn"
-                    class="action-btn hapus-btn"
-                    type="button"
-                    disabled>
-                    Hapus Semua
-                </button>
-
-                <button
-                    id="terapkanBtn"
-                    class="action-btn terapkan-btn disabled"
-                    type="button"
-                    disabled>
-                    Terapkan
-                </button>
-
+                <button id="hapusSemuaBtn" class="action-btn hapus-btn" type="button" disabled>Hapus Semua</button>
+                <button id="terapkanBtn" class="action-btn terapkan-btn disabled" type="button" disabled>Terapkan</button>
             </div>
 
             <div class="divider-wrap">
@@ -92,48 +64,40 @@
                 <span class="material-icons-round">swap_horiz</span>
                 <span>Swipe Untuk Mencari</span>
             </a>
-
         </aside>
 
-        <section class="search-result">
-
+        {{-- RESULT --}}
+        <section class="search-result" aria-label="Hasil pencarian resep">
             <div class="result-header-wrapper">
-
-                <p class="result-info-text" id="resultInfoText">
-                    Pilih bahan untuk melihat resep
-                </p>
-
-                <div class="selected-chips-wrapper" id="selectedChips"></div>
-
+                <p id="resultInfoText" class="result-info-text">Pilih bahan untuk melihat resep</p>
+                <div id="selectedChips" class="selected-chips-wrapper" role="list"></div>
             </div>
 
-            <div id="resepContainer" class="resep-container hidden">
+            {{-- RESEP LIST --}}
+            <div id="resepContainer" class="resep-container hidden"></div>
 
-                @foreach($reseps as $resep)
-                <x-resep-card :resep="$resep" />
-                @endforeach
-
-            </div>
-
-            <div id="loadingState" class="loading-state hidden">
+            {{-- LOADING --}}
+            <div id="loadingState" class="loading-state hidden" aria-live="polite">
                 <div class="loading-spinner"></div>
                 <p>Sedang mencari resep...</p>
             </div>
 
-            <div class="result-placeholder" id="resultPlaceholder">
+            {{-- EMPTY STATE --}}
+            <div id="resultPlaceholder" class="result-placeholder">
                 <span class="material-icons-round">restaurant_menu</span>
                 <h3>Rekomendasi Resep</h3>
                 <p>Pilih bahan terlebih dahulu untuk melihat hasil resep.</p>
             </div>
 
+            {{-- LOAD MORE --}}
+            <div id="loadMoreWrapper" class="load-more-wrapper hidden">
+                <button id="loadMoreBtn" class="load-more-btn" type="button">Muat Lebih Banyak</button>
+            </div>
         </section>
-
     </section>
-
 </main>
-
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/pages/pencarian-resep.js') }}"></script>
+    <script src="{{ asset('js/pages/pencarian-resep.js') }}"></script>
 @endpush

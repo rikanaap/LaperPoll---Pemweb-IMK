@@ -1,4 +1,4 @@
-/* pilih-resep.css */
+/* pilih-resep.css - Final Fix */
 
 .main-content {
     max-width: 100%;
@@ -10,101 +10,167 @@
     display: flex;
     flex-direction: column;
 }
+
 .navbar {
     background-color: #f4f5f7;
     margin: 0 -0.7rem;
     padding-left: 1rem;
     padding-right: 1rem;
 }
-.profile-link { display: flex; align-items: center; }
-.back-btn { text-decoration: none; display: flex; align-items: center; }
-.slot-info { padding: 0 0.25rem; }
-.kulkas-title { color: #8C2A1A; }
 
-/* ── LIST RESEP — selalu kolom vertikal ──────────────────────── */
+.slot-info {
+    padding: 0 0.25rem;
+}
+
+.kulkas-title {
+    color: #8C2A1A;
+}
+
+/* ========= GRID UNTUK CARD HORIZONTAL ========= */
 .resep-menus {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 0.75rem;
 }
 
-/* ── RESEP CARD ──────────────────────────────────────────────── */
+/* CARD HORIZONTAL */
 .resep {
     display: flex;
-    border-radius: 1.25rem;
-    border: 0.05rem solid #F2E2D9;
-    background-color: white;
-    padding: 0.9rem 0.75rem;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 1.25rem;
+    border: 1px solid #F2E2D9;
+    padding: 0.75rem 1rem;
     cursor: pointer;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
     text-decoration: none;
-    /* Pastikan card tidak bisa diklik kalau tidak ada slot */
+    gap: 0.5rem;
 }
-.resep:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-color: #8C2A1A; }
 
-/* Kalau tidak ada slot → disable visual */
+.resep:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border-color: #8C2A1A;
+}
+
 .resep.no-slot {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
 }
 
-.resep-content { display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0; }
+/* Bagian kiri (icon + detail) */
+.resep-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0; /* penting untuk ellipsis */
+}
+
 .resep-logo {
     display: flex;
-    width: 4rem;
-    height: 4rem;
+    width: 3rem;
+    height: 3rem;
     justify-content: center;
     align-items: center;
-    border-radius: 1rem;
+    border-radius: 0.875rem;
     background-color: #FEE7C3;
     flex-shrink: 0;
 }
-.resep-logo .material-icons-round { font-size: 1.8rem !important; color: #8C2A1A; }
-.resep-detail { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; min-width: 0; }
+
+.resep-logo .material-icons-round {
+    font-size: 1.5rem !important;
+    color: #8C2A1A;
+}
+
+.resep-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 0;
+}
+
 .resep-detail h1 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2D1A11;
+    margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.resep-content-detail { display: flex; align-items: center; gap: 1rem; }
-.resep-content-detail > div { display: flex; align-items: center; gap: 0.35rem; }
-.resep-content-detail .material-icons-round { font-size: 0.9rem !important; color: var(--primary-darker); }
 
-.arrow-icon { font-size: 1rem !important; color: var(--secondary-normal); flex-shrink: 0; }
+.resep-content-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
 
-/* ── SLOT WARNING BANNER ─────────────────────────────────────── */
+.resep-content-detail > div {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.resep-content-detail .material-icons-round {
+    font-size: 0.8rem !important;
+    color: #8C2A1A;
+}
+
+.resep-content-detail span:not(.material-icons-round) {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #4A2A1A;
+}
+
+/* Panah kanan */
+.arrow-icon {
+    font-size: 1rem !important;
+    color: #B87C5A;
+    flex-shrink: 0;
+}
+
+/* Warning banner */
 .slot-warning {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1rem;
     background-color: #FEF3C7;
-    border: 1px solid #FCD34D;
     border-radius: 0.75rem;
     color: #92400E;
+    font-size: 0.85rem;
 }
-.slot-warning .material-icons-round { font-size: 1.1rem !important; flex-shrink: 0; }
 
-/* ── EMPTY STATE ─────────────────────────────────────────────── */
+.slot-warning .material-icons-round {
+    font-size: 1.1rem !important;
+}
+
 .empty-state {
     text-align: center;
-    padding: 2rem 1rem;
-    color: var(--primary-darker);
-    font-family: var(--font-jakarta);
+    padding: 2rem;
+    color: #8C2A1A;
+    font-size: 0.9rem;
+    grid-column: 1 / -1;
 }
 
-/* ── TABLET (≥ 768px) ────────────────────────────────────────── */
-@media (min-width: 768px) {
-    .main-content { padding: 0 1.5rem 2rem; }
-    .navbar { margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
-    /* Tetap 1 kolom di tablet — lebih rapi untuk card horizontal */
+/* ========= RESPONSIVE GRID ========= */
+@media (min-width: 600px) {
+    .resep-menus {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-/* ── DESKTOP (≥ 1024px) ──────────────────────────────────────── */
 @media (min-width: 1024px) {
-    .main-content { max-width: 900px; margin: 0 auto; padding: 0 2rem 2rem; }
-    .navbar { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
+    .main-content {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2rem 2rem;
+    }
+    .resep-menus {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }

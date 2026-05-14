@@ -2,148 +2,118 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Resep;
+use App\Models\Bahan;
 use App\Models\ResepBahan;
 
 class ResepBahanSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-     public function run(): void
+    public function run(): void
     {
         $data = [
 
             /*
             ===================================
-            RESEP ID 1 = Nasi Goreng Spesial
+            NASI GORENG SPESIAL
             ===================================
             */
             [
-                'resep_id' => 1,
-                'bahan_id' => 16, // Nasi
-                'gram_total' => 200,
-            ],
-            [
-                'resep_id' => 1,
-                'bahan_id' => 1, // Telur
-                'gram_total' => 60,
-            ],
-            [
-                'resep_id' => 1,
-                'bahan_id' => 6, // Bawang Merah
-                'gram_total' => 20,
-            ],
-            [
-                'resep_id' => 1,
-                'bahan_id' => 7, // Bawang Putih
-                'gram_total' => 15,
-            ],
-            [
-                'resep_id' => 1,
-                'bahan_id' => 25, // Kecap Manis
-                'gram_total' => 15,
+                'resep' => 'Nasi Goreng Spesial',
+                'bahans' => [
+                    ['nama' => 'Nasi', 'gram' => 200],
+                    ['nama' => 'Telur', 'gram' => 60],
+                    ['nama' => 'Bawang Merah', 'gram' => 20],
+                    ['nama' => 'Bawang Putih', 'gram' => 15],
+                    ['nama' => 'Kecap Manis', 'gram' => 15],
+                ]
             ],
 
             /*
             ===================================
-            RESEP ID 2 = Mie Goreng Jawa
+            MIE GORENG JAWA
             ===================================
             */
             [
-                'resep_id' => 2,
-                'bahan_id' => 17, // Mie
-                'gram_total' => 150,
-            ],
-            [
-                'resep_id' => 2,
-                'bahan_id' => 1, // Telur
-                'gram_total' => 60,
-            ],
-            [
-                'resep_id' => 2,
-                'bahan_id' => 7, // Bawang Putih
-                'gram_total' => 15,
-            ],
-            [
-                'resep_id' => 2,
-                'bahan_id' => 25, // Kecap Manis
-                'gram_total' => 10,
+                'resep' => 'Mie Goreng Jawa',
+                'bahans' => [
+                    ['nama' => 'Mie', 'gram' => 150],
+                    ['nama' => 'Telur', 'gram' => 60],
+                    ['nama' => 'Bawang Putih', 'gram' => 15],
+                    ['nama' => 'Kecap Manis', 'gram' => 10],
+                ]
             ],
 
             /*
             ===================================
-            RESEP ID 3 = Telur Dadar Crispy
+            TELUR DADAR CRISPY
             ===================================
             */
             [
-                'resep_id' => 3,
-                'bahan_id' => 1, // Telur
-                'gram_total' => 120,
-            ],
-            [
-                'resep_id' => 3,
-                'bahan_id' => 24, // Garam
-                'gram_total' => 5,
+                'resep' => 'Telur Dadar Crispy',
+                'bahans' => [
+                    ['nama' => 'Telur', 'gram' => 120],
+                    ['nama' => 'Garam', 'gram' => 5],
+                ]
             ],
 
             /*
             ===================================
-            RESEP ID 4 = Ayam Kecap Pedas
+            AYAM KECAP PEDAS
             ===================================
             */
             [
-                'resep_id' => 4,
-                'bahan_id' => 2, // Ayam
-                'gram_total' => 250,
-            ],
-            [
-                'resep_id' => 4,
-                'bahan_id' => 25, // Kecap Manis
-                'gram_total' => 20,
-            ],
-            [
-                'resep_id' => 4,
-                'bahan_id' => 8, // Cabai Merah
-                'gram_total' => 25,
-            ],
-            [
-                'resep_id' => 4,
-                'bahan_id' => 7, // Bawang Putih
-                'gram_total' => 15,
+                'resep' => 'Ayam Kecap Pedas',
+                'bahans' => [
+                    ['nama' => 'Ayam', 'gram' => 250],
+                    ['nama' => 'Kecap Manis', 'gram' => 20],
+                    ['nama' => 'Cabai Merah', 'gram' => 25],
+                    ['nama' => 'Bawang Putih', 'gram' => 15],
+                ]
             ],
 
             /*
             ===================================
-            RESEP ID 5 = Capcay Sayur
+            CAPCAY SAYUR
             ===================================
             */
             [
-                'resep_id' => 5,
-                'bahan_id' => 11, // Wortel
-                'gram_total' => 80,
+                'resep' => 'Capcay Sayur',
+                'bahans' => [
+                    ['nama' => 'Wortel', 'gram' => 80],
+                    ['nama' => 'Kubis', 'gram' => 100],
+                    ['nama' => 'Sawi', 'gram' => 80],
+                    ['nama' => 'Bawang Putih', 'gram' => 10],
+                ]
             ],
-            [
-                'resep_id' => 5,
-                'bahan_id' => 13, // Kubis
-                'gram_total' => 100,
-            ],
-            [
-                'resep_id' => 5,
-                'bahan_id' => 15, // Sawi
-                'gram_total' => 80,
-            ],
-            [
-                'resep_id' => 5,
-                'bahan_id' => 7, // Bawang Putih
-                'gram_total' => 10,
-            ],
-
         ];
 
         foreach ($data as $item) {
-            ResepBahan::create($item);
+
+            $resep = Resep::where('title', $item['resep'])->first();
+
+            if (!$resep) {
+                continue;
+            }
+
+            foreach ($item['bahans'] as $bahanItem) {
+
+                $bahan = Bahan::where('nama', $bahanItem['nama'])->first();
+
+                if (!$bahan) {
+                    continue;
+                }
+
+                ResepBahan::updateOrCreate(
+                    [
+                        'resep_id' => $resep->id,
+                        'bahan_id' => $bahan->id,
+                    ],
+                    [
+                        'gram_total' => $bahanItem['gram'],
+                    ]
+                );
+            }
         }
     }
 }
