@@ -21,7 +21,7 @@
                 <h1 class="font-jakarta text-h4 font-bold">Sign Up</h1>
                 <div class="auth-link gap-1 flex flex-row">
                     <p class="font-jakarta text-title2 font-regular">Sudah punya akun?</p>
-                    <a href="#" class="font-jakarta text-title2 font-bold" onclick="changeMode('signin')">Masuk
+                    <a href="/auth/signin" class="font-jakarta text-title2 font-bold">Masuk
                         disini</a>
                 </div>
             </div>

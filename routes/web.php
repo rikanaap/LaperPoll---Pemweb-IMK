@@ -14,6 +14,11 @@ use App\Http\Controllers\NotaBelAnjaController;
 use App\Http\Controllers\LandingPage;
 use App\Http\Controllers\MainMenu;
 
+use App\Http\Controllers\Api\ResepApiController;
+use App\Http\Controllers\Api\SwipeResepApiController;
+// Pastikan namanya persis 'auth.sign-in'
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.sign-in');
+
 // Harmoni -> Link Landing Page
 Route::get('/', [LandingPage::class, 'index'])
     ->name('landing.index');
@@ -55,6 +60,18 @@ Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])
     ->name('pencarian.resep');
 Route::get('/filter-resep', [PencarianResepController::class, 'filter'])
     ->name('filter.resep');
+Route::prefix('api')->group(function () {
+
+    Route::get('/resep/search', [ResepApiController::class, 'search'])
+        ->name('api.resep.search');
+
+    Route::get('/bahan/by-ids', [ResepApiController::class, 'getBahansByIds'])
+        ->name('api.bahan.by-ids');
+
+    Route::get('/swipe-rasa',[SwipeResepApiController::class, 'getRasa']);
+
+    Route::post('/filter-resep-swipe',[SwipeResepApiController::class, 'filterResep']);
+});
 
 // Ikbal -> link untuk akses swipe rasa
 Route::get('/swipe-rasa', [SwipeResepController::class, 'index'])

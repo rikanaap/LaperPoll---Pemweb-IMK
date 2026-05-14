@@ -60,6 +60,9 @@
     border: 1px solid var(--accent-normal);
     /* Frame tipis biar profil lebih stand out */
     transition: transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .profile:active {

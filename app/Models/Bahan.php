@@ -16,10 +16,13 @@ class Bahan extends Model
 
 
     public function reseps()
-    {
-        return $this->belongsToMany(Resep::class, 'resep_bahan')
-                    ->withPivot('gram_total');
-    }
+        {
+            return $this->belongsToMany(
+                Resep::class,
+                'resep_bahan'
+            )->withPivot('gram_total')
+            ->withTimestamps();
+        }
 
     public function resepBahans()
     {
