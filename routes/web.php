@@ -15,6 +15,7 @@ use App\Http\Controllers\LandingPage;
 use App\Http\Controllers\MainMenu;
 
 use App\Http\Controllers\Api\ResepApiController;
+use App\Http\Controllers\Api\SwipeResepApiController;
 // Pastikan namanya persis 'auth.sign-in'
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.sign-in');
 
@@ -67,6 +68,9 @@ Route::prefix('api')->group(function () {
     Route::get('/bahan/by-ids', [ResepApiController::class, 'getBahansByIds'])
         ->name('api.bahan.by-ids');
 
+    Route::get('/swipe-rasa',[SwipeResepApiController::class, 'getRasa']);
+
+    Route::post('/filter-resep-swipe',[SwipeResepApiController::class, 'filterResep']);
 });
 
 // Ikbal -> link untuk akses swipe rasa

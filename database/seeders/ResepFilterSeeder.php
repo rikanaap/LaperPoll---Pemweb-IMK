@@ -3,66 +3,87 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Resep;
+use App\Models\Filter;
+use App\Models\ResepFilter;
 
 class ResepFilterSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $data = [
 
-            // ======================================
-            // RESEP 1
-            // Pedas + Gurih
-            // ======================================
             [
-                'resep_id' => 1,
-                'filters_id' => 1,
+                'resep' => 'Nasi Goreng Spesial',
+                'filters' => [
+                    'Goreng',
+                    'Gurih',
+                ]
             ],
 
             [
-                'resep_id' => 1,
-                'filters_id' => 3,
-            ],
-
-            // ======================================
-            // RESEP 2
-            // Manis
-            // ======================================
-            [
-                'resep_id' => 2,
-                'filters_id' => 2,
-            ],
-
-            // ======================================
-            // RESEP 3
-            // Sehat
-            // ======================================
-            [
-                'resep_id' => 3,
-                'filters_id' => 5,
-            ],
-
-            // ======================================
-            // RESEP 4
-            // Pedas + Asin
-            // ======================================
-            [
-                'resep_id' => 4,
-                'filters_id' => 1,
+                'resep' => 'Mie Goreng Jawa',
+                'filters' => [
+                    'Goreng',
+                    'Manis',
+                ]
             ],
 
             [
-                'resep_id' => 4,
-                'filters_id' => 4,
+                'resep' => 'Telur Dadar Crispy',
+                'filters' => [
+                    'Goreng',
+                    'Gurih',
+                ]
+            ],
+
+            [
+                'resep' => 'Ayam Kecap Pedas',
+                'filters' => [
+                    'Pedas',
+                    'Manis',
+                ]
+            ],
+
+            [
+                'resep' => 'Capcay Sayur',
+                'filters' => [
+                    'Sehat',
+                    'Tumis',
+                ]
             ],
 
         ];
 
-        DB::table('resep_filters')
-            ->insert($data);
+        foreach ($data as $item) {
+
+            $resep = Resep::where(
+                'title',
+                $item['resep']
+            )->first();
+
+            if (!$resep) {
+                continue;
+            }
+
+            foreach ($item['filters'] as $filterTitle) {
+
+                $filter = Filter::where(
+                    'title',
+                    $filterTitle
+                )->first();
+
+                if (!$filter) {
+                    continue;
+                }
+
+                ResepFilter::updateOrCreate(
+                    [
+                        'resep_id' => $resep->id,
+                        'filters_id' => $filter->id,
+                    ]
+                );
+            }
+        }
     }
 }
