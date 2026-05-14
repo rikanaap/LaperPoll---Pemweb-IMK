@@ -264,8 +264,15 @@
         elements.bahanList?.addEventListener('click', event => {
             const item = event.target.closest('.bahan-item');
             if (!item) return;
+
             const checkbox = item.querySelector('input');
-            if (event.target.tagName !== 'INPUT') checkbox.checked = !checkbox.checked;
+
+            // kalau bukan checkbox → toggle manual
+            if (!event.target.matches('input')) {
+                event.preventDefault();
+                checkbox.checked = !checkbox.checked;
+            }
+
             logic.syncSelectedBahan();
         });
 
