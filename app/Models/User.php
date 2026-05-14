@@ -39,7 +39,6 @@ class User extends Authenticatable
 
     public function favorites()
     {
-
         return $this->belongsToMany(Resep::class, 'favorites', 'user_id', 'resep_id')->withTimestamps();
     }
 

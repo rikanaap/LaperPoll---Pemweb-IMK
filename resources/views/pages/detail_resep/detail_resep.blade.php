@@ -3,143 +3,143 @@
 @section('title', 'Detail Resep - LaperPoll')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('css/pages/detail-resep.css') }}">
+<link rel="stylesheet" href="{{ asset('css/pages/detail-resep.css') }}">
 @endpush
 
-  <main class="main-content flex flex-col font-jakarta" data-recipe-id="roti-bakar-keju">
-    <x-navbar :back="true"></x-navbar>
-    
-    <section>
-      <div class="recipe-header-container">
-        <div class="header-left">
-          <h1 class="recipe-title">Roti Bakar Keju</h1>
-          <div class="recipe-meta">
-            <span class="meta-item">
-              <span class="material-icons-round">timer</span> 15 mins
-            </span>
-            <span class="meta-item">
-              <span class="material-icons-round">icecream</span> Dessert
-            </span>
-          </div>
-        </div>
+<main class="main-content flex flex-col font-jakarta" data-recipe-id="roti-bakar-keju">
+  <x-navbar :back="true"></x-navbar>
 
-        <div class="header-right">
-          <div class="author-section">
-            <div class="author-text">
-              <span class="created-by font-jakarta">Dibuat oleh</span>
-              <span class="author-username font-jakarta font-semibold">@RotiRoni</span>
-            </div>
-            <img src="../assets/images/Image_DummyProfile.png" alt="Author" class="author-avatar">
-          </div>
-          <div class="rating-section">
-            <div class="stars">
-              <span class="material-icons-round">star</span>
-              <span class="material-icons-round">star</span>
-              <span class="material-icons-round">star</span>
-              <span class="material-icons-round">star</span>
-              <span class="material-icons-round">star_half</span>
-            </div>
-            <span class="rating-score">4.5</span>
-          </div>
+  <section>
+    <div class="recipe-header-container">
+    <div class="header-left">
+        <h1 class="recipe-title">{{ $resep->title }}</h1>
+        <div class="recipe-meta">
+          <span class="meta-item">
+            <span class="material-icons-round">timer</span> 15 mins
+          </span>
+          <span class="meta-item">
+            <span class="material-icons-round">icecream</span> Dessert
+          </span>
         </div>
       </div>
-    </section>
-    
-    <section class="recipe-hero">
-      <img
-        src="https://images.unsplash.com/photo-1581574303858-f00f95088f7b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        style="height: 350px" alt="Roti Bakar Keju" class="hero-image">
-      <div class="hero-overlay">
-        <span class="material-icons-round favorite-icon">favorite_border</span>
-        <span class="material-icons-round play-icon">play_circle_outline</span>
-      </div>
-      <div class="carousel-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
-    </section>
 
-    <section class="sidebar-card flex-flex-col">
-      <div class="sidebar-card-header">
-        <span class="sidebar-section-title font-jakarta font-semibold">Bahan-bahan</span>
-        <div class="unit-toggle wrapper font-jakarta">
-          <span class="unit-icon">&#9878</span>
-          <select class="unit-select">
-            <option value="gram">Gram</option>
-            <option value="miligram">Miligram</option>
-            <option value="kilogram">Kilogram</option>
-            <option value="sendok_makan">Sdm</option>
-          </select>
-        </div>
-      </div>
-      <div class="chips-grid">
-        <div class="chip font-jakarta"><span class="amt">100g</span> Tepung Protein Tinggi</div>
-        <div class="chip font-jakarta"><span class="amt">23g</span> Tepung Terigu</div>
-        <div class="chip font-jakarta"><span class="amt">89g</span> Mentega</div>
-        <div class="chip font-jakarta"><span class="amt">78g</span> Keju Parut</div>
-        <div class="chip font-jakarta"><span class="amt">66g</span> Air</div>
-        <div class="chip font-jakarta"><span class="amt">20g</span> Telur</div>
-        <div class="chip-none font-jakarta"><span class="amt">45g</span> Kacang Almond</div>
-        <div class="chip-none font-jakarta"><span class="amt">60g</span> Madu</div>
-        <div class="chip-none font-jakarta"><span class="amt">12g</span> Coklat Bubuk</div>
-        <div class="chip-none font-jakarta"><span class="amt">34g</span> Susu Bubuk</div>
-      </div>
-    </section>
-
-    <section>
-      <div class="steps-card">
-        <h2 class="section-title font-jakarta font-semibold">Cara Membuat</h2>
-
-        <div class="step-item">
-          <div class="step-num font-jakarta font-bold">1</div>
-          <div class="step-body">
-            <div class="step-title">Siapkan roti</div>
-            <p class="step-text">Oles roti dengan margarine di kedua sisinya secara merata. Pastikan seluruh permukaan
-              roti terlapisi agar hasil panggang lebih sempurna dan tidak kering.</p>
+      <div class="header-right">
+        <div class="author-section">
+          <div class="author-text">
+            <span class="created-by font-jakarta">Dibuat oleh</span>
+            <span class="author-username font-jakarta font-semibold">@RotiRoni</span>
           </div>
+          <img src="../assets/images/Image_DummyProfile.png" alt="Author" class="author-avatar">
         </div>
-
-        <div class="step-item">
-          <div class="step-num font-jakarta font-bold">2</div>
-          <div class="step-body">
-            <div class="step-title">Panggang roti</div>
-            <p class="step-text">Panaskan pan anti lengket di atas api sedang. Panggang roti di atas pan hingga
-              kecoklatan di kedua sisinya. Ulangi hingga semua roti matang dengan warna yang merata.</p>
+        <div class="rating-section">
+          <div class="stars">
+            <span class="material-icons-round">star</span>
+            <span class="material-icons-round">star</span>
+            <span class="material-icons-round">star</span>
+            <span class="material-icons-round">star</span>
+            <span class="material-icons-round">star_half</span>
           </div>
+          <span class="rating-score">4.5</span>
         </div>
-
-        <div class="step-item">
-          <div class="step-num font-jakarta font-bold">3</div>
-          <div class="step-body">
-            <div class="step-title">Tambahkan keju dan madu</div>
-            <p class="step-text">Taburi keju parut di atas roti yang masih panas, kemudian oleskan madu secukupnya untuk
-              memberikan sentuhan manis yang alami dan aroma yang menggugah selera.</p>
-          </div>
-        </div>
-
-        <div class="step-item">
-          <div class="step-num font-jakarta font-bold">4</div>
-          <div class="step-body">
-            <div class="step-title">Sajikan</div>
-            <p class="step-text">Pindahkan roti bakar ke piring saji. Taburi kembali dengan keju parut, hiasi dengan
-              kacang almond yang dicincang kasar, serta taburan coklat bubuk dan susu bubuk di atasnya. Sajikan selagi
-              hangat.</p>
-          </div>
-        </div>
-    </section>
-
-    <section>
-      <a href="{{ url('/timer-resep') }}">
-        <button class="button font-jakarta font-semibold ">
-          Buat sekarang
-          <span class="arrow-forward material-icons-round">arrow_forward</span>
-        </button>
-      </a>
       </div>
+    </div>
+  </section>
+
+  <section class="recipe-hero">
+    <img
+      src="https://images.unsplash.com/photo-1581574303858-f00f95088f7b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      style="height: 350px" alt="Roti Bakar Keju" class="hero-image">
+    <div class="hero-overlay">
+      <span class="material-icons-round favorite-icon">favorite_border</span>
+      <span class="material-icons-round play-icon">play_circle_outline</span>
+    </div>
+    <div class="carousel-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </section>
+
+  <section class="sidebar-card flex-flex-col">
+    <div class="sidebar-card-header">
+      <span class="sidebar-section-title font-jakarta font-semibold">Bahan-bahan</span>
+      <div class="unit-toggle wrapper font-jakarta">
+        <span class="unit-icon">&#9878</span>
+        <select class="unit-select">
+          <option value="gram">Gram</option>
+          <option value="miligram">Miligram</option>
+          <option value="kilogram">Kilogram</option>
+          <option value="sendok_makan">Sdm</option>
+        </select>
       </div>
-    </section>
-  </main>
+    </div>
+    <div class="chips-grid">
+      <div class="chip font-jakarta"><span class="amt">100g</span> Tepung Protein Tinggi</div>
+      <div class="chip font-jakarta"><span class="amt">23g</span> Tepung Terigu</div>
+      <div class="chip font-jakarta"><span class="amt">89g</span> Mentega</div>
+      <div class="chip font-jakarta"><span class="amt">78g</span> Keju Parut</div>
+      <div class="chip font-jakarta"><span class="amt">66g</span> Air</div>
+      <div class="chip font-jakarta"><span class="amt">20g</span> Telur</div>
+      <div class="chip-none font-jakarta"><span class="amt">45g</span> Kacang Almond</div>
+      <div class="chip-none font-jakarta"><span class="amt">60g</span> Madu</div>
+      <div class="chip-none font-jakarta"><span class="amt">12g</span> Coklat Bubuk</div>
+      <div class="chip-none font-jakarta"><span class="amt">34g</span> Susu Bubuk</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="steps-card">
+      <h2 class="section-title font-jakarta font-semibold">Cara Membuat</h2>
+
+      <div class="step-item">
+        <div class="step-num font-jakarta font-bold">1</div>
+        <div class="step-body">
+          <div class="step-title">Siapkan roti</div>
+          <p class="step-text">Oles roti dengan margarine di kedua sisinya secara merata. Pastikan seluruh permukaan
+            roti terlapisi agar hasil panggang lebih sempurna dan tidak kering.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num font-jakarta font-bold">2</div>
+        <div class="step-body">
+          <div class="step-title">Panggang roti</div>
+          <p class="step-text">Panaskan pan anti lengket di atas api sedang. Panggang roti di atas pan hingga
+            kecoklatan di kedua sisinya. Ulangi hingga semua roti matang dengan warna yang merata.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num font-jakarta font-bold">3</div>
+        <div class="step-body">
+          <div class="step-title">Tambahkan keju dan madu</div>
+          <p class="step-text">Taburi keju parut di atas roti yang masih panas, kemudian oleskan madu secukupnya untuk
+            memberikan sentuhan manis yang alami dan aroma yang menggugah selera.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num font-jakarta font-bold">4</div>
+        <div class="step-body">
+          <div class="step-title">Sajikan</div>
+          <p class="step-text">Pindahkan roti bakar ke piring saji. Taburi kembali dengan keju parut, hiasi dengan
+            kacang almond yang dicincang kasar, serta taburan coklat bubuk dan susu bubuk di atasnya. Sajikan selagi
+            hangat.</p>
+        </div>
+      </div>
+  </section>
+
+  <section>
+    <a href="{{ url('/timer-resep') }}">
+      <button class="button font-jakarta font-semibold ">
+        Buat sekarang
+        <span class="arrow-forward material-icons-round">arrow_forward</span>
+      </button>
+    </a>
+    </div>
+    </div>
+  </section>
+</main>
 
 
 

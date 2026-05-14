@@ -29,9 +29,11 @@
 </head>
 
 <body>
+    <x-popup-toast />
     @yield('content')
 
 </body>
 {{-- Page-specific JS --}}
 @stack('scripts')
+
 </html>
