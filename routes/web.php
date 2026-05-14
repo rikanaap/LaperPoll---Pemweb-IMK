@@ -45,6 +45,10 @@ Route::get('/ulasan', function () {
     return view('pages.ulasan.ulasan');
 });
 
+Route::get('/favorit', function () {
+    return view('pages.favorit.index'); 
+});
+
 Route::middleware(['auth'])->group(function () {
     
     Route::post('/favorit/toggle/{id}', [FavoriteController::class, 'toggle'])->name('favorit.toggle');
