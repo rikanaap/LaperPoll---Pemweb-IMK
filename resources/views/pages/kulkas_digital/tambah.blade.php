@@ -11,14 +11,12 @@
 
     <x-navbar :backUrl="route('kulkas.index')"></x-navbar>
 
-    {{-- FORM CARD --}}
     <div class="tb-card">
         <div class="tb-card-header">
             <h1 class="tb-title font-jakarta font-bold">Tambah Bahan</h1>
             <p class="tb-subtitle font-jakarta font-regular">Tambahkan bahan ke kulkas digitalmu</p>
         </div>
 
-        {{-- VALIDATION ERRORS --}}
         @if($errors->any())
             <div class="tb-errors">
                 <span class="material-icons-round">error_outline</span>
@@ -34,22 +32,16 @@
             @csrf
 
             {{-- Data bahan untuk JS autocomplete --}}
-            {{-- Data bahan untuk JS autocomplete --}}
             <script id="bahanData" type="application/json">
-                <?php
-                    $bahanJson = $bahans->map(function($b) {
-                        return [
-                            'id'                     => $b->id,
-                            'nama'                   => $b->nama,
-                            'has_expiry'             => $b->expired_expectancy_day !== null,
-                            'expired_expectancy_day' => $b->expired_expectancy_day,
-                        ];
-                    });
-                    echo json_encode($bahanJson);
-                ?>
+                {!! $bahans->map(fn($b) => [
+                    'id'                     => $b->id,
+                    'nama'                   => $b->nama,
+                    'has_expiry'             => $b->expired_expectancy_day !== null,
+                    'expired_expectancy_day' => $b->expired_expectancy_day,
+                ])->toJson() !!}
             </script>
 
-            <input type="hidden" name="bahan_id" id="bahanId">
+            <input type="hidden" name="bahan_id" id="bahanId" value="{{ old('bahan_id') }}">
 
             {{-- NAMA BAHAN --}}
             <div class="tb-group">
@@ -62,7 +54,8 @@
                         <input type="text" id="searchBahan"
                                class="input-data font-jakarta text-body"
                                placeholder="Cari nama bahan..."
-                               autocomplete="off">
+                               autocomplete="off"
+                               value="{{ old('bahan_id') ? \App\Models\Bahan::find(old('bahan_id'))?->nama : '' }}">
                         <span class="material-icons-round tb-clear" id="clearSearch"
                               style="display:none; cursor:pointer;">close</span>
                     </div>
@@ -85,7 +78,8 @@
                         </button>
                     </div>
                     <div class="input tb-satuan-input">
-                        <input type="text" id="satuanBahan" name="jumlah"
+                        {{-- Tidak pakai name="jumlah" di sini, dihandle oleh JS via hidden field --}}
+                        <input type="text" id="satuanBahan"
                                class="input-data font-jakarta text-body"
                                placeholder="satuan (gram, buah, ...)"
                                autocomplete="off">
@@ -103,11 +97,11 @@
                     <span class="material-icons-round">shopping_bag</span>
                     <input type="date" id="boughtDate" name="bought_date"
                            class="input-data font-jakarta text-body"
-                           value="{{ date('Y-m-d') }}" required>
+                           value="{{ old('bought_date', date('Y-m-d')) }}" required>
                 </div>
             </div>
 
-            {{-- TANGGAL EXPIRED (muncul kalau bahan punya expiry) --}}
+            {{-- TANGGAL EXPIRED --}}
             <div class="tb-group" id="expiredSection" style="display:none;">
                 <label class="tb-label font-jakarta font-semibold">
                     Tanggal Expired
@@ -116,7 +110,8 @@
                 <div class="input" style="margin-top: 0.5rem;">
                     <span class="material-icons-round">event_busy</span>
                     <input type="date" id="expiredDate" name="expired_date"
-                           class="input-data font-jakarta text-body">
+                           class="input-data font-jakarta text-body"
+                           value="{{ old('expired_date') }}">
                 </div>
             </div>
 
@@ -132,32 +127,6 @@
 @endsection
 
 @push('scripts')
+    {{-- Tidak ada inline script di sini — semua dihandle oleh tambah-bahan.js --}}
     <script src="{{ asset('js/tambah-bahan.js') }}"></script>
-    <script>
-    // Sync jumlahAngka + satuanBahan → input name="jumlah"
-    document.addEventListener('DOMContentLoaded', () => {
-        const angka  = document.getElementById('jumlahAngka');
-        const satuan = document.getElementById('satuanBahan');
-
-        // Hapus name dari satuan, pakai hidden field sebagai pengganti
-        satuan.removeAttribute('name');
-        const hid = document.createElement('input');
-        hid.type = 'hidden';
-        hid.name = 'jumlah';
-        hid.id   = 'jumlahHidden';
-        hid.value = '1';
-        document.getElementById('formTambahBahan').appendChild(hid);
-
-        function syncJumlah() {
-            const a = angka.value || '1';
-            const s = satuan.value.trim();
-            // Kirim gabungan ke server via hidden field
-            document.getElementById('jumlahHidden').value = a + (s ? ' ' + s : '');
-        }
-        angka.addEventListener('input', syncJumlah);
-        satuan.addEventListener('input', syncJumlah);
-
-        syncJumlah();
-    });
-    </script>
 @endpush

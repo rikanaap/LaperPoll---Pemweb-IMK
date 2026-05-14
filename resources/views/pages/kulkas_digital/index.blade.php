@@ -41,7 +41,7 @@
         <button class="kd-chip" data-filter="hampir-habis">Hampir Habis</button>
     </div>
 
-    {{-- GRID --}}
+    {{-- GRID BAHAN --}}
     <section class="kd-grid" id="kdGrid">
         @forelse($grouped as $item)
             @php
@@ -138,7 +138,66 @@
         @endforelse
     </section>
 
+    {{-- REKOMENDASI RESEP --}}
+    @if(count($rekomendasi) > 0)
+    <section class="kd-resep">
+        <div class="kd-resep-header">
+            <span class="kd-resep-sparkle">✨</span>
+            <h2 class="kd-resep-title font-jakarta font-semibold">Resep dari bahan yang ada</h2>
+        </div>
+
+        <div class="kd-resep-list">
+            @foreach($rekomendasi as $resep)
+                <div class="kd-resep-item {{ $resep['lengkap'] ? 'resep-lengkap' : '' }}"
+                     data-bahan-kurang="{{ implode(', ', $resep['bahan_kurang']->toArray()) }}">
+
+                    <div class="kd-resep-info">
+                        <p class="kd-resep-nama font-jakarta font-medium">{{ $resep['title'] }}</p>
+                        @if(!$resep['lengkap'])
+                            <p class="kd-resep-kurang font-jakarta font-regular">
+                                Kurang: {{ implode(', ', $resep['bahan_kurang']->toArray()) }}
+                            </p>
+                        @endif
+                    </div>
+
+                    <div class="kd-resep-right">
+                        <span class="kd-resep-badge {{ $resep['lengkap'] ? 'badge-resep-lengkap' : 'badge-resep-partial' }} font-jakarta font-bold">
+                            {{ $resep['bahan_ada'] }}/{{ $resep['total_bahan'] }}
+                            @if($resep['lengkap']) ✓ @endif
+                        </span>
+                        @if(!$resep['lengkap'])
+                            <button class="kd-resep-detail-btn font-jakarta"
+                                    data-kurang="{{ implode(', ', $resep['bahan_kurang']->toArray()) }}"
+                                    data-nama="{{ $resep['title'] }}">
+                                <span class="material-icons-round">info_outline</span>
+                            </button>
+                        @endif
+                    </div>
+
+                </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
 </main>
+
+{{-- MODAL BAHAN KURANG --}}
+<div id="modalBahanKurang" style="display:none;">
+    <div class="modal-overlay" id="modalKurangOverlay"></div>
+    <div class="modal-box">
+        <div class="modal-resep-icon">
+            <span class="material-icons-round">shopping_cart</span>
+        </div>
+        <h3 class="modal-title font-jakarta font-bold" id="modalKurangTitle"></h3>
+        <p class="modal-desc font-jakarta font-regular">Bahan yang masih kurang:</p>
+        <ul class="modal-kurang-list" id="modalKurangList"></ul>
+        <button class="modal-btn-confirm font-jakarta font-bold" id="modalKurangClose"
+                style="width:100%; margin-top:0.5rem;">
+            Tutup
+        </button>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
