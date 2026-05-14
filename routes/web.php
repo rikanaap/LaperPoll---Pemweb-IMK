@@ -63,6 +63,16 @@ Route::get('/timer-resep', function () {
 Route::get('/ulasan', function () {
     return view('pages.ulasan.ulasan');
 });
+
+Route::get('/favorit', function () {
+    return view('pages.favorit.index'); 
+});
+
+Route::middleware(['auth'])->group(function () {
+    
+    Route::post('/favorit/toggle/{id}', [FavoriteController::class, 'toggle'])->name('favorit.toggle');
+});
+
 // Ikbal -> link halaman pencarian resep
 Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])
     ->name('pencarian.resep');

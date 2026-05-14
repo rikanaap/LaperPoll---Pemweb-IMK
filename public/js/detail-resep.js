@@ -36,18 +36,10 @@
 
 const STORAGE_KEY = "laberpoll_favorites";
 
-// Ambil data resep dari data attributes di <main>
-const mainEl = document.querySelector('main[data-recipe-id]');
-const recipeId = mainEl?.dataset.recipeId ?? window.location.pathname.split('/').pop();
-
-// Simpan info lengkap resep (supaya halaman favorit bisa nampilin kartunya)
-const recipeData = {
-  id:       recipeId,
-  title:    mainEl?.dataset.recipeTitle    ?? document.querySelector('.recipe-title')?.innerText ?? 'Resep',
-  time:     mainEl?.dataset.recipeTime     ?? '15 mins',
-  category: mainEl?.dataset.recipeCategory ?? 'Dessert',
-  image:    mainEl?.dataset.recipeImage    ?? '',
-};
+// Ambil ID resep dari halaman (bisa dari data attribute atau URL)
+// Sesuaikan dengan cara kamu nyimpan ID resep di blade template
+const recipeId = document.querySelector('[data-recipe-id]')?.dataset.recipeId 
+               ?? window.location.pathname.split('/').pop();
 
 const favoriteIcon = document.querySelector('.favorite-icon');
 
@@ -66,37 +58,45 @@ function saveFavorites(favorites) {
 }
 
 function isFavorite(id) {
-  return loadFavorites().some(f => f.id === id);
+  return loadFavorites().includes(id);
 }
 
-function toggleFavorite(data) {
+function toggleFavorite(id) {
   let favorites = loadFavorites();
-  const exists = favorites.some(f => f.id === data.id);
-  if (exists) {
-    favorites = favorites.filter(f => f.id !== data.id);
+  if (favorites.includes(id)) {
+    favorites = favorites.filter(f => f !== id);
   } else {
-    favorites.push(data); // simpan objek lengkap
+    favorites.push(id);
   }
   saveFavorites(favorites);
-  return !exists;
+  return favorites.includes(id);
 }
 
 // --- Update tampilan ikon ---
 
 function updateFavoriteIcon(active) {
   if (!favoriteIcon) return;
-  favoriteIcon.textContent = active ? "favorite" : "favorite_border";
-  favoriteIcon.classList.toggle("favorite-active", active);
+
+  if (active) {
+    favoriteIcon.textContent = "favorite";          // ikon hati penuh
+    favoriteIcon.classList.add("favorite-active");
+  } else {
+    favoriteIcon.textContent = "favorite_border";   // ikon hati kosong
+    favoriteIcon.classList.remove("favorite-active");
+  }
 }
 
 // --- Init ---
 
+// Set tampilan awal sesuai status tersimpan
 updateFavoriteIcon(isFavorite(recipeId));
 
+// Klik tombol favorit
 favoriteIcon?.addEventListener('click', () => {
-  const nowActive = toggleFavorite(recipeData);
+  const nowActive = toggleFavorite(recipeId);
   updateFavoriteIcon(nowActive);
 
+  // Animasi kecil saat diklik
   favoriteIcon.classList.add("favorite-pop");
   favoriteIcon.addEventListener('animationend', () => {
     favoriteIcon.classList.remove("favorite-pop");

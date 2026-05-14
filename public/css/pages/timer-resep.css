@@ -1,75 +1,474 @@
 :root {
-    --primary: #E65100;
-    --bg-page: #FDECEC;
-    --white: #FFFFFF;
+    --primary:       #E65100;
+    --primary-light: #FFF3E0;
+    --primary-mid:   #FF8F00;
+    --bg-page:       #FDF6F0;
+    --white:         #FFFFFF;
+    --text-dark:     #1A1A1A;
+    --text-mid:      #555555;
+    --text-light:    #999999;
+    --green:         #2D6A27;
+    --border:        #F0E8E0;
+    --shadow:        0 2px 20px rgba(230,81,0,0.08);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-body { background: var(--bg-page); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg-page);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
 
+/* ── Layout utama ── */
 .app-container {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1.6fr 1fr;
     gap: 20px;
     width: 100%;
     max-width: 1100px;
 }
 
-.instruction-card, .control-card {
+/* ── Kartu umum ── */
+.instruction-card,
+.control-card {
     background: var(--white);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
-.header-step h1 { font-size: 24px; margin-bottom: 25px; color: #333; }
-.step-content { display: flex; gap: 20px; }
+
+
+.header-step {
+    margin-bottom: 24px;
+}
+
+#step-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.3;
+}
+
+.step-content {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
 .step-text-zone { flex: 1.2; }
 .step-image-zone { flex: 1; }
-.recipe-img { width: 100%; border-radius: 15px; aspect-ratio: 4/3; object-fit: cover; }
 
-.info-label { display: flex; align-items: center; gap: 8px; color: #2D5A27; font-size: 18px; margin-bottom: 10px; }
-.info-detail { font-size: 16px; line-height: 1.6; color: #444; }
-.divider { margin: 20px 0; border: none; border-top: 1px solid #eee; }
-.ingredients-list { list-style: none; padding-left: 5px; }
-.ingredients-list li { margin-bottom: 5px; font-size: 16px; }
-
-
-.control-card { display: flex; flex-direction: column; align-items: center; gap: 25px; }
-.stepper { display: flex; align-items: center; gap: 8px; }
-.step-circle { width: 32px; height: 32px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
-.step-circle.active { background: var(--primary); color: white; }
-.step-line { width: 20px; height: 2px; background: #eee; }
-
-.nav-wrapper { display: flex; justify-content: space-between; width: 100%; }
-.nav-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; text-align: center; }
-.btn-round { background: var(--primary); border: none;  width: 45px; height: 45px; border-radius: 50%; cursor: pointer; margin-bottom: 5px; }
-.material-icons-round{color: #f0f0f0;}
-
-.timer-circle {
-    width: 180px;
-    height: 180px;
+/* Tombol Keluar di Pojok Kanan Atas */
+.btn-back {
+    background: #F5F5F5;
+    color: var(--text-mid);
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: conic-gradient(var(--primary) 0% 100%, #f0f0f0 100% 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border);
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
 }
-.time-text { font-size: 36px; font-weight: bold; color: white; z-index: 2; }
-.timer-circle::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; }
 
-.btn-outline { padding: 10px 20px; border: 2px solid var(--primary); background: transparent; color: var(--primary); border-radius: 10px; font-weight: bold; cursor: pointer; min-width: 100px; }
-.btn-outline:hover { background: var(--primary); color: white; }
-.guide-text { font-size: 11px; color: #888; text-align: center; }
+.btn-back:hover {
+    background: #FFEBEE;
+    color: #D32F2F;
+}
+
+.btn-back .material-icons-round {
+    font-size: 20px;
+}
+/* Gambar resep */
+.recipe-img {
+    width: 100%;
+    border-radius: 18px;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border: 3px solid var(--border);
+    transition: transform 0.3s ease;
+}
+.recipe-img:hover { transform: scale(1.02); }
+
+/* Info group */
+.info-group { margin-bottom: 4px; }
+
+.info-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+}
+
+.info-label .material-icons-round {
+    font-size: 18px;
+    color: var(--green);
+    background: #E8F5E9;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.info-detail {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-mid);
+}
+
+.divider {
+    margin: 20px 0;
+    border: none;
+    border-top: 1.5px dashed var(--border);
+}
+
+/* Daftar bahan */
+.ingredients-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ingredients-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-mid);
+    background: var(--primary-light);
+    padding: 8px 14px;
+    border-radius: 10px;
+    border-left: 3px solid var(--primary);
+}
+
+.ingredients-list li::before {
+    content: '✓';
+    font-weight: 800;
+    color: var(--primary);
+    font-size: 13px;
+    flex-shrink: 0;
+}
 
 
-@media (max-width: 850px) {
-    .app-container { grid-template-columns: 1fr; }
-    .step-content { flex-direction: column; }
+.control-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+/* ── Stepper ── */
+.stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+}
+
+.step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #F0EAE4;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    transition: background 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+    flex-shrink: 0;
+}
+
+.step-circle.active {
+    background: var(--primary);
+    color: #fff;
+    transform: scale(1.15);
+    box-shadow: 0 0 0 5px rgba(230,81,0,0.15);
+}
+
+.step-circle.done {
+    background: var(--primary-mid);
+    color: #fff;
+}
+
+.step-line {
+    flex: 1;
+    height: 3px;
+    background: #F0EAE4;
+    border-radius: 2px;
+    transition: background 0.4s;
+}
+
+.step-line.done {
+    background: var(--primary-mid);
+}
+
+/* ── Nav prev/next ── */
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn-round {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(230,81,0,0.25);
+}
+
+.btn-round:hover {
+    background: #BF360C;
+    transform: scale(1.08);
+    box-shadow: 0 6px 18px rgba(230,81,0,0.35);
+}
+
+.btn-round:active { transform: scale(0.96); }
+
+.btn-round .material-icons-round {
+    color: #fff;
+    font-size: 22px;
+}
+
+
+.timer-circle {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+}
+
+
+.timer-circle svg {
+    position: absolute;
+    top: 0; left: 0;
+    transform: rotate(-90deg);
+}
+
+
+.timer-circle::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: var(--white);
+    z-index: 1;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.time-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    z-index: 2;
+    letter-spacing: -1px;
+}
+
+
+.timer-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.btn-outline {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+#btn-start {
+    background: var(--primary);
+    color: #fff;
+    border: 2px solid var(--primary);
+    box-shadow: 0 4px 14px rgba(230,81,0,0.25);
+}
+
+#btn-start:hover {
+    background: #BF360C;
+    border-color: #BF360C;
+    box-shadow: 0 6px 18px rgba(230,81,0,0.35);
+}
+
+#btn-reset {
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--border);
+}
+
+#btn-reset:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+}
+
+.btn-outline:active { transform: scale(0.97); }
+
+
+/* ── Mobile Portrait ── */
+@media (max-width: 600px) {
+    body { padding: 12px; align-items: flex-start; }
+
+    .app-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .instruction-card,
+    .control-card {
+        padding: 20px 16px;
+        border-radius: 18px;
+    }
+
+    .step-content { flex-direction: column-reverse; }
+    .step-image-zone { width: 100%; }
+    .recipe-img { height: 180px; aspect-ratio: unset; }
+
+    .timer-circle { width: 140px; height: 140px; }
+    .timer-circle svg { width: 140px; height: 140px; }
+    .time-text { font-size: 26px; }
+}
+
+/* ── Mobile Landscape (orientasi miring) ── */
+@media (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding: 10px;
+        align-items: flex-start;
+        overflow-y: auto;          /* pastikan bisa scroll kalau perlu */
+    }
+
+    .app-container {
+        grid-template-columns: 1.4fr 1fr;   /* tetap side-by-side */
+        grid-template-rows: auto;
+        gap: 12px;
+        align-items: start;
+    }
+
+    .instruction-card,
+    .control-card {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    
+    .step-content {
+        flex-direction: row;
+        gap: 16px;
+    }
+
+    .step-image-zone {
+        flex: 0 0 140px;          
+
+    .recipe-img {
+        height: 120px;
+        aspect-ratio: unset;
+        border-radius: 12px;
+    }
+
+    #step-title { font-size: 16px; margin-bottom: 12px; }
+    .info-label  { font-size: 12px; margin-bottom: 6px; }
+    .info-detail { font-size: 13px; line-height: 1.5; }
+    .divider     { margin: 10px 0; }
+
+    .ingredients-list li { padding: 5px 10px; font-size: 12px; }
+
+    /* Kartu kanan: susun horizontal stepper + konten */
+    .control-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 10px 16px;
+        align-items: center;
+    }
+
+    /* Stepper span penuh di atas */
+    .stepper {
+        grid-column: 1 / -1;
+    }
+
+    /* Timer di kiri bawah */
+    .timer-circle {
+        width: 110px;
+        height: 110px;
+        justify-self: center;
+    }
+
+    .timer-circle svg {
+        width: 110px;
+        height: 110px;
+    }
+
+    .time-text { font-size: 22px; }
+
+    /* Nav di kanan */
+
+
+    .btn-round { width: 40px; height: 40px; }
+
+    /* Tombol aksi span penuh di baris bawah */
+    .timer-actions {
+        grid-column: 1 / -1;
+        gap: 8px;
+    }
+
+    .btn-outline {
+        padding: 9px 0;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+    }
 }
