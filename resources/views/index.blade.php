@@ -71,7 +71,7 @@
                     <div class="flex gap-[0.18rem]">
                         <div class="flex gap-[0.1rem]">
                             <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
+                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</a>
                         </div>
                         <div class="flex gap-[0.1rem]">
                             <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>

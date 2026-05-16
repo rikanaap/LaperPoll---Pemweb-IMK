@@ -59,14 +59,6 @@
             </div>
         </div>
     </form>
-    @if ($errors->any())
-    <div style="color:red; margin-bottom: 8px;">
-        @foreach ($errors->all() as $error)
-        <p>{{ $error }}</p>
-        @endforeach
-    </div>
-    @endif
-
 </div>
 @endsection
 
