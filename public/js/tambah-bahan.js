@@ -3,24 +3,38 @@
 (function () {
     'use strict';
 
+    // ── Parse data bahan dari blade ──────────────────────────────────────
     const bahanDataJson = document.getElementById('bahanData')?.textContent || '[]';
     let bahanList = [];
     try { bahanList = JSON.parse(bahanDataJson); } catch (e) { console.warn(e); }
 
-    const searchInput    = document.getElementById('searchBahan');
-    const dropdown       = document.getElementById('bahanDropdown');
-    const clearBtn       = document.getElementById('clearSearch');
-    const bahanIdInput   = document.getElementById('bahanId');
-    const jumlahAngka    = document.getElementById('jumlahAngka');
-    const satuanInput    = document.getElementById('satuanBahan');
-    const boughtDate     = document.getElementById('boughtDate');
-    const expiredDate    = document.getElementById('expiredDate');
-    const expiredSection = document.getElementById('expiredSection');
-    const expiredChips   = document.getElementById('expiredChips');
-    const form           = document.getElementById('formTambahBahan');
+    // ── Element refs ─────────────────────────────────────────────────────
+    const searchInput      = document.getElementById('searchBahan');
+    const dropdown         = document.getElementById('bahanDropdown');
+    const clearBtn         = document.getElementById('clearSearch');
+    const bahanIdInput     = document.getElementById('bahanId');
+    const jumlahAngka      = document.getElementById('jumlahAngka');
+    const boughtDateInput  = document.getElementById('boughtDate');
+    const expiredDateInput = document.getElementById('expiredDate');
+    const expiredChips     = document.getElementById('expiredChips');
+    const expiredHint      = document.getElementById('expiredHint');
+    const form             = document.getElementById('formTambahBahan');
+    const submitBtn        = document.getElementById('submitBtn');
+
+    // Satuan chips + custom input
+    const satuanChipBtns   = document.querySelectorAll('.tb-satuan-chip:not(.tb-satuan-other)');
+    const satuanOtherBtn   = document.getElementById('satuanOtherBtn');
+    const satuanCustomInput = document.getElementById('satuanCustom');
+
+    // Toggle tanggal
+    const dateTypeToggleBtns = document.querySelectorAll('.tb-date-toggle-btn');
+    const sectionBought  = document.getElementById('sectionBoughtDate');
+    const sectionExpired = document.getElementById('sectionExpiredDate');
 
     let selectedBahan     = null;
     let defaultExpiryDays = null;
+    let activeSatuan      = 'gram';   // default gram
+    let activeDateType    = 'bought'; // 'bought' | 'expired'
 
     // ── HIDDEN FIELD jumlah ───────────────────────────────────────────────
     let hiddenJumlah = document.getElementById('jumlahHidden');
@@ -29,18 +43,104 @@
         hiddenJumlah.type  = 'hidden';
         hiddenJumlah.name  = 'jumlah';
         hiddenJumlah.id    = 'jumlahHidden';
-        hiddenJumlah.value = '1';
+        hiddenJumlah.value = '100 gram';
         form?.appendChild(hiddenJumlah);
     }
-    if (satuanInput) satuanInput.removeAttribute('name');
 
     function syncJumlah() {
-        const angka  = jumlahAngka?.value || '1';
-        const satuan = satuanInput?.value.trim() || '';
-        hiddenJumlah.value = angka + (satuan ? ' ' + satuan : '');
+        const angka  = parseInt(jumlahAngka?.value) || 1;
+        const satuan = activeSatuan === '__custom__'
+            ? (satuanCustomInput?.value.trim() || '')
+            : activeSatuan;
+        hiddenJumlah.value = satuan ? `${angka} ${satuan}` : `${angka}`;
     }
 
-    // ── DROPDOWN ──────────────────────────────────────────────────────────
+    // ── SATUAN CHIPS ──────────────────────────────────────────────────────
+    satuanChipBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            satuanChipBtns.forEach(b => b.classList.remove('active'));
+            satuanOtherBtn.classList.remove('active');
+            btn.classList.add('active');
+            activeSatuan = btn.dataset.satuan;
+
+            satuanCustomInput.style.display = 'none';
+            satuanCustomInput.value = '';
+
+            syncJumlah();
+        });
+    });
+
+    satuanOtherBtn?.addEventListener('click', () => {
+        satuanChipBtns.forEach(b => b.classList.remove('active'));
+        satuanOtherBtn.classList.add('active');
+        activeSatuan = '__custom__';
+
+        satuanCustomInput.style.display = 'block';
+        satuanCustomInput.focus();
+        syncJumlah();
+    });
+
+    satuanCustomInput?.addEventListener('input', () => {
+        activeSatuan = '__custom__';
+        syncJumlah();
+    });
+
+    // ── COUNTER ───────────────────────────────────────────────────────────
+    document.getElementById('btnPlus')?.addEventListener('click', () => {
+        jumlahAngka.value = (parseInt(jumlahAngka.value) || 0) + getStep();
+        syncJumlah();
+    });
+
+    document.getElementById('btnMinus')?.addEventListener('click', () => {
+        const v = parseInt(jumlahAngka.value) || getStep();
+        jumlahAngka.value = Math.max(getStep(), v - getStep());
+        syncJumlah();
+    });
+
+    jumlahAngka?.addEventListener('input', () => {
+        if (!jumlahAngka.value || parseInt(jumlahAngka.value) < 1) jumlahAngka.value = 1;
+        syncJumlah();
+    });
+
+    // Step disesuaikan satuan: gram/ml → 50, lainnya → 1
+    function getStep() {
+        if (['gram', 'ml'].includes(activeSatuan)) return 50;
+        if (['kg', 'liter'].includes(activeSatuan)) return 1;
+        return 1;
+    }
+
+    // ── TOGGLE TIPE TANGGAL ───────────────────────────────────────────────
+    const dateModeInput = document.getElementById('dateMode');
+
+    dateTypeToggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            dateTypeToggleBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeDateType = btn.dataset.type;
+
+            // Sync hidden field date_mode sesuai value controller ('beli' / 'expired')
+            if (dateModeInput) dateModeInput.value = activeDateType === 'bought' ? 'beli' : 'expired';
+
+            if (activeDateType === 'bought') {
+                sectionBought.style.display  = '';
+                sectionExpired.style.display = 'none';
+                if (expiredDateInput) expiredDateInput.value = '';
+                if (boughtDateInput && !boughtDateInput.value) {
+                    boughtDateInput.value = new Date().toISOString().split('T')[0];
+                }
+            } else {
+                sectionBought.style.display  = 'none';
+                sectionExpired.style.display = '';
+                if (boughtDateInput) boughtDateInput.value = '';
+                if (selectedBahan?.has_expiry && defaultExpiryDays) {
+                    showExpiredChips(defaultExpiryDays);
+                    autoFillExpired(defaultExpiryDays);
+                }
+            }
+        });
+    });
+
+    // ── DROPDOWN SEARCH ───────────────────────────────────────────────────
     function closeDropdown() {
         if (dropdown) dropdown.style.display = 'none';
     }
@@ -49,19 +149,16 @@
         if (!dropdown) return;
         dropdown.innerHTML = '';
 
-        if (results.length > 0) {
-            results.forEach(b => {
-                const li = document.createElement('li');
-                li.textContent = b.nama;
-                li.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectBahan(b);
-                });
-                dropdown.appendChild(li);
+        results.forEach(b => {
+            const li = document.createElement('li');
+            li.textContent = b.nama;
+            li.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectBahan(b);
             });
-        }
+            dropdown.appendChild(li);
+        });
 
-        // Kalau tidak ada hasil, tampilkan opsi tambah bahan baru
         if (results.length === 0 && query) {
             const li = document.createElement('li');
             li.className = 'tb-add-new';
@@ -74,7 +171,7 @@
             dropdown.appendChild(li);
         }
 
-        dropdown.style.display = 'block';
+        dropdown.style.display = results.length > 0 || query ? 'block' : 'none';
     }
 
     function selectBahan(bahan) {
@@ -84,17 +181,56 @@
         if (clearBtn) clearBtn.style.display = 'block';
         closeDropdown();
 
+        // Kalau bahan punya expiry, otomatis tunjukkan info di bagian expired
         if (bahan.has_expiry && bahan.expired_expectancy_day) {
             defaultExpiryDays = bahan.expired_expectancy_day;
-            showExpiredSection(bahan.expired_expectancy_day);
+            if (expiredHint) {
+                expiredHint.textContent =
+                    `Rekomendasi: ${bahan.expired_expectancy_day} hari dari tanggal beli`;
+            }
+            // Kalau user sedang di tab expired, langsung tunjukkan chip
+            if (activeDateType === 'expired') {
+                showExpiredChips(bahan.expired_expectancy_day);
+                autoFillExpired(bahan.expired_expectancy_day);
+            }
         } else {
-            hideExpiredSection();
+            defaultExpiryDays = null;
+            if (expiredChips) { expiredChips.innerHTML = ''; expiredChips.style.display = 'none'; }
+            if (expiredHint) expiredHint.textContent = 'Isi tanggal kedaluwarsa bahan ini';
         }
+    }
+
+    // ── EXPIRED CHIPS ─────────────────────────────────────────────────────
+    function showExpiredChips(defaultDays) {
+        if (!expiredChips) return;
+        expiredChips.style.display = 'flex';
+        expiredChips.innerHTML = '';
+
+        const daysArr = Array.from(new Set([defaultDays, 7, 14, 30])).sort((a, b) => a - b);
+        daysArr.forEach(day => {
+            const chip = document.createElement('button');
+            chip.type      = 'button';
+            chip.className = 'tb-chip-btn' + (day === defaultDays ? ' active' : '');
+            chip.textContent = day === defaultDays ? `${day} hari (rekomendasi)` : `${day} hari`;
+            chip.addEventListener('click', () => {
+                expiredChips.querySelectorAll('.tb-chip-btn').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                autoFillExpired(day);
+            });
+            expiredChips.appendChild(chip);
+        });
+    }
+
+    function autoFillExpired(days) {
+        if (!expiredDateInput) return;
+        const base = new Date();
+        base.setHours(0, 0, 0, 0);
+        base.setDate(base.getDate() + days);
+        expiredDateInput.value = base.toISOString().split('T')[0];
     }
 
     // ── MODAL KONFIRMASI BAHAN BARU ───────────────────────────────────────
     function showKonfirmasiModal(nama) {
-        // Buat modal kalau belum ada
         let modal = document.getElementById('modalBahanBaru');
         if (!modal) {
             modal = document.createElement('div');
@@ -114,17 +250,15 @@
                 </div>
             `;
             document.body.appendChild(modal);
-
             document.getElementById('modalCancel').addEventListener('click', hideModal);
             document.getElementById('modalOverlay').addEventListener('click', hideModal);
         }
 
         document.getElementById('modalTitle').textContent = `Tambah "${nama}" sebagai bahan baru?`;
         document.getElementById('modalDesc').textContent =
-            'Bahan ini belum ada di database Laperpoll. Kamu tetap bisa menyimpannya ke kulkas, dan tim kami akan menambahkan informasi lengkapnya nanti.';
+            'Bahan ini belum ada di database LaperPoll. Kamu tetap bisa menyimpannya ke kulkas.';
 
         const confirmBtn = document.getElementById('modalConfirm');
-        // Hapus listener lama biar tidak double
         const newConfirm = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newConfirm, confirmBtn);
         newConfirm.addEventListener('click', () => simpanBahanBaru(nama));
@@ -137,10 +271,19 @@
         if (modal) modal.style.display = 'none';
     }
 
+    function showToast(msg, isError = false) {
+        const existing = document.querySelector('.tb-toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'tb-toast' + (isError ? ' toast-error' : '');
+        toast.innerHTML = `<span class="material-icons-round">${isError ? 'error_outline' : 'check_circle'}</span> ${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    }
+
     async function simpanBahanBaru(nama) {
         const confirmBtn = document.getElementById('modalConfirm');
-        confirmBtn.disabled     = true;
-        confirmBtn.textContent  = 'Menyimpan...';
+        if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = 'Menyimpan...'; }
 
         try {
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
@@ -153,71 +296,30 @@
                 body: JSON.stringify({ nama }),
             });
 
-            if (!res.ok) throw new Error('Gagal menyimpan');
+            if (!res.ok) {
+                const errText = await res.text();
+                console.error('Server error:', res.status, errText);
+                throw new Error(`Server error ${res.status}`);
+            }
 
             const data = await res.json();
             hideModal();
             selectBahan(data);
-
+            showToast(`"${data.nama}" berhasil ${data.status === 'created' ? 'ditambahkan ke database' : 'ditemukan'}`);
         } catch (err) {
             console.error(err);
-            alert('Gagal menyimpan bahan baru. Coba lagi.');
+            showToast('Gagal menyimpan bahan baru: ' + err.message, true);
         } finally {
-            if (confirmBtn) {
-                confirmBtn.disabled    = false;
-                confirmBtn.textContent = 'Ya, Tambahkan';
-            }
+            if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = 'Ya, Tambahkan'; }
         }
     }
 
-    // ── EXPIRED SECTION ───────────────────────────────────────────────────
-    function showExpiredSection(defaultDays) {
-        if (!expiredSection) return;
-        expiredSection.style.display = 'flex';
-        buildExpiredChips(defaultDays);
-        updateExpiredDateByDays(defaultDays);
-    }
-
-    function hideExpiredSection() {
-        if (expiredSection) expiredSection.style.display = 'none';
-        if (expiredDate)    expiredDate.value = '';
-        if (expiredChips)   expiredChips.innerHTML = '';
-    }
-
-    function buildExpiredChips(defaultDays) {
-        if (!expiredChips) return;
-        expiredChips.innerHTML = '';
-        const daysArray = Array.from(new Set([defaultDays, 7, 14, 30])).sort((a, b) => a - b);
-
-        daysArray.forEach(day => {
-            const chip = document.createElement('button');
-            chip.type      = 'button';
-            chip.className = 'tb-chip-btn' + (day === defaultDays ? ' active' : '');
-            chip.textContent = day === defaultDays ? `${day} hari (rekomendasi)` : `${day} hari`;
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('#expiredChips .tb-chip-btn').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                updateExpiredDateByDays(day);
-            });
-            expiredChips.appendChild(chip);
-        });
-    }
-
-    function updateExpiredDateByDays(days) {
-        if (!expiredDate || !boughtDate) return;
-        let base = boughtDate.value ? new Date(boughtDate.value + 'T00:00:00') : new Date();
-        if (isNaN(base)) base = new Date();
-        const newDate = new Date(base);
-        newDate.setDate(base.getDate() + days);
-        expiredDate.value = newDate.toISOString().split('T')[0];
-    }
-
-    // ── EVENTS ────────────────────────────────────────────────────────────
+    // ── SEARCH INPUT EVENTS ───────────────────────────────────────────────
     searchInput?.addEventListener('input', (e) => {
         const q = e.target.value.trim();
         if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
-        if (!q) { closeDropdown(); return; }
-        const filtered = bahanList.filter(b => b.nama.toLowerCase().includes(q.toLowerCase()));
+        if (!q) { closeDropdown(); bahanIdInput.value = ''; selectedBahan = null; return; }
+        const filtered = bahanList.filter(b => b.nama.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
         renderDropdown(filtered, q);
     });
 
@@ -226,9 +328,10 @@
         bahanIdInput.value = '';
         clearBtn.style.display = 'none';
         closeDropdown();
-        hideExpiredSection();
         selectedBahan     = null;
         defaultExpiryDays = null;
+        if (expiredChips)  { expiredChips.innerHTML = ''; expiredChips.style.display = 'none'; }
+        if (expiredHint)   expiredHint.textContent = 'Isi tanggal kedaluwarsa bahan ini';
         searchInput.focus();
     });
 
@@ -236,61 +339,55 @@
         if (!e.target.closest('.tb-search-wrap')) closeDropdown();
     });
 
-    document.getElementById('btnPlus')?.addEventListener('click', () => {
-        jumlahAngka.value = (parseInt(jumlahAngka.value) || 1) + 1;
-        syncJumlah();
-    });
-
-    document.getElementById('btnMinus')?.addEventListener('click', () => {
-        const v = parseInt(jumlahAngka.value) || 1;
-        if (v > 1) jumlahAngka.value = v - 1;
-        syncJumlah();
-    });
-
-    jumlahAngka?.addEventListener('input', () => {
-        if (!jumlahAngka.value || parseInt(jumlahAngka.value) < 1) jumlahAngka.value = 1;
-        syncJumlah();
-    });
-
-    satuanInput?.addEventListener('input', syncJumlah);
-
-    boughtDate?.addEventListener('change', () => {
-        if (!selectedBahan?.has_expiry) return;
-        const activeChip = document.querySelector('#expiredChips .tb-chip-btn.active');
-        const days = activeChip ? parseInt(activeChip.textContent) : defaultExpiryDays;
-        if (days) updateExpiredDateByDays(days);
-    });
-
+    // ── VALIDASI SUBMIT ───────────────────────────────────────────────────
     form?.addEventListener('submit', (e) => {
         if (!bahanIdInput.value) {
             e.preventDefault();
-            alert('Pilih nama bahan dari daftar, atau tambahkan sebagai bahan baru.');
             searchInput?.focus();
+            searchInput?.classList.add('tb-input-error');
+            alert('Pilih nama bahan dari daftar terlebih dahulu.');
             return;
         }
-        if (!satuanInput?.value.trim()) {
+
+        // Validasi tanggal sesuai tipe yang dipilih
+        if (activeDateType === 'bought' && !boughtDateInput?.value) {
             e.preventDefault();
-            alert('Isi satuan bahan (contoh: gram, butir, liter).');
-            satuanInput?.focus();
+            boughtDateInput?.focus();
+            alert('Isi tanggal beli.');
             return;
         }
+        if (activeDateType === 'expired' && !expiredDateInput?.value) {
+            e.preventDefault();
+            expiredDateInput?.focus();
+            alert('Isi tanggal expired.');
+            return;
+        }
+
+        // Validasi satuan custom
+        if (activeSatuan === '__custom__' && !satuanCustomInput?.value.trim()) {
+            e.preventDefault();
+            satuanCustomInput?.focus();
+            alert('Isi satuan bahan.');
+            return;
+        }
+
         syncJumlah();
     });
 
-    // Inisialisasi
-    if (boughtDate && !boughtDate.value) {
-        boughtDate.value = new Date().toISOString().split('T')[0];
+    // ── INIT ──────────────────────────────────────────────────────────────
+    if (boughtDateInput && !boughtDateInput.value) {
+        boughtDateInput.value = new Date().toISOString().split('T')[0];
     }
+
+    // Restore state kalau ada old() dari validasi server
     if (bahanIdInput?.value && searchInput?.value) {
         const found = bahanList.find(b => b.id == bahanIdInput.value);
         if (found) {
             selectedBahan = found;
-            if (found.has_expiry && found.expired_expectancy_day) {
-                defaultExpiryDays = found.expired_expectancy_day;
-                showExpiredSection(found.expired_expectancy_day);
-            }
+            defaultExpiryDays = found.expired_expectancy_day;
         }
     }
+
     syncJumlah();
 
 })();

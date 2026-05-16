@@ -34,7 +34,7 @@
                placeholder="Cari bahan di kulkas..." autocomplete="off">
     </div>
 
-    {{-- FILTER --}}
+    {{-- FILTER CHIPS --}}
     <div class="kd-filters">
         <button class="kd-chip active" data-filter="semua">Semua</button>
         <button class="kd-chip" data-filter="tersedia">Tersedia</button>
@@ -55,25 +55,25 @@
                     'hampir-habis' => 'Hampir Habis',
                     default        => 'Expired',
                 };
+                $iconStatus = match($item['status']) {
+                    'tersedia'     => 'check_circle',
+                    'hampir-habis' => 'schedule',
+                    default        => 'cancel',
+                };
+                $firstBeli = $item['pembelian'][0];
             @endphp
+
             <div class="kd-card"
                  data-status="{{ $item['status'] }}"
                  data-nama="{{ strtolower($item['nama']) }}">
 
-                {{-- Collapsed --}}
+                {{-- ── COLLAPSED ── --}}
                 <div class="kd-collapsed">
-                    <p class="kd-nama font-jakarta font-semibold">{{ $item['nama'] }}</p>
-                    <p class="kd-sub font-jakarta font-regular">
-                        {{ $item['pembelian'][0]['jumlah'] }}
-                        @if($item['pembelian'][0]['sisa_hari'] !== null)
-                            &nbsp;·&nbsp;
-                            {{ $item['pembelian'][0]['sisa_hari'] > 0
-                                ? $item['pembelian'][0]['sisa_hari'].' hari'
-                                : 'Habis' }}
-                        @endif
-                    </p>
-                    <div class="kd-card-footer">
-                        <span class="kd-badge {{ $bc }} font-jakarta font-medium">{{ $bl }}</span>
+                    <div class="kd-card-status-row">
+                        <span class="kd-badge {{ $bc }} font-jakarta font-medium">
+                            <span class="material-icons-round kd-badge-icon">{{ $iconStatus }}</span>
+                            {{ $bl }}
+                        </span>
                         @if(count($item['pembelian']) > 1)
                             <span class="kd-more font-jakarta">
                                 +{{ count($item['pembelian']) - 1 }}
@@ -81,13 +81,39 @@
                             </span>
                         @endif
                     </div>
+
+                    <p class="kd-nama font-jakarta font-semibold">{{ $item['nama'] }}</p>
+
+                    <div class="kd-info-pills">
+                        <span class="kd-pill">
+                            <span class="material-icons-round kd-pill-icon">scale</span>
+                            {{ $firstBeli['jumlah'] }}
+                        </span>
+                        @if($firstBeli['sisa_hari'] !== null)
+                            <span class="kd-pill {{ $firstBeli['sisa_hari'] <= 3 ? 'kd-pill-warn' : '' }}">
+                                <span class="material-icons-round kd-pill-icon">event_busy</span>
+                                @if($firstBeli['sisa_hari'] > 0)
+                                    {{ $firstBeli['sisa_hari'] }} hari lagi
+                                @else
+                                    Expired
+                                @endif
+                            </span>
+                        @endif
+                    </div>
                 </div>
 
-                {{-- Expanded --}}
+                {{-- ── EXPANDED ── --}}
                 <div class="kd-expanded">
                     <div class="kd-exp-header">
                         <p class="kd-nama font-jakarta font-semibold">{{ $item['nama'] }}</p>
                         <span class="material-icons-round kd-close">expand_less</span>
+                    </div>
+
+                    <div style="margin-bottom:0.25rem;">
+                        <span class="kd-badge {{ $bc }} font-jakarta font-medium">
+                            <span class="material-icons-round kd-badge-icon">{{ $iconStatus }}</span>
+                            {{ $bl }}
+                        </span>
                     </div>
 
                     @foreach($item['pembelian'] as $i => $beli)
@@ -103,24 +129,45 @@
                                     </button>
                                 </form>
                             </div>
-                            <p class="kd-beli-info font-jakarta font-regular">
-                                <span class="material-icons-round kd-iicon">scale</span>
-                                {{ $beli['jumlah'] }}
-                            </p>
-                            <p class="kd-beli-info font-jakarta font-regular">
-                                <span class="material-icons-round kd-iicon">shopping_bag</span>
-                                Dibeli: {{ $beli['bought_date'] ?? '-' }}
-                            </p>
-                            @if($item['has_expiry'] && $beli['expired_date'])
-                                <p class="kd-beli-info font-jakarta font-regular
-                                    {{ ($beli['sisa_hari'] !== null && $beli['sisa_hari'] <= 3) ? 'kd-warn-text' : '' }}">
-                                    <span class="material-icons-round kd-iicon">event_busy</span>
-                                    Expired: {{ $beli['expired_date'] }}
-                                    @if($beli['sisa_hari'] !== null)
-                                        ({{ $beli['sisa_hari'] > 0 ? $beli['sisa_hari'].' hari lagi' : 'sudah habis' }})
-                                    @endif
-                                </p>
-                            @endif
+
+                            <div class="kd-detail-grid">
+                                <div class="kd-detail-cell">
+                                    <span class="kd-detail-label font-jakarta">Jumlah</span>
+                                    <span class="kd-detail-val font-jakarta font-semibold">
+                                        <span class="material-icons-round kd-iicon">scale</span>
+                                        {{ $beli['jumlah'] }}
+                                    </span>
+                                </div>
+
+                                @if($beli['bought_date'])
+                                <div class="kd-detail-cell">
+                                    <span class="kd-detail-label font-jakarta">Tanggal Beli</span>
+                                    <span class="kd-detail-val font-jakarta font-semibold">
+                                        <span class="material-icons-round kd-iicon">shopping_bag</span>
+                                        {{ $beli['bought_date'] }}
+                                    </span>
+                                </div>
+                                @endif
+
+                                @if($item['has_expiry'] && $beli['expired_date'])
+                                <div class="kd-detail-cell {{ ($beli['sisa_hari'] !== null && $beli['sisa_hari'] <= 3) ? 'kd-detail-warn' : '' }}">
+                                    <span class="kd-detail-label font-jakarta">Expired</span>
+                                    <span class="kd-detail-val font-jakarta font-semibold">
+                                        <span class="material-icons-round kd-iicon">event_busy</span>
+                                        {{ $beli['expired_date'] }}
+                                    </span>
+                                </div>
+                                @if($beli['sisa_hari'] !== null)
+                                <div class="kd-detail-cell">
+                                    <span class="kd-detail-label font-jakarta">Sisa</span>
+                                    <span class="kd-detail-val font-jakarta font-semibold {{ $beli['sisa_hari'] <= 3 ? 'kd-warn-text' : '' }}">
+                                        <span class="material-icons-round kd-iicon">hourglass_bottom</span>
+                                        {{ $beli['sisa_hari'] > 0 ? $beli['sisa_hari'].' hari' : 'Sudah habis' }}
+                                    </span>
+                                </div>
+                                @endif
+                                @endif
+                            </div>
                         </div>
                         @if(!$loop->last)<hr class="kd-divider">@endif
                     @endforeach
@@ -128,7 +175,7 @@
 
             </div>
         @empty
-            <div class="kd-empty">
+            <div class="kd-empty" id="kdEmptyState">
                 <span class="material-icons-round kd-empty-icon">kitchen</span>
                 <p class="font-jakarta font-semibold kd-empty-title">Kulkas masih kosong</p>
                 <p class="font-jakarta font-regular kd-empty-sub">
@@ -138,7 +185,7 @@
         @endforelse
     </section>
 
-    {{-- REKOMENDASI RESEP --}}
+    {{-- REKOMENDASI RESEP — hanya muncul jika ada bahan di kulkas --}}
     @if(count($rekomendasi) > 0)
     <section class="kd-resep">
         <div class="kd-resep-header">
@@ -148,30 +195,45 @@
 
         <div class="kd-resep-list">
             @foreach($rekomendasi as $resep)
-                <div class="kd-resep-item {{ $resep['lengkap'] ? 'resep-lengkap' : '' }}"
-                     data-bahan-kurang="{{ implode(', ', $resep['bahan_kurang']->toArray()) }}">
+                @php
+                    // Siapkan data bahan_detail sebagai JSON untuk dikirim ke JS
+                    $bahanDetailJson  = json_encode($resep['bahan_detail']);
+                    $bahanKurangNames = $resep['bahan_kurang']->map(fn($b) => $b['nama'])->join(', ');
+                @endphp
+                <div class="kd-resep-item"
+                     data-resep-id="{{ $resep['id'] }}"
+                     data-resep-nama="{{ $resep['title'] }}"
+                     data-bahan-ids="{{ implode(',', $resep['bahan_ids']->toArray()) }}"
+                     data-bahan-detail='{{ $bahanDetailJson }}'
+                     data-lengkap="{{ $resep['lengkap'] ? '1' : '0' }}">
 
                     <div class="kd-resep-info">
                         <p class="kd-resep-nama font-jakarta font-medium">{{ $resep['title'] }}</p>
+
                         @if(!$resep['lengkap'])
                             <p class="kd-resep-kurang font-jakarta font-regular">
-                                Kurang: {{ implode(', ', $resep['bahan_kurang']->toArray()) }}
+                                Kurang: {{ $bahanKurangNames }}
+                            </p>
+                        @else
+                            <p class="kd-resep-lengkap-text font-jakarta font-regular">
+                                Semua bahan tersedia!
                             </p>
                         @endif
                     </div>
 
                     <div class="kd-resep-right">
-                        <span class="kd-resep-badge {{ $resep['lengkap'] ? 'badge-resep-lengkap' : 'badge-resep-partial' }} font-jakarta font-bold">
+                        <span class="kd-resep-badge
+                            {{ $resep['lengkap'] ? 'badge-resep-lengkap' : 'badge-resep-partial' }}
+                            font-jakarta font-bold">
                             {{ $resep['bahan_ada'] }}/{{ $resep['total_bahan'] }}
                             @if($resep['lengkap']) ✓ @endif
                         </span>
-                        @if(!$resep['lengkap'])
-                            <button class="kd-resep-detail-btn font-jakarta"
-                                    data-kurang="{{ implode(', ', $resep['bahan_kurang']->toArray()) }}"
-                                    data-nama="{{ $resep['title'] }}">
-                                <span class="material-icons-round">info_outline</span>
-                            </button>
-                        @endif
+                        <button class="kd-resep-detail-btn font-jakarta"
+                                title="{{ $resep['lengkap'] ? 'Masak sekarang' : 'Lihat bahan kurang' }}">
+                            <span class="material-icons-round">
+                                {{ $resep['lengkap'] ? 'restaurant' : 'info_outline' }}
+                            </span>
+                        </button>
                     </div>
 
                 </div>
@@ -182,22 +244,59 @@
 
 </main>
 
-{{-- MODAL BAHAN KURANG --}}
-<div id="modalBahanKurang" style="display:none;">
+{{-- ── MODAL BAHAN KURANG (resep belum lengkap) ── --}}
+<div id="modalBahanKurang" style="display:none; position:fixed; inset:0; z-index:999; align-items:center; justify-content:center; padding:1rem;">
     <div class="modal-overlay" id="modalKurangOverlay"></div>
     <div class="modal-box">
         <div class="modal-resep-icon">
             <span class="material-icons-round">shopping_cart</span>
         </div>
         <h3 class="modal-title font-jakarta font-bold" id="modalKurangTitle"></h3>
-        <p class="modal-desc font-jakarta font-regular">Bahan yang masih kurang:</p>
-        <ul class="modal-kurang-list" id="modalKurangList"></ul>
+        <p class="modal-desc font-jakarta font-regular">Cek takaran bahan yang dibutuhkan:</p>
+        <ul class="modal-bahan-detail-list" id="modalKurangList"></ul>
         <button class="modal-btn-confirm font-jakarta font-bold" id="modalKurangClose"
                 style="width:100%; margin-top:0.5rem;">
             Tutup
         </button>
     </div>
 </div>
+
+{{-- ── MODAL KONFIRMASI MASAK (resep sudah lengkap) ── --}}
+<div id="modalMasak" style="display:none; position:fixed; inset:0; z-index:999; align-items:center; justify-content:center; padding:1rem;">
+    <div class="modal-overlay" id="modalMasakOverlay"></div>
+    <div class="modal-box">
+        <div class="modal-resep-icon" style="background:#F0FDF4; border-radius:50%; padding:0.75rem;">
+            <span class="material-icons-round" style="color:#16A34A; font-size:2rem;">restaurant</span>
+        </div>
+        <h3 class="modal-title font-jakarta font-bold" id="modalMasakTitle"></h3>
+        <p class="modal-desc font-jakarta font-regular">
+            Semua bahan tersedia! Mau dimasak sekarang?<br>
+            <small style="color:#B87C5A;">Bahan yang dipakai otomatis dikurangi dari kulkas.</small>
+        </p>
+
+        <ul class="modal-bahan-detail-list" id="modalMasakBahanList"></ul>
+
+        <div class="modal-actions" style="width:100%; margin-top:0.5rem;">
+            <button class="modal-btn-cancel font-jakarta font-medium" id="modalMasakCancel">
+                Nanti dulu
+            </button>
+            <button class="modal-btn-confirm font-jakarta font-bold" id="modalMasakConfirm">
+                <span class="material-icons-round" style="font-size:1rem; vertical-align:middle;">check</span>
+                Yuk, masak!
+            </button>
+        </div>
+
+        <p class="modal-loading font-jakarta font-regular" id="modalMasakLoading"
+           style="display:none; font-size:0.8rem; color:#6B5B54; margin-top:0.5rem;">
+            Memproses...
+        </p>
+    </div>
+</div>
+
+<script>
+    const PAKAI_RESEP_URL = "{{ route('kulkas.pakai-resep') }}";
+    const CSRF_TOKEN      = "{{ csrf_token() }}";
+</script>
 @endsection
 
 @push('scripts')

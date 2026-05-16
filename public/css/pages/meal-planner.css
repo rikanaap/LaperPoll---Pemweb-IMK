@@ -1,4 +1,5 @@
-/* meal-planner.css */
+/* meal-planner.css — full version (existing + revisi) */
+
 .main-content {
     max-width: 100%;
     margin: 0 auto;
@@ -75,6 +76,7 @@
     border-radius: 0.5rem;
     color: var(--secondary-normal);
     transition: background 0.15s;
+    width: 100%;
 }
 .preset-btn:hover { background: var(--primary-normal); }
 
@@ -114,7 +116,7 @@
     transition: background 0.12s;
     line-height: 1.4;
 }
-.cal-cell:hover { background: var(--primary-normal); }
+.cal-cell:hover:not(.cal-disabled) { background: var(--primary-normal); }
 .cal-cell.cal-selected {
     background: #8C2A1A !important;
     color: white;
@@ -123,6 +125,20 @@
 }
 .cal-cell.cal-in-range { background: var(--orange-light); }
 .cal-empty { cursor: default; }
+
+/* REVISI 3: hari sebelum hari ini di-disable */
+.cal-cell.cal-disabled {
+    color: #D1C5C0 !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+    text-decoration: line-through;
+}
+/* Hari ini punya border khusus */
+.cal-cell.cal-today {
+    font-weight: 700;
+    border: 1.5px solid #E65100;
+    border-radius: 50%;
+}
 
 .date-range-footer {
     width: 100%;
@@ -134,6 +150,7 @@
     background: none; border: none; cursor: pointer;
     color: #8C2A1A; text-decoration: underline;
     padding: 0.25rem 0.5rem;
+    font-family: var(--font-jakarta);
 }
 
 /* ── KALORI TRACKER ── */
@@ -178,11 +195,14 @@
 }
 .kalori-bar-fill {
     height: 100%;
-    background: var(--orange-normal);
+    background: linear-gradient(90deg, #E65100, #FF8A50);
     border-radius: 2rem;
     transition: width 0.3s ease, background 0.3s ease;
 }
-.kalori-bar-fill.kalori-bar-over { background: var(--accent-normal); }
+/* REVISI 2: kalori melebihi → merah tua */
+.kalori-bar-fill.kalori-bar-over {
+    background: linear-gradient(90deg, #7F1D1D, #991B1B) !important;
+}
 
 .kalori-alert {
     align-items: center; gap: 0.4rem;
@@ -193,7 +213,7 @@
 }
 .kalori-alert-icon { font-size: 0.9rem !important; }
 
-/* ── MODAL ── */
+/* ── MODAL KALORI ── */
 .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.4);
@@ -205,10 +225,18 @@
     background: var(--orange-normal);
     border-radius: 1.5rem;
     padding: 1.5rem;
-    width: min(90vw, 280px);
+    width: min(90vw, 300px);
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
 }
-.modal-card h2 { font-size: 1rem; }
+/* REVISI 1: label tanggal di modal */
+.mp-modal-title { color: #fff; font-size: 1rem; }
+.mp-modal-date  {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.78rem;
+    margin-top: -0.5rem;
+}
+.mp-modal-unit  { color: rgba(255,255,255,0.9); align-self: center; }
+
 .modal-input-row { align-items: center; gap: 0.5rem; }
 .modal-input {
     flex: 1;
@@ -237,8 +265,10 @@
 }
 .modal-submit:hover { opacity: 0.85; }
 
-/* ── TAB HARI ── */
+/* ── TAB HARI (REVISI 4: dinamis dari JS) ── */
+.hari-tabs { display: flex; flex-direction: column; gap: 0.75rem; }
 .hari-tabs input[type="radio"] { display: none; }
+
 .hari-labels {
     gap: 0.4rem;
     flex-wrap: nowrap;
@@ -260,50 +290,199 @@
     align-items: center;
     min-width: 3.2rem;
     text-align: center;
+    flex-shrink: 0;
 }
 .hari-label:hover { background-color: var(--primary-normal); }
-.hari-label-day { font-size: 0.625rem; color: var(--primary-darker); }
+.hari-label-day  { font-size: 0.625rem; color: var(--primary-darker); }
 .hari-label-date { font-size: 0.9rem; color: var(--secondary-normal); }
 
-#tab-sen:checked ~ .hari-labels label[for="tab-sen"],
-#tab-sel:checked ~ .hari-labels label[for="tab-sel"],
-#tab-rab:checked ~ .hari-labels label[for="tab-rab"],
-#tab-kam:checked ~ .hari-labels label[for="tab-kam"],
-#tab-jum:checked ~ .hari-labels label[for="tab-jum"],
-#tab-sab:checked ~ .hari-labels label[for="tab-sab"],
-#tab-min:checked ~ .hari-labels label[for="tab-min"] {
+/* REVISI 4: label bulan kecil di bawah tanggal */
+.hari-label-bulan {
+    font-size: 0.58rem !important;
+    color: #B87C5A;
+    line-height: 1;
+}
+
+/* Hari ini highlight oranye */
+.hari-label-today .hari-label-date { color: #E65100; }
+.hari-label-today { border-color: #E65100; }
+
+/*
+ * Tab active state: karena radio + label sekarang dibuat dinamis oleh JS
+ * (dengan id tab-0, tab-1, ...), kita pakai CSS selector dinamis
+ * untuk 30 tab (cukup untuk 1 bulan penuh).
+ */
+.hari-tabs input[type="radio"]:checked + * + * + * + * + * + * + * + * + * + .hari-labels { display: flex; }
+
+/* Cara lebih reliable: JS menambahkan class .active ke label saat radio checked */
+/* Ini di-handle via JS di renderTabs() dengan event listener */
+
+/* Fallback CSS selector untuk tab-0 s/d tab-30 */
+.hari-tabs input[id="tab-0"]:checked  ~ .hari-labels label[for="tab-0"],
+.hari-tabs input[id="tab-1"]:checked  ~ .hari-labels label[for="tab-1"],
+.hari-tabs input[id="tab-2"]:checked  ~ .hari-labels label[for="tab-2"],
+.hari-tabs input[id="tab-3"]:checked  ~ .hari-labels label[for="tab-3"],
+.hari-tabs input[id="tab-4"]:checked  ~ .hari-labels label[for="tab-4"],
+.hari-tabs input[id="tab-5"]:checked  ~ .hari-labels label[for="tab-5"],
+.hari-tabs input[id="tab-6"]:checked  ~ .hari-labels label[for="tab-6"],
+.hari-tabs input[id="tab-7"]:checked  ~ .hari-labels label[for="tab-7"],
+.hari-tabs input[id="tab-8"]:checked  ~ .hari-labels label[for="tab-8"],
+.hari-tabs input[id="tab-9"]:checked  ~ .hari-labels label[for="tab-9"],
+.hari-tabs input[id="tab-10"]:checked ~ .hari-labels label[for="tab-10"],
+.hari-tabs input[id="tab-11"]:checked ~ .hari-labels label[for="tab-11"],
+.hari-tabs input[id="tab-12"]:checked ~ .hari-labels label[for="tab-12"],
+.hari-tabs input[id="tab-13"]:checked ~ .hari-labels label[for="tab-13"],
+.hari-tabs input[id="tab-14"]:checked ~ .hari-labels label[for="tab-14"],
+.hari-tabs input[id="tab-15"]:checked ~ .hari-labels label[for="tab-15"],
+.hari-tabs input[id="tab-16"]:checked ~ .hari-labels label[for="tab-16"],
+.hari-tabs input[id="tab-17"]:checked ~ .hari-labels label[for="tab-17"],
+.hari-tabs input[id="tab-18"]:checked ~ .hari-labels label[for="tab-18"],
+.hari-tabs input[id="tab-19"]:checked ~ .hari-labels label[for="tab-19"],
+.hari-tabs input[id="tab-20"]:checked ~ .hari-labels label[for="tab-20"],
+.hari-tabs input[id="tab-21"]:checked ~ .hari-labels label[for="tab-21"],
+.hari-tabs input[id="tab-22"]:checked ~ .hari-labels label[for="tab-22"],
+.hari-tabs input[id="tab-23"]:checked ~ .hari-labels label[for="tab-23"],
+.hari-tabs input[id="tab-24"]:checked ~ .hari-labels label[for="tab-24"],
+.hari-tabs input[id="tab-25"]:checked ~ .hari-labels label[for="tab-25"],
+.hari-tabs input[id="tab-26"]:checked ~ .hari-labels label[for="tab-26"],
+.hari-tabs input[id="tab-27"]:checked ~ .hari-labels label[for="tab-27"],
+.hari-tabs input[id="tab-28"]:checked ~ .hari-labels label[for="tab-28"],
+.hari-tabs input[id="tab-29"]:checked ~ .hari-labels label[for="tab-29"],
+.hari-tabs input[id="tab-30"]:checked ~ .hari-labels label[for="tab-30"] {
     background-color: #8C2A1A;
     color: #ffffff;
     border-color: #8C2A1A;
 }
-#tab-sen:checked ~ .hari-labels label[for="tab-sen"] .hari-label-day,
-#tab-sen:checked ~ .hari-labels label[for="tab-sen"] .hari-label-date,
-#tab-sel:checked ~ .hari-labels label[for="tab-sel"] .hari-label-day,
-#tab-sel:checked ~ .hari-labels label[for="tab-sel"] .hari-label-date,
-#tab-rab:checked ~ .hari-labels label[for="tab-rab"] .hari-label-day,
-#tab-rab:checked ~ .hari-labels label[for="tab-rab"] .hari-label-date,
-#tab-kam:checked ~ .hari-labels label[for="tab-kam"] .hari-label-day,
-#tab-kam:checked ~ .hari-labels label[for="tab-kam"] .hari-label-date,
-#tab-jum:checked ~ .hari-labels label[for="tab-jum"] .hari-label-day,
-#tab-jum:checked ~ .hari-labels label[for="tab-jum"] .hari-label-date,
-#tab-sab:checked ~ .hari-labels label[for="tab-sab"] .hari-label-day,
-#tab-sab:checked ~ .hari-labels label[for="tab-sab"] .hari-label-date,
-#tab-min:checked ~ .hari-labels label[for="tab-min"] .hari-label-day,
-#tab-min:checked ~ .hari-labels label[for="tab-min"] .hari-label-date { color: #ffffff; }
 
-.hari-content {
-    display: none;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 0.25rem;
-}
-#tab-sen:checked ~ #content-sen,
-#tab-sel:checked ~ #content-sel,
-#tab-rab:checked ~ #content-rab,
-#tab-kam:checked ~ #content-kam,
-#tab-jum:checked ~ #content-jum,
-#tab-sab:checked ~ #content-sab,
-#tab-min:checked ~ #content-min { display: flex; }
+/* Teks di dalam label yang aktif juga putih */
+.hari-tabs input[id="tab-0"]:checked  ~ .hari-labels label[for="tab-0"]  .hari-label-day,
+.hari-tabs input[id="tab-0"]:checked  ~ .hari-labels label[for="tab-0"]  .hari-label-date,
+.hari-tabs input[id="tab-0"]:checked  ~ .hari-labels label[for="tab-0"]  .hari-label-bulan,
+.hari-tabs input[id="tab-1"]:checked  ~ .hari-labels label[for="tab-1"]  .hari-label-day,
+.hari-tabs input[id="tab-1"]:checked  ~ .hari-labels label[for="tab-1"]  .hari-label-date,
+.hari-tabs input[id="tab-1"]:checked  ~ .hari-labels label[for="tab-1"]  .hari-label-bulan,
+.hari-tabs input[id="tab-2"]:checked  ~ .hari-labels label[for="tab-2"]  .hari-label-day,
+.hari-tabs input[id="tab-2"]:checked  ~ .hari-labels label[for="tab-2"]  .hari-label-date,
+.hari-tabs input[id="tab-2"]:checked  ~ .hari-labels label[for="tab-2"]  .hari-label-bulan,
+.hari-tabs input[id="tab-3"]:checked  ~ .hari-labels label[for="tab-3"]  .hari-label-day,
+.hari-tabs input[id="tab-3"]:checked  ~ .hari-labels label[for="tab-3"]  .hari-label-date,
+.hari-tabs input[id="tab-3"]:checked  ~ .hari-labels label[for="tab-3"]  .hari-label-bulan,
+.hari-tabs input[id="tab-4"]:checked  ~ .hari-labels label[for="tab-4"]  .hari-label-day,
+.hari-tabs input[id="tab-4"]:checked  ~ .hari-labels label[for="tab-4"]  .hari-label-date,
+.hari-tabs input[id="tab-4"]:checked  ~ .hari-labels label[for="tab-4"]  .hari-label-bulan,
+.hari-tabs input[id="tab-5"]:checked  ~ .hari-labels label[for="tab-5"]  .hari-label-day,
+.hari-tabs input[id="tab-5"]:checked  ~ .hari-labels label[for="tab-5"]  .hari-label-date,
+.hari-tabs input[id="tab-5"]:checked  ~ .hari-labels label[for="tab-5"]  .hari-label-bulan,
+.hari-tabs input[id="tab-6"]:checked  ~ .hari-labels label[for="tab-6"]  .hari-label-day,
+.hari-tabs input[id="tab-6"]:checked  ~ .hari-labels label[for="tab-6"]  .hari-label-date,
+.hari-tabs input[id="tab-6"]:checked  ~ .hari-labels label[for="tab-6"]  .hari-label-bulan,
+.hari-tabs input[id="tab-7"]:checked  ~ .hari-labels label[for="tab-7"]  .hari-label-day,
+.hari-tabs input[id="tab-7"]:checked  ~ .hari-labels label[for="tab-7"]  .hari-label-date,
+.hari-tabs input[id="tab-7"]:checked  ~ .hari-labels label[for="tab-7"]  .hari-label-bulan,
+.hari-tabs input[id="tab-8"]:checked  ~ .hari-labels label[for="tab-8"]  .hari-label-day,
+.hari-tabs input[id="tab-8"]:checked  ~ .hari-labels label[for="tab-8"]  .hari-label-date,
+.hari-tabs input[id="tab-8"]:checked  ~ .hari-labels label[for="tab-8"]  .hari-label-bulan,
+.hari-tabs input[id="tab-9"]:checked  ~ .hari-labels label[for="tab-9"]  .hari-label-day,
+.hari-tabs input[id="tab-9"]:checked  ~ .hari-labels label[for="tab-9"]  .hari-label-date,
+.hari-tabs input[id="tab-9"]:checked  ~ .hari-labels label[for="tab-9"]  .hari-label-bulan,
+.hari-tabs input[id="tab-10"]:checked ~ .hari-labels label[for="tab-10"] .hari-label-day,
+.hari-tabs input[id="tab-10"]:checked ~ .hari-labels label[for="tab-10"] .hari-label-date,
+.hari-tabs input[id="tab-10"]:checked ~ .hari-labels label[for="tab-10"] .hari-label-bulan,
+.hari-tabs input[id="tab-11"]:checked ~ .hari-labels label[for="tab-11"] .hari-label-day,
+.hari-tabs input[id="tab-11"]:checked ~ .hari-labels label[for="tab-11"] .hari-label-date,
+.hari-tabs input[id="tab-11"]:checked ~ .hari-labels label[for="tab-11"] .hari-label-bulan,
+.hari-tabs input[id="tab-12"]:checked ~ .hari-labels label[for="tab-12"] .hari-label-day,
+.hari-tabs input[id="tab-12"]:checked ~ .hari-labels label[for="tab-12"] .hari-label-date,
+.hari-tabs input[id="tab-12"]:checked ~ .hari-labels label[for="tab-12"] .hari-label-bulan,
+.hari-tabs input[id="tab-13"]:checked ~ .hari-labels label[for="tab-13"] .hari-label-day,
+.hari-tabs input[id="tab-13"]:checked ~ .hari-labels label[for="tab-13"] .hari-label-date,
+.hari-tabs input[id="tab-13"]:checked ~ .hari-labels label[for="tab-13"] .hari-label-bulan,
+.hari-tabs input[id="tab-14"]:checked ~ .hari-labels label[for="tab-14"] .hari-label-day,
+.hari-tabs input[id="tab-14"]:checked ~ .hari-labels label[for="tab-14"] .hari-label-date,
+.hari-tabs input[id="tab-14"]:checked ~ .hari-labels label[for="tab-14"] .hari-label-bulan,
+.hari-tabs input[id="tab-15"]:checked ~ .hari-labels label[for="tab-15"] .hari-label-day,
+.hari-tabs input[id="tab-15"]:checked ~ .hari-labels label[for="tab-15"] .hari-label-date,
+.hari-tabs input[id="tab-15"]:checked ~ .hari-labels label[for="tab-15"] .hari-label-bulan,
+.hari-tabs input[id="tab-16"]:checked ~ .hari-labels label[for="tab-16"] .hari-label-day,
+.hari-tabs input[id="tab-16"]:checked ~ .hari-labels label[for="tab-16"] .hari-label-date,
+.hari-tabs input[id="tab-16"]:checked ~ .hari-labels label[for="tab-16"] .hari-label-bulan,
+.hari-tabs input[id="tab-17"]:checked ~ .hari-labels label[for="tab-17"] .hari-label-day,
+.hari-tabs input[id="tab-17"]:checked ~ .hari-labels label[for="tab-17"] .hari-label-date,
+.hari-tabs input[id="tab-17"]:checked ~ .hari-labels label[for="tab-17"] .hari-label-bulan,
+.hari-tabs input[id="tab-18"]:checked ~ .hari-labels label[for="tab-18"] .hari-label-day,
+.hari-tabs input[id="tab-18"]:checked ~ .hari-labels label[for="tab-18"] .hari-label-date,
+.hari-tabs input[id="tab-18"]:checked ~ .hari-labels label[for="tab-18"] .hari-label-bulan,
+.hari-tabs input[id="tab-19"]:checked ~ .hari-labels label[for="tab-19"] .hari-label-day,
+.hari-tabs input[id="tab-19"]:checked ~ .hari-labels label[for="tab-19"] .hari-label-date,
+.hari-tabs input[id="tab-19"]:checked ~ .hari-labels label[for="tab-19"] .hari-label-bulan,
+.hari-tabs input[id="tab-20"]:checked ~ .hari-labels label[for="tab-20"] .hari-label-day,
+.hari-tabs input[id="tab-20"]:checked ~ .hari-labels label[for="tab-20"] .hari-label-date,
+.hari-tabs input[id="tab-20"]:checked ~ .hari-labels label[for="tab-20"] .hari-label-bulan,
+.hari-tabs input[id="tab-21"]:checked ~ .hari-labels label[for="tab-21"] .hari-label-day,
+.hari-tabs input[id="tab-21"]:checked ~ .hari-labels label[for="tab-21"] .hari-label-date,
+.hari-tabs input[id="tab-21"]:checked ~ .hari-labels label[for="tab-21"] .hari-label-bulan,
+.hari-tabs input[id="tab-22"]:checked ~ .hari-labels label[for="tab-22"] .hari-label-day,
+.hari-tabs input[id="tab-22"]:checked ~ .hari-labels label[for="tab-22"] .hari-label-date,
+.hari-tabs input[id="tab-22"]:checked ~ .hari-labels label[for="tab-22"] .hari-label-bulan,
+.hari-tabs input[id="tab-23"]:checked ~ .hari-labels label[for="tab-23"] .hari-label-day,
+.hari-tabs input[id="tab-23"]:checked ~ .hari-labels label[for="tab-23"] .hari-label-date,
+.hari-tabs input[id="tab-23"]:checked ~ .hari-labels label[for="tab-23"] .hari-label-bulan,
+.hari-tabs input[id="tab-24"]:checked ~ .hari-labels label[for="tab-24"] .hari-label-day,
+.hari-tabs input[id="tab-24"]:checked ~ .hari-labels label[for="tab-24"] .hari-label-date,
+.hari-tabs input[id="tab-24"]:checked ~ .hari-labels label[for="tab-24"] .hari-label-bulan,
+.hari-tabs input[id="tab-25"]:checked ~ .hari-labels label[for="tab-25"] .hari-label-day,
+.hari-tabs input[id="tab-25"]:checked ~ .hari-labels label[for="tab-25"] .hari-label-date,
+.hari-tabs input[id="tab-25"]:checked ~ .hari-labels label[for="tab-25"] .hari-label-bulan,
+.hari-tabs input[id="tab-26"]:checked ~ .hari-labels label[for="tab-26"] .hari-label-day,
+.hari-tabs input[id="tab-26"]:checked ~ .hari-labels label[for="tab-26"] .hari-label-date,
+.hari-tabs input[id="tab-26"]:checked ~ .hari-labels label[for="tab-26"] .hari-label-bulan,
+.hari-tabs input[id="tab-27"]:checked ~ .hari-labels label[for="tab-27"] .hari-label-day,
+.hari-tabs input[id="tab-27"]:checked ~ .hari-labels label[for="tab-27"] .hari-label-date,
+.hari-tabs input[id="tab-27"]:checked ~ .hari-labels label[for="tab-27"] .hari-label-bulan,
+.hari-tabs input[id="tab-28"]:checked ~ .hari-labels label[for="tab-28"] .hari-label-day,
+.hari-tabs input[id="tab-28"]:checked ~ .hari-labels label[for="tab-28"] .hari-label-date,
+.hari-tabs input[id="tab-28"]:checked ~ .hari-labels label[for="tab-28"] .hari-label-bulan,
+.hari-tabs input[id="tab-29"]:checked ~ .hari-labels label[for="tab-29"] .hari-label-day,
+.hari-tabs input[id="tab-29"]:checked ~ .hari-labels label[for="tab-29"] .hari-label-date,
+.hari-tabs input[id="tab-29"]:checked ~ .hari-labels label[for="tab-29"] .hari-label-bulan,
+.hari-tabs input[id="tab-30"]:checked ~ .hari-labels label[for="tab-30"] .hari-label-day,
+.hari-tabs input[id="tab-30"]:checked ~ .hari-labels label[for="tab-30"] .hari-label-date,
+.hari-tabs input[id="tab-30"]:checked ~ .hari-labels label[for="tab-30"] .hari-label-bulan { color: #ffffff; }
+
+/* Content: semua tersembunyi, yang aktif ditampilkan via CSS sibling selector */
+.hari-content { display: none; flex-direction: column; gap: 0.75rem; margin-top: 0.25rem; }
+
+.hari-tabs input[id="tab-0"]:checked  ~ #content-0,
+.hari-tabs input[id="tab-1"]:checked  ~ #content-1,
+.hari-tabs input[id="tab-2"]:checked  ~ #content-2,
+.hari-tabs input[id="tab-3"]:checked  ~ #content-3,
+.hari-tabs input[id="tab-4"]:checked  ~ #content-4,
+.hari-tabs input[id="tab-5"]:checked  ~ #content-5,
+.hari-tabs input[id="tab-6"]:checked  ~ #content-6,
+.hari-tabs input[id="tab-7"]:checked  ~ #content-7,
+.hari-tabs input[id="tab-8"]:checked  ~ #content-8,
+.hari-tabs input[id="tab-9"]:checked  ~ #content-9,
+.hari-tabs input[id="tab-10"]:checked ~ #content-10,
+.hari-tabs input[id="tab-11"]:checked ~ #content-11,
+.hari-tabs input[id="tab-12"]:checked ~ #content-12,
+.hari-tabs input[id="tab-13"]:checked ~ #content-13,
+.hari-tabs input[id="tab-14"]:checked ~ #content-14,
+.hari-tabs input[id="tab-15"]:checked ~ #content-15,
+.hari-tabs input[id="tab-16"]:checked ~ #content-16,
+.hari-tabs input[id="tab-17"]:checked ~ #content-17,
+.hari-tabs input[id="tab-18"]:checked ~ #content-18,
+.hari-tabs input[id="tab-19"]:checked ~ #content-19,
+.hari-tabs input[id="tab-20"]:checked ~ #content-20,
+.hari-tabs input[id="tab-21"]:checked ~ #content-21,
+.hari-tabs input[id="tab-22"]:checked ~ #content-22,
+.hari-tabs input[id="tab-23"]:checked ~ #content-23,
+.hari-tabs input[id="tab-24"]:checked ~ #content-24,
+.hari-tabs input[id="tab-25"]:checked ~ #content-25,
+.hari-tabs input[id="tab-26"]:checked ~ #content-26,
+.hari-tabs input[id="tab-27"]:checked ~ #content-27,
+.hari-tabs input[id="tab-28"]:checked ~ #content-28,
+.hari-tabs input[id="tab-29"]:checked ~ #content-29,
+.hari-tabs input[id="tab-30"]:checked ~ #content-30 { display: flex; }
 
 /* ── MEAL SECTION ── */
 .meal-section {
@@ -317,7 +496,7 @@
 .meal-icon { font-size: 1rem; color: var(--orange-normal); }
 .meal-label { flex: 1; color: var(--orange-normal); letter-spacing: 0.05em; }
 .meal-action {
-    color: #8C2A1A; text-decoration: none; font-size: 0.7rem;
+    color: #8C2A1A; font-size: 0.7rem;
     transition: opacity 0.15s; background: none; border: none;
     cursor: pointer; font-family: var(--font-jakarta); font-weight: 700;
     letter-spacing: 0.03em;
@@ -327,6 +506,7 @@
 .meal-img-placeholder {
     width: 3.5rem; height: 3.5rem; border-radius: 0.75rem;
     background-color: var(--primary-normal); flex-shrink: 0;
+    overflow: hidden;
 }
 .meal-info { justify-content: center; }
 
@@ -338,6 +518,44 @@
 .slot-kosong:hover { border-color: #8C2A1A; background-color: var(--orange-light); }
 .slot-kosong-icon { font-size: 1.5rem; color: var(--primary-darker); }
 .slot-kosong:hover .slot-kosong-icon { color: #8C2A1A; }
+
+/* ── LOADING ── */
+.mp-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    color: #B87C5A;
+}
+.mp-loading.hidden { display: none; }
+.mp-loading-icon {
+    font-size: 1.5rem !important;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── TOAST ── */
+.mp-toast {
+    position: fixed;
+    bottom: 5rem; left: 50%; transform: translateX(-50%);
+    background: #1F2937; color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.875rem;
+    font-size: 0.875rem;
+    font-family: var(--font-jakarta, sans-serif);
+    z-index: 1000;
+    display: flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    animation: toastIn 0.25s ease;
+}
+.mp-toast.mp-toast-error { background: #DC2626; }
+.mp-toast .material-icons-round { font-size: 1rem !important; }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
 
 /* ── GENERATE BUTTON ── */
 .generate-btn {
@@ -352,9 +570,11 @@
     justify-content: center; align-items: center;
     box-shadow: 0 4px 16px rgba(236, 68, 72, 0.35);
     transition: background-color 0.2s ease;
+    border: none; cursor: pointer;
+    font-family: var(--font-jakarta);
 }
 .generate-btn:hover { background-color: var(--accent-normal-hover); }
-.generate-btn span.material-icons-round { font-size: 1.3rem; }
+.generate-btn .material-icons-round { font-size: 1.3rem; }
 
 /* ── TABLET (≥768px) ── */
 @media (min-width: 768px) {
@@ -363,16 +583,42 @@
     .date-range-dropdown { min-width: 22rem; }
     .kalori-tracker { padding: 1.25rem 1.5rem; }
 
-    #tab-sen:checked ~ #content-sen,
-    #tab-sel:checked ~ #content-sel,
-    #tab-rab:checked ~ #content-rab,
-    #tab-kam:checked ~ #content-kam,
-    #tab-jum:checked ~ #content-jum,
-    #tab-sab:checked ~ #content-sab,
-    #tab-min:checked ~ #content-min {
+    /* Tab content di tablet: 3 kolom */
+    .hari-tabs input[id="tab-0"]:checked  ~ #content-0,
+    .hari-tabs input[id="tab-1"]:checked  ~ #content-1,
+    .hari-tabs input[id="tab-2"]:checked  ~ #content-2,
+    .hari-tabs input[id="tab-3"]:checked  ~ #content-3,
+    .hari-tabs input[id="tab-4"]:checked  ~ #content-4,
+    .hari-tabs input[id="tab-5"]:checked  ~ #content-5,
+    .hari-tabs input[id="tab-6"]:checked  ~ #content-6,
+    .hari-tabs input[id="tab-7"]:checked  ~ #content-7,
+    .hari-tabs input[id="tab-8"]:checked  ~ #content-8,
+    .hari-tabs input[id="tab-9"]:checked  ~ #content-9,
+    .hari-tabs input[id="tab-10"]:checked ~ #content-10,
+    .hari-tabs input[id="tab-11"]:checked ~ #content-11,
+    .hari-tabs input[id="tab-12"]:checked ~ #content-12,
+    .hari-tabs input[id="tab-13"]:checked ~ #content-13,
+    .hari-tabs input[id="tab-14"]:checked ~ #content-14,
+    .hari-tabs input[id="tab-15"]:checked ~ #content-15,
+    .hari-tabs input[id="tab-16"]:checked ~ #content-16,
+    .hari-tabs input[id="tab-17"]:checked ~ #content-17,
+    .hari-tabs input[id="tab-18"]:checked ~ #content-18,
+    .hari-tabs input[id="tab-19"]:checked ~ #content-19,
+    .hari-tabs input[id="tab-20"]:checked ~ #content-20,
+    .hari-tabs input[id="tab-21"]:checked ~ #content-21,
+    .hari-tabs input[id="tab-22"]:checked ~ #content-22,
+    .hari-tabs input[id="tab-23"]:checked ~ #content-23,
+    .hari-tabs input[id="tab-24"]:checked ~ #content-24,
+    .hari-tabs input[id="tab-25"]:checked ~ #content-25,
+    .hari-tabs input[id="tab-26"]:checked ~ #content-26,
+    .hari-tabs input[id="tab-27"]:checked ~ #content-27,
+    .hari-tabs input[id="tab-28"]:checked ~ #content-28,
+    .hari-tabs input[id="tab-29"]:checked ~ #content-29,
+    .hari-tabs input[id="tab-30"]:checked ~ #content-30 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
     }
+
     .generate-btn { max-width: 480px; }
 }

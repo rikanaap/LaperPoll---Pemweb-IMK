@@ -31,6 +31,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.75rem;
+    height: fit-content;
 }
 
 /* CARD HORIZONTAL */
@@ -46,6 +47,7 @@
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
     text-decoration: none;
     gap: 0.5rem;
+    height: fit-content;
 }
 
 .resep:hover {
