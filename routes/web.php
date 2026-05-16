@@ -17,6 +17,7 @@ use App\Http\Controllers\MainMenu;
 use App\Http\Controllers\Api\ResepApiController;
 use App\Http\Controllers\Api\SwipeResepApiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DetailResepController;
 use App\Http\Controllers\FavoriteController;
 
 // Harmoni -> Link Landing Page
@@ -48,19 +49,19 @@ Route::prefix('auth')->name('auth.')->group(function () {
 // Harmoni -> Link Main Menu
 Route::get('/main-menu', [MainMenu::class, 'index'])
     ->name('main-menu.index');
-Route::get('/main-menu?m=favorit', [MainMenu::class, 'favoritPengguna'])
-    ->name('main-menu.favorit');
-Route::get('/main-menu?m=hari', [MainMenu::class, 'resepHariIni'])
-    ->name('main-menu.hari-ini');
+    
+Route::get('/detail-resep/{id}', [DetailResepController::class, 'showwDetail'])
+    ->name('detail_resep.index');
 
-Route::get('/detail-resep', function () {
-    return view('pages.detail_resep.detail_resep');
-});
 Route::get('/timer-resep', function () {
     return view('pages.timer_resep.timer_resep');
 });
 Route::get('/ulasan', function () {
     return view('pages.ulasan.ulasan');
+});
+
+Route::get('/favorit', function () {
+    return view('pages.favorit.index'); 
 });
 // Ikbal -> link halaman pencarian resep
 Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])
