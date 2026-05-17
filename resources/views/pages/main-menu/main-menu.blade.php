@@ -4,17 +4,19 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/pages/main-menu.css') }}">
-<link rel="stylesheet" href="{{ asset('css/components/resep-card.css') }}">
-<link rel="stylesheet" href="{{ asset('css/components/chips.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/resep-card-main-menu.css') }}">
 @endpush
 
 @section('content')
-@include('components.navbar')
+@php
+$currentFilters = (array) request()->query('filter', []);
+@endphp
+<x-navbar></x-navbar>
 <div class="desktop-menus">
     <section class="resep-menus">
         <main class="main-content flex flex-col">
             @foreach ($reseps as $resep )
-            <x-resep-card :resep="$resep" />
+            <x-resep-card-main-menu :resep="$resep" />
             @endforeach
         </main>
     </section>
@@ -23,43 +25,32 @@
             <span class="material-icons-round">search</span>
             <input id="search-filter" class="input-data text-body font-jakarta font-semibold" type="text" placeholder="Telusuri filter yang ada">
         </div>
-        <div class="bottom-filters-used" style="display: none;">
+        @if (count($currentFilters) > 0)
+        <div class="bottom-filters-used">
             <p class="font-jakarta text-body font-semibold text-secondary-normal">Filter saat ini:</p>
         </div>
+        @endif
         <div class="bottom-filters">
-            <div class="bottom-filter">
-                <p class="font-jakarta text-body font-regular">Makanan</p>
-            </div>
-            <div class="bottom-filter">
-                <p class="font-jakarta text-body font-regular">Minuman</p>
-            </div>
-            <div class="bottom-filter">
-                <p class="font-jakarta text-body font-regular">Dessert</p>
-            </div>
-            <div class="bottom-filter">
-                <p class="font-jakarta text-body font-regular">Cemilan</p>
-            </div>
-            <div class="bottom-filter">
-                <p class="font-jakarta text-body font-regular">Tradisional</p>
-            </div>
-            <div class="bottom-filter">
-                <p class="font-jakarta text-body font-regular">Modern</p>
-            </div>
-            <div class="bottom-filter">
-                <p class="font-jakarta text-body font-regular">Sarapan</p>
-            </div>
-            <div class="bottom-filter">
-                <p class="font-jakarta text-body font-regular">Makan Malam</p>
-            </div>
+            @foreach ($master_filters as $filter)
+            @php
+            $updatedFilters = array_merge($currentFilters, [$filter->id]);
+            $toggleUrl = request()->fullUrlWithQuery(['filter' => $updatedFilters]);
+            @endphp
+            <a href="{{ $toggleUrl }}">
+                <div class="bottom-filter">
+                    <p class="font-jakarta text-body font-regular">{{ $filter->title }}</p>
+                </div>
+            </a>
+            @endforeach
         </div>
-        <div class="bottom-text">
+        @if (count($currentFilters) < 1)
+            <div class="bottom-text">
             <p class="font-jakarta text-body font-semibold">Tekan untuk memfilter hasil!</p>
-        </div>
-    </section>
+</div>
+@endif
+</section>
 </div>
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/global.js') }}"></script>
-<script src="{{ asset('js/pages/main-menu.js') }}" type="module"></script>
 @endpush

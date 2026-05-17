@@ -15,6 +15,7 @@ use App\Http\Controllers\MainMenu;
 use App\Http\Controllers\Api\ResepApiController;
 use App\Http\Controllers\Api\SwipeResepApiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DetailResepController;
 use App\Http\Controllers\FavoriteController;
 
 // ─── PUBLIC ─────────────────────────────────────────────────────────────────
@@ -32,6 +33,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('/logout',     [AuthController::class, 'logout'])    ->name('auth.logout');
 });
 
+<<<<<<< HEAD
 Route::get('/main-menu',         [MainMenu::class, 'index'])          ->name('main-menu.index');
 Route::get('/main-menu?m=favorit',[MainMenu::class, 'favoritPengguna'])->name('main-menu.favorit');
 Route::get('/main-menu?m=hari',  [MainMenu::class, 'resepHariIni'])  ->name('main-menu.hari-ini');
@@ -39,6 +41,30 @@ Route::get('/main-menu?m=hari',  [MainMenu::class, 'resepHariIni'])  ->name('mai
 Route::get('/detail-resep', fn() => view('pages.detail_resep.detail_resep'))->name('detail.resep');
 Route::get('/timer-resep',  fn() => view('pages.timer_resep.timer_resep'));
 Route::get('/ulasan',       fn() => view('pages.ulasan.ulasan'));
+=======
+// Harmoni -> Link Main Menu
+Route::get('/main-menu', [MainMenu::class, 'index'])
+    ->name('main-menu.index');
+    
+Route::get('/detail-resep/{id}', [DetailResepController::class, 'showwDetail'])
+    ->name('detail_resep.index');
+
+Route::get('/timer-resep', function () {
+    return view('pages.timer_resep.timer_resep');
+});
+Route::get('/ulasan', function () {
+    return view('pages.ulasan.ulasan');
+});
+
+Route::get('/favorit', function () {
+    return view('pages.favorit.index'); 
+});
+// Ikbal -> link halaman pencarian resep
+Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])
+    ->name('pencarian.resep');
+Route::get('/filter-resep', [PencarianResepController::class, 'filter'])
+    ->name('filter.resep');
+>>>>>>> e724ff3cf4132fa2f401e4e9366a0a92efbadc2f
 
 Route::get('/pencarian-resep',    [PencarianResepController::class, 'index'])    ->name('pencarian.resep');
 Route::get('/filter-resep',       [PencarianResepController::class, 'filter'])   ->name('filter.resep');
