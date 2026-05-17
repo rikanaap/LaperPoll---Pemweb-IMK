@@ -40,6 +40,7 @@ Route::get('/detail-resep', fn() => view('pages.detail_resep.detail_resep'))->na
 Route::get('/timer-resep',  fn() => view('pages.timer_resep.timer_resep'));
 Route::get('/ulasan',       fn() => view('pages.ulasan.ulasan'));
 
+
 // Ikbal -> link halaman pencarian resep
 Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])->name('pencarian.resep');
 
