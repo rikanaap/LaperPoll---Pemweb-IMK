@@ -9,41 +9,53 @@ class ResepResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $matchPercentage = 0;
-        if ($this->total_bahan_count > 0) {
-            $matchPercentage = round(($this->matched_bahan_count / $this->total_bahan_count) * 100);
+        $bahanParam = $request->query('bahan') ?? $request->input('bahan');
+        
+        $inputBahanIds = $bahanParam ? collect(explode(',', $bahanParam))
+            ->map(fn($id) => (int) trim($id))
+            ->filter()
+            ->toArray() : [];
+
+        $isSearchingByBahan = !empty($inputBahanIds);
+
+        $totalBahan = (int) ($this->bahans_count ?? ($this->relationLoaded('bahans') ? $this->bahans->count() : 0));
+        
+        $matchedBahan = isset($this->matched_bahan_count) 
+            ? (int) $this->matched_bahan_count 
+            : ($this->relationLoaded('bahans') ? $this->bahans->whereIn('id', $inputBahanIds)->count() : 0);
+            
+        $matchPercentage = $totalBahan > 0 ? round(($matchedBahan / $totalBahan) * 100) : 0;
+
+        $missingBahans = [];
+        if ($isSearchingByBahan && $this->relationLoaded('bahans')) {
+            $missingBahans = $this->bahans->filter(function ($bahan) use ($inputBahanIds) {
+                return !in_array($bahan->id, $inputBahanIds);
+            })->map(function ($bahan) {
+                return [
+                    'id' => $bahan->id,
+                    'nama' => $bahan->nama,
+                ];
+            })->values()->all();
         }
 
-        $selectedBahanIds = collect($request->input('bahan_ids', []))
-            ->map(fn ($id) => (int) $id)
-            ->toArray();
-
-        $missingBahans = $this->bahans
-            ->whereNotIn('id', $selectedBahanIds)
-            ->values()
-            ->map(fn ($bahan) => [
-                'id' => $bahan->id,
-                'nama' => $bahan->nama,
-            ]);
-
         return [
-            'id'                  => $this->id,
-            'title'               => $this->title,
-            'description'         => $this->description,
-            'thumbnail'           => $this->thumbnail ? asset('storage/' . $this->thumbnail) : null,
-            'cook_duration'       => $this->cook_duration,
-            'calorie'             => $this->calorie,
-            'rating'              => (float) ($this->current_star ?? 0),
-            'views'               => (int) ($this->views_count ?? 0),
-            'match_percentage'    => $matchPercentage,
-            'matched_bahan_count' => $this->matched_bahan_count,
-            'total_bahan_count'   => $this->total_bahan_count,
-            'missing_bahans'      => $missingBahans,
-            'author'              => [
-                'name' => $this->user?->name,
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'thumbnail' => $this->thumbnail ? asset('storage/' . $this->thumbnail) : null,
+            'cook_duration' => $this->cook_duration,
+            'rating' => $this->current_star ?? 5.0,
+            'views' => $this->views_count ?? 0,
+            'search_by_bahan' => $isSearchingByBahan,
+            'total_bahan_count' => $totalBahan,
+            'matched_bahan_count' => $matchedBahan,
+            'match_percentage' => $matchPercentage,
+            'missing_bahans' => $missingBahans,
+            'author' => [
+                'name' => $this->user?->name ?? 'User LaperPoll',
+                'avatar' => $this->user?->avatar ? asset('storage/' . $this->user->avatar) : null,
             ],
-            'created_at'          => $this->created_at?->format('Y-m-d H:i:s'),
-            'updated_at'          => $this->updated_at?->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at ? $this->created_at->isoFormat('D MMMM YYYY') : null,
         ];
     }
 }

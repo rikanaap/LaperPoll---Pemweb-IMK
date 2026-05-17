@@ -1,113 +1,55 @@
 @extends('layouts.app')
 
-@section('title', 'Hasil Rekomendasi Resep')
+@section('title', 'Rekomendasi Resep')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/pages/filter-resep-swipe.css') }}">
-<link rel="stylesheet" href="{{ asset('css/components/resep-card.css') }}">
 @endpush
 
 @section('content')
-
 <main class="filter-page font-jakarta">
+    <x-navbar :backUrl="route('swipe.rasa')" />
 
-    <x-navbar :back-url="route('swipe.rasa')" />
-
-    <div class="main-layout">
-
-        <aside class="sidebar-filter">
-
-            <div class="sidebar-header">
-
-                <h2>
-                    Riwayat Pilihan
-                </h2>
-
-                <p class="text-muted">
-                    Bahan atau rasa yang sedang Anda saring
-                </p>
-
+    <div class="filter-layout">
+        {{-- LEFT PANEL --}}
+        <aside class="filter-sidebar">
+            <div class="sidebar-card full-height">
+                <span class="sidebar-badge">LaperPoll</span>
+                <h2>Rasa Pilihanmu</h2>
+                <p>Sistem menampilkan resep terbaik berdasarkan rasa favoritmu.</p>
+                <div id="selectedRasaContainer" class="selected-chips">
+                    {{-- Diisi dinamis via JS Engine --}}
+                </div>
             </div>
-
-            <div
-                id="selectedRasaContainer"
-                class="selected-chips-wrapper"
-            ></div>
-
-            <div class="filter-info-box">
-
-                <span class="material-icons-round">
-                    info
-                </span>
-
-                <p>
-                    Ubah pilihan pada menu sebelumnya
-                    untuk mengubah hasil saringan.
-                </p>
-
-            </div>
-
         </aside>
 
-        <section class="content-section">
-
+        {{-- RIGHT PANEL --}}
+        <section class="filter-content">
             <div class="content-header">
-
-                <p class="result-info-text">
-
-                    @if(count($resepList) > 0)
-
-                        Terdapat
-                        {{ count($resepList) }}
-                        resep pilihan untuk bahan yang tersedia
-
-                    @else
-
-                        Belum ada resep yang ditemukan
-
-                    @endif
-
-                </p>
-
+                <h1>Rekomendasi Resep</h1>
+                <p id="resultInfoText" class="result-info">Sedang memuat rekomendasi...</p>
             </div>
 
-            <div class="resep-container">
-
-                @forelse ($resepList as $resep)
-
-                    <x-resep-card :resep="$resep" />
-
-                @empty
-
-                    <div class="result-placeholder">
-
-                        <span class="material-icons-round">
-                            restaurant_menu
-                        </span>
-
-                        <h3>
-                            Belum ada hasil
-                        </h3>
-
-                        <p>
-                            Silakan lakukan swipe
-                            pada resep terlebih dahulu
-                        </p>
-
-                    </div>
-
-                @endforelse
-
+            {{-- GRID CONTAINER --}}
+            <div id="resepContainer" class="resep-grid">
+                {{-- LOADING STATE DEFAULT --}}
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <h3>Sedang mencari resep...</h3>
+                    <p>Mohon tunggu sebentar</p>
+                </div>
             </div>
-
         </section>
-
     </div>
-
 </main>
-
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/pages/filter-resep-swipe.js') }}"></script>
+<script>
+    window.filterSwipeConfig = {
+        apiUrl: "{{ route('api.swipe.filter.resep.swipe') }}",
+        swipeUrl: "{{ route('swipe.rasa') }}"
+    };
+</script>
+<script src="{{ asset('js/pages/filter-swipe-resep.js') }}"></script>
 @endpush

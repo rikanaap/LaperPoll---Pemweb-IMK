@@ -1,161 +1,200 @@
-.swipe-page {
-    min-height: 100vh;
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
     background: #f8fafc;
-    color: #1e293b;
-    padding-bottom: 3rem;
+}
+
+.swipe-page * {
+    box-sizing: border-box;
+}
+
+.swipe-page {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: linear-gradient(180deg, #fffaf5 0%, #f8fafc 100%);
 }
 
 .swipe-wrapper {
-    max-width: 1440px;
+    flex: 1;
+    width: 100%;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
+    overflow: hidden;
 }
 
 .swipe-split-layout {
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 340px minmax(300px, 1fr) 340px;
     gap: 2rem;
+    align-items: stretch;
 }
 
 .swipe-info-panel,
-.desktop-history-panel {
-    display: none;
+.desktop-history-panel,
+.swipe-interaction-panel {
+    min-height: 0;
+    height: 100%;
 }
-
 
 .info-card,
 .desktop-history-card {
-    background: #ffffff;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #e7edf4;
     border-radius: 32px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    padding: 1.7rem;
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
 }
 
 .info-card {
-    padding: 2rem;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .info-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
 }
 
 .info-icon {
-    font-size: 34px;
+    font-size: 2rem !important;
     color: #ff7a00;
 }
 
 .badge-tag,
 .mobile-badge {
-    padding: 0.45rem 1rem;
+    padding: .5rem 1rem;
     border-radius: 999px;
-    background: #fff0db;
+    background: #fff3e6;
     color: #ff7a00;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: .75rem;
+    font-weight: 800;
 }
 
 .info-title {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    line-height: 1.35;
     font-weight: 800;
-    line-height: 1.2;
+    color: #0f172a;
     margin-bottom: 1rem;
 }
 
 .info-desc {
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: .95rem;
+    line-height: 1.9;
     color: #64748b;
-    margin-bottom: 1.5rem;
 }
 
 .divider-line {
     width: 100%;
     height: 1px;
     background: #e2e8f0;
-    margin-bottom: 1.5rem;
+    margin: 1.5rem 0;
 }
 
 .progress-box {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .progress-label {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.6rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+    align-items: center;
+    margin-bottom: .75rem;
+    font-size: .88rem;
+    font-weight: 700;
+    color: #334155;
 }
 
 .progress-bar-container,
 .mobile-progress-wrapper {
     width: 100%;
-    overflow: hidden;
+    height: 10px;
     background: #e2e8f0;
     border-radius: 999px;
-}
-
-.progress-bar-container {
-    height: 8px;
-}
-
-.mobile-progress-wrapper {
-    width: 220px;
-    height: 6px;
+    overflow: hidden;
 }
 
 .progress-bar,
 .mobile-progress-bar {
-    height: 100%;
     width: 0%;
-    background: linear-gradient(135deg, #ff922e, #ff7a00);
-    transition: width 0.3s ease;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff9b3f, #ff6b00);
+    transition: width .3s ease;
+}
+
+.tips-box {
+    margin-top: auto;
 }
 
 .tips-title {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.7rem;
-    font-size: 0.95rem;
-    font-weight: 700;
+    gap: .6rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0f172a;
 }
 
 .tips-title span {
-    color: #ffb300;
+    color: #f59e0b;
 }
 
 .tips-list {
     padding-left: 1rem;
-    color: #64748b;
-    line-height: 1.8;
-    font-size: 0.9rem;
-}
-
-.mobile-info-header {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-
-    margin-bottom: 2rem;
-}
-
-.mobile-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
+    gap: .8rem;
+    color: #64748b;
+    font-size: .92rem;
+    line-height: 1.7;
 }
 
 .swipe-interaction-panel {
-    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.swipe-interaction-panel::before,
+.swipe-interaction-panel::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 72%;
+    background: #e2e8f0;
+}
+
+.swipe-interaction-panel::before {
+    left: 0;
+}
+
+.swipe-interaction-panel::after {
+    right: 0;
 }
 
 .swipe-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -164,147 +203,115 @@
 
 .swipe-cards {
     position: relative;
-    width: 320px;
-    height: 430px;
-
-    overflow: visible;
+    width: 280px;
+    height: 390px;
 }
 
 .swipe-card {
     position: absolute;
     inset: 0;
-
-    border-radius: 32px;
+    border-radius: 30px;
     padding: 2rem 1.5rem;
-
+    background: linear-gradient(145deg, #ff9838, #ff6b00);
+    color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     text-align: center;
-
     cursor: grab;
     user-select: none;
-
-    border: 1px solid rgba(255,255,255,0.5);
-
-    backdrop-filter: blur(10px);
-
-    transition:
-        transform 0.3s cubic-bezier(0.16,1,0.3,1),
-        opacity 0.3s ease;
+    box-shadow: 0 24px 55px rgba(255, 115, 0, 0.28);
+    transition: transform .3s ease, opacity .3s ease;
 }
 
-.swipe-card:nth-last-child(1) {
-    transform: translateY(0) scale(1);
-    z-index: 3;
+/* Modifikasi tumpukan efek card berdasarkan urutan anak maju (:nth-child) */
+.swipe-card:nth-child(2) {
+    transform: translateY(12px) scale(.95);
 }
 
-.swipe-card:nth-last-child(2) {
-    transform: translateY(12px) scale(0.96);
-    z-index: 2;
-    opacity: 0.92;
-}
-
-.swipe-card:nth-last-child(3) {
-    transform: translateY(24px) scale(0.92);
-    z-index: 1;
-    opacity: 0.82;
-}
-
-.swipe-card:nth-last-child(n+4) {
-    opacity: 0;
-    pointer-events: none;
+.swipe-card:nth-child(3) {
+    transform: translateY(22px) scale(.9);
 }
 
 .swipe-icon-wrapper {
-    width: 90px;
-    height: 90px;
-
+    width: 80px;
+    height: 80px;
     border-radius: 24px;
-
-    background: rgba(255,255,255,0.18);
-
+    background: rgba(255, 255, 255, 0.18);
     display: flex;
-    justify-content: center;
     align-items: center;
-
-    margin-bottom: 1.5rem;
+    justify-content: center;
+    margin-bottom: 1.3rem;
 }
 
 .swipe-icon-wrapper span {
-    font-size: 42px;
+    font-size: 38px;
     color: #ffffff;
 }
 
 .swipe-title {
-    font-size: 2rem;
+    font-size: 1.7rem;
+    line-height: 1.3;
     font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 0.7rem;
+    margin-bottom: .9rem;
 }
 
 .swipe-desc {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #f8fafc;
+    font-size: .92rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.95);
+    max-width: 95%;
 }
 
 .swipe-buttons {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
 }
 
 .swipe-btn {
-    width: 72px;
-    height: 72px;
-
-    border: none;
+    width: 66px;
+    height: 66px;
     border-radius: 50%;
-
+    border: none;
+    background: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
-
     cursor: pointer;
-
-    transition: all 0.25s ease;
+    transition: transform .25s ease, box-shadow .25s ease;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
 }
 
-.swipe-btn span {
-    font-size: 30px;
+.swipe-btn:hover {
+    transform: scale(1.08);
 }
 
-.like-btn {
-    background: #ffffff;
-    border: 1px solid #bbf7d0;
+.swipe-btn:active {
+    transform: scale(.94);
 }
 
 .like-btn span {
     color: #22c55e;
-}
-
-.dislike-btn {
-    background: #fff5f5;
-    border: 1px solid #fecaca;
+    font-size: 30px;
 }
 
 .dislike-btn span {
     color: #ef4444;
+    font-size: 30px;
 }
 
 .desktop-history-card {
-    height: 100%;
-    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .desktop-history-header {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: .8rem;
     margin-bottom: 1.5rem;
 }
 
@@ -313,303 +320,271 @@
 }
 
 .desktop-history-header h3 {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
 }
 
 .history-section {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
 }
 
 .section-title {
-    margin-bottom: 0.8rem;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #64748b;
+    font-size: .74rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    color: #94a3b8;
+    margin-bottom: .9rem;
 }
 
 .history-flex {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: .7rem;
 }
 
 .history-chip {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-
-    padding: 0.7rem 1rem;
-
+    gap: .45rem;
+    padding: .7rem 1rem;
     border-radius: 999px;
-
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: .8rem;
+    font-weight: 700;
 }
 
 .history-chip.liked {
     background: #dcfce7;
     color: #15803d;
+    border: none;
+    cursor: pointer;
 }
 
 .history-chip.disliked {
-    background: #fee2e2;
-    color: #b91c1c;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.remove-disliked {
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: #e2e8f0;
+    cursor: pointer;
 }
 
 .empty-history {
-    font-size: 0.8rem;
+    font-size: .85rem;
+    line-height: 1.7;
     color: #94a3b8;
 }
 
-.mobile-history-wrapper {
-    display: block;
+.empty-state {
+    position: absolute;
+    inset: 0;
+    border-radius: 30px;
+    border: 2px dashed #cbd5e1;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-weight: 700;
 }
 
-@media (min-width: 1024px) {
+.mobile-info-header,
+.mobile-history-wrapper {
+    display: none;
+}
 
-    .mobile-history-wrapper,
-    .mobile-info-header {
-        display: none;
-    }
-
-    .swipe-page {
-        height: 100vh;
-        overflow: hidden;
-
-        display: flex;
-        flex-direction: column;
-    }
-
+@media (max-width: 1100px) {
+    
     .swipe-wrapper {
-        flex: 1;
-
-        display: flex;
-        align-items: center;
-
-        overflow: hidden;
+        padding: 1rem;
+        overflow-y: auto;
     }
 
     .swipe-split-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
         width: 100%;
-        height: 100%;
-
-        display: grid;
-        grid-template-columns: 360px 1fr 320px;
-
-        gap: 2rem;
-
-        align-items: stretch;
-
-        overflow: hidden;
     }
 
     .swipe-info-panel,
     .desktop-history-panel {
-        display: block;
+        display: none;
     }
 
     .swipe-interaction-panel {
+        width: 100%;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        justify-content: flex-start;
         align-items: center;
+        overflow: visible;
+        padding-bottom: 6rem;
+    }
 
-        overflow: hidden;
+    .swipe-interaction-panel::before,
+    .swipe-interaction-panel::after {
+        display: none;
+    }
+
+    .mobile-info-header {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: .8rem;
+        margin-bottom: 2rem;
+    }
+
+    .mobile-title {
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.3;
+    }
+
+    .mobile-progress-wrapper {
+        width: 280px;
     }
 
     .swipe-container {
         width: 100%;
-        height: 100%;
-
-        justify-content: center;
-    }
-
-    .swipe-cards {
-        width: 320px;
-        height: 430px;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-
-    .swipe-wrapper {
-        padding: 2rem 1.5rem;
-    }
-
-    .swipe-split-layout {
+        display: flex;
+        flex-direction: column;
         align-items: center;
-    }
-
-    .mobile-title {
-        font-size: 2rem;
-    }
-
-    .mobile-progress-wrapper {
-        width: 260px;
-        height: 8px;
+        justify-content: center;
+        gap: 2.2rem;
     }
 
     .swipe-cards {
-        width: min(420px, 90vw);
-        height: 580px;
+        width: 430px;
+        height: 600px;
+        position: relative;
     }
 
     .swipe-card {
-        padding: 2.5rem 2rem;
-        border-radius: 40px;
-    }
-
-    .swipe-icon-wrapper {
-        width: 110px;
-        height: 110px;
-
-        border-radius: 30px;
-
-        margin-bottom: 2rem;
-    }
-
-    .swipe-icon-wrapper span {
-        font-size: 54px;
+        border-radius: 38px;
+        padding: 2.8rem 2.3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
     }
 
     .swipe-title {
-        font-size: 2.5rem;
+        font-size: 2.4rem;
+        line-height: 1.3;
         margin-bottom: 1rem;
     }
 
     .swipe-desc {
-        font-size: 1.15rem;
-        line-height: 1.8;
-        max-width: 90%;
+        font-size: 1.08rem;
+        line-height: 1.9;
+        max-width: 95%;
+    }
+
+    .swipe-icon-wrapper {
+        width: 115px;
+        height: 115px;
+        border-radius: 30px;
+        margin-bottom: 1.7rem;
+    }
+
+    .swipe-icon-wrapper span {
+        font-size: 52px;
     }
 
     .swipe-buttons {
-        gap: 2rem;
+        gap: 1.5rem;
     }
 
     .swipe-btn {
-        width: 84px;
-        height: 84px;
+        width: 74px;
+        height: 74px;
     }
 
     .swipe-btn span {
         font-size: 34px;
     }
+
+    .mobile-history-wrapper {
+        display: block;
+    }
 }
 
-@media (max-width: 767px) {
-
-    .swipe-page {
-        height: 100vh;
-        overflow: hidden;
-
-        display: flex;
-        flex-direction: column;
-    }
-
+@media (max-width: 480px) {
     .swipe-wrapper {
-        flex: 1;
-
-        display: flex;
-        flex-direction: column;
-
-        padding: 0.8rem 1rem 1rem;
+        padding: .9rem;
     }
 
-    .swipe-split-layout {
-        flex: 1;
-    }
-
-    .swipe-info-panel,
-    .desktop-history-panel {
-        display: none;
+    .swipe-interaction-panel {
+        padding-bottom: 7rem;
     }
 
     .mobile-info-header {
-        margin-bottom: 1.5rem;
-    }
-
-    .mobile-badge {
-        font-size: 0.68rem;
-        padding: 0.35rem 0.9rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1.3rem;
+        gap: .7rem;
     }
 
     .mobile-title {
         font-size: 1.35rem;
-        margin-bottom: 1rem;
+        line-height: 1.3;
     }
 
     .mobile-progress-wrapper {
-        width: 150px;
-        height: 5px;
-    }
-
-    .swipe-interaction-panel {
-        flex: 1;
-
-        display: flex;
-        flex-direction: column;
-    }
-
-    .swipe-container {
-        flex: 1;
-
-        justify-content: flex-start;
-
-        gap: 1rem;
+        width: 180px;
     }
 
     .swipe-cards {
-        width: 250px;
-        height: 300px;
-
-        flex-shrink: 0;
+        width: 240px;
+        height: 340px;
     }
 
     .swipe-card {
-        border-radius: 28px;
-        padding: 1.5rem 1.2rem;
+        border-radius: 22px;
+        padding: 1.2rem;
+    }
+
+    .swipe-title {
+        font-size: 1.3rem;
+        margin-bottom: .7rem;
+    }
+
+    .swipe-desc {
+        font-size: .82rem;
+        line-height: 1.6;
     }
 
     .swipe-icon-wrapper {
-        width: 72px;
-        height: 72px;
-
-        border-radius: 20px;
-
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
         margin-bottom: 1rem;
     }
 
     .swipe-icon-wrapper span {
-        font-size: 36px;
-    }
-
-    .swipe-title {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .swipe-desc {
-        font-size: 0.85rem;
-        line-height: 1.6;
+        font-size: 28px;
     }
 
     .swipe-buttons {
-        gap: 1.2rem;
-        margin-top: 0.5rem;
+        gap: .9rem;
     }
 
     .swipe-btn {
-        width: 58px;
-        height: 58px;
+        width: 54px;
+        height: 54px;
     }
 
     .swipe-btn span {
         font-size: 24px;
-    }
-
-    .empty-text {
-        font-size: 0.9rem;
     }
 }

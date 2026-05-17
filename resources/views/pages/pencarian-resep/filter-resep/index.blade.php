@@ -13,8 +13,8 @@
     data-page="filter" 
     data-search-url="{{ url('/api/resep/search') }}" 
     data-bahan-url="{{ url('/api/bahan/by-ids') }}" 
-    data-filter-url="{{ route('filter.resep') }}" 
-    data-search-page-url="{{ route('pencarian.resep') }}">
+    data-filter-url="{{ route('pencarian.resep') }}" {{-- 🌟 Diubah ke pencarian.resep --}}
+    data-search-page-url="{{ route('pencarian.resep') }}"> {{-- 🌟 Diubah ke pencarian.resep --}}
 
     <x-navbar :back-url="route('pencarian.resep')" />
 

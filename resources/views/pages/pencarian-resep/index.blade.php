@@ -14,7 +14,7 @@
     data-page="search" 
     data-search-url="{{ url('/api/resep/search') }}" 
     data-bahan-url="{{ url('/api/bahan/by-ids') }}" 
-    data-filter-url="{{ route('filter.resep') }}" 
+    data-filter-url="{{ route('pencarian.resep') }}" {{-- 🌟 Diubah ke pencarian.resep --}}
     data-search-page-url="{{ route('pencarian.resep') }}">
 
     <x-navbar :back-url="route('landing.index')" />
@@ -22,10 +22,11 @@
     <section class="search-layout">
         {{-- SIDEBAR --}}
         <aside class="search-sidebar">
-            {{-- SEARCH INPUT --}}
+            {{-- GLOBAL SEARCH TEXT --}}
             <div class="input" id="searchWrapper">
                 <span class="material-icons-round">search</span>
-                <input type="text" id="searchInput" class="input-data" placeholder="Cari bahan..." autocomplete="off">
+                {{-- 🌟 Tambahkan value dari controller jika ada input pencarian sebelumnya --}}
+                <input type="text" id="searchInput" class="input-data" placeholder="Cari nama resep atau bahan..." autocomplete="off" value="{{ $keyword ?? '' }}">
             </div>
 
             <p class="text-body font-medium section-title">Bahan Populer Minggu Ini</p>
@@ -37,6 +38,7 @@
                         <div class="bahan-group">
                             <span class="group-letter">{{ $huruf }}</span>
                             @foreach($kelompokBahan as $bahan)
+                                {{-- 🌟 Pastikan komponen bahan-item lo tahu kalau bahannya sedang ter-check (opsional tergantung logic komponen) --}}
                                 <x-bahan-item :bahan="$bahan" />
                             @endforeach
                         </div>
@@ -69,7 +71,7 @@
         {{-- RESULT --}}
         <section class="search-result" aria-label="Hasil pencarian resep">
             <div class="result-header-wrapper">
-                <p id="resultInfoText" class="result-info-text">Pilih bahan untuk melihat resep</p>
+                <p id="resultInfoText" class="result-info-text">Pilih bahan atau ketik nama resep untuk memulai</p>
                 <div id="selectedChips" class="selected-chips-wrapper" role="list"></div>
             </div>
 
@@ -86,7 +88,7 @@
             <div id="resultPlaceholder" class="result-placeholder">
                 <span class="material-icons-round">restaurant_menu</span>
                 <h3>Rekomendasi Resep</h3>
-                <p>Pilih bahan terlebih dahulu untuk melihat hasil resep.</p>
+                <p>Masukkan kata kunci pencarian atau pilih kombinasi bahan dapurmu.</p>
             </div>
 
             {{-- LOAD MORE --}}

@@ -10,6 +10,7 @@ class SwipeResepController extends Controller
     {
         return view('pages.swipe-resep.index');
     }
+
     public function showFilter(): View
     {
         return view('pages.swipe-resep.filter.index');

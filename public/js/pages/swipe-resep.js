@@ -1,587 +1,302 @@
-/**
- * LaperPoll - Swipe Resep Engine
- * Author: Gemini x Ikbal Miftahudin
- */
-
-const swipeApp = {
-
-    // ======================================
-    // ELEMENTS
-    // ======================================
-    ui: {
-        cardsContainer: document.getElementById("swipeCards"),
-
-        likeBtn: document.getElementById("like"),
-        dislikeBtn: document.getElementById("dislike"),
-
-        counterText: document.getElementById("counterText"),
-
-        progressBar: document.getElementById("progressBar"),
-        mobileBar: document.getElementById("mobileProgressBar"),
-
-        emptyState: document.getElementById("emptyState"),
-
-        // MOBILE DRAWER
-        drawer: document.getElementById("historyDrawer"),
-        drawerTrigger: document.getElementById("drawerTrigger"),
-
-        likedList: document.getElementById("likedHistoryList"),
-        dislikedList: document.getElementById("dislikedHistoryList"),
-
-        // DESKTOP HISTORY PANEL
-        desktopLikedList: document.getElementById("desktopLikedHistory"),
-        desktopDislikedList: document.getElementById("desktopDislikedHistory"),
-    },
-
-    // ======================================
-    // STATE
-    // ======================================
-    state: {
-        likeCount: 0,
-        maxLike: 3,
-
-        isAnimating: false,
-
-        threshold: 120,
-
-        likedHistory: [],
-        dislikedHistory: [],
-
-        redirectUrl: "/filter-resep-swipe"
-    },
-
-    // ======================================
-    // INIT
-    // ======================================
-    init() {
-        this.updateUI();
-        this.bindEvents();
-        this.enableDragAll();
-        this.initDrawer();
-
-        console.log("Swipe Engine Ready, Mas Bro!");
-    },
-
-    // ======================================
-    // EVENTS
-    // ======================================
-    bindEvents() {
-
-        this.ui.likeBtn?.addEventListener("click", () => {
-            this.swipe("right");
-        });
-
-        this.ui.dislikeBtn?.addEventListener("click", () => {
-            this.swipe("left");
-        });
-
-    },
-
-    // ======================================
-    // DRAWER
-    // ======================================
-    initDrawer() {
-
-        if (!this.ui.drawerTrigger || !this.ui.drawer) return;
-
-        this.ui.drawerTrigger.addEventListener("click", () => {
-
-            this.ui.drawer.classList.toggle("is-open");
-
-            const arrow =
-                this.ui.drawerTrigger.querySelector(".arrow-icon");
-
-            if (arrow) {
-
-                arrow.innerText =
-                    this.ui.drawer.classList.contains("is-open")
-                        ? "expand_more"
-                        : "expand_less";
-            }
-
-        });
-
-    },
-
-    // ======================================
-    // UI UPDATE
-    // ======================================
-    updateUI() {
-
-        const percentage =
-            (this.state.likeCount / this.state.maxLike) * 100;
-
-        if (this.ui.counterText) {
-
-            this.ui.counterText.textContent =
-                `${this.state.likeCount} / ${this.state.maxLike}`;
-
-        }
-
-        [
-            this.ui.progressBar,
-            this.ui.mobileBar
-        ].forEach(bar => {
-
-            if (bar) {
-                bar.style.width = `${percentage}%`;
-            }
-
-        });
-
-    },
-
-    // ======================================
-    // HISTORY RENDER
-    // ======================================
-    renderHistory() {
-
-        const renderItems = (items, type) => {
-
-            if (items.length === 0) {
-
-                return `
-                    <p class="empty-history">
-                        Belum ada rasa
-                        ${type === 'liked'
-                            ? 'disukai'
-                            : 'dilewati'}
-                    </p>
-                `;
-
-            }
-
-            return items.map(item => `
-
-                <div
-                    class="history-chip
-                           ${type}
-                           ${type === 'liked'
-                                ? 'clickable-history'
-                                : ''}"
-
-                    ${type === 'liked'
-                        ? `onclick="window.location.href='${this.state.redirectUrl}'"`
-                        : ''}>
-
-                    <span class="material-icons-round history-icon">
-                        ${item.icon}
-                    </span>
-
-                    <span>
-                        ${item.title}
-                    </span>
-
-                </div>
-
-            `).join('');
-
-        };
-
-        const likedHTML =
-            renderItems(this.state.likedHistory, 'liked');
-
-        const dislikedHTML =
-            renderItems(this.state.dislikedHistory, 'disliked');
-
-        // MOBILE
-        if (this.ui.likedList) {
-            this.ui.likedList.innerHTML = likedHTML;
-        }
-
-        if (this.ui.dislikedList) {
-            this.ui.dislikedList.innerHTML = dislikedHTML;
-        }
-
-        // DESKTOP
-        if (this.ui.desktopLikedList) {
-            this.ui.desktopLikedList.innerHTML = likedHTML;
-        }
-
-        if (this.ui.desktopDislikedList) {
-            this.ui.desktopDislikedList.innerHTML = dislikedHTML;
-        }
-
-    },
-
-    // ======================================
-    // GET TOP CARD
-    // ======================================
-    getTopCard() {
-
-        const cards =
-            this.ui.cardsContainer.querySelectorAll(".swipe-card");
-
-        return cards.length > 0
-            ? cards[cards.length - 1]
-            : null;
-
-    },
-
-    // ======================================
-    // SWIPE
-    // ======================================
-    swipe(direction) {
-
-        if (this.state.isAnimating) return;
-
-        const card = this.getTopCard();
-
-        if (!card) return;
-
-        this.state.isAnimating = true;
-
-        // ======================================
-        // CARD DATA
-        // ======================================
-
-        const cardData = {
-
-            title:
-                card.querySelector(".swipe-title")?.innerText
-                || "Rasa",
-
-            icon:
-                card.querySelector(".material-icons-round")?.innerText
-                || "restaurant"
-
-        };
-
-        const moveX =
-            direction === "right"
-                ? 500
-                : -500;
-
-        const rotate =
-            direction === "right"
-                ? 30
-                : -30;
-
-        // ======================================
-        // LABEL
-        // ======================================
-
-        this.addLabel(
-            card,
-            direction === "right"
-                ? "like"
-                : "nope"
-        );
-
-        // ======================================
-        // ANIMATION
-        // ======================================
-
-        card.style.transition =
-            "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s";
-
-        card.style.transform =
-            `translateX(${moveX}px) rotate(${rotate}deg)`;
-
-        card.style.opacity = "0";
-
-        // ======================================
-        // SAVE HISTORY
-        // ======================================
-
-        if (direction === "right") {
-
-            this.state.likeCount++;
-
-            this.state.likedHistory.push(cardData);
-
-            this.updateUI();
-
-        } else {
-
-            this.state.dislikedHistory.push(cardData);
-
-        }
-
-        this.renderHistory();
-
-        // ======================================
-        // REMOVE CARD
-        // ======================================
-
-        card.addEventListener("transitionend", () => {
-
-            card.remove();
-
-            this.state.isAnimating = false;
-
-            this.checkEmpty();
-            this.checkLimit();
-
-        }, { once: true });
-
-    },
-
-    // ======================================
-    // LABEL
-    // ======================================
-    addLabel(card, type) {
-
-        const existingLabel =
-            card.querySelector(".swipe-label");
-
-        if (existingLabel) {
-            existingLabel.remove();
-        }
-
-        const label = document.createElement("div");
-
-        label.className =
-            `swipe-label ${type}`;
-
-        label.innerText =
-            type === "like"
-                ? "LIKE"
-                : "SKIP";
-
-        card.appendChild(label);
-
-    },
-
-    // ======================================
-    // EMPTY STATE
-    // ======================================
-    checkEmpty() {
-
-        const remaining =
-            this.ui.cardsContainer.querySelectorAll(".swipe-card");
-
-        if (
-            remaining.length === 0 &&
-            this.ui.emptyState
-        ) {
-
-            this.ui.emptyState.style.display = "block";
-
-        }
-
-    },
-
-    // ======================================
-    // LIMIT
-    // ======================================
-    checkLimit() {
-
-        if (
-            this.state.likeCount >=
-            this.state.maxLike
-        ) {
-
-            // Disable Button
-            if (this.ui.likeBtn) {
-                this.ui.likeBtn.disabled = true;
-            }
-
-            if (this.ui.dislikeBtn) {
-                this.ui.dislikeBtn.disabled = true;
-            }
-
-            // Auto Redirect
-            setTimeout(() => {
-
-                this.ui.drawer?.classList.add("is-open");
-
-                setTimeout(() => {
-
-                    window.location.href =
-                        this.state.redirectUrl;
-
-                }, 1000);
-
-            }, 400);
-
-        }
-
-    },
-
-    // ======================================
-    // DRAG
-    // ======================================
-    enableDragAll() {
-
-        const cards =
-            this.ui.cardsContainer.querySelectorAll(".swipe-card");
-
-        cards.forEach(card => {
-
-            this.setupDrag(card);
-
-        });
-
-    },
-
-    // ======================================
-    // SETUP DRAG
-    // ======================================
-    setupDrag(card) {
-
-        let startX = 0;
-        let currentX = 0;
-
-        let isDragging = false;
-
-        // ======================================
-        // START
-        // ======================================
-
-        const onStart = (e) => {
-
-            if (this.state.isAnimating) return;
-
-            isDragging = true;
-
-            startX =
-                e.touches
-                    ? e.touches[0].clientX
-                    : e.clientX;
-
-            card.style.transition = "none";
-
-        };
-
-        // ======================================
-        // MOVE
-        // ======================================
-
-        const onMove = (e) => {
-
-            if (!isDragging) return;
-
-            currentX =
-                e.touches
-                    ? e.touches[0].clientX
-                    : e.clientX;
-
-            const diff =
-                currentX - startX;
-
-            const rotate =
-                diff / 18;
-
-            card.style.transform =
-                `translateX(${diff}px) rotate(${rotate}deg)`;
-
-            // PREVIEW
-            if (diff > 60) {
-
-                card.classList.add("preview-like");
-                card.classList.remove("preview-nope");
-
-            } else if (diff < -60) {
-
-                card.classList.add("preview-nope");
-                card.classList.remove("preview-like");
-
-            } else {
-
-                card.classList.remove(
-                    "preview-like",
-                    "preview-nope"
-                );
-
-            }
-
-        };
-
-        // ======================================
-        // END
-        // ======================================
-
-        const onEnd = () => {
-
-            if (!isDragging) return;
-
-            isDragging = false;
-
-            const diff =
-                currentX - startX;
-
-            card.classList.remove(
-                "preview-like",
-                "preview-nope"
-            );
-
-            // RIGHT
-            if (diff > this.state.threshold) {
-
-                this.swipe("right");
-
-            }
-
-            // LEFT
-            else if (diff < -this.state.threshold) {
-
-                this.swipe("left");
-
-            }
-
-            // RESET
-            else {
-
-                card.style.transition =
-                    "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-
-                card.style.transform = "";
-
-            }
-
-        };
-
-        // ======================================
-        // MOUSE
-        // ======================================
-
-        card.addEventListener(
-            "mousedown",
-            onStart
-        );
-
-        window.addEventListener(
-            "mousemove",
-            onMove
-        );
-
-        window.addEventListener(
-            "mouseup",
-            onEnd
-        );
-
-        // ======================================
-        // TOUCH
-        // ======================================
-
-        card.addEventListener(
-            "touchstart",
-            onStart,
-            { passive: true }
-        );
-
-        card.addEventListener(
-            "touchmove",
-            onMove,
-            { passive: true }
-        );
-
-        card.addEventListener(
-            "touchend",
-            onEnd
-        );
-
+document.addEventListener('DOMContentLoaded', async () => {
+  const swipeCards = document.getElementById('swipeCards');
+  const likedHistory = document.getElementById('likedContainer');
+  const dislikedHistory = document.getElementById('dislikedContainer');
+  const mobileLikedHistory = document.getElementById('mobileLikedContainer');
+  const mobileDislikedHistory = document.getElementById('mobileDislikedContainer');
+  const counterText = document.getElementById('counterText');
+  const progressBar = document.getElementById('progressBar');
+  const mobileProgressBar = document.getElementById('mobileProgressBar');
+  const emptyState = document.getElementById('emptyState');
+  const likeBtn = document.getElementById('likeBtn');
+  const dislikeBtn = document.getElementById('dislikeBtn');
+  const historyDrawer = document.getElementById('historyDrawer');
+  const drawerHeader = document.getElementById('drawerHeader');
+  const drawerOverlay = document.getElementById('drawerOverlay');
+  const arrowIcon = document.getElementById('drawerArrow');
+
+  const state = {
+    cards: [],
+    disliked: [],
+    currentLiked: [],
+    likedGroups: [],
+    redirecting: false,
+    drawerOpen: false
+  };
+
+  init();
+
+  async function init() {
+    resetCurrentLiked();
+    loadState();
+    await fetchRasa();
+    renderCards();
+    updateHistory();
+    updateProgress();
+    initHistoryDrawer();
+  }
+
+  function resetCurrentLiked() {
+    state.currentLiked = [];
+  }
+
+  function loadState() {
+    const saved = sessionStorage.getItem('swipeRasaState');
+    if (!saved) return;
+    try {
+      const parsed = JSON.parse(saved);
+      state.disliked = parsed.disliked || [];
+      state.likedGroups = parsed.likedGroups || [];
+    } catch (err) {
+      console.error(err);
     }
+  }
 
-};
+  function saveState() {
+    sessionStorage.setItem(
+      'swipeRasaState',
+      JSON.stringify({
+        disliked: state.disliked,
+        likedGroups: state.likedGroups
+      })
+    );
+  }
 
-// ======================================
-// RUN
-// ======================================
+  async function fetchRasa() {
+    try {
+      const res = await fetch(window.swipeConfig.apiUrl);
+      const result = await res.json();
+      if (!result.success) return;
+      const excludedIds = [
+        ...state.disliked.map(item => item.id)
+      ];
+      state.cards = result.data.filter(
+        item => !excludedIds.includes(item.id)
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
-document.addEventListener("DOMContentLoaded", () => {
+  function renderCards() {
+    swipeCards.innerHTML = '';
+    if (!state.cards.length) {
+      emptyState.style.display = 'flex';
+      swipeCards.appendChild(emptyState);
+      if (state.currentLiked.length > 0 && !state.redirecting) {
+        navigateToFilterPage();
+      }
+      return;
+    }
+    emptyState.style.display = 'none';
+    const visible = state.cards.slice(0, 3);
+    visible.forEach((rasa, index) => {
+      const card = createCard(rasa, index);
+      swipeCards.appendChild(card);
+    });
+  }
 
-    swipeApp.init();
+  function createCard(rasa, index) {
+    const card = document.createElement('div');
+    card.className = 'swipe-card';
+    card.style.zIndex = 100 - index;
+    card.innerHTML = `
+      <div class="swipe-icon-wrapper">
+        <span class="material-icons-round">restaurant</span>
+      </div>
+      <h2 class="swipe-title">${rasa.title ?? '-'}</h2>
+      <p class="swipe-desc">${rasa.description ?? '-'}</p>
+    `;
+    addSwipeEvents(card, rasa);
+    return card;
+  }
 
+  function addSwipeEvents(card, rasa) {
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
+
+    card.addEventListener('pointerdown', (e) => {
+      if (card !== swipeCards.querySelector('.swipe-card:first-child')) return;
+      startX = e.clientX;
+      dragging = true;
+      card.style.transition = 'none';
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      currentX = e.clientX - startX;
+      const x = Math.max(-180, Math.min(180, currentX));
+      card.style.transform = `translateX(${x}px) rotate(${x / 18}deg)`;
+    });
+
+    window.addEventListener('pointerup', () => {
+      if (!dragging) return;
+      dragging = false;
+      card.style.transition = '.3s ease';
+      if (currentX > 120) {
+        swipeRight(card, rasa);
+      } else if (currentX < -120) {
+        swipeLeft(card, rasa);
+      } else {
+        card.style.transform = '';
+      }
+      currentX = 0;
+    });
+  }
+
+  function swipeRight(card, rasa) {
+    card.style.transform = 'translateX(420px) rotate(25deg)';
+    card.style.opacity = '0';
+    setTimeout(() => {
+      likeCard(rasa);
+    }, 200);
+  }
+
+  function swipeLeft(card, rasa) {
+    card.style.transform = 'translateX(-420px) rotate(-25deg)';
+    card.style.opacity = '0';
+    setTimeout(() => {
+      dislikeCard(rasa);
+    }, 200);
+  }
+
+  likeBtn?.addEventListener('click', () => {
+    const rasa = state.cards[0];
+    const card = swipeCards.querySelector('.swipe-card:first-child');
+    if (rasa && card) swipeRight(card, rasa);
+  });
+
+  dislikeBtn?.addEventListener('click', () => {
+    const rasa = state.cards[0];
+    const card = swipeCards.querySelector('.swipe-card:first-child');
+    if (rasa && card) swipeLeft(card, rasa);
+  });
+
+  function likeCard(rasa) {
+    if (!rasa) return;
+    state.currentLiked.push(rasa);
+    removeCard(rasa.id);
+    updateHistory();
+    updateProgress();
+    
+    if (state.currentLiked.length >= 3 || state.cards.length === 0) {
+      const group = {
+        id: Date.now(),
+        items: [...state.currentLiked]
+      };
+      state.likedGroups.unshift(group);
+      saveState();
+      sessionStorage.setItem('selectedRasa', JSON.stringify(state.currentLiked));
+      state.redirecting = true;
+      setTimeout(() => {
+        navigateToFilterPage();
+      }, 700);
+    }
+  }
+
+  function dislikeCard(rasa) {
+    if (!rasa) return;
+    state.disliked.push(rasa);
+    removeCard(rasa.id);
+    saveState();
+    updateHistory();
+  }
+
+  function removeCard(id) {
+    state.cards = state.cards.filter(item => item.id !== id);
+    renderCards();
+  }
+
+  function navigateToFilterPage() {
+    sessionStorage.setItem('selectedRasa', JSON.stringify(state.currentLiked));
+    const ids = state.currentLiked.map(r => r.id).join(',');
+    window.location.href = `${window.swipeConfig.redirectUrl}?filters=${ids}`;
+  }
+
+  function updateHistory() {
+    const likedHTML = state.likedGroups.length
+      ? state.likedGroups.map(group => {
+          const names = group.items.map(item => item.title).join(' • ');
+          return `
+            <button class="history-chip liked liked-group-chip" data-ids="${group.items.map(i => i.id).join(',')}">
+              ❤️ ${names}
+            </button>
+          `;
+        }).join('')
+      : `<p class="empty-history">Belum ada history rasa</p>`;
+
+    const dislikedHTML = state.disliked.length
+      ? state.disliked.map(item => `
+          <div class="history-chip disliked">
+            <span>❌ ${item.title}</span>
+            <button class="remove-disliked" data-id="${item.id}">×</button>
+          </div>
+        `).join('')
+      : `<p class="empty-history">Belum ada rasa dilewati</p>`;
+
+    likedHistory.innerHTML = likedHTML;
+    dislikedHistory.innerHTML = dislikedHTML;
+    if (mobileLikedHistory) mobileLikedHistory.innerHTML = likedHTML;
+    if (mobileDislikedHistory) mobileDislikedHistory.innerHTML = dislikedHTML;
+    bindHistoryEvents();
+  }
+
+  function bindHistoryEvents() {
+    document.querySelectorAll('.liked-group-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const ids = chip.dataset.ids;
+        window.location.href = `${window.swipeConfig.redirectUrl}?filters=${ids}`;
+      });
+    });
+
+    document.querySelectorAll('.remove-disliked').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = Number(btn.dataset.id);
+        restoreDisliked(id);
+      });
+    });
+  }
+
+  function restoreDisliked(id) {
+    const item = state.disliked.find(i => i.id === id);
+    if (!item) return;
+    state.disliked = state.disliked.filter(i => i.id !== id);
+    state.cards.unshift(item);
+    saveState();
+    updateHistory();
+    renderCards();
+  }
+
+  function updateProgress() {
+    const total = state.currentLiked.length;
+    counterText.innerText = `${total} / 3`;
+    const percent = (total / 3) * 100;
+    progressBar.style.width = `${percent}%`;
+    if (mobileProgressBar) mobileProgressBar.style.width = `${percent}%`;
+  }
+
+  function initHistoryDrawer() {
+    if (!historyDrawer || !drawerHeader) return;
+    drawerHeader.addEventListener('click', toggleDrawer);
+    drawerOverlay?.addEventListener('click', closeDrawer);
+  }
+
+  function toggleDrawer() {
+    state.drawerOpen = !state.drawerOpen;
+    historyDrawer.classList.toggle('is-open', state.drawerOpen);
+    drawerOverlay?.classList.toggle('active', state.drawerOpen);
+    if (arrowIcon) {
+      arrowIcon.style.transform = state.drawerOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+    document.body.style.overflow = state.drawerOpen ? 'hidden' : '';
+  }
+
+  function closeDrawer() {
+    state.drawerOpen = false;
+    historyDrawer.classList.remove('is-open');
+    drawerOverlay?.classList.remove('active');
+    if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
+    document.body.style.overflow = '';
+  }
 });

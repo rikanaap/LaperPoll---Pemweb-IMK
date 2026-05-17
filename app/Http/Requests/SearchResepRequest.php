@@ -14,17 +14,15 @@ class SearchResepRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bahan_ids'   => ['nullable', 'array'],
-            'bahan_ids.*' => ['integer', 'exists:bahans,id'],
+            'q'     => ['nullable', 'string', 'max:100'],
+            'bahan' => ['nullable', 'string'], // Menerima format "1,2,3"
         ];
     }
 
     public function messages(): array
     {
         return [
-            'bahan_ids.array'      => 'Format bahan harus berupa array.',
-            'bahan_ids.*.integer'  => 'ID bahan harus berupa angka.',
-            'bahan_ids.*.exists'   => 'Bahan tidak ditemukan.',
+            'q.string' => 'Kata kunci pencarian harus berupa teks.',
         ];
     }
 }

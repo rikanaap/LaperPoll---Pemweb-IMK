@@ -9,7 +9,6 @@ use App\Models\Bahan;
 use App\Services\ResepService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class ResepApiController extends Controller
 {
@@ -20,14 +19,21 @@ class ResepApiController extends Controller
     public function search(SearchResepRequest $request): JsonResponse 
     {
         $validated = $request->validated();
+        $keyword = $validated['q'] ?? null;
+        
+        $bahanParam = $request->query('bahan') ?? $request->input('bahan');
+        $bahanIds = [];
 
-        $bahanIds = collect($validated['bahan_ids'] ?? [])
-            ->map(fn ($id) => (int) $id)
-            ->filter()
-            ->values()
-            ->toArray();
+        if ($bahanParam && trim($bahanParam) !== '') {
+            $cleanBahanParam = preg_replace('/[^0-9,]/', '', $bahanParam);
+            $bahanIds = collect(explode(',', $cleanBahanParam))
+                ->map(fn($id) => (int) trim($id))
+                ->filter()
+                ->values()
+                ->toArray();
+        }
 
-        $reseps = $this->resepService->searchByBahans($bahanIds, 10);
+        $reseps = $this->resepService->searchByBahans($bahanIds, $keyword, 10);
 
         return response()->json([
             'success' => true,
@@ -45,32 +51,36 @@ class ResepApiController extends Controller
 
     public function getBahansByIds(Request $request): JsonResponse 
     {
-        if (!$request->filled('ids')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Parameter ids wajib diisi.',
-                'data'    => [],
-            ], 422);
+        $idsParam = $request->query('ids') ?? $request->input('ids');
+
+        if (!$idsParam) {
+            return response()->json(['success' => true, 'total' => 0, 'data' => []]);
         }
 
-        $ids = collect(explode(',', $request->ids))
+        if (is_array($idsParam)) {
+            $idsParam = implode(',', $idsParam);
+        }
+
+        $cleanParam = preg_replace('/[^0-9,]/', '', $idsParam);
+        
+        $ids = collect(explode(',', $cleanParam))
             ->map(fn ($id) => (int) trim($id))
             ->filter()
+            ->unique()
             ->values()
             ->toArray();
 
-        $cacheKey = 'bahans_by_ids_' . md5(json_encode($ids));
+        if (empty($ids)) {
+            return response()->json(['success' => true, 'total' => 0, 'data' => []]);
+        }
 
-        $bahans = Cache::remember($cacheKey, now()->addMinutes(30), function () use ($ids) {
-            return Bahan::query()
-                ->whereIn('id', $ids)
-                ->orderBy('nama')
-                ->get(['id', 'nama']);
-        });
+        $bahans = Bahan::query()
+            ->whereIn('id', $ids)
+            ->orderBy('nama')
+            ->get(['id', 'nama']);
 
         return response()->json([
             'success' => true,
-            'message' => 'Berhasil mengambil data bahan.',
             'total'   => $bahans->count(),
             'data'    => $bahans,
         ]);

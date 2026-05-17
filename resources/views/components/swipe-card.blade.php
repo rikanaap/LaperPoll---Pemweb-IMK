@@ -1,9 +1,7 @@
-<div class="swipe-card" style="background: linear-gradient(135deg, {{ $attributes['color_start'] ?? '#475569' }} 0%, {{ $attributes['color_end'] ?? '#1e293b' }} 100%);">
+<div class="swipe-card" {{ $attributes }}>
     <div class="swipe-icon-wrapper">
-        <span class="material-icons-round">{{ $icon }}</span>
+        <span class="material-icons-round">restaurant</span>
     </div>
-    <div class="card-body">
-        <h3 class="swipe-title">{{ $title }}</h3>
-        <p class="swipe-desc">{{ $desc }}</p>
-    </div>
+    <h2 class="swipe-title">{{ $title ?? '-' }}</h2>
+    <p class="swipe-desc">{{ $description ?? '-' }}</p>
 </div>

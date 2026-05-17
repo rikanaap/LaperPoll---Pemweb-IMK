@@ -4,54 +4,82 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\JsonResponse;
 use App\Models\Filter;
-use App\Models\Resep;
+use App\Services\SwipeResepService;
+use App\Http\Resources\ResepSwipeResource;
 
 class SwipeResepApiController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | GET RASA SWIPE
-    |--------------------------------------------------------------------------
-    */
-    public function getRasa()
-    {
-        $filters = Filter::where(
-            'level',
-            3
-        )->get();
+    protected $swipeService;
 
-        return response()->json([
-            'success' => true,
-            'data' => $filters
-        ]);
+    public function __construct(SwipeResepService $swipeService)
+    {
+        $this->swipeService = $swipeService;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | FILTER RESEP
-    |--------------------------------------------------------------------------
-    */
-    public function filterResep(Request $request)
+    public function getRasa(): JsonResponse
     {
-        $filterIds = $request->filters ?? [];
-
-        $reseps = Resep::with('user')
-            ->whereHas('filters', function ($query) use ($filterIds) {
-
-                $query->whereIn(
-                    'filters.id',
-                    $filterIds
-                );
-
-            })
-            ->latest()
+        $rasa = Filter::query()
+            ->where('level', 3)
+            ->select(['id', 'title', 'description'])
+            ->inRandomOrder()
             ->get();
 
         return response()->json([
             'success' => true,
-            'data' => $reseps
+            'message' => 'Berhasil mengambil data rasa',
+            'data' => $rasa
+        ]);
+    }
+
+    public function filterSwipe(Request $request): JsonResponse 
+    {
+        $rawFilters = $request->query('filters');
+
+        if (!$rawFilters) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Filter rasa wajib diisi',
+                'data' => []
+            ], 422);
+        }
+
+        $filters = is_string($rawFilters) ? explode(',', $rawFilters) : $rawFilters;
+        
+        $cleanFilters = collect($filters)
+            ->map(fn ($id) => (int) $id)
+            ->filter(fn ($id) => $id > 0)
+            ->unique()
+            ->values()
+            ->toArray();
+
+        if (empty($cleanFilters)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Filter tidak valid',
+                'data' => []
+            ], 422);
+        }
+
+        $reseps = $this->swipeService->filterRecipesBySwipe($cleanFilters);
+
+        $selectedFiltersData = Filter::query()
+            ->whereIn('id', $cleanFilters)
+            ->select(['id', 'title'])
+            ->get()
+            ->map(fn($f) => [
+                'id' => $f->id,
+                'title' => $f->title
+            ])
+            ->toArray();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil mengambil rekomendasi resep',
+            'selected_filters' => $selectedFiltersData,
+            'total_result' => $reseps->count(),
+            'data' => ResepSwipeResource::collection($reseps)
         ]);
     }
 }

@@ -1,7 +1,7 @@
 (() => {
     const CONFIG = {
         mobileBreakpoint: 768,
-        debounceDelay: 300,
+        debounceDelay: 400,
     };
 
     const main = document.querySelector('main');
@@ -21,6 +21,7 @@
         selectedBahan: [],
         recipes: [],
         pagination: null,
+        keywordSearch: '',
         isMobile: window.innerWidth < CONFIG.mobileBreakpoint,
     };
 
@@ -40,6 +41,24 @@
         };
     };
 
+    const formatDuration = (timeStr) => {
+        if (!timeStr || typeof timeStr !== 'string') return '-';
+        const parts = timeStr.replace(/\./g, ':').split(':');
+        if (parts.length < 2) return timeStr;
+
+        const hours = parseInt(parts[0], 10) || 0;
+        const minutes = parseInt(parts[1], 10) || 0;
+        const totalMinutes = (hours * 60) + minutes;
+
+        if (totalMinutes === 0) return '-';
+        if (totalMinutes < 60) return `${totalMinutes} Menit`;
+        
+        const finalHours = Math.floor(totalMinutes / 60);
+        const finalMinutes = totalMinutes % 60;
+        
+        return finalMinutes === 0 ? `${finalHours} Jam` : `${finalHours} Jam ${finalMinutes} Menit`;
+    };
+
     const elements = {
         searchInput: getElement('#searchInput'),
         bahanList: getElement('.bahan-list'),
@@ -54,15 +73,24 @@
     };
 
     const api = {
-        async fetchRecipes(page = 1) {
+        async fetchRecipes(pageNo = 1) {
             try {
                 if (activeController) activeController.abort();
                 activeController = new AbortController();
 
                 ui.showLoading();
                 const params = new URLSearchParams();
-                state.selectedBahan.forEach(bahan => params.append('bahan_ids[]', bahan.id));
-                params.append('page', page);
+                
+                if (state.selectedBahan.length > 0) {
+                    const idsString = state.selectedBahan.map(b => b.id).join(',');
+                    params.append('bahan', idsString);
+                }
+                
+                if (state.keywordSearch.trim() !== '') {
+                    params.append('q', state.keywordSearch);
+                }
+                
+                params.append('page', pageNo);
 
                 const response = await fetch(`${API.searchUrl}?${params.toString()}`, {
                     signal: activeController.signal
@@ -86,8 +114,11 @@
         async fetchBahansByIds(ids = []) {
             try {
                 if (!ids.length) return [];
-                const response = await fetch(`${API.bahanUrl}?ids=${ids.join(',')}`);
+                const idsString = ids.map(id => parseInt(id, 10)).join(',');
+                
+                const response = await fetch(`${API.bahanUrl}?ids=${idsString}`);
                 if (!response.ok) throw new Error('Failed fetch bahans');
+                
                 const result = await response.json();
                 return result.data || [];
             } catch (error) {
@@ -99,20 +130,47 @@
 
     const templates = {
         recipeCard(resep) {
-            const thumbnail = resep.thumbnail 
+            const thumbnail = resep.thumbnail
                 ? `<img src="${resep.thumbnail}" alt="${resep.title}">`
                 : `<div class="resep-banner-placeholder"><span class="material-icons-round">restaurant</span></div>`;
 
-            const matchStatus = resep.match_percentage >= 80 ? '<div class="match-status excellent">Sangat Cocok</div>'
-                : resep.match_percentage >= 50 ? '<div class="match-status good">Cocok</div>'
-                : '<div class="match-status low">Kurang Cocok</div>';
+            let cardMiddleContent = '';
+            
+            if (resep.search_by_bahan === true && resep.total_bahan_count > 0) {
+                const matchStatus = resep.match_percentage >= 80 ? '<div class="match-status excellent">Sangat Cocok</div>'
+                    : resep.match_percentage >= 50 ? '<div class="match-status good">Cocok</div>'
+                    : '<div class="match-status low">Kurang Cocok</div>';
 
-            const missingContent = resep.missing_bahans?.length
-                ? `<div class="missing-section">
-                    <div class="missing-label"><span class="material-icons-round">kitchen</span><span>Bahan yang belum tersedia</span></div>
-                    <div class="missing-chips">${resep.missing_bahans.map(item => `<div class="missing-chip">${item.nama}</div>`).join('')}</div>
-                   </div>`
-                : `<div class="perfect-match"><span class="material-icons-round">verified</span><span>Semua bahan tersedia 🎉</span></div>`;
+                const missingContent = resep.missing_bahans?.length
+                    ? `<div class="missing-section">
+                        <div class="missing-label"><span class="material-icons-round">kitchen</span><span>Bahan belum tersedia</span></div>
+                        <div class="missing-chips">${resep.missing_bahans.map(item => `<div class="missing-chip">${item.nama}</div>`).join('')}</div>
+                       </div>`
+                    : `<div class="perfect-match"><span class="material-icons-round">verified</span><span>Bahan lengkap! 🎉</span></div>`;
+
+                cardMiddleContent = `
+                    <div class="match-wrapper">
+                        <div class="match-header">
+                            <div class="match-percent">
+                                <div class="match-percent-circle">${resep.match_percentage}%</div>
+                                <div class="match-percent-info">
+                                    <h4>Kecocokan</h4>
+                                    <p>${resep.matched_bahan_count} / ${resep.total_bahan_count} bahan terpenuhi untuk resep ini</p>
+                                </div>
+                            </div>
+                            ${matchStatus}
+                        </div>
+                        ${missingContent}
+                    </div>`;
+            } else {
+                // 🔥 Pengisi space kosong untuk card resep biasa
+                cardMiddleContent = `
+                    <div class="resep-preview-info" style="margin-top: 12px; margin-bottom: 8px; min-height: 40px;">
+                        <p class="preview-text" style="font-size: 12px; color: #64748b; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            ${resep.description || 'Yuk, intip resep lengkap dan cara mudah membuatnya di dapur lo!'}
+                        </p>
+                    </div>`;
+            }
 
             return `
                 <div class="resep">
@@ -125,24 +183,15 @@
                                     <span class="material-icons-round resep-arrow">chevron_right</span>
                                 </div>
                                 <div class="resep-meta-list">
-                                    <div class="meta-item"><span class="material-icons-round">schedule</span><p>${resep.cook_duration || '-'}</p></div>
+                                    <div class="meta-item"><span class="material-icons-round">schedule</span><p>${formatDuration(resep.cook_duration)}</p></div>
                                     <div class="meta-item"><span class="material-icons-round">star</span><p>${Number(resep.rating).toFixed(1)}</p></div>
-                                    <div class="meta-item views"><span class="material-icons-round">visibility</span><p>${resep.views}</p></div>
+                                    <div class="meta-item views"><span class="material-icons-round">visibility</span><p>${resep.views || 0}</p></div>
                                 </div>
-                                <div class="match-wrapper">
-                                    <div class="match-header">
-                                        <div class="match-percent">
-                                            <div class="match-percent-circle">${resep.match_percentage}%</div>
-                                            <div class="match-percent-info">
-                                                <h4>Tingkat Kecocokan</h4>
-                                                <p>${resep.matched_bahan_count} dari ${resep.total_bahan_count} bahan tersedia</p>
-                                            </div>
-                                        </div>
-                                        ${matchStatus}
-                                    </div>
-                                    ${missingContent}
+                                ${cardMiddleContent}
+                                <div class="resep-verified">
+                                    <span class="material-icons-round">account_circle</span>
+                                    <p class="user-name">${resep.author?.name || 'User'}</p>
                                 </div>
-                                <div class="resep-verified"><p class="user-name">${resep.author?.name || 'User'}</p></div>
                             </div>
                         </div>
                     </div>
@@ -152,9 +201,10 @@
 
     const ui = {
         updateItemState() {
+            if (page !== 'search') return;
             document.querySelectorAll('.bahan-item').forEach(item => {
                 const checkbox = item.querySelector('input');
-                item.classList.toggle('active', checkbox.checked);
+                if (checkbox) item.classList.toggle('active', checkbox.checked);
             });
         },
 
@@ -166,8 +216,9 @@
             }
             [elements.btnApply, elements.btnHapus].forEach(btn => {
                 if (!btn) return;
-                btn.disabled = total === 0;
-                btn.classList.toggle('disabled', total === 0);
+                const isFormEmpty = (total === 0 && state.keywordSearch.trim() === '');
+                btn.disabled = isFormEmpty;
+                btn.classList.toggle('disabled', isFormEmpty);
             });
         },
 
@@ -182,12 +233,18 @@
 
         renderResultText() {
             if (!elements.resultInfoText) return;
-            if (!state.selectedBahan.length) {
-                elements.resultInfoText.textContent = 'Pilih bahan untuk melihat resep';
+            if (!state.selectedBahan.length && !state.keywordSearch) {
+                elements.resultInfoText.textContent = 'Pilih bahan atau ketik kata kunci untuk melihat resep';
                 return;
             }
-            const names = state.selectedBahan.map(item => item.nama).join(', ');
-            elements.resultInfoText.textContent = `Menampilkan rekomendasi resep berdasarkan: ${names}`;
+            
+            let textOutput = 'Menampilkan hasil pencarian';
+            if (state.keywordSearch) textOutput += ` resep "${state.keywordSearch}"`;
+            if (state.selectedBahan.length) {
+                const names = state.selectedBahan.map(item => item.nama).join(', ');
+                textOutput += ` berdasarkan bahan: ${names}`;
+            }
+            elements.resultInfoText.textContent = textOutput;
         },
 
         renderRecipes() {
@@ -214,6 +271,7 @@
         showEmptyState(message) {
             ui.resetRecipes();
             if (!elements.resultPlaceholder) return;
+            elements.resultPlaceholder.classList.remove('hidden');
             elements.resultPlaceholder.innerHTML = `<span class="material-icons-round">restaurant_menu</span><h3>${message}</h3>`;
         },
 
@@ -227,95 +285,179 @@
 
     const logic = {
         syncSelectedBahan() {
+            if (page !== 'search') return;
+
             state.selectedBahan = Array.from(document.querySelectorAll('.bahan-item input:checked')).map(input => ({
-                id: input.dataset.id,
+                id: parseInt(input.dataset.id, 10),
                 nama: input.dataset.nama,
             }));
 
             ui.renderAll();
+            
             if (!state.isMobile) {
-                state.selectedBahan.length ? api.fetchRecipes() : ui.resetRecipes();
+                (state.selectedBahan.length || state.keywordSearch.trim() !== '') ? api.fetchRecipes() : ui.resetRecipes();
             }
         },
 
         async initFilterPage() {
             const params = new URLSearchParams(window.location.search);
             const bahan = params.get('bahan');
-            if (!bahan) return ui.showEmptyState('Tidak ada bahan dipilih');
+            const queryText = params.get('q');
 
-            const ids = bahan.split(',').filter(Boolean);
-            state.selectedBahan = await api.fetchBahansByIds(ids);
+            if (queryText) {
+                state.keywordSearch = queryText;
+                if (elements.searchInput) elements.searchInput.value = queryText;
+            }
+
+            if (bahan) {
+                const ids = bahan.split(',').filter(Boolean);
+                
+                state.selectedBahan = ids.map(id => ({ id: parseInt(id, 10), nama: 'Memuat...' }));
+                ui.renderAll();
+
+                const dataBahanTerverifikasi = await api.fetchBahansByIds(ids);
+                
+                if (dataBahanTerverifikasi && dataBahanTerverifikasi.length > 0) {
+                    state.selectedBahan = dataBahanTerverifikasi;
+                }
+            } else {
+                state.selectedBahan = [];
+            }
+
             ui.renderAll();
             await api.fetchRecipes();
         },
 
         handleSearch: debounce(event => {
-            const keyword = event.target.value.toLowerCase();
-            document.querySelectorAll('.bahan-item').forEach(item => {
-                const nama = item.querySelector('.bahan-nama').textContent.toLowerCase();
-                item.style.display = nama.includes(keyword) ? 'flex' : 'none';
-            });
+            const keyword = event.target.value.trim();
+            const lowerKeyword = keyword.toLowerCase();
+            state.keywordSearch = keyword;
+
+            ui.renderAll();
+
+            const localBahanItems = document.querySelectorAll('.bahan-item');
+            if (localBahanItems.length > 0) {
+                localBahanItems.forEach(item => {
+                    const namaBahan = item.querySelector('.bahan-nama')?.textContent.toLowerCase() || '';
+                    item.classList.toggle('hidden', !namaBahan.includes(lowerKeyword));
+                });
+            }
+
+            const abjadGroups = document.querySelectorAll('.bahan-group');
+            if (abjadGroups.length > 0) {
+                abjadGroups.forEach(group => {
+                    const visibleItems = group.querySelectorAll('.bahan-item:not(.hidden)');
+                    group.classList.toggle('hidden', visibleItems.length === 0);
+                });
+            }
+
+            if (!state.isMobile) {
+                (keyword.length > 0 || state.selectedBahan.length > 0) ? api.fetchRecipes() : ui.resetRecipes();
+            }
         }, CONFIG.debounceDelay),
     };
 
-    function initEvents() {
-        elements.searchInput?.addEventListener('input', logic.handleSearch);
+    const handlers = {
+        onSearchInput(event) {
+            logic.handleSearch(event);
+        },
 
-        elements.bahanList?.addEventListener('click', event => {
+        onBahanClick(event) {
             const item = event.target.closest('.bahan-item');
             if (!item) return;
 
             const checkbox = item.querySelector('input');
-
-            // kalau bukan checkbox → toggle manual
             if (!event.target.matches('input')) {
                 event.preventDefault();
                 checkbox.checked = !checkbox.checked;
             }
-
             logic.syncSelectedBahan();
-        });
+        },
 
-        elements.chipsWrapper?.addEventListener('click', async event => {
-            if (!event.target.classList.contains('chip-close')) return;
-            const id = event.target.dataset.id;
+        async onChipsClick(event) {
+            const chipClose = event.target.closest('.chip-close');
+            if (!chipClose) return;
+            
+            const id = chipClose.dataset.id;
             state.selectedBahan = state.selectedBahan.filter(item => item.id != id);
 
             if (page === 'filter') {
-                if (!state.selectedBahan.length) return window.location.href = API.searchPageUrl;
+                if (!state.selectedBahan.length && !state.keywordSearch) {
+                    window.location.href = API.searchPageUrl;
+                    return;
+                }
                 const ids = state.selectedBahan.map(item => item.id);
-                window.history.replaceState({}, '', `${API.filterUrl}?bahan=${ids.join(',')}`);
+                const newParams = new URLSearchParams();
+                if (ids.length) newParams.append('bahan', ids.join(','));
+                if (state.keywordSearch) newParams.append('q', state.keywordSearch);
+
+                window.history.replaceState({}, '', `${API.filterUrl}?${newParams.toString()}`);
                 ui.renderAll();
                 await api.fetchRecipes();
                 return;
             }
 
             document.querySelectorAll('.bahan-item input').forEach(input => {
-                if (input.dataset.id === id) input.checked = false;
+                if (input.dataset.id == id) input.checked = false;
             });
             logic.syncSelectedBahan();
-        });
+        },
 
-        elements.btnHapus?.addEventListener('click', () => {
+        onBtnHapusClick() {
             document.querySelectorAll('.bahan-item input').forEach(input => input.checked = false);
             state.selectedBahan = [];
-            logic.syncSelectedBahan();
-        });
+            state.keywordSearch = '';
+            if (elements.searchInput) elements.searchInput.value = '';
+            
+            document.querySelectorAll('.bahan-item, .bahan-group').forEach(item => {
+                item.classList.remove('hidden');
+            });
 
-        elements.btnApply?.addEventListener('click', () => {
+            logic.syncSelectedBahan();
+            if (page === 'filter') window.location.href = API.searchPageUrl;
+        },
+
+        onBtnApplyClick() {
             if (!state.isMobile) return;
             const ids = state.selectedBahan.map(item => item.id);
-            window.location.href = `${API.filterUrl}?bahan=${ids.join(',')}`;
-        });
+            const redirectParams = new URLSearchParams();
+            
+            if (ids.length) redirectParams.append('bahan', ids.join(','));
+            if (state.keywordSearch) redirectParams.append('q', state.keywordSearch);
 
-        window.addEventListener('resize', () => {
+            window.location.href = `${API.filterUrl}?${redirectParams.toString()}`;
+        },
+
+        onWindowResize() {
+            const wasMobile = state.isMobile;
             state.isMobile = window.innerWidth < CONFIG.mobileBreakpoint;
-        });
+            
+            if (wasMobile && !state.isMobile && (state.selectedBahan.length || state.keywordSearch.trim() !== '')) {
+                api.fetchRecipes();
+            }
+        }
+    };
+
+    function initEvents() {
+        elements.searchInput?.addEventListener('input', handlers.onSearchInput);
+        elements.bahanList?.addEventListener('click', handlers.onBahanClick);
+        elements.chipsWrapper?.addEventListener('click', handlers.onChipsClick);
+        elements.btnHapus?.addEventListener('click', handlers.onBtnHapusClick);
+        elements.btnApply?.addEventListener('click', handlers.onBtnApplyClick);
+        window.addEventListener('resize', handlers.onWindowResize);
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener('DOMContentLoaded', () => {
         initEvents();
-        if (page === 'search') logic.syncSelectedBahan();
-        if (page === 'filter') await logic.initFilterPage();
+        
+        if (page === 'search') {
+            logic.syncSelectedBahan();
+        }
+        
+        if (page === 'filter') {
+            setTimeout(async () => {
+                await logic.initFilterPage();
+            }, 50);
+        }
     });
 })();
