@@ -1,178 +1,197 @@
-/* pilih-resep.css - Final Fix */
+/* pilih-resep.css — Full */
 
-.main-content {
-    max-width: 100%;
-    margin: 0 auto;
-    min-height: 100vh;
-    background-color: #FFF8F5;
-    padding: 0 0.7rem 2rem;
-    gap: 1rem;
+.pr-page {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    background: #FFF8F5;
+    gap: 0;
+    padding-bottom: 2rem;
 }
 
 .navbar {
-    background-color: #f4f5f7;
-    margin: 0 -0.7rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    background: #FFF8F5;
+    padding: 0 1rem;
 }
 
-.slot-info {
-    padding: 0 0.25rem;
+/* ── HEADER ── */
+.pr-header {
+    padding: 0.75rem 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
-
-.kulkas-title {
+.pr-title {
+    font-size: 1.35rem;
     color: #8C2A1A;
+    line-height: 1;
 }
 
-/* ========= GRID UNTUK CARD HORIZONTAL ========= */
+/* Slot pills */
+.pr-slot-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.slot-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.75rem;
+    background: #FFF4EE;
+    border: 1.5px solid #FECDA3;
+    border-radius: 2rem;
+    font-size: 0.78rem;
+    color: #7C3514;
+}
+.slot-pill .material-icons-round { font-size: 0.85rem !important; color: #E65100; }
+.slot-pill-waktu {
+    background: #FEF3C7;
+    border-color: #FDE68A;
+    color: #92400E;
+}
+.slot-pill-waktu .material-icons-round { color: #D97706; }
+
+.pr-warning {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.85rem;
+    background: #FEF3C7;
+    border-radius: 0.75rem;
+    color: #92400E;
+    font-size: 0.8rem;
+}
+.pr-warning .material-icons-round { font-size: 1rem !important; color: #D97706; }
+
+/* ── SEARCH ── */
+.pr-search-wrap {
+    padding: 0.75rem 1rem 0;
+}
+
+/* ── GRID ── */
 .resep-menus {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
     height: fit-content;
 }
 
-/* CARD HORIZONTAL */
-.resep {
+/* ── CARD ── */
+.resep-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: white;
     border-radius: 1.25rem;
-    border: 1px solid #F2E2D9;
-    padding: 0.75rem 1rem;
+    border: 1px solid #F4E8E0;
+    padding: 0.75rem 0.85rem;
     cursor: pointer;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
-    text-decoration: none;
+    transition: box-shadow 0.18s, border-color 0.18s, background 0.15s;
     gap: 0.5rem;
-    height: fit-content;
 }
-
-.resep:hover {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    border-color: #8C2A1A;
+.resep-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border-color: #E65100;
+    background: #FFFAF8;
 }
-
-.resep.no-slot {
+.resep-card.no-slot {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
 }
 
-/* Bagian kiri (icon + detail) */
-.resep-content {
+.resep-card-content {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    flex: 1;
-    min-width: 0; /* penting untuk ellipsis */
-}
-
-.resep-logo {
-    display: flex;
-    width: 3rem;
-    height: 3rem;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0.875rem;
-    background-color: #FEE7C3;
-    flex-shrink: 0;
-}
-
-.resep-logo .material-icons-round {
-    font-size: 1.5rem !important;
-    color: #8C2A1A;
-}
-
-.resep-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
     flex: 1;
     min-width: 0;
 }
 
-.resep-detail h1 {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #2D1A11;
-    margin: 0;
+.resep-thumb {
+    width: 3rem; height: 3rem;
+    border-radius: 0.75rem;
+    background: #FFF4EE;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+.resep-thumb img { width:100%; height:100%; object-fit:cover; }
+.resep-thumb .material-icons-round { font-size: 1.4rem !important; color: #FECDA3; }
+
+.resep-detail { flex:1; min-width:0; }
+.resep-nama {
+    font-size: 0.9rem;
+    color: #172D23;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin: 0;
 }
-
-.resep-content-detail {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.resep-content-detail > div {
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-}
-
-.resep-content-detail .material-icons-round {
-    font-size: 0.8rem !important;
-    color: #8C2A1A;
-}
-
-.resep-content-detail span:not(.material-icons-round) {
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: #4A2A1A;
-}
-
-/* Panah kanan */
-.arrow-icon {
-    font-size: 1rem !important;
-    color: #B87C5A;
-    flex-shrink: 0;
-}
-
-/* Warning banner */
-.slot-warning {
+.resep-meta {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    background-color: #FEF3C7;
-    border-radius: 0.75rem;
-    color: #92400E;
-    font-size: 0.85rem;
+    margin-top: 0.2rem;
+    flex-wrap: wrap;
 }
-
-.slot-warning .material-icons-round {
-    font-size: 1.1rem !important;
+.resep-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.7rem;
+    color: #B87C5A;
 }
+.resep-meta-item .material-icons-round { font-size: 0.8rem !important; color: #E65100; }
 
-.empty-state {
+.resep-arrow { font-size: 0.85rem !important; color: #E8D5CC; flex-shrink: 0; }
+.resep-card:hover .resep-arrow { color: #E65100; }
+
+/* ── EMPTY STATE ── */
+.resep-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 3rem 2rem;
     text-align: center;
-    padding: 2rem;
-    color: #8C2A1A;
-    font-size: 0.9rem;
-    grid-column: 1 / -1;
+    background: white;
+    border-radius: 1.25rem;
+    border: 1px solid #F4E8E0;
 }
+.resep-empty-icon { font-size: 2.5rem !important; color: #D1C5C0; }
+.resep-empty p:first-of-type { font-size: 0.9rem; color: #172D23; }
+.resep-empty p:last-of-type  { font-size: 0.8rem; color: #6B5B54; }
 
-/* ========= RESPONSIVE GRID ========= */
+/* ── LOADING ── */
+.pr-loading-overlay {
+    position: fixed; inset: 0;
+    background: rgba(255,248,245,0.88);
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.pr-spinner {
+    width: 2.2rem; height: 2.2rem;
+    border: 3px solid #F4E8E0;
+    border-top-color: #8C2A1A;
+    border-radius: 50%;
+    animation: prSpin 0.7s linear infinite;
+}
+@keyframes prSpin { to { transform: rotate(360deg); } }
+.pr-loading-overlay p { font-size: 0.875rem; color: #8C2A1A; }
+
+/* ── RESPONSIVE ── */
 @media (min-width: 600px) {
-    .resep-menus {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .resep-menus { display: grid; grid-template-columns: repeat(2,1fr); }
 }
-
 @media (min-width: 1024px) {
-    .main-content {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 0 2rem 2rem;
-    }
-    .resep-menus {
-        grid-template-columns: repeat(3, 1fr);
-    }
+    .pr-page, .pr-header, .pr-search-wrap { max-width:1100px; margin-left:auto; margin-right:auto; }
+    .resep-menus { max-width:1100px; margin: 0 auto; grid-template-columns: repeat(3,1fr); }
 }
