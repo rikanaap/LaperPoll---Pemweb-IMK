@@ -11,7 +11,7 @@
 
     <x-navbar :backUrl="route('meal-planner.index')"></x-navbar>
 
-    {{-- HEADER --}}
+    {{-- ── HEADER ── --}}
     <div class="nb-header">
         <div class="nb-header-left">
             <h1 class="nb-title font-jakarta font-bold">Nota Belanja</h1>
@@ -34,14 +34,14 @@
         </button>
     </div>
 
-    {{-- FILTER DROPDOWN --}}
+    {{-- ── FILTER DROPDOWN ── --}}
     <div class="nb-filter-dropdown hidden" id="filterDropdown">
         <p class="font-jakarta font-semibold nb-filter-label">Filter Rentang Tanggal</p>
         <div class="nb-filter-presets">
-            <button class="nb-preset-btn font-jakarta" data-preset="today">Hari ini</button>
-            <button class="nb-preset-btn font-jakarta" data-preset="tomorrow">Besok</button>
-            <button class="nb-preset-btn font-jakarta" data-preset="thisweek">Minggu ini</button>
-            <button class="nb-preset-btn font-jakarta" data-preset="next7">7 Hari ke depan</button>
+            <button class="nb-preset-btn font-jakarta font-medium" data-preset="today">Hari ini</button>
+            <button class="nb-preset-btn font-jakarta font-medium" data-preset="tomorrow">Besok</button>
+            <button class="nb-preset-btn font-jakarta font-medium" data-preset="thisweek">Minggu ini</button>
+            <button class="nb-preset-btn font-jakarta font-medium" data-preset="next7">7 Hari ke depan</button>
         </div>
         <div class="nb-filter-custom">
             <div class="nb-filter-row">
@@ -67,7 +67,7 @@
         </button>
     </div>
 
-    {{-- RESEP DALAM RANGE (kalau ada) --}}
+    {{-- ── RESEP DALAM RANGE ── --}}
     @if($resepDalamRange->isNotEmpty())
     <div class="nb-resep-list">
         <p class="nb-section-label font-jakarta font-bold">
@@ -82,16 +82,16 @@
     </div>
     @endif
 
-    {{-- PROGRESS CARD --}}
+    {{-- ── PROGRESS + HAPUS SELESAI ── --}}
     @if($totalItem > 0)
-    <div class="nb-progress-card">
+    <div class="nb-progress-card" id="nbProgressCard">
         <div class="nb-progress-top">
             <div class="nb-progress-icon-wrap">
                 <span class="material-icons-round">shopping_cart</span>
             </div>
             <div class="nb-progress-info">
                 <p class="font-jakarta font-bold nb-progress-title">Daftar Belanja</p>
-                <p class="font-jakarta font-regular nb-progress-sub">
+                <p class="font-jakarta font-regular nb-progress-sub" id="progressSub">
                     {{ $doneItem }} dari {{ $totalItem }} item sudah dibeli
                 </p>
             </div>
@@ -101,12 +101,11 @@
         </div>
         <div class="nb-progress-track">
             <div class="nb-progress-fill" id="progressFill"
-                 style="width: {{ $totalItem > 0 ? round(($doneItem / $totalItem) * 100) : 0 }}%">
-            </div>
+                 style="width: {{ $totalItem > 0 ? round(($doneItem / $totalItem) * 100) : 0 }}%"></div>
         </div>
     </div>
 
-    {{-- TOMBOL HAPUS YANG SUDAH DIBELI (REVISI 1) --}}
+    {{-- Tombol hapus muncul hanya jika ada yang sudah dibeli --}}
     <div class="nb-hapus-wrap {{ $doneItem > 0 ? '' : 'hidden' }}" id="hapusSelesaiWrap">
         <button class="nb-hapus-btn font-jakarta font-semibold" id="hapusSelesaiBtn">
             <span class="material-icons-round">delete_sweep</span>
@@ -115,7 +114,7 @@
     </div>
     @endif
 
-    {{-- DAFTAR BAHAN PER KATEGORI --}}
+    {{-- ── DAFTAR BAHAN PER KATEGORI ── --}}
     <div id="bahanList">
         @forelse($groupedOrdered as $kategori => $items)
             @php
@@ -140,7 +139,7 @@
                         <span class="material-icons-round">{{ $iconKat }}</span>
                     </div>
                     <span class="font-jakarta font-bold nb-kat-label">{{ $kategori }}</span>
-                    <span class="nb-kat-count font-jakarta font-medium">
+                    <span class="nb-kat-count font-jakarta font-medium" data-kat-count="{{ $kategori }}">
                         {{ $items->count() }} item
                     </span>
                 </div>
@@ -159,18 +158,14 @@
                                     {{ $item->bahan->nama }}
                                 </span>
                                 <span class="nb-item-qty font-jakarta font-regular">
-                                    {{ $item->gram_total }} gram
+                                    {{ $item->gram_total > 0 ? $item->gram_total . ' gram' : '—' }}
                                 </span>
                             </div>
                         </label>
-                        @if(!$loop->last)
-                            <div class="nb-item-divider"></div>
-                        @endif
                     @endforeach
                 </div>
             </div>
         @empty
-            {{-- Empty state --}}
             <div class="nb-empty" id="notaEmpty">
                 <div class="nb-empty-icon-wrap">
                     <span class="material-icons-round">receipt_long</span>
@@ -189,16 +184,19 @@
 
 </main>
 
-{{-- TOAST --}}
-<div class="nb-toast hidden" id="nbToast"></div>
+{{-- ── TOAST ── --}}
+<div class="nb-toast hidden" id="nbToast">
+    <span class="material-icons-round" id="nbToastIcon">check_circle</span>
+    <span id="nbToastMsg"></span>
+</div>
 @endsection
 
 @push('scripts')
 <script>
-    window.csrfToken    = "{{ csrf_token() }}";
-    window.nbApiToggle  = "{{ url('/api/nota-belanja/toggle') }}";
-    window.nbApiHapus   = "{{ url('/api/nota-belanja/hapus-selesai') }}";
-    window.notaUrl      = "{{ route('nota.index') }}";
+    window.csrfToken   = "{{ csrf_token() }}";
+    window.nbApiToggle = "{{ url('/api/nota-belanja/toggle') }}";
+    window.nbApiHapus  = "{{ url('/api/nota-belanja/hapus-selesai') }}";
+    window.notaUrl     = "{{ route('nota.index') }}";
 </script>
 <script src="{{ asset('js/nota-belanja.js') }}"></script>
 @endpush

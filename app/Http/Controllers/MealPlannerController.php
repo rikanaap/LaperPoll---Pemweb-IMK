@@ -6,7 +6,6 @@ use App\Models\MealPlanner;
 use App\Models\MealPlannerDetail;
 use App\Models\Resep;
 use App\Models\UserCart;
-use App\Models\ResepBahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,8 +19,7 @@ class MealPlannerController extends Controller
         return view('pages.meal_planner.index');
     }
 
-    // ── AJAX: ambil data meal planner berdasarkan range tanggal ────────
-    // GET /api/meal-planner?start=2026-05-16&end=2026-05-22
+    // ── GET /api/meal-planner?start=2026-05-16&end=2026-05-22 ─────────
     public function getData(Request $request)
     {
         $request->validate([
@@ -37,24 +35,24 @@ class MealPlannerController extends Controller
             ->where('user_id', $userId)
             ->whereBetween('tanggal', [$start->toDateString(), $end->toDateString()])
             ->get()
-            ->keyBy(fn($p) => $p->tanggal->format('Y-m-d'));
+            ->keyBy(fn($p) => Carbon::parse($p->tanggal)->format('Y-m-d'));
 
-        // Bangun response per tanggal dalam range
         $result = [];
         $cur = $start->copy();
         while ($cur <= $end) {
             $iso     = $cur->toDateString();
-            $planner = $planners[$iso] ?? null;
+            $planner = $planners->get($iso);
 
             $meals = ['SA' => null, 'SI' => null, 'MA' => null];
             if ($planner) {
                 foreach ($planner->details as $detail) {
                     $resep = $detail->resep;
+                    if (!$resep) continue;
                     $meals[$detail->meal_time] = [
                         'detail_id' => $detail->id,
                         'resep_id'  => $resep->id,
                         'nama'      => $resep->title,
-                        'kalori'    => $resep->calorie ?? 0,
+                        'kalori'    => (int)($resep->calorie ?? 0),
                         'durasi'    => $resep->cook_duration,
                         'thumbnail' => $resep->thumbnail
                             ? asset('storage/' . $resep->thumbnail)
@@ -64,11 +62,11 @@ class MealPlannerController extends Controller
             }
 
             $result[] = [
-                'tanggal'     => $iso,
-                'planner_id'  => $planner?->id,
-                'max_calorie' => $planner?->max_calorie,
-                'total_kalori'=> collect($meals)->sum(fn($m) => $m['kalori'] ?? 0),
-                'meals'       => $meals,
+                'tanggal'      => $iso,
+                'planner_id'   => $planner?->id,
+                'max_calorie'  => (int)($planner?->max_calorie ?? 0),
+                'total_kalori' => collect($meals)->sum(fn($m) => $m['kalori'] ?? 0),
+                'meals'        => $meals,
             ];
 
             $cur->addDay();
@@ -77,9 +75,7 @@ class MealPlannerController extends Controller
         return response()->json($result);
     }
 
-    // ── AJAX: simpan/update target kalori harian ───────────────────────
-    // POST /api/meal-planner/kalori
-    // body: { tanggal, max_calorie }
+    // ── POST /api/meal-planner/kalori ─────────────────────────────────
     public function setKalori(Request $request)
     {
         $request->validate([
@@ -87,25 +83,21 @@ class MealPlannerController extends Controller
             'max_calorie' => 'required|integer|min:100|max:9999',
         ]);
 
-        $userId = Auth::id();
-
+        $userId  = Auth::id();
         $planner = MealPlanner::firstOrCreate(
             ['user_id' => $userId, 'tanggal' => $request->tanggal],
             ['max_calorie' => $request->max_calorie]
         );
-
         $planner->update(['max_calorie' => $request->max_calorie]);
 
         return response()->json([
             'success'     => true,
             'planner_id'  => $planner->id,
-            'max_calorie' => $planner->max_calorie,
+            'max_calorie' => (int)$planner->max_calorie,
         ]);
     }
 
-    // ── AJAX: tambah resep ke slot meal planner ────────────────────────
-    // POST /api/meal-planner/tambah
-    // body: { tanggal, meal_time (SA/SI/MA), resep_id }
+    // ── POST /api/meal-planner/tambah ─────────────────────────────────
     public function tambahResep(Request $request)
     {
         $request->validate([
@@ -117,13 +109,12 @@ class MealPlannerController extends Controller
         $userId = Auth::id();
 
         DB::transaction(function () use ($request, $userId) {
-            // Pastikan baris meal_planner untuk tanggal ini ada
             $planner = MealPlanner::firstOrCreate(
                 ['user_id' => $userId, 'tanggal' => $request->tanggal],
                 ['max_calorie' => null]
             );
 
-            // Hapus slot yang sama kalau sudah ada (replace)
+            // Replace slot yang sama
             MealPlannerDetail::where('meal_planner_id', $planner->id)
                 ->where('meal_time', $request->meal_time)
                 ->delete();
@@ -138,31 +129,28 @@ class MealPlannerController extends Controller
         $resep = Resep::find($request->resep_id);
 
         return response()->json([
-            'success'  => true,
-            'resep_id' => $resep->id,
-            'nama'     => $resep->title,
-            'kalori'   => $resep->calorie ?? 0,
-            'thumbnail'=> $resep->thumbnail ? asset('storage/' . $resep->thumbnail) : null,
+            'success'   => true,
+            'resep_id'  => $resep->id,
+            'nama'      => $resep->title,
+            'kalori'    => (int)($resep->calorie ?? 0),
+            'thumbnail' => $resep->thumbnail ? asset('storage/' . $resep->thumbnail) : null,
         ]);
     }
 
-    // ── AJAX: hapus satu slot resep ────────────────────────────────────
-    // DELETE /api/meal-planner/detail/{id}
+    // ── DELETE /api/meal-planner/detail/{id} ──────────────────────────
     public function hapusDetail($id)
     {
-        $userId = Auth::id();
-
-        $detail = MealPlannerDetail::whereHas('mealPlanner', fn($q) => $q->where('user_id', $userId))
-            ->findOrFail($id);
+        $detail = MealPlannerDetail::whereHas(
+            'mealPlanner', fn($q) => $q->where('user_id', Auth::id())
+        )->findOrFail($id);
 
         $detail->delete();
 
         return response()->json(['success' => true]);
     }
 
-    // ── AJAX: generate nota belanja dari range tanggal ─────────────────
-    // POST /api/meal-planner/generate-nota
-    // body: { start, end }
+    // ── POST /api/meal-planner/generate-nota ──────────────────────────
+    // FIX: pakai updateOrCreate biar tidak duplicate entry di user_cart
     public function generateNota(Request $request)
     {
         $request->validate([
@@ -172,17 +160,20 @@ class MealPlannerController extends Controller
 
         $userId = Auth::id();
 
-        // Ambil semua resep_id dalam range
-        $resepIds = MealPlannerDetail::whereHas('mealPlanner', function ($q) use ($userId, $request) {
+        // Kumpulkan semua resep_id dalam range
+        $resepIds = MealPlannerDetail::whereHas('mealPlanner', fn($q) =>
             $q->where('user_id', $userId)
-              ->whereBetween('tanggal', [$request->start, $request->end]);
-        })->pluck('resep_id')->unique();
+              ->whereBetween('tanggal', [$request->start, $request->end])
+        )->pluck('resep_id')->unique();
 
         if ($resepIds->isEmpty()) {
-            return response()->json(['success' => false, 'message' => 'Tidak ada resep di range ini.'], 422);
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada resep di rentang tanggal ini.',
+            ], 422);
         }
 
-        // Kumpulkan kebutuhan bahan dari semua resep (aggregate gram_total)
+        // Agregasi gram per bahan dari semua resep
         $bahanNeeds = DB::table('resep_bahan')
             ->whereIn('resep_id', $resepIds)
             ->select('bahan_id', DB::raw('SUM(gram_total) as total_gram'))
@@ -191,27 +182,28 @@ class MealPlannerController extends Controller
 
         DB::transaction(function () use ($userId, $bahanNeeds) {
             foreach ($bahanNeeds as $need) {
-                $existing = UserCart::where('user_id', $userId)
-                    ->where('bahan_id', $need->bahan_id)
-                    ->where('is_done', 0)
-                    ->first();
-
-                if ($existing) {
-                    $existing->increment('gram_total', $need->total_gram);
-                } else {
-                    UserCart::create([
-                        'user_id'    => $userId,
-                        'bahan_id'   => $need->bahan_id,
+                // updateOrCreate = aman dari duplicate entry (user_id + bahan_id unique)
+                // Kalau sudah ada (apapun is_done-nya) → update gram_total
+                // Kalau belum ada → buat baru
+                UserCart::updateOrCreate(
+                    [
+                        'user_id'  => $userId,
+                        'bahan_id' => $need->bahan_id,
+                    ],
+                    [
                         'gram_total' => $need->total_gram,
-                        'is_done'    => 0,
-                    ]);
-                }
+                        'is_done'    => 0,  // reset ke belum dibeli
+                    ]
+                );
             }
         });
 
         return response()->json([
             'success'  => true,
-            'redirect' => route('nota.index'),
+            'redirect' => route('nota.index', [
+                'start' => $request->start,
+                'end'   => $request->end,
+            ]),
         ]);
     }
 }
