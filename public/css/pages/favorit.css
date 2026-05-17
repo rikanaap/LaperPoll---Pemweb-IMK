@@ -1,0 +1,102 @@
+:root {
+    --bg-color: #fff8f6;
+    --primary-red: #ff4d4d;
+    --text-dark: #333;
+    --text-light: #888;
+    --card-bg: #ffffff;
+    --accent-pink: #fde2e2;
+}
+
+body {
+    background-color: var(--bg-color);
+    margin: 0;
+    color: var(--text-dark);
+}
+
+/* Profile Card */
+.profile-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.profile-info { display: flex; align-items: center; gap: 20px; }
+.avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--primary-red); }
+.profile-stats { display: flex; gap: 40px; text-align: center; border-left: 1px solid #eee; padding-left: 40px; }
+.stat-item strong { display: block; font-size: 20px; }
+.stat-item span { color: var(--text-light); font-size: 14px; }
+
+/* Section Title */
+.section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 16px; }
+.heart-active { color: var(--text-dark); }
+.count { color: #3498db; text-decoration: underline; }
+
+/* Recipe Grid */
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    padding: 0 10px ;
+    width: 100%;
+}
+
+.recipe-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 0;
+    flex-direction: column;
+    display: flex;
+}
+
+.recipe-image-placeholder {
+    height: 180px;
+    background-color: var(--accent-pink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.placeholder-icon { font-size: 50px; color: #c0392b; opacity: 0.5; }
+
+/* Tombol Favorit dari image_55187b.png */
+.fav-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.8);
+    transition: 0.3s;
+}
+.fav-btn.active { color: #e67e22; } /* Warna oranye sesuai image_55187b.png */
+
+.card-body { padding: 15px; }
+.meta-info { display: flex; gap: 15px; color: var(--text-light); font-size: 13px; margin: 10px 0; }
+.card-footer { display: flex; justify-content: space-between; border-top: 1px solid #eee; padding-top: 10px; color: var(--text-light); }
+
+.fab-add {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-red);
+    color: white;
+    border: none;
+    font-size: 30px;
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }}

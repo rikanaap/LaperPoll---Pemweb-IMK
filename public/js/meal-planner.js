@@ -1,449 +1,594 @@
-// ============================================================
-//  MEAL PLANNER — JS utama
-//  Features: tab hari + tanggal, date range picker, kalori tracker
-// ============================================================
+// meal-planner.js — Full Rewrite
+// Kompatibel dengan MealPlannerController versi kamu (SA/SI/MA, apiBase)
+(function () {
+'use strict';
 
-const labelHari = {
-    sen: "Senin", sel: "Selasa", rab: "Rabu",
-    kam: "Kamis", jum: "Jumat", sab: "Sabtu", min: "Minggu"
-};
-const hariList = ["sen", "sel", "rab", "kam", "jum", "sab", "min"];
-const waktuList = ["sarapan", "siang", "malam"];
+// ─── Constants ───────────────────────────────────────────────
+const WAKTU   = ['SA', 'SI', 'MA'];
+const ICON    = { SA: 'wb_sunny', SI: 'restaurant', MA: 'bedtime' };
+const LABEL   = { SA: 'SARAPAN', SI: 'MAKAN SIANG', MA: 'MAKAN MALAM' };
+const HARI    = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const BULAN   = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+const BULAN_F = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
-const iconWaktu  = { sarapan: "wb_sunny",    siang: "restaurant", malam: "bedtime" };
-const labelWaktu = { sarapan: "SARAPAN",     siang: "MAKAN SIANG", malam: "MAKAN MALAM" };
+// ─── State ───────────────────────────────────────────────────
+let activeDates   = [];     // ['2026-05-12', ...]
+let activeIdx     = 0;      // index tab aktif
+let serverData    = {};     // { '2026-05-12': { planner_id, max_calorie, total_kalori, meals } }
+let rangeStart    = null;
+let rangeEnd      = null;
+let calStep       = 0;      // 0 = pilih start, 1 = pilih end
+let calMonth, calYear;
 
-// ─── Storage key helpers ─────────────────────────────────────
-function mealKey(dateStr, waktu) { return `meal_${dateStr}_${waktu}`; }
-function kaloriTargetKey() { return "kalori_target"; }
-
-// ─── Date range state ────────────────────────────────────────
-let rangeStart = null;   // Date object
-let rangeEnd   = null;   // Date object
-let calPickStep = 0;     // 0=pick start, 1=pick end
-let calViewMonth, calViewYear;
-
-// Tanggal untuk masing-masing tab hari (diset oleh initWeekDates)
-const tabDates = {};  // { sen: "2026-05-04", sel: ..., ... }
-
-function toISO(d) {
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+// ─── Utils ───────────────────────────────────────────────────
+const toISO  = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const pad    = n => String(n).padStart(2,'0');
+const today  = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+const todayISO = () => toISO(today());
+function parseISO(s) { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); }
+function datesInRange(s, e) {
+    const r=[], c=new Date(s); c.setHours(0,0,0,0);
+    const end=new Date(e); end.setHours(23,59,59);
+    while(c<=end){ r.push(toISO(new Date(c))); c.setDate(c.getDate()+1); }
+    return r;
 }
-function parseISO(s) {
-    const [y,m,d] = s.split('-').map(Number);
-    return new Date(y, m-1, d);
+function fmtDate(d) {
+    return `${HARI[d.getDay()]}, ${d.getDate()} ${BULAN_F[d.getMonth()]} ${d.getFullYear()}`;
 }
-
-// ─── Init: set tanggal tab sesuai minggu hari ini (atau range) ─
-function initWeekDates(anchorDate) {
-    // anchor ke Senin minggu anchor
-    const d = anchorDate ? new Date(anchorDate) : new Date();
-    d.setHours(0,0,0,0);
-    const dow = d.getDay(); // 0=Sun
-    const diffToMon = (dow === 0) ? -6 : 1 - dow;
-    const monday = new Date(d);
-    monday.setDate(d.getDate() + diffToMon);
-
-    hariList.forEach((h, i) => {
-        const day = new Date(monday);
-        day.setDate(monday.getDate() + i);
-        tabDates[h] = toISO(day);
-        const el = document.getElementById(`date-${h}`);
-        if (el) el.textContent = day.getDate();
-    });
+function fmtLabel(d) {
+    return `${d.getDate()} ${BULAN[d.getMonth()]}`;
 }
-
-// ─── Render semua slot ───────────────────────────────────────
-function renderSemuaSlot() {
-    hariList.forEach(hari => {
-        const container = document.getElementById(`content-${hari}`);
-        if (!container) return;
-        container.innerHTML = "";
-        const dateStr = tabDates[hari];
-
-        waktuList.forEach(waktu => {
-            const key  = mealKey(dateStr, waktu);
-            const data = localStorage.getItem(key);
-
-            const section = document.createElement("div");
-            section.className = "meal-section flex flex-col gap-2";
-
-            if (data) {
-                const resep = JSON.parse(data);
-                const kalNum = parseInt(resep.kalori) || 0;
-                section.innerHTML = `
-                    <div class="meal-section-header flex flex-row">
-                        <span class="material-icons-round meal-icon">${iconWaktu[waktu]}</span>
-                        <p class="font-jakarta font-bold text-caption meal-label">${labelWaktu[waktu]}</p>
-                        <button class="meal-action font-jakarta font-bold text-caption hapus-btn"
-                            data-key="${key}">HAPUS</button>
-                    </div>
-                    <div class="meal-card flex flex-row gap-3">
-                        <div class="meal-img-placeholder"></div>
-                        <div class="meal-info flex flex-col gap-1">
-                            <h2 class="font-jakarta font-semibold text-title2 text-secondary-normal">${resep.nama}</h2>
-                            <p class="font-jakarta font-regular text-caption text-primary-darker">${resep.waktu} · ${resep.kalori}</p>
-                        </div>
-                    </div>
-                `;
-            } else {
-                section.innerHTML = `
-                    <div class="meal-section-header flex flex-row">
-                        <span class="material-icons-round meal-icon">${iconWaktu[waktu]}</span>
-                        <p class="font-jakarta font-bold text-caption meal-label">${labelWaktu[waktu]}</p>
-                    </div>
-                    <a href="${window.pilihResepUrl}?slot=${dateStr}-${waktu}" class="slot-kosong flex flex-row gap-3">
-                        <span class="material-icons-round slot-kosong-icon">add_circle_outline</span>
-                        <p class="font-jakarta font-medium text-body text-primary-darker">Tambah resep</p>
-                    </a>
-                `;
-            }
-
-            container.appendChild(section);
-        });
-    });
-
-    // Bind hapus buttons
-    document.querySelectorAll(".hapus-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const key = e.target.dataset.key;
-            localStorage.removeItem(key);
-            renderSemuaSlot();
-            updateKaloriTracker();
-            cekTombolGenerate();
-        });
-    });
+function fmtRangeLabel() {
+    if (!rangeStart) return 'Pilih tanggal';
+    if (!rangeEnd || toISO(rangeStart) === toISO(rangeEnd)) return fmtLabel(rangeStart);
+    return `${fmtLabel(rangeStart)} – ${fmtLabel(rangeEnd)}`;
+}
+function formatDurasi(t) {
+    if (!t) return null;
+    const p = t.split(':').map(Number);
+    const j = p[0]||0, m = p[1]||0;
+    if (j>0&&m>0) return `${j}j ${m}mnt`;
+    if (j>0) return `${j} jam`;
+    if (m>0) return `${m} mnt`;
+    return null;
 }
 
-// ─── Generate button ─────────────────────────────────────────
-function cekTombolGenerate() {
-    const generateBtn = document.querySelector(".generate-btn");
-    if (!generateBtn) return;
-    const activeTab = document.querySelector('input[name="hari"]:checked');
-    if (!activeTab) return;
-    const hariAktif = activeTab.id.replace("tab-", "");
-    const dateStr   = tabDates[hariAktif];
-    const adaData   = waktuList.some(w => localStorage.getItem(mealKey(dateStr, w)));
-    generateBtn.style.opacity       = adaData ? "1"    : "0.5";
-    generateBtn.style.pointerEvents = adaData ? "auto" : "none";
+// ─── API ─────────────────────────────────────────────────────
+async function api(url, method='GET', body=null) {
+    const opts = { method, headers: { 'Content-Type':'application/json', 'X-CSRF-TOKEN': window.MP.csrf, 'Accept':'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(url, opts);
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message||`HTTP ${res.status}`); }
+    return res.json();
 }
 
-// ─── Kalori Tracker ──────────────────────────────────────────
-function getKaloriTarget() {
-    return parseInt(localStorage.getItem(kaloriTargetKey())) || 0;
-}
-function setKaloriTarget(val) {
-    localStorage.setItem(kaloriTargetKey(), val);
-}
-function getKaloriHariIni() {
-    const activeTab = document.querySelector('input[name="hari"]:checked');
-    if (!activeTab) return 0;
-    const hariAktif = activeTab.id.replace("tab-", "");
-    const dateStr   = tabDates[hariAktif];
-    let total = 0;
-    waktuList.forEach(w => {
-        const data = localStorage.getItem(mealKey(dateStr, w));
-        if (data) {
-            const resep = JSON.parse(data);
-            total += parseInt(resep.kalori) || 0;
-        }
-    });
-    return total;
+// ─── Load data dari server ────────────────────────────────────
+async function loadData(start, end) {
+    setLoading(true);
+    try {
+        const rows = await api(`${window.MP.apiBase}?start=${start}&end=${end}`);
+        serverData = {};
+        rows.forEach(r => { serverData[r.tanggal] = r; });
+        renderTabs();
+        renderContent();
+        updateKaloriUI();
+        updateGenerateBtn();
+    } catch(e) {
+        toast('Gagal memuat data: ' + e.message, true);
+    } finally {
+        setLoading(false);
+    }
 }
 
-function updateKaloriTracker() {
-    const target = getKaloriTarget();
-    const current = getKaloriHariIni();
-    const nilaiEl = document.getElementById("kaloriNilai");
-    const barFill = document.getElementById("kaloriBarFill");
-    const alert   = document.getElementById("kaloriAlert");
-    const tracker = document.getElementById("kaloriTracker");
+// ─── Tabs ─────────────────────────────────────────────────────
+function renderTabs() {
+    const wrap = document.getElementById('mpTabsWrap');
+    const tabs = document.getElementById('mpTabs');
+    if (!wrap || !tabs) return;
 
-    if (!nilaiEl) return;
+    if (!activeDates.length) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    tabs.innerHTML = '';
 
-    if (target === 0) {
-        // Tampilkan tombol "Atur Kalori"
-        tracker.innerHTML = `
-            <button class="kalori-atur-btn flex flex-row gap-1" id="kaloriEditBtn2">
-                <span class="material-icons-round">emoji_food_beverage</span>
-                <span class="font-jakarta font-semibold text-caption">🔥 Atur Kalori Hari Ini!</span>
-            </button>
+    activeDates.forEach((iso, i) => {
+        const d       = parseISO(iso);
+        const isToday = iso === todayISO();
+        const btn     = document.createElement('button');
+        btn.className = 'mp-tab' + (i===activeIdx?' active':'') + (isToday?' today':'');
+        btn.innerHTML = `
+            <span class="mp-tab-day">${HARI[d.getDay()]}</span>
+            <span class="mp-tab-date">${d.getDate()}</span>
+            <span class="mp-tab-month">${BULAN[d.getMonth()]}</span>
         `;
-        document.getElementById("kaloriEditBtn2")?.addEventListener("click", () => {
-            document.getElementById("kaloriModal").classList.remove("hidden");
-        });
+        btn.addEventListener('click', () => switchTab(i));
+        tabs.appendChild(btn);
+    });
+}
+
+function switchTab(idx) {
+    activeIdx = idx;
+    document.querySelectorAll('.mp-tab').forEach((b,i) => b.classList.toggle('active', i===idx));
+    renderContent();
+    updateKaloriUI();
+}
+
+// ─── Content (3 slot meal) ────────────────────────────────────
+function renderContent() {
+    const content = document.getElementById('mpContent');
+    const empty   = document.getElementById('mpEmpty');
+    if (!content) return;
+
+    if (!activeDates.length) {
+        content.style.display = 'none';
+        if (empty) empty.style.display = '';
         return;
     }
 
-    // Restore full tracker HTML if it was replaced
-    if (!nilaiEl || !document.getElementById("kaloriNilai")) return;
-    nilaiEl.textContent = `${current}/${target}`;
+    content.style.display = '';
+    if (empty) empty.style.display = 'none';
+    content.innerHTML = '';
 
-    const pct = target > 0 ? Math.min((current / target) * 100, 100) : 0;
-    barFill.style.width = pct + "%";
+    const iso     = activeDates[activeIdx];
+    const dayData = serverData[iso] || { meals: {} };
 
-    const melebihi = current > target;
-    barFill.classList.toggle("kalori-bar-over", melebihi);
-    alert.classList.toggle("hidden", !melebihi);
-}
+    WAKTU.forEach(w => {
+        const meal    = dayData.meals?.[w] || null;
+        const section = document.createElement('div');
+        section.className = 'mp-meal-section';
 
-// ─── Modal Kalori ─────────────────────────────────────────────
-document.getElementById("kaloriEditBtn")?.addEventListener("click", () => {
-    const modal = document.getElementById("kaloriModal");
-    if (modal) {
-        const t = getKaloriTarget();
-        if (t) document.getElementById("kaloriInput").value = t;
-        modal.classList.remove("hidden");
-    }
-});
-document.getElementById("kaloriSubmit")?.addEventListener("click", () => {
-    const val = parseInt(document.getElementById("kaloriInput").value);
-    if (val && val > 0) {
-        setKaloriTarget(val);
-        document.getElementById("kaloriModal").classList.add("hidden");
-        initKaloriTracker();
-        updateKaloriTracker();
-    }
-});
-document.getElementById("kaloriModal")?.addEventListener("click", (e) => {
-    if (e.target === document.getElementById("kaloriModal")) {
-        document.getElementById("kaloriModal").classList.add("hidden");
-    }
-});
-
-function initKaloriTracker() {
-    const target = getKaloriTarget();
-    const tracker = document.getElementById("kaloriTracker");
-    if (!tracker) return;
-
-    if (target === 0) {
-        tracker.innerHTML = `
-            <button class="kalori-atur-btn flex flex-row gap-1" id="kaloriEditBtn2">
-                <span class="material-icons-round">emoji_food_beverage</span>
-                <span class="font-jakarta font-semibold text-caption">🔥 Atur Kalori Hari Ini!</span>
-            </button>
+        const header = `
+            <div class="mp-meal-header">
+                <span class="material-icons-round mp-meal-icon">${ICON[w]}</span>
+                <span class="mp-meal-label font-jakarta font-bold">${LABEL[w]}</span>
+                ${meal ? `<button class="mp-meal-hapus font-jakarta font-bold" data-detail-id="${meal.detail_id}" data-iso="${iso}" data-w="${w}">HAPUS</button>` : ''}
+            </div>
         `;
-        document.getElementById("kaloriEditBtn2")?.addEventListener("click", () => {
-            document.getElementById("kaloriModal").classList.remove("hidden");
-            document.getElementById("kaloriSubmit").onclick = function() {
-                const val = parseInt(document.getElementById("kaloriInput").value);
-                if (val && val > 0) {
-                    setKaloriTarget(val);
-                    document.getElementById("kaloriModal").classList.add("hidden");
-                    restoreKaloriTracker();
-                    updateKaloriTracker();
-                }
-            };
-        });
-    }
-}
 
-function restoreKaloriTracker() {
-    const tracker = document.getElementById("kaloriTracker");
-    if (!tracker) return;
-    tracker.innerHTML = `
-        <div class="kalori-row flex flex-row gap-2">
-            <span class="kalori-nilai font-jakarta font-bold text-h5" id="kaloriNilai">0/0</span>
-            <button class="kalori-edit-btn" id="kaloriEditBtn" title="Atur target kalori">
-                <span class="material-icons-round">edit</span>
-            </button>
-        </div>
-        <div class="kalori-bar-track">
-            <div class="kalori-bar-fill" id="kaloriBarFill" style="width:0%"></div>
-        </div>
-        <div class="kalori-alert hidden flex flex-row gap-1" id="kaloriAlert">
-            <span class="material-icons-round kalori-alert-icon">warning_amber</span>
-            <span class="font-jakarta font-semibold text-caption">Melebihi Batas!</span>
-        </div>
-    `;
-    document.getElementById("kaloriEditBtn")?.addEventListener("click", () => {
-        const modal = document.getElementById("kaloriModal");
-        if (modal) {
-            const t = getKaloriTarget();
-            if (t) document.getElementById("kaloriInput").value = t;
-            modal.classList.remove("hidden");
+        let body = '';
+        if (meal) {
+            const dur = formatDurasi(meal.durasi);
+            body = `
+                <div class="mp-meal-card">
+                    <div class="mp-meal-thumb">
+                        ${meal.thumbnail
+                            ? `<img src="${meal.thumbnail}" alt="${meal.nama}">`
+                            : `<span class="material-icons-round">restaurant</span>`
+                        }
+                    </div>
+                    <div class="mp-meal-info">
+                        <p class="mp-meal-nama">${meal.nama}</p>
+                        <div class="mp-meal-meta">
+                            <span class="mp-meal-meta-item">
+                                <span class="material-icons-round">local_fire_department</span>
+                                ${meal.kalori} kal
+                            </span>
+                            ${dur ? `<span class="mp-meal-meta-item"><span class="material-icons-round">schedule</span>${dur}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            const href = `${window.MP.pilihResepUrl}?tanggal=${iso}&meal_time=${w}`;
+            body = `
+                <a href="${href}" class="mp-slot-kosong">
+                    <div class="mp-slot-plus">
+                        <span class="material-icons-round">add</span>
+                    </div>
+                    <span class="mp-slot-text font-jakarta font-medium">Tambah resep</span>
+                </a>
+            `;
         }
+
+        section.innerHTML = header + body;
+        content.appendChild(section);
+    });
+
+    // Bind hapus
+    content.querySelectorAll('.mp-meal-hapus').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const detailId = btn.dataset.detailId;
+            const iso2     = btn.dataset.iso;
+            const w2       = btn.dataset.w;
+            btn.disabled = true; btn.textContent = '...';
+            try {
+                await api(`${window.MP.apiBase}/detail/${detailId}`, 'DELETE');
+                if (serverData[iso2]?.meals) {
+                    serverData[iso2].meals[w2] = null;
+                    serverData[iso2].total_kalori = WAKTU.reduce((s,x)=>s+(serverData[iso2].meals[x]?.kalori||0),0);
+                }
+                renderContent();
+                updateKaloriUI();
+                updateGenerateBtn();
+                toast('Resep dihapus dari jadwal');
+            } catch(e) {
+                toast('Gagal menghapus: ' + e.message, true);
+                btn.disabled = false; btn.textContent = 'HAPUS';
+            }
+        });
     });
 }
 
-// ─── Date Range Picker ────────────────────────────────────────
-const dateRangeBtn      = document.getElementById("dateRangeBtn");
-const dateRangeDropdown = document.getElementById("dateRangeDropdown");
-const dateRangeLabel    = document.getElementById("dateRangeLabel");
-const calendarEl        = document.getElementById("dateRangeCalendar");
+// ─── Kalori UI ────────────────────────────────────────────────
+function updateKaloriUI() {
+    if (!activeDates.length) return;
+    const iso      = activeDates[activeIdx];
+    const dayData  = serverData[iso] || {};
+    const target   = dayData.max_calorie || 0;
+    const current  = dayData.total_kalori || 0;
 
-function formatDisplayDate(d) {
-    const months = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
-    return `${d.getDate()} ${months[d.getMonth()]} ${String(d.getFullYear()).slice(-2)}`;
-}
+    const wrap     = document.getElementById('mpKaloriWrap');
+    const setBtn   = document.getElementById('mpSetKaloriBtn');
+    const cur      = document.getElementById('mpKaloriCurrent');
+    const tgt      = document.getElementById('mpKaloriTarget');
+    const bar      = document.getElementById('mpBarFill');
+    const overEl   = document.getElementById('mpKaloriOver');
 
-function updateDateRangeLabel() {
-    if (rangeStart && rangeEnd) {
-        dateRangeLabel.textContent = `${formatDisplayDate(rangeStart)} – ${formatDisplayDate(rangeEnd)}`;
-    } else if (rangeStart) {
-        dateRangeLabel.textContent = `${formatDisplayDate(rangeStart)} – ...`;
+    if (!wrap || !setBtn) return;
+
+    if (target > 0) {
+        wrap.style.display    = '';
+        setBtn.style.display  = 'none';
+        if (cur) cur.textContent = current;
+        if (tgt) tgt.textContent = `${target} kal`;
+
+        const pct      = Math.min((current/target)*100, 100);
+        const melebihi = current > target;
+        if (bar) {
+            bar.style.width = pct + '%';
+            bar.classList.toggle('over', melebihi);
+        }
+        if (overEl) overEl.style.display = melebihi ? 'flex' : 'none';
     } else {
-        dateRangeLabel.textContent = "Pilih Rentang Tanggal";
+        wrap.style.display   = 'none';
+        setBtn.style.display = '';
     }
 }
 
+// ─── Modal kalori ─────────────────────────────────────────────
+function openModal() {
+    if (!activeDates.length) return;
+    const iso  = activeDates[activeIdx];
+    const d    = parseISO(iso);
+    const dateEl = document.getElementById('mpModalDate');
+    if (dateEl) dateEl.textContent = fmtDate(d);
+
+    const input = document.getElementById('mpKaloriInput');
+    if (input) {
+        input.value = serverData[iso]?.max_calorie || '';
+        // highlight chip yang cocok
+        document.querySelectorAll('.mp-chip').forEach(c => {
+            c.classList.toggle('active', parseInt(c.dataset.val) === (serverData[iso]?.max_calorie||0));
+        });
+    }
+
+    document.getElementById('mpModalOverlay').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('mpModalOverlay').style.display = 'none';
+}
+
+document.getElementById('mpKaloriEdit')?.addEventListener('click', openModal);
+document.getElementById('mpSetKaloriBtn')?.addEventListener('click', openModal);
+document.getElementById('mpModalCancel')?.addEventListener('click', closeModal);
+document.getElementById('mpModalClose')?.addEventListener('click', closeModal);
+document.getElementById('mpModalOverlay')?.addEventListener('click', e => {
+    if (e.target === document.getElementById('mpModalOverlay')) closeModal();
+});
+
+// Stepper
+document.getElementById('mpStepMinus')?.addEventListener('click', () => {
+    const inp = document.getElementById('mpKaloriInput');
+    const v   = Math.max(100, (parseInt(inp.value)||0) - 100);
+    inp.value = v; syncChips(v);
+});
+document.getElementById('mpStepPlus')?.addEventListener('click', () => {
+    const inp = document.getElementById('mpKaloriInput');
+    const v   = Math.min(9999, (parseInt(inp.value)||0) + 100);
+    inp.value = v; syncChips(v);
+});
+document.getElementById('mpKaloriInput')?.addEventListener('input', e => {
+    syncChips(parseInt(e.target.value)||0);
+});
+
+// Chips
+document.querySelectorAll('.mp-chip').forEach(c => {
+    c.addEventListener('click', () => {
+        const v = parseInt(c.dataset.val);
+        const inp = document.getElementById('mpKaloriInput');
+        if (inp) inp.value = v;
+        syncChips(v);
+    });
+});
+function syncChips(val) {
+    document.querySelectorAll('.mp-chip').forEach(c => {
+        c.classList.toggle('active', parseInt(c.dataset.val) === val);
+    });
+}
+
+// Save
+document.getElementById('mpModalSave')?.addEventListener('click', async () => {
+    const val = parseInt(document.getElementById('mpKaloriInput')?.value);
+    if (!val || val < 100) { toast('Masukkan minimal 100 kal', true); return; }
+
+    const btn = document.getElementById('mpModalSave');
+    btn.disabled = true; btn.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Menyimpan...';
+
+    try {
+        const iso  = activeDates[activeIdx];
+        const data = await api(`${window.MP.apiBase}/kalori`, 'POST', { tanggal: iso, max_calorie: val });
+        if (!serverData[iso]) serverData[iso] = { meals:{}, total_kalori:0 };
+        serverData[iso].max_calorie = data.max_calorie;
+        serverData[iso].planner_id  = data.planner_id;
+        closeModal();
+        updateKaloriUI();
+        toast('Target kalori disimpan!');
+    } catch(e) {
+        toast('Gagal: ' + e.message, true);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-icons-round">check</span> Simpan Target';
+    }
+});
+
+// ─── Generate nota ────────────────────────────────────────────
+function updateGenerateBtn() {
+    const btn = document.getElementById('mpGenerateBtn');
+    if (!btn) return;
+    const ada = activeDates.some(iso => WAKTU.some(w => serverData[iso]?.meals?.[w]));
+    btn.style.opacity       = ada ? '1'    : '0.45';
+    btn.style.pointerEvents = ada ? 'auto' : 'none';
+}
+
+document.getElementById('mpGenerateBtn')?.addEventListener('click', async () => {
+    if (!activeDates.length) return;
+    const start = activeDates[0];
+    const end   = activeDates[activeDates.length-1];
+    const btn   = document.getElementById('mpGenerateBtn');
+    btn.style.opacity = '0.7';
+    try {
+        const data = await api(`${window.MP.apiBase}/generate-nota`, 'POST', { start, end });
+        if (data.success) window.location.href = data.redirect;
+    } catch(e) {
+        toast('Gagal generate nota: ' + e.message, true);
+    } finally {
+        btn.style.opacity = '1';
+    }
+});
+
+// ─── Date picker ──────────────────────────────────────────────
+const dateRangeBtn = document.getElementById('dateRangeBtn');
+const dropdown     = document.getElementById('mpDropdown');
+const backdrop     = document.getElementById('mpBackdrop');
+
+function openDropdown() {
+    dropdown.style.display = '';
+    backdrop.style.display = '';
+    document.getElementById('dateRangeChevron')?.classList.add('open');
+    document.getElementById('dateRangeBtn')?.classList.add('active');
+    renderCalendar();
+}
+function closeDropdown() {
+    dropdown.style.display = 'none';
+    backdrop.style.display = 'none';
+    document.getElementById('dateRangeChevron')?.classList.remove('open');
+    document.getElementById('dateRangeBtn')?.classList.remove('active');
+}
+
+dateRangeBtn?.addEventListener('click', () => {
+    dropdown.style.display === 'none' ? openDropdown() : closeDropdown();
+});
+backdrop?.addEventListener('click', closeDropdown);
+
+// Presets
+document.querySelectorAll('.mp-preset').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const t   = new Date(); t.setHours(0,0,0,0);
+        let s, e;
+        switch(btn.dataset.preset) {
+            case 'today':    s=e=new Date(t); break;
+            case 'tomorrow': s=new Date(t); s.setDate(t.getDate()+1); e=new Date(s); break;
+            case 'next7':    s=new Date(t); e=new Date(t); e.setDate(t.getDate()+6); break;
+            case 'thisweek': {
+                const dow=t.getDay()===0?6:t.getDay()-1;
+                s=new Date(t); s.setDate(t.getDate()-dow);
+                if(s<t) s=new Date(t);
+                e=new Date(s); e.setDate(s.getDate()+6);
+                break;
+            }
+            case 'thismonth': s=new Date(t); e=new Date(t.getFullYear(),t.getMonth()+1,0); break;
+            default: return;
+        }
+        calStep=0; closeDropdown();
+        await applyRange(s, e);
+    });
+});
+
+async function applyRange(s, e) {
+    rangeStart  = s; rangeEnd = e || s;
+    activeDates = datesInRange(rangeStart, rangeEnd);
+    activeIdx   = 0;
+    document.getElementById('dateRangeLabel').textContent = fmtRangeLabel();
+
+    // Simpan range ke sessionStorage biar tidak hilang saat redirect ke pilih-resep
+    try {
+        sessionStorage.setItem('mp_range', JSON.stringify({
+            start: toISO(rangeStart),
+            end  : toISO(rangeEnd),
+        }));
+    } catch(_) {}
+
+    await loadData(toISO(rangeStart), toISO(rangeEnd));
+}
+
+// Calendar
 function renderCalendar() {
-    const now = new Date();
-    if (!calViewMonth && calViewMonth !== 0) calViewMonth = now.getMonth();
-    if (!calViewYear) calViewYear = now.getFullYear();
-
-    const monthNames = ["Januari","Februari","Maret","April","Mei","Juni",
-                        "Juli","Agustus","September","Oktober","November","Desember"];
-    const dayNames   = ["Mo","Tu","We","Th","Fr","Sa","Su"];
-
-    const firstDay  = new Date(calViewYear, calViewMonth, 1).getDay();
-    const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
-    const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+    const cal = document.getElementById('mpCalendar');
+    if (!cal) return;
+    const tISO      = todayISO();
+    const firstDay  = new Date(calYear, calMonth, 1).getDay();
+    const daysInMon = new Date(calYear, calMonth+1, 0).getDate();
+    const offset    = firstDay===0 ? 6 : firstDay-1;
+    const dayNames  = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
 
     let html = `
-        <div class="cal-nav flex flex-row">
-            <button class="cal-nav-btn" id="calPrev"><span class="material-icons-round">chevron_left</span></button>
-            <span class="font-jakarta font-semibold text-caption cal-month-label">${monthNames[calViewMonth]} ${calViewYear}</span>
-            <button class="cal-nav-btn" id="calNext"><span class="material-icons-round">chevron_right</span></button>
+        <div class="mp-cal-nav">
+            <button class="mp-cal-nav-btn" id="mpCalPrev">
+                <span class="material-icons-round">chevron_left</span>
+            </button>
+            <span class="mp-cal-month font-jakarta font-bold">${BULAN_F[calMonth]} ${calYear}</span>
+            <button class="mp-cal-nav-btn" id="mpCalNext">
+                <span class="material-icons-round">chevron_right</span>
+            </button>
         </div>
-        <div class="cal-grid">
+        <div class="mp-cal-grid">
     `;
-    dayNames.forEach(d => { html += `<span class="cal-day-name font-jakarta font-bold text-caption">${d}</span>`; });
+    dayNames.forEach(d => { html+=`<span class="mp-cal-day-name font-jakarta">${d}</span>`; });
+    for(let i=0;i<offset;i++) html+=`<span class="mp-cal-empty"></span>`;
 
-    for (let i = 0; i < startOffset; i++) {
-        html += `<span class="cal-cell cal-empty"></span>`;
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-        const d = new Date(calViewYear, calViewMonth, day);
+    for(let day=1; day<=daysInMon; day++) {
+        const d   = new Date(calYear, calMonth, day);
         const iso = toISO(d);
-        let cls = "cal-cell font-jakarta text-body";
-
-        if (rangeStart && rangeEnd) {
-            const ds = rangeStart.getTime(), de = rangeEnd.getTime(), dt = d.getTime();
-            if (ds === dt || de === dt) cls += " cal-selected";
-            else if (dt > ds && dt < de) cls += " cal-in-range";
-        } else if (rangeStart && toISO(rangeStart) === iso) {
-            cls += " cal-selected";
-        }
-
-        html += `<span class="${cls}" data-date="${iso}">${day}</span>`;
-    }
-
-    html += `</div>`;
-    calendarEl.innerHTML = html;
-
-    document.getElementById("calPrev")?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        calViewMonth--;
-        if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
-        renderCalendar();
-    });
-    document.getElementById("calNext")?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        calViewMonth++;
-        if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
-        renderCalendar();
-    });
-
-    calendarEl.querySelectorAll(".cal-cell:not(.cal-empty)").forEach(cell => {
-        cell.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const iso = cell.dataset.date;
-            const clicked = parseISO(iso);
-            if (calPickStep === 0 || (rangeStart && rangeEnd)) {
-                rangeStart = clicked; rangeEnd = null; calPickStep = 1;
-            } else {
-                if (clicked < rangeStart) {
-                    rangeEnd = rangeStart; rangeStart = clicked;
-                } else {
-                    rangeEnd = clicked;
-                }
-                calPickStep = 0;
-                // Ketika range selesai → pindahkan tab ke minggu rangeStart
-                initWeekDates(rangeStart);
-                renderSemuaSlot();
-                updateKaloriTracker();
-                cekTombolGenerate();
-                dateRangeDropdown.classList.remove("open");
+        const isPast = iso < tISO;
+        let cls = 'mp-cal-cell font-jakarta';
+        if (isPast) { cls += ' mp-cal-disabled'; }
+        else {
+            if (iso===tISO) cls += ' mp-cal-today';
+            if (rangeStart && rangeEnd) {
+                const ds=rangeStart.getTime(), de=rangeEnd.getTime(), dt=d.getTime();
+                if(ds===dt||de===dt) cls+=' mp-cal-selected';
+                else if(dt>ds&&dt<de) cls+=' mp-cal-in-range';
+            } else if (rangeStart && toISO(rangeStart)===iso) {
+                cls += ' mp-cal-selected';
             }
-            updateDateRangeLabel();
-            renderCalendar();
+        }
+        html+=`<span class="${cls}" data-date="${iso}">${day}</span>`;
+    }
+    html += '</div>';
+    cal.innerHTML = html;
+
+    document.getElementById('mpCalPrev')?.addEventListener('click', e => {
+        e.stopPropagation();
+        if(--calMonth<0){calMonth=11;calYear--;} renderCalendar();
+    });
+    document.getElementById('mpCalNext')?.addEventListener('click', e => {
+        e.stopPropagation();
+        if(++calMonth>11){calMonth=0;calYear++;} renderCalendar();
+    });
+
+    cal.querySelectorAll('.mp-cal-cell:not(.mp-cal-disabled):not(.mp-cal-empty)').forEach(cell => {
+        cell.addEventListener('click', async e => {
+            e.stopPropagation();
+            const clicked = parseISO(cell.dataset.date);
+            if (calStep===0 || (rangeStart&&rangeEnd)) {
+                rangeStart=clicked; rangeEnd=null; calStep=1;
+                document.getElementById('mpCalHint').textContent = 'Ketuk tanggal akhir';
+                renderCalendar();
+            } else {
+                if(clicked<rangeStart){ rangeEnd=rangeStart; rangeStart=clicked; }
+                else rangeEnd=clicked;
+                calStep=0;
+                document.getElementById('mpCalHint').textContent = 'Ketuk tanggal mulai';
+                closeDropdown();
+                await applyRange(rangeStart, rangeEnd);
+            }
         });
     });
 }
 
-dateRangeBtn?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    dateRangeDropdown.classList.toggle("open");
-    if (dateRangeDropdown.classList.contains("open")) renderCalendar();
-});
-document.addEventListener("click", () => {
-    dateRangeDropdown?.classList.remove("open");
-});
-dateRangeDropdown?.addEventListener("click", (e) => e.stopPropagation());
+// ─── Loading ──────────────────────────────────────────────────
+function setLoading(show) {
+    const l = document.getElementById('mpLoading');
+    const c = document.getElementById('mpContent');
+    if (l) l.style.display = show ? '' : 'none';
+    if (c && show) c.style.display = 'none';
+}
 
-// Preset buttons
-document.querySelectorAll(".preset-btn").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const preset = btn.dataset.preset;
-        const today = new Date(); today.setHours(0,0,0,0);
-        if (preset === "today") {
-            rangeStart = rangeEnd = new Date(today);
-        } else if (preset === "yesterday") {
-            const y = new Date(today); y.setDate(today.getDate()-1);
-            rangeStart = rangeEnd = y;
-        } else if (preset === "thisweek") {
-            const dow = today.getDay() === 0 ? 6 : today.getDay()-1;
-            rangeStart = new Date(today); rangeStart.setDate(today.getDate()-dow);
-            rangeEnd   = new Date(rangeStart); rangeEnd.setDate(rangeStart.getDate()+6);
-        } else if (preset === "lastweek") {
-            const dow = today.getDay() === 0 ? 6 : today.getDay()-1;
-            const thisM = new Date(today); thisM.setDate(today.getDate()-dow);
-            rangeStart = new Date(thisM); rangeStart.setDate(thisM.getDate()-7);
-            rangeEnd   = new Date(thisM); rangeEnd.setDate(thisM.getDate()-1);
-        } else if (preset === "thismonth") {
-            rangeStart = new Date(today.getFullYear(), today.getMonth(), 1);
-            rangeEnd   = new Date(today.getFullYear(), today.getMonth()+1, 0);
+// ─── Toast ───────────────────────────────────────────────────
+let toastTimer;
+function toast(msg, isErr=false) {
+    const el   = document.getElementById('mpToast');
+    const icon = document.getElementById('mpToastIcon');
+    const txt  = document.getElementById('mpToastMsg');
+    if (!el) return;
+    el.className   = 'mp-toast' + (isErr ? ' error' : '');
+    if (icon) icon.textContent = isErr ? 'error_outline' : 'check_circle';
+    if (txt)  txt.textContent  = msg;
+    el.style.display = '';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.style.display='none'; }, 3200);
+}
+
+// ─── Cek kembali dari pilih-resep ────────────────────────────
+async function cekReturnFromPilihResep() {
+    const p = new URLSearchParams(window.location.search);
+    if (!p.get('added')) return;
+
+    const date  = p.get('date');
+    const waktu = p.get('meal_time');
+    window.history.replaceState({}, '', window.location.pathname);
+    if (!date) return;
+
+    // Restore range dari sessionStorage yang disimpan sebelum redirect
+    try {
+        const saved = sessionStorage.getItem('mp_range');
+        if (saved) {
+            const { start, end } = JSON.parse(saved);
+            rangeStart = parseISO(start);
+            rangeEnd   = parseISO(end);
         }
-        calPickStep = 0;
-        updateDateRangeLabel();
-        initWeekDates(rangeStart);
-        renderSemuaSlot();
-        updateKaloriTracker();
-        cekTombolGenerate();
-        dateRangeDropdown.classList.remove("open");
-    });
-});
+    } catch(_) {}
 
-document.getElementById("dateRangeReset")?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    rangeStart = rangeEnd = null; calPickStep = 0;
-    updateDateRangeLabel();
-    initWeekDates(new Date());
-    renderSemuaSlot();
-    updateKaloriTracker();
-    cekTombolGenerate();
-    dateRangeDropdown.classList.remove("open");
-});
+    // Fallback: pakai tanggal yang baru ditambah
+    if (!rangeStart) { rangeStart = parseISO(date); rangeEnd = parseISO(date); }
 
-// ─── Tab change handler ───────────────────────────────────────
-document.querySelectorAll('input[name="hari"]').forEach(radio => {
-    radio.addEventListener("change", () => {
-        updateKaloriTracker();
-        cekTombolGenerate();
-    });
-});
+    await applyRange(rangeStart, rangeEnd);
 
-// ─── Init ─────────────────────────────────────────────────────
-(function init() {
-    initWeekDates(new Date());
-    renderSemuaSlot();
-    initKaloriTracker();
-    updateKaloriTracker();
-    cekTombolGenerate();
-    updateDateRangeLabel();
-    calViewMonth = new Date().getMonth();
-    calViewYear  = new Date().getFullYear();
+    // Aktifkan tab tanggal yang baru ditambah resepnya
+    const idx = activeDates.indexOf(date);
+    if (idx >= 0) switchTab(idx);
+    toast(`Resep berhasil ditambahkan ke ${LABEL[waktu] || waktu}!`);
+}
+
+// ─── Empty state btn & kalori edit bind ──────────────────────
+document.getElementById('mpEmptyCta')?.addEventListener('click', openDropdown);
+
+// ─── Init ────────────────────────────────────────────────────
+(async function init() {
+    const now = new Date();
+    calMonth  = now.getMonth();
+    calYear   = now.getFullYear();
+
+    // Cek dulu apakah balik dari pilih-resep (ada ?added=1)
+    const p = new URLSearchParams(window.location.search);
+    if (p.get('added')) {
+        // Restore range dari sessionStorage, baru cek return
+        try {
+            const saved = sessionStorage.getItem('mp_range');
+            if (saved) {
+                const { start, end } = JSON.parse(saved);
+                rangeStart = parseISO(start);
+                rangeEnd   = parseISO(end);
+            }
+        } catch(_) {}
+        await cekReturnFromPilihResep();
+    } else {
+        // Normal load — cek sessionStorage dulu, fallback ke hari ini
+        let defaultStart = today(), defaultEnd = today();
+        try {
+            const saved = sessionStorage.getItem('mp_range');
+            if (saved) {
+                const { start, end } = JSON.parse(saved);
+                const s = parseISO(start), e = parseISO(end);
+                // Hanya restore kalau rangenya masih valid (tidak semua di masa lalu)
+                if (e >= today()) {
+                    defaultStart = s < today() ? today() : s;
+                    defaultEnd   = e;
+                }
+            }
+        } catch(_) {}
+        await applyRange(defaultStart, defaultEnd);
+    }
+})();
+
 })();

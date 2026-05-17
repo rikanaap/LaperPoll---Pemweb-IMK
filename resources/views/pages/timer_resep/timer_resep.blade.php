@@ -6,9 +6,13 @@
     <link rel="stylesheet" href="{{ asset('css/pages/timer-resep.css') }}">
 @endpush
 
+
 <body>
     <div class="app-container">
         <main class="instruction-card">
+            <a href="{{ url()->previous() }}" class="btn-back">
+                <span class="material-icons-round">arrow_back</span>
+            </a>
             <header class="header-step">
                 <h1 id="step-title" class="font-jakarta">Memuat...</h1>
             </header>
@@ -30,7 +34,7 @@
                 </div>
 
                 <div class="step-image-zone">
-                    <img id="step-img" src="https://images.unsplash.com/photo-1581574303858-f00f95088f7b?q=80&w=400" alt="Langkah Masak" class="recipe-img">
+                    <img id="step-img" src=" " alt="Langkah Masak" class="recipe-img">
                 </div>
             </div>
         </main>

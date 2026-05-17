@@ -23,14 +23,6 @@
                 <p class="font-poppins font-medium text-[0.5rem]/[120%] text-orange-dark-active">Banyak hal lainnya yang bisa kamu gunakan di aplikasi ini</p>
             </div>
             <div class="flex flex-row gap-[0.6rem]">
-                @php
-                $features = [
-                ['name' => 'Kulkas Digital', 'icon' => 'inventory_2', 'link' => route('kulkas.index'), "locked"=>true],
-                ['name' => 'Nota Belanja', 'icon' => 'shopping_cart', 'link' => route('nota.index'), "locked"=>true],
-                ['name' => 'Meal Planner', 'icon' => 'calendar_month', 'link' => route('meal-planner.index'), "locked"=>true],
-                ['name' => 'Swiper Search', 'icon' => 'swipe', 'link' => route('swipe.rasa'), "locked"=>false],
-                ];
-                @endphp
                 @foreach ( $features as $feature )
                 @if($feature['locked'] && !$user)
                 <a href="{{ route('auth.sign-in') }}">
@@ -61,159 +53,12 @@
         <div class="flex justify-between items-center self-stretch">
             <h1 class="font-poppins text-[0.7rem]/120% text-orange-normal-active font-medium">Resep Favorit Pengguna</h1>
             <!-- TODO: Ganti Routing  -->
-            <a href="{{ route('main-menu.favorit') }}" class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium">Lihat Semua</a>
+            <a href="{{ route('main-menu.index', ['m' => 'favorit']) }}" class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium">Lihat Semua</a>
         </div>
         <div class="flex flex-row items-center gap-[0.3rem] overflow-x-scroll w-full">
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @foreach ($reseps_favorit as $resep_f)
+            <x-card-resep-landing :resep="$resep_f" :index="0"></x-card-resep-landing>
+            @endforeach
         </div>
     </div>
 
@@ -222,159 +67,12 @@
         <div class="flex justify-between items-center self-stretch">
             <h1 class="font-poppins text-[0.7rem]/120% text-orange-normal-active font-medium">Resep Hari Ini</h1>
             <!-- TODO: Ganti Routing  -->
-            <a href="{{ route('main-menu.hari-ini') }}" class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium">Lihat Semua</a>
+            <a href="{{ route('main-menu.index', ['m' => 'hari_ini']) }}" class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium">Lihat Semua</a>
         </div>
         <div class="flex flex-row items-center gap-[0.3rem] overflow-x-scroll w-full">
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
-                <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
-                <div class="flex flex-col gap-[0.1rem] items-start">
-                    <h2 class="text-black overflow-ellipsis font-jakarta text-[0.5rem]/[120%] font-semibold">Spageti</h2>
-                    <div class="flex gap-[0.18rem]">
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">25 mins</>
-                        </div>
-                        <div class="flex gap-[0.1rem]">
-                            <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                            <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
-                        </div>
-                    </div>
-                    <div class="flex gap-[0.125rem]">
-                        <p class="text-black text-[0.4rem]/[120%] font-medium font-jakarta">@foodnice</p>
-                        <div class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6" fill="none">
-                                <path d="M3 0L3.39891 0.481395L3.92705 0.146831L4.15768 0.727933L4.76336 0.572949L4.80312 1.19688L5.42705 1.23664L5.27207 1.84232L5.85317 2.07295L5.51861 2.60109L6 3L5.51861 3.39891L5.85317 3.92705L5.27207 4.15768L5.42705 4.76336L4.80312 4.80312L4.76336 5.42705L4.15768 5.27207L3.92705 5.85317L3.39891 5.51861L3 6L2.60109 5.51861L2.07295 5.85317L1.84232 5.27207L1.23664 5.42705L1.19688 4.80312L0.572949 4.76336L0.727933 4.15768L0.146831 3.92705L0.481395 3.39891L0 3L0.481395 2.60109L0.146831 2.07295L0.727933 1.84232L0.572949 1.23664L1.19688 1.19688L1.23664 0.572949L1.84232 0.727933L2.07295 0.146831L2.60109 0.481395L3 0Z" fill="#0186FF" />
-                            </svg>
-                            <span class="material-icons-round text-[0.125rem] text-white absolute top-1/2 left-1/2 right-1/2 bottom-1/2">check</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @foreach ($reseps_hari as $resep_h)
+            <x-card-resep-landing :resep="$resep_h" :index="0"></x-card-resep-landing>
+            @endforeach
         </div>
     </div>
 
@@ -390,66 +88,9 @@
                 </div>
                 <div class="flex justify-center items-center content-center gap-[0.3rem] self-stretch flex-wrap">
                     <!-- Card Bahan -->
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
-                    <div class="flex flex-col gap-[0.25rem] justify-center min-h-[4.5rem] max-h-[4.5rem] py-[0.4rem] px-[0.5rem] items-center rounded-[0.5rem] border-solid border-[0.67px] border-[#F7C9B0] bg-primary-light">
-                        <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.4rem]">
-                            <span class="material-icons-round text-2 text-accent-dark">lunch_dining</span>
-                        </div>
-                        <p class="text-center self-stretch font-jakarta text-[0.45rem]/[120%] font-normal">Tomat</p>
-                    </div>
+                    @foreach ($bahans as $index=>$bahan)
+                    <x-card-bahan-landing :bahan="$bahan" :index="$index"></x-card-bahan-landing>
+                    @endforeach
                 </div>
                 <a href="{{ route('pencarian.resep') }}" class="px-[0.4rem] py-[0.4rem] rounded-[0.3rem] bg-orange-light-active text-accent-normal font-poppins text-[0.45rem]/[120%] font-medium">Lihat Semua</a>
             </div>
@@ -474,15 +115,15 @@
                         <div class="flex flex-col content-center gap-[0.2rem] w-full">
                             <div class="flex w-full items-center justify-between">
                                 <div class="flex flex-col gap-[0.06rem] self-stretch">
-                                    <p class="text-black font-jakarta text-[0.48rem]/[120%] font-semibold">Bambang Tri Hartanto</p>
-                                    <p class="text-black font-jakarta text-[0.45rem]/[120%] font-normal">@bang_tri</p>
+                                    <p class="text-black font-jakarta text-[0.48rem]/[120%] font-semibold">{{ $comments[0]['name'] }}</p>
+                                    <p class="text-black font-jakarta text-[0.45rem]/[120%] font-normal">{{ $comments[0]['username'] }}</p>
                                 </div>
                                 <div class="flex w-fit p-[0.2rem] items-center gap-[0.25rem] rounded-[0.6rem] bg-[#B84100]">
                                     <span class="material-icons-round text-[0.5rem] text-secondary-light">star</span>
-                                    <p class="text-secondary-light text-[0.45rem] font-normal">4.3/5</>
+                                    <p class="text-secondary-light text-[0.45rem] font-normal">{{ $comments[0]['rating'] }}</>
                                 </div>
                             </div>
-                            <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal">Sangat membantu dalam mencari resep masakan. Tampilan menarik dan mudah digunakan.</p>
+                            <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal">{{ $comments[0]['comment'] }}</p>
                         </div>
                     </div>
                     <div class=" rotate-[3deg] flex w-[15rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
@@ -490,15 +131,15 @@
                         <div class="flex flex-col content-center gap-[0.2rem] w-full">
                             <div class="flex w-full items-center justify-between">
                                 <div class="flex flex-col gap-[0.06rem] self-stretch">
-                                    <p class="text-black font-jakarta text-[0.48rem]/[120%] font-semibold">Bambang Tri Hartanto</p>
-                                    <p class="text-black font-jakarta text-[0.45rem]/[120%] font-normal">@bang_tri</p>
+                                    <p class="text-black font-jakarta text-[0.48rem]/[120%] font-semibold">{{ $comments[1]['name'] }}</p>
+                                    <p class="text-black font-jakarta text-[0.45rem]/[120%] font-normal">{{ $comments[1]['username'] }}</p>
                                 </div>
                                 <div class="flex w-fit p-[0.2rem] items-center gap-[0.25rem] rounded-[0.6rem] bg-[#B84100]">
                                     <span class="material-icons-round text-[0.5rem] text-secondary-light">star</span>
-                                    <p class="text-secondary-light text-[0.45rem] font-normal">4.3/5</>
+                                    <p class="text-secondary-light text-[0.45rem] font-normal">{{ $comments[1]['rating'] }}</>
                                 </div>
                             </div>
-                            <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal">Sangat membantu dalam mencari resep masakan. Tampilan menarik dan mudah digunakan.</p>
+                            <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal">{{ $comments[1]['comment'] }}</p>
                         </div>
                     </div>
                     <div class=" rotate-[-3deg] flex w-[15rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
@@ -506,15 +147,15 @@
                         <div class="flex flex-col content-center gap-[0.2rem] w-full">
                             <div class="flex w-full items-center justify-between">
                                 <div class="flex flex-col gap-[0.06rem] self-stretch">
-                                    <p class="text-black font-jakarta text-[0.48rem]/[120%] font-semibold">Bambang Tri Hartanto</p>
-                                    <p class="text-black font-jakarta text-[0.45rem]/[120%] font-normal">@bang_tri</p>
+                                    <p class="text-black font-jakarta text-[0.48rem]/[120%] font-semibold">{{ $comments[2]['name'] }}</p>
+                                    <p class="text-black font-jakarta text-[0.45rem]/[120%] font-normal">{{ $comments[2]['username'] }}</p>
                                 </div>
                                 <div class="flex w-fit p-[0.2rem] items-center gap-[0.25rem] rounded-[0.6rem] bg-[#B84100]">
                                     <span class="material-icons-round text-[0.5rem] text-secondary-light">star</span>
-                                    <p class="text-secondary-light text-[0.45rem] font-normal">4.3/5</>
+                                    <p class="text-secondary-light text-[0.45rem] font-normal">{{ $comments[2]['rating'] }}</>
                                 </div>
                             </div>
-                            <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal">Sangat membantu dalam mencari resep masakan. Tampilan menarik dan mudah digunakan.</p>
+                            <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal">{{ $comments[2]['comment'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -533,45 +174,17 @@
             </div>
             <div class="flex flex-col gap-2 w-[20rem]">
                 <!-- FAQ CARD      -->
-                <a>
-                    <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
-                        <div class="flex w-full flex-col gap-1 justify-center">
-                            <p class="text-[0.45rem] font-medium font-poppins text-black">Apa itu laperpoll?</p>
-                            <p class="text-[0.45rem] text-black font-light leading-relaxed">
-                                Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
-                            </p>
-                        </div>
-                        <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
-                            <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
-                        </button>
+                @foreach ($faqs as $faq )
+                <div id="faq-card" class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
+                    <div class="flex w-full flex-col gap-1 justify-center">
+                        <p class="text-[0.45rem] font-medium font-poppins text-black">{{ $faq['q'] }}</p>
+                        <p class="faq-answer text-[0.45rem] text-black font-light leading-relaxed hidden">{{ $faq['a'] }}</p>
                     </div>
-                </a>
-                <a>
-                    <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
-                        <div class="flex w-full flex-col gap-1 justify-center">
-                            <p class="text-[0.45rem] font-medium font-poppins text-black">Bagaimana cara menambahkan resep baru ke aplikasi?</p>
-                            <p class="text-[0.45rem] text-black font-light leading-relaxed hidden">
-                                Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
-                            </p>
-                        </div>
-                        <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
-                            <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
-                        </button>
-                    </div>
-                </a>
-                <a>
-                    <div class="rounded-[0.2rem] border-l-solid border-l-[1px] border-l-[#B84100] py-[0.5rem] px-[0.9rem] flex justify-between gap-1 overflow-hidden bg-[#FEE7C3]">
-                        <div class="flex w-full flex-col gap-1 justify-center">
-                            <p class="text-[0.45rem] font-medium font-poppins text-black">Apakah aplikasi ini bisa digunakan secara offline?</p>
-                            <p class="text-[0.45rem] text-black font-light leading-relaxed hidden">
-                                Laperpoll adalah aplikasi resep masakan berbasis komunitas yang memudahkan kamu menemukan resep sesuai bahan yang tersedia di rumah. Didukung fitur Kulkas Digital, Meal Planner, dan Swiper Search yang intuitif.
-                            </p>
-                        </div>
-                        <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
-                            <span class="material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
-                        </button>
-                    </div>
-                </a>
+                    <button class="w-fit h-fit p-[0.2rem] aspect-square flex justify-center items-center bg-[#B84100] rounded-full">
+                        <span class="faq-icon material-icons-round text-[0.8rem] text-white">keyboard_arrow_down</span>
+                    </button>
+                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -601,4 +214,5 @@
 
 @endsection
 @push('scripts')
+<script src="{{ asset('js/pages/landing-page.js') }}"></script>
 @endpush

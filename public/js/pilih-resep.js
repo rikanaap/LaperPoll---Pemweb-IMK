@@ -1,126 +1,179 @@
 // pilih-resep.js
+// Kompatibel dengan meal-planner.js baru
+// Format slot: ?tanggal=2026-05-27&meal_time=SA
 
-const labelWaktu = { sarapan: "Sarapan", siang: "Makan Siang", malam: "Makan Malam" };
-const bulan = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"];
+(function () {
+'use strict';
 
-// Ambil slot dari query string
+const LABEL_WAKTU = { SA: 'Sarapan', SI: 'Makan Siang', MA: 'Makan Malam' };
+const HARI        = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const BULAN       = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+
+// ── Parse slot dari query string ──────────────────────────────
+// Format: ?tanggal=2026-05-27&meal_time=SA
 const params   = new URLSearchParams(window.location.search);
-const slot     = params.get("slot");   // format: YYYY-MM-DD-waktu
+const slotDate = params.get('tanggal')   || null;
+const slotWaktu= params.get('meal_time') || null;
 
-let slotDate  = null;
-let slotWaktu = null;
+// ── Header info slot ──────────────────────────────────────────
+const slotLabel   = document.getElementById('slotLabel');
+const slotWarning = document.getElementById('slotWarning');
 
-if (slot) {
-    // YYYY-MM-DD-sarapan  → split oleh '-' = ['2026','05','06','sarapan']
-    // Ambil 3 bagian pertama sebagai tanggal, sisanya sebagai waktu
-    const firstDash  = slot.indexOf("-");
-    const secondDash = slot.indexOf("-", firstDash + 1);
-    const thirdDash  = slot.indexOf("-", secondDash + 1);
-
-    if (thirdDash !== -1) {
-        slotDate  = slot.substring(0, thirdDash);        // "2026-05-06"
-        slotWaktu = slot.substring(thirdDash + 1);       // "sarapan"
+if (slotDate && slotWaktu) {
+    const d        = new Date(slotDate + 'T00:00:00');
+    const hariNama = HARI[d.getDay()];
+    const tgl      = `${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`;
+    const wLabel   = LABEL_WAKTU[slotWaktu] || slotWaktu;
+    if (slotLabel) {
+        slotLabel.innerHTML = `
+            <span class="slot-pill font-jakarta font-semibold">
+                <span class="material-icons-round">calendar_today</span>
+                ${hariNama}, ${tgl}
+            </span>
+            <span class="slot-pill slot-pill-waktu font-jakarta font-semibold">
+                <span class="material-icons-round">restaurant</span>
+                ${wLabel}
+            </span>
+        `;
     }
+} else {
+    if (slotLabel)   slotLabel.textContent = 'Pilih slot di Meal Planner terlebih dahulu.';
+    if (slotWarning) slotWarning.style.display = 'flex';
 }
 
-// Tampilkan info slot di header
-const slotLabel = document.getElementById("slotLabel");
-if (slotLabel) {
-    if (slotDate && slotWaktu) {
-        const d        = new Date(slotDate + "T00:00:00");
-        const hariNama = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][d.getDay()];
-        const tgl      = `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
-        slotLabel.textContent = `${hariNama}, ${tgl} · ${labelWaktu[slotWaktu] || slotWaktu}`;
-    } else {
-        slotLabel.textContent = "Pilih slot di meal planner terlebih dahulu.";
-        // Tampilkan warning banner
-        const warningEl = document.getElementById("slotWarning");
-        if (warningEl) warningEl.style.display = "flex";
-    }
+// ── Data resep dari DB (injected via blade) ───────────────────
+const allResep = window.resepData || [];
+
+// ── Format durasi ─────────────────────────────────────────────
+function formatDurasi(t) {
+    if (!t) return null;
+    const p = t.split(':').map(Number);
+    const j = p[0]||0, m = p[1]||0;
+    if (j>0&&m>0) return `${j}j ${m}mnt`;
+    if (j>0) return `${j} jam`;
+    if (m>0) return `${m} mnt`;
+    return null;
 }
 
-// ─── Data Resep ──────────────────────────────────────────────
-const dataResep = [
-    { id: 1,  nama: "Nasi Goreng Spesial",   waktu: "25 mnt", kalori: "450 kkal", icon: "rice_bowl" },
-    { id: 2,  nama: "Ayam Bakar Kecap",       waktu: "40 mnt", kalori: "480 kkal", icon: "lunch_dining" },
-    { id: 3,  nama: "Mie Ayam Bakso",         waktu: "20 mnt", kalori: "510 kkal", icon: "ramen_dining" },
-    { id: 4,  nama: "Soto Ayam",              waktu: "35 mnt", kalori: "420 kkal", icon: "soup_kitchen" },
-    { id: 5,  nama: "Rendang Daging",         waktu: "60 mnt", kalori: "520 kkal", icon: "lunch_dining" },
-    { id: 6,  nama: "Gado-Gado",              waktu: "20 mnt", kalori: "390 kkal", icon: "eco" },
-    { id: 7,  nama: "Bolu Ketan",             waktu: "30 mnt", kalori: "320 kkal", icon: "cake" },
-    { id: 8,  nama: "Pancake Pisang",         waktu: "25 mnt", kalori: "340 kkal", icon: "breakfast_dining" },
-    { id: 9,  nama: "Bubur Ayam",             waktu: "15 mnt", kalori: "280 kkal", icon: "soup_kitchen" },
-    { id: 10, nama: "Roti Bakar Keju",        waktu: "20 mnt", kalori: "550 kkal", icon: "breakfast_dining" },
-    { id: 11, nama: "Sup Sayur Tahu",         waktu: "30 mnt", kalori: "210 kkal", icon: "soup_kitchen" },
-    { id: 12, nama: "Tempe Orek",             waktu: "20 mnt", kalori: "290 kkal", icon: "lunch_dining" },
-    { id: 13, nama: "Capcay Kuah",            waktu: "25 mnt", kalori: "230 kkal", icon: "eco" },
-    { id: 14, nama: "Oatmeal Buah",           waktu: "10 mnt", kalori: "250 kkal", icon: "breakfast_dining" },
-    { id: 15, nama: "Nasi Uduk",              waktu: "30 mnt", kalori: "400 kkal", icon: "rice_bowl" },
-    { id: 16, nama: "Ikan Bakar Bumbu",       waktu: "45 mnt", kalori: "460 kkal", icon: "set_meal" },
-    { id: 17, nama: "Tumis Kangkung",         waktu: "15 mnt", kalori: "180 kkal", icon: "eco" },
-    { id: 18, nama: "Lontong Sayur",          waktu: "35 mnt", kalori: "350 kkal", icon: "rice_bowl" },
-    { id: 19, nama: "Rawon Daging",           waktu: "50 mnt", kalori: "530 kkal", icon: "soup_kitchen" },
-    { id: 20, nama: "Roti Telur Dadar",       waktu: "15 mnt", kalori: "310 kkal", icon: "breakfast_dining" },
-    { id: 21, nama: "Perkedel Jagung",        waktu: "25 mnt", kalori: "270 kkal", icon: "lunch_dining" },
-];
+// ── XSS helper ────────────────────────────────────────────────
+function esc(s) {
+    return String(s).replace(/[&<>"']/g, c =>
+        ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])
+    );
+}
 
-// ─── Render resep list ───────────────────────────────────────
-const resepList = document.getElementById("resepList");
+// ── Render ────────────────────────────────────────────────────
+const resepList = document.getElementById('resepList');
 
 function renderResep(data) {
-    resepList.innerHTML = "";
+    if (!resepList) return;
+    resepList.innerHTML = '';
 
     if (!data.length) {
-        resepList.innerHTML = `<p class="empty-state font-jakarta text-body">Resep tidak ditemukan.</p>`;
+        resepList.innerHTML = `
+            <div class="resep-empty">
+                <span class="material-icons-round resep-empty-icon">search_off</span>
+                <p class="font-jakarta font-semibold">Resep tidak ditemukan</p>
+                <p class="font-jakarta font-regular">Coba kata kunci lain</p>
+            </div>
+        `;
         return;
     }
 
+    const noSlot = !slotDate || !slotWaktu;
+
     data.forEach(resep => {
-        const card = document.createElement("div");
-        card.className = "resep" + (!slotDate || !slotWaktu ? " no-slot" : "");
+        const card = document.createElement('div');
+        card.className = 'resep-card' + (noSlot ? ' no-slot' : '');
+        const dur  = formatDurasi(resep.cook_duration);
+
         card.innerHTML = `
-            <div class="resep-content">
-                <div class="resep-logo">
-                    <span class="material-icons-round">${resep.icon}</span>
+            <div class="resep-card-content">
+                <div class="resep-thumb">
+                    ${resep.thumbnail
+                        ? `<img src="${esc(resep.thumbnail)}" alt="${esc(resep.nama)}">`
+                        : `<span class="material-icons-round">restaurant</span>`
+                    }
                 </div>
                 <div class="resep-detail">
-                    <h1 class="font-jakarta text-title2 text-black font-semibold">${resep.nama}</h1>
-                    <div class="resep-content-detail">
-                        <div>
-                            <span class="material-icons-round">watch_later</span>
-                            <p class="text-body font-jakarta font-medium text-black">${resep.waktu}</p>
-                        </div>
-                        <div>
+                    <p class="resep-nama font-jakarta font-semibold">${esc(resep.nama)}</p>
+                    <div class="resep-meta">
+                        ${resep.kalori ? `
+                        <span class="resep-meta-item font-jakarta">
                             <span class="material-icons-round">local_fire_department</span>
-                            <p class="text-body font-jakarta font-medium text-black">${resep.kalori}</p>
-                        </div>
+                            ${resep.kalori} kal
+                        </span>` : ''}
+                        ${dur ? `
+                        <span class="resep-meta-item font-jakarta">
+                            <span class="material-icons-round">schedule</span>
+                            ${dur}
+                        </span>` : ''}
                     </div>
                 </div>
             </div>
-            <span class="material-icons-round arrow-icon">arrow_forward_ios</span>
+            <span class="material-icons-round resep-arrow">arrow_forward_ios</span>
         `;
 
-        if (slotDate && slotWaktu) {
-            card.addEventListener("click", () => {
-                const storageKey = `meal_${slotDate}_${slotWaktu}`;
-                localStorage.setItem(storageKey, JSON.stringify({
-                    nama: resep.nama,
-                    waktu: resep.waktu,
-                    kalori: resep.kalori,
-                    icon: resep.icon
-                }));
-                window.location.href = window.mealPlannerUrl || "/meal-planner";
-            });
-        }
-
+        if (!noSlot) card.addEventListener('click', () => pilihResep(resep));
         resepList.appendChild(card);
     });
 }
 
-renderResep(dataResep);
+// ── Pilih resep → POST ke API → redirect ke meal planner ─────
+let isSaving = false;
 
-// ─── Search ──────────────────────────────────────────────────
-document.getElementById("searchResep")?.addEventListener("input", (e) => {
+async function pilihResep(resep) {
+    if (isSaving) return;
+    isSaving = true;
+
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.style.display = 'flex';
+
+    try {
+        const res = await fetch(`${window.MP.apiBase}/tambah`, {
+            method : 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': window.MP.csrf,
+                'Accept'      : 'application/json',
+            },
+            body: JSON.stringify({
+                tanggal  : slotDate,
+                meal_time: slotWaktu,
+                resep_id : resep.id,
+            }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            // Redirect balik ke meal planner dengan flag
+            const p = new URLSearchParams({
+                added    : '1',
+                date     : slotDate,
+                meal_time: slotWaktu,
+            });
+            window.location.href = `${window.MP.mealPlannerUrl}?${p.toString()}`;
+        } else {
+            alert('Gagal menyimpan resep, coba lagi.');
+            isSaving = false;
+            if (overlay) overlay.style.display = 'none';
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Gagal menghubungi server.');
+        isSaving = false;
+        if (overlay) overlay.style.display = 'none';
+    }
+}
+
+// ── Search ────────────────────────────────────────────────────
+document.getElementById('searchResep')?.addEventListener('input', e => {
     const q = e.target.value.toLowerCase().trim();
-    renderResep(dataResep.filter(r => r.nama.toLowerCase().includes(q)));
+    renderResep(q ? allResep.filter(r => r.nama.toLowerCase().includes(q)) : allResep);
 });
+
+// ── Init ──────────────────────────────────────────────────────
+renderResep(allResep);
+
+})();

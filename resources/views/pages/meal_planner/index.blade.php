@@ -7,130 +7,200 @@
 @endpush
 
 @section('content')
-<main class="main-content flex flex-col">
+<div class="mp-page">
 
-    {{-- NAVBAR --}}
-    <x-navbar :back="true"></x-navbar>
+    {{-- ── STICKY TOP BAR ── --}}
+    <div class="mp-topbar">
+        <x-navbar :back="true"></x-navbar>
 
-    {{-- PAGE HEADER --}}
-    <div class="page-header flex flex-col gap-1">
-        <h1 class="font-jakarta font-bold text-h5 kulkas-title">Meal Planner</h1>
-    </div>
-
-    {{-- DATE RANGE PICKER --}}
-    <div class="date-range-wrapper flex flex-row gap-2">
-        <button class="date-range-btn flex flex-row gap-1" id="dateRangeBtn">
-            <span class="material-icons-round date-range-icon">date_range</span>
-            <span class="font-jakarta font-semibold text-caption" id="dateRangeLabel">Pilih Rentang Tanggal</span>
-            <span class="material-icons-round date-range-chevron">expand_more</span>
-        </button>
-        <div class="date-range-dropdown" id="dateRangeDropdown">
-            <div class="date-range-presets flex flex-col gap-1">
-                <button class="preset-btn font-jakarta text-body" data-preset="today">Hari ini</button>
-                <button class="preset-btn font-jakarta text-body" data-preset="yesterday">Kemarin</button>
-                <button class="preset-btn font-jakarta text-body" data-preset="thisweek">Minggu ini</button>
-                <button class="preset-btn font-jakarta text-body" data-preset="lastweek">Minggu lalu</button>
-                <button class="preset-btn font-jakarta text-body" data-preset="thismonth">Bulan ini</button>
+        <div class="mp-topbar-inner">
+            <div class="mp-heading">
+                <h1 class="mp-title font-jakarta font-bold">Meal Planner</h1>
+                <button class="mp-range-btn" id="dateRangeBtn">
+                    <span class="material-icons-round">calendar_month</span>
+                    <span class="font-jakarta font-semibold" id="dateRangeLabel">Pilih tanggal</span>
+                    <span class="material-icons-round mp-chevron" id="dateRangeChevron">expand_more</span>
+                </button>
             </div>
-            <div class="date-range-calendar" id="dateRangeCalendar"></div>
-            <div class="date-range-footer flex flex-row gap-2">
-                <button class="date-range-reset font-jakarta font-medium text-caption" id="dateRangeReset">Reset</button>
+
+            {{-- Kalori bar (muncul setelah ada target) --}}
+            <div class="mp-kalori-bar-wrap" id="mpKaloriWrap" style="display:none;">
+                <div class="mp-kalori-info">
+                    <div class="mp-kalori-text-group">
+                        <span class="mp-kalori-current font-jakarta font-bold" id="mpKaloriCurrent">0</span>
+                        <span class="mp-kalori-sep font-jakarta font-regular">/</span>
+                        <span class="mp-kalori-target font-jakarta font-regular" id="mpKaloriTarget">0 kal</span>
+                    </div>
+                    <button class="mp-kalori-edit" id="mpKaloriEdit" title="Atur target kalori">
+                        <span class="material-icons-round">edit</span>
+                    </button>
+                </div>
+                <div class="mp-bar-track">
+                    <div class="mp-bar-fill" id="mpBarFill"></div>
+                    <div class="mp-bar-label font-jakarta font-bold" id="mpBarLabel"></div>
+                </div>
+                <p class="mp-kalori-over font-jakarta font-semibold" id="mpKaloriOver" style="display:none;">
+                    <span class="material-icons-round">warning_amber</span>
+                    Kalori melebihi target!
+                </p>
+            </div>
+
+            {{-- Set target kalori (muncul kalau belum ada target) --}}
+            <button class="mp-set-kalori-btn font-jakarta font-semibold" id="mpSetKaloriBtn" style="display:none;">
+                <span class="material-icons-round">local_fire_department</span>
+                Set target kalori hari ini
+            </button>
+
+            {{-- Tab hari --}}
+            <div class="mp-tabs-scroll" id="mpTabsWrap" style="display:none;">
+                <div class="mp-tabs" id="mpTabs"></div>
             </div>
         </div>
     </div>
 
-    {{-- KALORI TRACKER --}}
-    <div class="kalori-tracker flex flex-col gap-2" id="kaloriTracker">
-        <div class="kalori-row flex flex-row gap-2">
-            <span class="kalori-nilai font-jakarta font-bold text-h5" id="kaloriNilai">0/0</span>
-            <button class="kalori-edit-btn" id="kaloriEditBtn" title="Atur target kalori">
-                <span class="material-icons-round">edit</span>
+    {{-- ── BODY ── --}}
+    <div class="mp-body" id="mpBody">
+
+        {{-- Empty state --}}
+        <div class="mp-empty" id="mpEmpty">
+            <div class="mp-empty-icon-wrap">
+                <span class="material-icons-round">restaurant_menu</span>
+            </div>
+            <p class="font-jakarta font-bold mp-empty-title">Rencanakan Makananmu</p>
+            <p class="font-jakarta font-regular mp-empty-sub">
+                Pilih tanggal untuk mulai mengatur jadwal makan harianmu
+            </p>
+            <button class="mp-empty-cta font-jakarta font-semibold" id="mpEmptyCta">
+                <span class="material-icons-round">calendar_month</span>
+                Pilih Tanggal
             </button>
         </div>
-        <div class="kalori-bar-track">
-            <div class="kalori-bar-fill" id="kaloriBarFill" style="width:0%"></div>
+
+        {{-- Content slot (diisi JS) --}}
+        <div class="mp-content" id="mpContent" style="display:none;"></div>
+
+        {{-- Loading --}}
+        <div class="mp-loading" id="mpLoading" style="display:none;">
+            <div class="mp-spinner"></div>
+            <span class="font-jakarta font-medium">Memuat jadwal...</span>
         </div>
-        <div class="kalori-alert hidden flex flex-row gap-1" id="kaloriAlert">
-            <span class="material-icons-round kalori-alert-icon">warning_amber</span>
-            <span class="font-jakarta font-semibold text-caption">Melebihi Batas!</span>
-        </div>
+
     </div>
 
-    {{-- MODAL ATUR KALORI --}}
-    <div class="modal-overlay hidden" id="kaloriModal">
-        <div class="modal-card flex flex-col gap-3">
-            <h2 class="font-jakarta font-bold text-title2" style="color:#8C2A1A;">Target/Batas Kalori Anda</h2>
-            <div class="modal-input-row flex flex-row gap-2">
-                <input type="number" class="modal-input font-jakarta text-h5 font-bold" id="kaloriInput" placeholder="1700" min="100" max="9999">
-                <span class="font-jakarta font-semibold text-body" style="color:#555;align-self:center;">kal</span>
+    {{-- ── GENERATE NOTA (fixed bottom) ── --}}
+    <button class="mp-generate-btn" id="mpGenerateBtn" style="opacity:0.45;pointer-events:none;">
+        <span class="material-icons-round">receipt_long</span>
+        <span class="font-jakarta font-bold">Generate Nota Belanja</span>
+    </button>
+
+</div>
+
+{{-- ── DATE PICKER DROPDOWN ── --}}
+<div class="mp-backdrop" id="mpBackdrop" style="display:none;"></div>
+<div class="mp-dropdown" id="mpDropdown" style="display:none;">
+    <div class="mp-dropdown-presets">
+        <p class="mp-section-label font-jakarta font-bold">Pilih Cepat</p>
+        <div class="mp-presets-grid">
+            <button class="mp-preset font-jakarta font-semibold" data-preset="today">
+                <span class="material-icons-round">today</span>Hari ini
+            </button>
+            <button class="mp-preset font-jakarta font-semibold" data-preset="tomorrow">
+                <span class="material-icons-round">event</span>Besok
+            </button>
+            <button class="mp-preset font-jakarta font-semibold" data-preset="next7">
+                <span class="material-icons-round">date_range</span>7 Hari ke depan
+            </button>
+            <button class="mp-preset font-jakarta font-semibold" data-preset="thisweek">
+                <span class="material-icons-round">view_week</span>Minggu ini
+            </button>
+            <button class="mp-preset font-jakarta font-semibold" data-preset="thismonth">
+                <span class="material-icons-round">calendar_month</span>Bulan ini
+            </button>
+        </div>
+    </div>
+    <div class="mp-dropdown-divider"></div>
+    <div class="mp-dropdown-cal">
+        <p class="mp-section-label font-jakarta font-bold">Pilih Manual</p>
+        <div id="mpCalendar"></div>
+        <p class="mp-cal-hint font-jakarta font-regular" id="mpCalHint">Ketuk tanggal mulai</p>
+    </div>
+</div>
+
+{{-- ── MODAL KALORI (redesign) ── --}}
+<div class="mp-modal-overlay" id="mpModalOverlay" style="display:none;">
+    <div class="mp-modal">
+
+        {{-- Header --}}
+        <div class="mp-modal-header">
+            <div class="mp-modal-flame">🔥</div>
+            <div class="mp-modal-header-text">
+                <p class="mp-modal-title font-jakarta font-bold">Target Kalori Harian</p>
+                <p class="mp-modal-date font-jakarta font-regular" id="mpModalDate"></p>
             </div>
-            <button class="modal-submit font-jakarta font-bold text-title2" id="kaloriSubmit">SUBMIT</button>
-        </div>
-    </div>
-
-    {{-- TAB HARI --}}
-    <div class="hari-tabs">
-        <input type="radio" name="hari" id="tab-sen" checked>
-        <input type="radio" name="hari" id="tab-sel">
-        <input type="radio" name="hari" id="tab-rab">
-        <input type="radio" name="hari" id="tab-kam">
-        <input type="radio" name="hari" id="tab-jum">
-        <input type="radio" name="hari" id="tab-sab">
-        <input type="radio" name="hari" id="tab-min">
-
-        <div class="hari-labels flex flex-row">
-            <label for="tab-sen" class="hari-label flex flex-col gap-0" data-hari="sen">
-                <span class="hari-label-day font-jakarta font-semibold text-caption">Sen</span>
-                <span class="hari-label-date font-jakarta font-bold text-body" id="date-sen"></span>
-            </label>
-            <label for="tab-sel" class="hari-label flex flex-col gap-0" data-hari="sel">
-                <span class="hari-label-day font-jakarta font-semibold text-caption">Sel</span>
-                <span class="hari-label-date font-jakarta font-bold text-body" id="date-sel"></span>
-            </label>
-            <label for="tab-rab" class="hari-label flex flex-col gap-0" data-hari="rab">
-                <span class="hari-label-day font-jakarta font-semibold text-caption">Rab</span>
-                <span class="hari-label-date font-jakarta font-bold text-body" id="date-rab"></span>
-            </label>
-            <label for="tab-kam" class="hari-label flex flex-col gap-0" data-hari="kam">
-                <span class="hari-label-day font-jakarta font-semibold text-caption">Kam</span>
-                <span class="hari-label-date font-jakarta font-bold text-body" id="date-kam"></span>
-            </label>
-            <label for="tab-jum" class="hari-label flex flex-col gap-0" data-hari="jum">
-                <span class="hari-label-day font-jakarta font-semibold text-caption">Jum</span>
-                <span class="hari-label-date font-jakarta font-bold text-body" id="date-jum"></span>
-            </label>
-            <label for="tab-sab" class="hari-label flex flex-col gap-0" data-hari="sab">
-                <span class="hari-label-day font-jakarta font-semibold text-caption">Sab</span>
-                <span class="hari-label-date font-jakarta font-bold text-body" id="date-sab"></span>
-            </label>
-            <label for="tab-min" class="hari-label flex flex-col gap-0" data-hari="min">
-                <span class="hari-label-day font-jakarta font-semibold text-caption">Min</span>
-                <span class="hari-label-date font-jakarta font-bold text-body" id="date-min"></span>
-            </label>
+            <button class="mp-modal-close" id="mpModalClose">
+                <span class="material-icons-round">close</span>
+            </button>
         </div>
 
-        {{-- Konten diisi oleh meal-planner.js --}}
-        <div class="hari-content" id="content-sen"></div>
-        <div class="hari-content" id="content-sel"></div>
-        <div class="hari-content" id="content-rab"></div>
-        <div class="hari-content" id="content-kam"></div>
-        <div class="hari-content" id="content-jum"></div>
-        <div class="hari-content" id="content-sab"></div>
-        <div class="hari-content" id="content-min"></div>
+        {{-- Body --}}
+        <div class="mp-modal-body">
+            <p class="mp-modal-desc font-jakarta font-regular">
+                Berapa kalori yang ingin kamu capai hari ini?
+            </p>
+
+            {{-- Stepper input --}}
+            <div class="mp-stepper">
+                <button class="mp-step-btn" id="mpStepMinus">
+                    <span class="material-icons-round">remove</span>
+                </button>
+                <div class="mp-input-wrap">
+                    <input type="number" id="mpKaloriInput"
+                           class="mp-kalori-input font-jakarta font-bold"
+                           min="100" max="9999" placeholder="2000">
+                    <span class="mp-input-unit font-jakarta font-regular">kal</span>
+                </div>
+                <button class="mp-step-btn" id="mpStepPlus">
+                    <span class="material-icons-round">add</span>
+                </button>
+            </div>
+
+            {{-- Quick chips --}}
+            <div class="mp-chips">
+                <button class="mp-chip font-jakarta font-semibold" data-val="1200">1.200</button>
+                <button class="mp-chip font-jakarta font-semibold" data-val="1500">1.500</button>
+                <button class="mp-chip font-jakarta font-semibold" data-val="2000">2.000</button>
+                <button class="mp-chip font-jakarta font-semibold" data-val="2500">2.500</button>
+                <button class="mp-chip font-jakarta font-semibold" data-val="3000">3.000</button>
+            </div>
+        </div>
+
+        {{-- Footer --}}
+        <div class="mp-modal-footer">
+            <button class="mp-btn-cancel font-jakarta font-semibold" id="mpModalCancel">Batal</button>
+            <button class="mp-btn-save font-jakarta font-bold" id="mpModalSave">
+                <span class="material-icons-round">check</span>
+                Simpan Target
+            </button>
+        </div>
     </div>
+</div>
 
-    {{-- GENERATE NOTA --}}
-    <a href="{{ route('nota.index') }}" class="generate-btn flex flex-row gap-2">
-        <span class="material-icons-round">bolt</span>
-        <span class="font-jakarta font-semibold text-title2">Generate Nota Belanja Otomatis</span>
-    </a>
+{{-- ── TOAST ── --}}
+<div class="mp-toast" id="mpToast" style="display:none;">
+    <span class="material-icons-round" id="mpToastIcon">check_circle</span>
+    <span class="font-jakarta font-semibold" id="mpToastMsg"></span>
+</div>
 
-</main>
 @endsection
 
 @push('scripts')
-    <script>
-        window.pilihResepUrl = "{{ route('pilih-resep.index') }}";
-    </script>
-    <script src="{{ asset('js/meal-planner.js') }}"></script>
+<script>
+    window.MP = {
+        pilihResepUrl : "{{ route('pilih-resep.index') }}",
+        apiBase       : "{{ url('/api/meal-planner') }}",
+        notaUrl       : "{{ route('nota.index') }}",
+        csrf          : "{{ csrf_token() }}",
+    };
+</script>
+<script src="{{ asset('js/meal-planner.js') }}"></script>
 @endpush

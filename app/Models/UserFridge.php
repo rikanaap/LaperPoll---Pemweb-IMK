@@ -2,37 +2,33 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UserFridge extends Model
 {
-    use HasFactory;
-
+    // Nama tabel di DB adalah "user_fridge" (bukan "user_fridges")
     protected $table = 'user_fridge';
 
     protected $fillable = [
         'user_id',
         'bahan_id',
-        'expired_date',
+        'jumlah',
         'bought_date',
-        'jumlah'
+        'expired_date',
     ];
 
     protected $casts = [
-        'user_id' => 'integer',
-        'bahan_id' => 'integer',
-        'expired_date' => 'datetime',
-        'bought_date' => 'datetime',
+        'bought_date'  => 'date',
+        'expired_date' => 'date',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function bahan()
     {
         return $this->belongsTo(Bahan::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

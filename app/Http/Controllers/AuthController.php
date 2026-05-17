@@ -64,8 +64,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            session()->flash('toast', 'Selamat datang, ' . Auth::user()->name . '! 👋');
+            session()->flash('toast_type', 'success');
             return redirect()->route('landing.index');
         }
+
+        session()->flash('toast', 'Email atau password salah.');
+        session()->flash('toast_type', 'error');
 
         return back()->withErrors([
             'login' => 'Email atau password salah.',

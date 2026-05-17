@@ -9,7 +9,6 @@
     padding: 0 0.7rem 2rem;
 }
 
-/* navbar full bleed */
 .navbar {
     margin: 0 -0.7rem;
     padding-left: 1rem;
@@ -41,10 +40,11 @@
 .kd-flash {
     display: flex; align-items: center; gap: 0.5rem;
     padding: 0.75rem 1rem;
-    background-color: #FDECED;
-    color: #B13336;
+    background-color: #F0FDF4;
+    color: #166534;
     border-radius: 0.75rem;
     font-size: 0.875rem;
+    transition: opacity 0.5s;
 }
 .kd-flash span { font-size: 1rem !important; }
 
@@ -57,6 +57,9 @@
 .kd-filters::-webkit-scrollbar { display: none; }
 
 .kd-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     padding: 0.4rem 1rem;
     border-radius: 2rem;
     border: 1px solid #DCDDDE;
@@ -70,6 +73,22 @@
 }
 .kd-chip.active { background: #8C2A1A; color: #fff; border-color: #8C2A1A; }
 .kd-chip:hover:not(.active) { background: #F4F5F7; }
+
+.kd-chip-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem; height: 1.25rem;
+    padding: 0 0.3rem;
+    border-radius: 2rem;
+    font-size: 0.7rem; font-weight: 700;
+    background-color: rgba(0,0,0,0.1);
+    color: inherit;
+}
+.kd-chip.active .kd-chip-count {
+    background-color: rgba(255,255,255,0.25);
+    color: #fff;
+}
 
 /* ── GRID ── */
 .kd-grid {
@@ -96,38 +115,115 @@
     cursor: default;
 }
 
-/* ── COLLAPSED ── */
+/* ── COLLAPSED (revisi) ── */
 .kd-collapsed {
-    display: flex; flex-direction: column;
-    gap: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
     padding: 0.85rem 0.8rem;
     min-height: 5.5rem;
-    justify-content: flex-end;
 }
-.kd-nama { font-size: 0.9rem; color: #172D23; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.kd-sub  { font-size: 0.75rem; color: #555656; }
-.kd-card-footer { display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin-top: 0.2rem; }
+
+/* Baris badge + more count */
+.kd-card-status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kd-nama {
+    font-size: 0.9rem;
+    color: #172D23;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 0.1rem;
+}
+
+/* Info pills (jumlah + sisa hari) */
+.kd-info-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.15rem;
+}
+
+.kd-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 2rem;
+    background: #F4F5F7;
+    font-size: 0.7rem;
+    color: #555656;
+    font-family: var(--font-jakarta);
+}
+.kd-pill-icon { font-size: 0.8rem !important; }
+.kd-pill-warn { background: #FEF9C3; color: #854D0E; }
+
+/* Badge status bahan */
+.kd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.18rem 0.5rem;
+    border-radius: 2rem;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+.kd-badge-icon { font-size: 0.8rem !important; }
+.badge-ok   { background-color: #DCFCE7; color: #166534; }
+.badge-warn { background-color: #FEF9C3; color: #854D0E; }
+.badge-exp  { background-color: #FEE2E2; color: #991B1B; }
+
 .kd-more { font-size: 0.7rem; color: #555656; display: flex; align-items: center; }
 .kd-arrow { font-size: 0.9rem !important; }
 
-/* ── BADGE ── */
-.kd-badge {
-    padding: 0.18rem 0.55rem; border-radius: 2rem;
-    font-size: 0.7rem; white-space: nowrap;
-}
-.badge-ok   { background: #FDECED; color: #B13336; }
-.badge-warn { background: #FDEEE6; color: #AD3D00; }
-.badge-exp  { background: #F4F5F7; color: #555656; }
-
 /* ── EXPANDED ── */
 .kd-expanded { display: none; flex-direction: column; gap: 0.65rem; padding: 1rem 0.85rem; }
-.kd-exp-header { display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+.kd-exp-header { display: flex; justify-content: space-between; align-items: center; }
 .kd-close { font-size: 1.1rem !important; color: #555656; cursor: pointer; }
 
-.kd-beli-item { display: flex; flex-direction: column; gap: 0.25rem; }
-.kd-beli-row  { display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+/* Detail grid 2 kolom di expanded */
+.kd-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+}
+
+.kd-detail-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.55rem 0.7rem;
+    background: #FFF8F5;
+    border-radius: 0.75rem;
+    border: 1px solid #F4E8E0;
+}
+.kd-detail-cell.kd-detail-warn {
+    background: #FFF4EC;
+    border-color: #FECDA3;
+}
+
+.kd-detail-label {
+    font-size: 0.65rem;
+    color: #8C2A1A;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.kd-detail-val {
+    font-size: 0.8rem;
+    color: #2D1A11;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.kd-beli-item { display: flex; flex-direction: column; gap: 0.5rem; }
+.kd-beli-row  { display: flex; justify-content: space-between; align-items: center; }
 .kd-beli-label { font-size: 0.7rem; color: #8C2A1A; text-transform: uppercase; letter-spacing: 0.05em; }
-.kd-beli-info  { font-size: 0.8rem; color: #555656; display: flex; align-items: center; gap: 0.25rem; }
 .kd-iicon { font-size: 0.85rem !important; }
 .kd-warn-text { color: #EC4448; }
 .kd-divider { border: none; border-top: 1px solid #F4F5F7; margin: 0.25rem 0; }
@@ -140,7 +236,7 @@
 .kd-del-btn:hover { color: #8C2A1A; }
 .kd-del-btn span { font-size: 1rem !important; }
 
-/* ── EMPTY STATE ── full width, isi layar ── */
+/* ── EMPTY STATE ── */
 .kd-empty {
     grid-column: 1 / -1;
     display: flex; flex-direction: column;
@@ -156,6 +252,201 @@
 .kd-empty-title { font-size: 1rem; color: #172D23; }
 .kd-empty-sub   { font-size: 0.875rem; color: #555656; }
 
+/* ── REKOMENDASI RESEP ── */
+.kd-resep {
+    background: white;
+    border-radius: 1.25rem;
+    padding: 1rem;
+    border: 1px solid #F4F5F7;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.kd-resep-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.kd-resep-sparkle { font-size: 1.1rem; }
+.kd-resep-title   { font-size: 0.9rem; color: #172D23; }
+
+.kd-resep-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.kd-resep-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #F4F5F7;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-radius: 0.5rem;
+    margin: 0 -0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+.kd-resep-item:last-child { border-bottom: none; }
+.kd-resep-item:hover { background: #FFF8F5; }
+
+.kd-resep-info { display: flex; flex-direction: column; gap: 0.2rem; flex: 1; }
+.kd-resep-nama { font-size: 0.875rem; color: #172D23; }
+.kd-resep-kurang {
+    font-size: 0.72rem;
+    color: #B87C5A;
+    line-height: 1.4;
+}
+.kd-resep-lengkap-text {
+    font-size: 0.72rem;
+    color: #166534;
+}
+
+.kd-resep-right {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.kd-resep-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 2rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+.badge-resep-lengkap { background: #E65100; color: white; }
+.badge-resep-partial  { background: #FEF9C3; color: #854D0E; }
+
+.kd-resep-detail-btn {
+    background: none; border: none; cursor: pointer;
+    color: #B87C5A; padding: 0;
+    display: flex; align-items: center;
+    transition: color 0.15s;
+}
+.kd-resep-detail-btn:hover { color: #E65100; }
+.kd-resep-detail-btn .material-icons-round { font-size: 1rem !important; }
+
+/* ── MODAL BASE ── */
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(2px);
+}
+
+.modal-box {
+    position: relative;
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem 1.5rem;
+    max-width: 360px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+
+.modal-resep-icon .material-icons-round { font-size: 2.5rem !important; color: #E65100; }
+.modal-title { font-size: 1rem; color: #2D1A11; line-height: 1.4; }
+.modal-desc  { font-size: 0.825rem; color: #6B5B54; }
+
+/* List bahan kurang */
+.modal-kurang-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.modal-kurang-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #FFF4EE;
+    border-radius: 0.75rem;
+    font-size: 0.85rem;
+    color: #4A2A1A;
+    font-family: var(--font-jakarta);
+}
+.modal-kurang-list li::before {
+    content: "close";
+    font-family: 'Material Icons Round';
+    font-size: 0.9rem;
+    color: #E65100;
+}
+
+/* List bahan tersedia (modal masak) */
+.modal-bahan-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.modal-bahan-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #F0FDF4;
+    border-radius: 0.75rem;
+    font-size: 0.85rem;
+    color: #166534;
+    font-family: var(--font-jakarta);
+}
+.modal-bahan-list li::before {
+    content: "check_circle";
+    font-family: 'Material Icons Round';
+    font-size: 0.9rem;
+    color: #16A34A;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.modal-btn-cancel {
+    flex: 1; padding: 0.75rem;
+    border-radius: 1rem;
+    border: 1.5px solid #E0D3CA;
+    background: white; color: #6B5B54;
+    font-size: 0.875rem; cursor: pointer;
+    transition: background 0.15s;
+}
+.modal-btn-cancel:hover { background: #F9F5F3; }
+
+.modal-btn-confirm {
+    flex: 1; padding: 0.75rem;
+    border-radius: 1rem; border: none;
+    background: #E65100; color: white;
+    font-size: 0.875rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+    transition: background 0.15s;
+}
+.modal-btn-confirm:hover    { background: #D84300; }
+.modal-btn-confirm:disabled { opacity: 0.6; cursor: not-allowed; }
+
 /* ── TABLET ── */
 @media (min-width: 768px) {
     .kd-main { padding: 0 1.5rem 2rem; }
@@ -170,4 +461,61 @@
     .navbar  { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
     .kd-grid { grid-template-columns: repeat(4, 1fr); }
     .kd-card.expanded { grid-column: span 2; }
+}
+
+/* ── MODAL BAHAN DETAIL LIST (takaran per bahan) ── */
+.modal-bahan-detail-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.modal-bahan-detail-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 0.82rem;
+    font-family: var(--font-jakarta);
+}
+
+/* Bahan yang cukup / sudah ada */
+.modal-bahan-detail-list li.bahan-cukup {
+    background: #F0FDF4;
+    color: #166534;
+}
+.modal-bahan-detail-list li.bahan-cukup::before {
+    content: "check_circle";
+    font-family: 'Material Icons Round';
+    font-size: 0.9rem;
+    color: #16A34A;
+    flex-shrink: 0;
+}
+
+/* Bahan yang kurang / tidak ada */
+.modal-bahan-detail-list li.bahan-kurang {
+    background: #FFF4EE;
+    color: #7C2D12;
+}
+.modal-bahan-detail-list li.bahan-kurang::before {
+    content: "close";
+    font-family: 'Material Icons Round';
+    font-size: 0.9rem;
+    color: #E65100;
+    flex-shrink: 0;
+}
+
+.modal-bahan-nama { flex: 1; text-align: left; }
+.modal-bahan-gram {
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    opacity: 0.85;
 }

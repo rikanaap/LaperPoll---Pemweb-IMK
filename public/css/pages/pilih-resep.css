@@ -1,110 +1,197 @@
-/* pilih-resep.css */
+/* pilih-resep.css — Full */
 
-.main-content {
-    max-width: 100%;
-    margin: 0 auto;
-    min-height: 100vh;
-    background-color: #FFF8F5;
-    padding: 0 0.7rem 2rem;
-    gap: 1rem;
+.pr-page {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    background: #FFF8F5;
+    gap: 0;
+    padding-bottom: 2rem;
 }
-.navbar {
-    background-color: #f4f5f7;
-    margin: 0 -0.7rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-.profile-link { display: flex; align-items: center; }
-.back-btn { text-decoration: none; display: flex; align-items: center; }
-.slot-info { padding: 0 0.25rem; }
-.kulkas-title { color: #8C2A1A; }
 
-/* ── LIST RESEP — selalu kolom vertikal ──────────────────────── */
+.navbar {
+    background: #FFF8F5;
+    padding: 0 1rem;
+}
+
+/* ── HEADER ── */
+.pr-header {
+    padding: 0.75rem 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.pr-title {
+    font-size: 1.35rem;
+    color: #8C2A1A;
+    line-height: 1;
+}
+
+/* Slot pills */
+.pr-slot-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.slot-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.75rem;
+    background: #FFF4EE;
+    border: 1.5px solid #FECDA3;
+    border-radius: 2rem;
+    font-size: 0.78rem;
+    color: #7C3514;
+}
+.slot-pill .material-icons-round { font-size: 0.85rem !important; color: #E65100; }
+.slot-pill-waktu {
+    background: #FEF3C7;
+    border-color: #FDE68A;
+    color: #92400E;
+}
+.slot-pill-waktu .material-icons-round { color: #D97706; }
+
+.pr-warning {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.85rem;
+    background: #FEF3C7;
+    border-radius: 0.75rem;
+    color: #92400E;
+    font-size: 0.8rem;
+}
+.pr-warning .material-icons-round { font-size: 1rem !important; color: #D97706; }
+
+/* ── SEARCH ── */
+.pr-search-wrap {
+    padding: 0.75rem 1rem 0;
+}
+
+/* ── GRID ── */
 .resep-menus {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    height: fit-content;
 }
 
-/* ── RESEP CARD ──────────────────────────────────────────────── */
-.resep {
+/* ── CARD ── */
+.resep-card {
     display: flex;
-    border-radius: 1.25rem;
-    border: 0.05rem solid #F2E2D9;
-    background-color: white;
-    padding: 0.9rem 0.75rem;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 1.25rem;
+    border: 1px solid #F4E8E0;
+    padding: 0.75rem 0.85rem;
     cursor: pointer;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
-    text-decoration: none;
-    /* Pastikan card tidak bisa diklik kalau tidak ada slot */
+    transition: box-shadow 0.18s, border-color 0.18s, background 0.15s;
+    gap: 0.5rem;
 }
-.resep:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-color: #8C2A1A; }
-
-/* Kalau tidak ada slot → disable visual */
-.resep.no-slot {
+.resep-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border-color: #E65100;
+    background: #FFFAF8;
+}
+.resep-card.no-slot {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
 }
 
-.resep-content { display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0; }
-.resep-logo {
+.resep-card-content {
     display: flex;
-    width: 4rem;
-    height: 4rem;
-    justify-content: center;
     align-items: center;
-    border-radius: 1rem;
-    background-color: #FEE7C3;
-    flex-shrink: 0;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
 }
-.resep-logo .material-icons-round { font-size: 1.8rem !important; color: #8C2A1A; }
-.resep-detail { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; min-width: 0; }
-.resep-detail h1 {
+
+.resep-thumb {
+    width: 3rem; height: 3rem;
+    border-radius: 0.75rem;
+    background: #FFF4EE;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+.resep-thumb img { width:100%; height:100%; object-fit:cover; }
+.resep-thumb .material-icons-round { font-size: 1.4rem !important; color: #FECDA3; }
+
+.resep-detail { flex:1; min-width:0; }
+.resep-nama {
+    font-size: 0.9rem;
+    color: #172D23;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin: 0;
 }
-.resep-content-detail { display: flex; align-items: center; gap: 1rem; }
-.resep-content-detail > div { display: flex; align-items: center; gap: 0.35rem; }
-.resep-content-detail .material-icons-round { font-size: 0.9rem !important; color: var(--primary-darker); }
-
-.arrow-icon { font-size: 1rem !important; color: var(--secondary-normal); flex-shrink: 0; }
-
-/* ── SLOT WARNING BANNER ─────────────────────────────────────── */
-.slot-warning {
+.resep-meta {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    background-color: #FEF3C7;
-    border: 1px solid #FCD34D;
-    border-radius: 0.75rem;
-    color: #92400E;
+    margin-top: 0.2rem;
+    flex-wrap: wrap;
 }
-.slot-warning .material-icons-round { font-size: 1.1rem !important; flex-shrink: 0; }
+.resep-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.7rem;
+    color: #B87C5A;
+}
+.resep-meta-item .material-icons-round { font-size: 0.8rem !important; color: #E65100; }
 
-/* ── EMPTY STATE ─────────────────────────────────────────────── */
-.empty-state {
+.resep-arrow { font-size: 0.85rem !important; color: #E8D5CC; flex-shrink: 0; }
+.resep-card:hover .resep-arrow { color: #E65100; }
+
+/* ── EMPTY STATE ── */
+.resep-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 3rem 2rem;
     text-align: center;
-    padding: 2rem 1rem;
-    color: var(--primary-darker);
-    font-family: var(--font-jakarta);
+    background: white;
+    border-radius: 1.25rem;
+    border: 1px solid #F4E8E0;
 }
+.resep-empty-icon { font-size: 2.5rem !important; color: #D1C5C0; }
+.resep-empty p:first-of-type { font-size: 0.9rem; color: #172D23; }
+.resep-empty p:last-of-type  { font-size: 0.8rem; color: #6B5B54; }
 
-/* ── TABLET (≥ 768px) ────────────────────────────────────────── */
-@media (min-width: 768px) {
-    .main-content { padding: 0 1.5rem 2rem; }
-    .navbar { margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
-    /* Tetap 1 kolom di tablet — lebih rapi untuk card horizontal */
+/* ── LOADING ── */
+.pr-loading-overlay {
+    position: fixed; inset: 0;
+    background: rgba(255,248,245,0.88);
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 }
+.pr-spinner {
+    width: 2.2rem; height: 2.2rem;
+    border: 3px solid #F4E8E0;
+    border-top-color: #8C2A1A;
+    border-radius: 50%;
+    animation: prSpin 0.7s linear infinite;
+}
+@keyframes prSpin { to { transform: rotate(360deg); } }
+.pr-loading-overlay p { font-size: 0.875rem; color: #8C2A1A; }
 
-/* ── DESKTOP (≥ 1024px) ──────────────────────────────────────── */
+/* ── RESPONSIVE ── */
+@media (min-width: 600px) {
+    .resep-menus { display: grid; grid-template-columns: repeat(2,1fr); }
+}
 @media (min-width: 1024px) {
-    .main-content { max-width: 900px; margin: 0 auto; padding: 0 2rem 2rem; }
-    .navbar { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
+    .pr-page, .pr-header, .pr-search-wrap { max-width:1100px; margin-left:auto; margin-right:auto; }
+    .resep-menus { max-width:1100px; margin: 0 auto; grid-template-columns: repeat(3,1fr); }
 }
