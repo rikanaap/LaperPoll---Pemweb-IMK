@@ -49,11 +49,13 @@ Route::get('/filter-resep-swipe', [SwipeResepController::class, 'showFilter'])->
 
 
 // API publik
-Route::prefix('api')->group(function () {
+// Tambahkan ->name('api.') di baris ini mas bro
+Route::prefix('api')->name('api.')->group(function () {
     Route::get('/resep/search', [ResepApiController::class, 'search'])->name('resep.search');
     Route::get('/bahan/by-ids', [ResepApiController::class, 'getBahansByIds'])->name('bahan.by-ids');
     Route::get('/bahans', [BahansController::class, 'apiList'])->name('bahans');
-    Route::post('/bahans/baru',        [KulkasDigitalController::class, 'storeBahanBaru'])->name('kulkas.bahan.baru');
+    Route::post('/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])->name('kulkas.bahan.baru');
+    
     Route::prefix('swipe')->name('swipe.')->group(function () {
         Route::get('/rasa', [SwipeResepApiController::class, 'getRasa'])->name('rasa');
         Route::get('/filter-resep-swipe', [SwipeResepApiController::class, 'filterSwipe'])->name('filter.resep.swipe');
