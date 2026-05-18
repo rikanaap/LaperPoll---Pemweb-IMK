@@ -19,31 +19,26 @@ class LangkahResepSeeder extends Seeder
             [
                 'resep_id' => 1,
                 'step_order' => 1,
-                'step_duration' => '00:03:00',
                 'description' => 'Panaskan minyak di wajan.',
             ],
             [
                 'resep_id' => 1,
                 'step_order' => 2,
-                'step_duration' => '00:05:00',
                 'description' => 'Tumis bawang merah dan bawang putih hingga harum.',
             ],
             [
                 'resep_id' => 1,
                 'step_order' => 3,
-                'step_duration' => '00:03:00',
                 'description' => 'Masukkan telur lalu orak-arik.',
             ],
             [
                 'resep_id' => 1,
                 'step_order' => 4,
-                'step_duration' => '00:07:00',
                 'description' => 'Masukkan nasi dan kecap, aduk rata.',
             ],
             [
                 'resep_id' => 1,
                 'step_order' => 5,
-                'step_duration' => '00:02:00',
                 'description' => 'Sajikan selagi hangat.',
             ],
 
@@ -51,19 +46,17 @@ class LangkahResepSeeder extends Seeder
             [
                 'resep_id' => 2,
                 'step_order' => 1,
-                'step_duration' => '00:05:00',
+                
                 'description' => 'Rebus mie hingga matang lalu tiriskan.',
             ],
             [
                 'resep_id' => 2,
                 'step_order' => 2,
-                'step_duration' => '00:04:00',
                 'description' => 'Tumis bawang hingga harum.',
             ],
             [
                 'resep_id' => 2,
                 'step_order' => 3,
-                'step_duration' => '00:06:00',
                 'description' => 'Masukkan mie dan bumbu, aduk rata.',
             ],
 
@@ -71,14 +64,50 @@ class LangkahResepSeeder extends Seeder
             [
                 'resep_id' => 3,
                 'step_order' => 1,
-                'step_duration' => '00:02:00',
+             
                 'description' => 'Kocok telur dengan garam.',
             ],
             [
                 'resep_id' => 3,
                 'step_order' => 2,
-                'step_duration' => '00:05:00',
                 'description' => 'Goreng telur tipis hingga renyah.',
+            ],
+
+            // RESEP ID 4 = Ayam Kecap Pedas
+            [
+                'resep_id' => 4,
+                'step_order' => 1,
+             
+                'description' => 'Bersihkan ayam dengan mencuci dan berikan perasan jeruk nipis sebelum dibilas.',
+            ],
+            [
+                'resep_id' => 4,
+                'step_order' => 2,
+                'description' => 'Haluskan bawang merah, bawang putih, dan cabai, tumis bumbu halus hingga harum.',
+            ],
+            [
+                'resep_id' => 4,
+                'step_order' => 3,
+             
+                'description' => 'Setelah itu, masukkan ayam yang telah digoreng ke dalam tumisan bumbu. 
+                Tambahkan air secukupnya hingga ayam terendam.',
+            ],
+            [
+                'resep_id' => 4,
+                'step_order' => 4,
+                'description' => 'Masak dengan api kecil untuk memastikan ayam meresap matang.
+                Sertakan kecap, gula merah, garam, dan gula sesuai selera',
+            ],
+            [
+                'resep_id' => 4,
+                'step_order' => 5,
+             
+                'description' => 'Tambahkan tomat dan daun bawang untuk sentuhan segar',
+            ],
+            [
+                'resep_id' => 4,
+                'step_order' => 6,
+                'description' => 'Sajikan dengan siap.',
             ],
 
         ];

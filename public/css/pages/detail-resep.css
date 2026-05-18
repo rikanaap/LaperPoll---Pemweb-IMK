@@ -92,8 +92,7 @@
     display: flex;
     justify-content: space-between; 
     align-items: center;
-    padding: 10px 22px;
-    box-sizing: border-box;
+    padding: 10px 30px;
     flex-wrap: nowrap;
 }
 
@@ -104,7 +103,7 @@
 }
 
 .recipe-title {
-    font-size: 25px;
+    font-size: 22px;
     white-space: nowrap;
 }
 
@@ -368,4 +367,10 @@
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
   -o-border-radius: 12px;
+}
+
+.button:hover {
+    background: #BF360C;
+    border-color: #BF360C;
+    box-shadow: 0 6px 18px rgba(230, 81, 0, 0.559);
 }

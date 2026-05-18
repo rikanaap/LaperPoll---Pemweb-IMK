@@ -21,14 +21,13 @@ class ResepSeeder extends Seeder
                 'views_count' => 120,
 
                 // STORAGE PATH
-                'thumbnail' => 'reseps/nasi_goreng.jpeg',
-
+                'thumbnail' => 'assets/images/nasi_goreng.jpeg',
                 'main_filter_id' => 1,
                 'is_published' => true,
             ],
 
             [
-                'user_id' => 1,
+                'user_id' => 2,
                 'title' => 'Mie Goreng Jawa',
                 'description' => 'Mie goreng manis gurih khas Jawa.',
                 'cook_duration' => '00:15:00',
@@ -44,7 +43,7 @@ class ResepSeeder extends Seeder
             ],
 
             [
-                'user_id' => 2,
+                'user_id' => 3,
                 'title' => 'Telur Dadar Crispy',
                 'description' => 'Telur dadar renyah dan gurih.',
                 'cook_duration' => '00:10:00',
@@ -60,7 +59,7 @@ class ResepSeeder extends Seeder
             ],
 
             [
-                'user_id' => 2,
+                'user_id' => 4,
                 'title' => 'Ayam Kecap Pedas',
                 'description' => 'Ayam manis pedas dengan bumbu kecap.',
                 'cook_duration' => '00:30:00',
@@ -76,7 +75,7 @@ class ResepSeeder extends Seeder
             ],
 
             [
-                'user_id' => 3,
+                'user_id' => 5,
                 'title' => 'Capcay Sayur',
                 'description' => 'Menu sehat dengan berbagai sayuran.',
                 'cook_duration' => '00:25:00',

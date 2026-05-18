@@ -19,7 +19,7 @@ class ResepAttachmentSeeder extends Seeder
             [
                 'resep_id' => 1,
                 'mimetype' => 'image/jpeg',
-                'path' => 'resep/nasi-goreng-1.jpg',
+                'path' => 'assets/images/nasi_goreng.jpeg',
             ],
             [
                 'resep_id' => 1,
@@ -31,21 +31,21 @@ class ResepAttachmentSeeder extends Seeder
             [
                 'resep_id' => 2,
                 'mimetype' => 'image/jpeg',
-                'path' => 'resep/mie-goreng-1.jpg',
+                'path' => 'assets/images/mie_goreng_jawa.jpg',
             ],
 
             // Resep ID 3 - Telur Dadar Crispy
             [
                 'resep_id' => 3,
                 'mimetype' => 'image/jpeg',
-                'path' => 'resep/telur-dadar-1.jpg',
+                'path' => 'assets/images/dadar_crispy.jpg',
             ],
 
             // Resep ID 4 - Ayam Kecap Pedas
             [
                 'resep_id' => 4,
                 'mimetype' => 'image/jpeg',
-                'path' => 'resep/ayam-kecap-1.jpg',
+                'path' => 'assets/images/ayam_kecap_pedas.jpg',
             ],
             [
                 'resep_id' => 4,
@@ -57,7 +57,7 @@ class ResepAttachmentSeeder extends Seeder
             [
                 'resep_id' => 5,
                 'mimetype' => 'image/jpeg',
-                'path' => 'resep/capcay-1.jpg',
+                'path' => 'assets/images/capcay_sayur.jpg',
             ],
         ];
 
