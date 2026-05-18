@@ -11,6 +11,7 @@ class Bahan extends Model
 
     protected $fillable = [
         'nama',
+        'kategori',
         'expired_expectancy_day'
     ];
 

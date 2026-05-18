@@ -140,17 +140,61 @@ class MealPlannerController extends Controller
     // ── DELETE /api/meal-planner/detail/{id} ──────────────────────────
     public function hapusDetail($id)
     {
+        $userId = Auth::id();
+
         $detail = MealPlannerDetail::whereHas(
-            'mealPlanner', fn($q) => $q->where('user_id', Auth::id())
+            'mealPlanner', fn($q) => $q->where('user_id', $userId)
         )->findOrFail($id);
 
         $detail->delete();
+
+        // ── AUTO RECALCULATE user_cart setelah hapus resep ──
+        // Ambil semua resep_id yang masih ada di planner user ini
+        $resepIds = MealPlannerDetail::whereHas('mealPlanner', fn($q) =>
+            $q->where('user_id', $userId)
+        )->pluck('resep_id')->unique();
+
+        DB::transaction(function () use ($userId, $resepIds) {
+            if ($resepIds->isEmpty()) {
+                // Tidak ada resep sama sekali → kosongkan cart
+                UserCart::where('user_id', $userId)->delete();
+                return;
+            }
+
+            // Hitung kebutuhan bahan dari semua resep yang masih ada
+            $bahanNeeds = DB::table('resep_bahan')
+                ->whereIn('resep_id', $resepIds)
+                ->select('bahan_id', DB::raw('SUM(gram_total) as total_gram'))
+                ->groupBy('bahan_id')
+                ->get()
+                ->keyBy('bahan_id');
+
+            $bahanIds = $bahanNeeds->keys()->toArray();
+
+            // Hapus bahan di cart yang sudah tidak dibutuhkan resep manapun
+            UserCart::where('user_id', $userId)
+                ->whereNotIn('bahan_id', $bahanIds)
+                ->delete();
+
+            // Update atau buat bahan yang masih dibutuhkan
+            foreach ($bahanNeeds as $need) {
+                UserCart::updateOrCreate(
+                    [
+                        'user_id'  => $userId,
+                        'bahan_id' => $need->bahan_id,
+                    ],
+                    [
+                        'gram_total' => $need->total_gram,
+                        'is_done'    => 0,
+                    ]
+                );
+            }
+        });
 
         return response()->json(['success' => true]);
     }
 
     // ── POST /api/meal-planner/generate-nota ──────────────────────────
-    // FIX: pakai updateOrCreate biar tidak duplicate entry di user_cart
     public function generateNota(Request $request)
     {
         $request->validate([
@@ -173,7 +217,6 @@ class MealPlannerController extends Controller
             ], 422);
         }
 
-        // Agregasi gram per bahan dari semua resep
         $bahanNeeds = DB::table('resep_bahan')
             ->whereIn('resep_id', $resepIds)
             ->select('bahan_id', DB::raw('SUM(gram_total) as total_gram'))
@@ -182,9 +225,6 @@ class MealPlannerController extends Controller
 
         DB::transaction(function () use ($userId, $bahanNeeds) {
             foreach ($bahanNeeds as $need) {
-                // updateOrCreate = aman dari duplicate entry (user_id + bahan_id unique)
-                // Kalau sudah ada (apapun is_done-nya) → update gram_total
-                // Kalau belum ada → buat baru
                 UserCart::updateOrCreate(
                     [
                         'user_id'  => $userId,
@@ -192,7 +232,7 @@ class MealPlannerController extends Controller
                     ],
                     [
                         'gram_total' => $need->total_gram,
-                        'is_done'    => 0,  // reset ke belum dibeli
+                        'is_done'    => 0,
                     ]
                 );
             }
