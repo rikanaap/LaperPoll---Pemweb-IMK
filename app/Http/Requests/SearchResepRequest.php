@@ -15,14 +15,16 @@ class SearchResepRequest extends FormRequest
     {
         return [
             'q'     => ['nullable', 'string', 'max:100'],
-            'bahan' => ['nullable', 'string'], // Menerima format "1,2,3"
+            'bahan' => ['nullable', 'string', 'regex:/^[\d,]+$/'], 
         ];
     }
 
     public function messages(): array
     {
         return [
-            'q.string' => 'Kata kunci pencarian harus berupa teks.',
+            'q.string'      => 'Kata kunci pencarian harus berupa teks.',
+            'q.max'         => 'Kata kunci maksimal 100 karakter.',
+            'bahan.regex'   => 'Format bahan tidak valid.',
         ];
     }
 }

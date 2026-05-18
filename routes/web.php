@@ -43,25 +43,47 @@ Route::get('/detail-resep/{id}', [DetailResepController::class, 'showDetail'])->
 Route::get('/timer-resep',  fn() => view('pages.timer_resep.timer_resep'));
 Route::get('/ulasan',       fn() => view('pages.ulasan.ulasan'));
 
+Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])
+    ->name('pencarian.resep');
 
-// Ikbal -> link halaman pencarian resep
-Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])->name('pencarian.resep');
+Route::get('/swipe-rasa', [SwipeResepController::class, 'index'])
+    ->name('swipe.rasa');
 
-Route::get('/swipe-rasa', [SwipeResepController::class, 'index'])->name('swipe.rasa');
-Route::get('/filter-resep-swipe', [SwipeResepController::class, 'showFilter'])->name('swipe.filter');
+Route::get('/filter-resep-swipe', [SwipeResepController::class, 'showFilter'])
+    ->name('swipe.filter');
 
 
-// API publik
-// Tambahkan ->name('api.') di baris ini mas bro
+// ─────────────────────────────────────────────────────────
+// API Routes (publik)
+// ─────────────────────────────────────────────────────────
+
 Route::prefix('api')->name('api.')->group(function () {
-    Route::get('/resep/search', [ResepApiController::class, 'search'])->name('resep.search');
-    Route::get('/bahan/by-ids', [ResepApiController::class, 'getBahansByIds'])->name('bahan.by-ids');
-    Route::get('/bahans', [BahansController::class, 'apiList'])->name('bahans');
-    Route::post('/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])->name('kulkas.bahan.baru');
-    
+
+    // Resep
+    Route::prefix('resep')->name('resep.')->group(function () {
+        Route::get('search', [ResepApiController::class, 'search'])
+            ->name('search');
+        Route::post('render-cards', [ResepApiController::class, 'renderCards'])
+            ->name('render-cards');
+    });
+
+    // Bahan
+    Route::prefix('bahan')->name('bahan.')->group(function () {
+        Route::get('by-ids', [ResepApiController::class, 'getBahansByIds'])
+            ->name('by-ids');
+    });
+
+    Route::get('/bahans', [BahansController::class, 'apiList'])
+        ->name('bahans');
+
+    Route::post('/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])
+        ->name('kulkas.bahan.baru');
+
     Route::prefix('swipe')->name('swipe.')->group(function () {
-        Route::get('/rasa', [SwipeResepApiController::class, 'getRasa'])->name('rasa');
-        Route::get('/filter-resep-swipe', [SwipeResepApiController::class, 'filterSwipe'])->name('filter.resep.swipe');
+        Route::get('/rasa', [SwipeResepApiController::class, 'getRasa'])
+            ->name('rasa');
+        Route::get('/filter-resep-swipe', [SwipeResepApiController::class, 'filterSwipe'])
+            ->name('filter.resep.swipe');
     });
 });
 
