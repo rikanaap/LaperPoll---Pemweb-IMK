@@ -94,6 +94,7 @@ function renderResep(data) {
                         ? `<img src="${esc(resep.thumbnail)}" alt="${esc(resep.nama)}">`
                         : `<span class="material-icons-round">restaurant</span>`
                     }
+                    ${resep.kalori ? `<span class="resep-thumb-kal">${resep.kalori} kal</span>` : ''}
                 </div>
                 <div class="resep-detail">
                     <p class="resep-nama font-jakarta font-semibold">${esc(resep.nama)}</p>
@@ -111,7 +112,9 @@ function renderResep(data) {
                     </div>
                 </div>
             </div>
-            <span class="material-icons-round resep-arrow">arrow_forward_ios</span>
+            <div class="resep-arrow-wrap">
+                <span class="material-icons-round resep-arrow">arrow_forward_ios</span>
+            </div>
         `;
 
         if (!noSlot) card.addEventListener('click', () => pilihResep(resep));
@@ -169,11 +172,25 @@ async function pilihResep(resep) {
 
 // ── Search ────────────────────────────────────────────────────
 document.getElementById('searchResep')?.addEventListener('input', e => {
-    const q = e.target.value.toLowerCase().trim();
-    renderResep(q ? allResep.filter(r => r.nama.toLowerCase().includes(q)) : allResep);
+    const q        = e.target.value.toLowerCase().trim();
+    const filtered = q ? allResep.filter(r => r.nama.toLowerCase().includes(q)) : allResep;
+    renderResep(filtered);
+    updateCount(allResep.length, filtered.length);
 });
+
+// ── Count helper ──────────────────────────────────────────────
+function updateCount(total, filtered) {
+    const bar = document.getElementById('prCountBar');
+    const txt = document.getElementById('prCountText');
+    if (!bar || !txt) return;
+    bar.style.display = '';
+    txt.textContent   = total === filtered
+        ? `${total} resep tersedia`
+        : `${filtered} dari ${total} resep`;
+}
 
 // ── Init ──────────────────────────────────────────────────────
 renderResep(allResep);
+updateCount(allResep.length, allResep.length);
 
 })();

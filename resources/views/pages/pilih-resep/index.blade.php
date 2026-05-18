@@ -30,6 +30,11 @@
         </div>
     </div>
 
+    {{-- COUNT --}}
+    <div class="pr-count-bar" id="prCountBar" style="display:none;">
+        <p class="pr-count-text font-jakarta" id="prCountText"></p>
+    </div>
+
     {{-- LIST --}}
     <section class="resep-menus" id="resepList"></section>
 

@@ -738,7 +738,8 @@
     .mp-modal-overlay { align-items: center; }
 }
 @media (min-width: 768px) {
-    .mp-topbar-inner { padding: 0.75rem 1.5rem 0; }
-    .mp-body         { padding: 1rem 1.5rem; }
+    .mp-page         { margin: 0 -2rem; }
+    .mp-topbar-inner { padding: 0.75rem 2rem 0; }
+    .mp-body         { padding: 1rem 2rem; }
     .mp-content      { display: grid; grid-template-columns: repeat(3, 1fr); }
 }

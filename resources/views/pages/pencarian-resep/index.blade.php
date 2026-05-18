@@ -10,6 +10,7 @@
 @endpush
 
 @section('content')
+<x-navbar :back-url="route('landing.index')" />
 <main class="search-page font-jakarta" 
     data-page="search" 
     data-search-url="{{ url('/api/resep/search') }}" 
@@ -17,7 +18,6 @@
     data-filter-url="{{ route('pencarian.resep') }}" {{-- 🌟 Diubah ke pencarian.resep --}}
     data-search-page-url="{{ route('pencarian.resep') }}">
 
-    <x-navbar :back-url="route('landing.index')" />
 
     <section class="search-layout">
         {{-- SIDEBAR --}}
