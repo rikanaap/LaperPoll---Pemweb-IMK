@@ -19,6 +19,55 @@ class MealPlannerController extends Controller
         return view('pages.meal_planner.index');
     }
 
+    // ─────────────────────────────────────────────────────────────────
+    // PRIVATE: Sync user_cart berdasarkan semua resep di planner user.
+    //
+    // $start & $end diisi  → hanya hitung resep dalam range itu
+    // $start & $end null   → hitung dari SEMUA planner user
+    //
+    // Yang dilakukan:
+    //  1. Agregasi gram per bahan dari semua resep aktif
+    //  2. Hapus bahan di cart yang tidak dibutuhkan resep manapun  ← fix utama
+    //  3. Update/buat bahan yang dibutuhkan
+    // ─────────────────────────────────────────────────────────────────
+    private function syncCart(int $userId, ?string $start = null, ?string $end = null): void
+    {
+        $resepIds = MealPlannerDetail::whereHas('mealPlanner', function ($q) use ($userId, $start, $end) {
+            $q->where('user_id', $userId);
+            if ($start && $end) {
+                $q->whereBetween('tanggal', [$start, $end]);
+            }
+        })->pluck('resep_id')->unique();
+
+        DB::transaction(function () use ($userId, $resepIds) {
+            if ($resepIds->isEmpty()) {
+                UserCart::where('user_id', $userId)->delete();
+                return;
+            }
+
+            $bahanNeeds = DB::table('resep_bahan')
+                ->whereIn('resep_id', $resepIds)
+                ->select('bahan_id', DB::raw('SUM(gram_total) as total_gram'))
+                ->groupBy('bahan_id')
+                ->get()
+                ->keyBy('bahan_id');
+
+            $bahanIdsNeeded = $bahanNeeds->keys()->toArray();
+
+            // Hapus bahan yang tidak dibutuhkan lagi — ini yang selama ini kurang
+            UserCart::where('user_id', $userId)
+                ->whereNotIn('bahan_id', $bahanIdsNeeded)
+                ->delete();
+
+            foreach ($bahanNeeds as $need) {
+                UserCart::updateOrCreate(
+                    ['user_id'  => $userId, 'bahan_id' => $need->bahan_id],
+                    ['gram_total' => $need->total_gram, 'is_done' => 0]
+                );
+            }
+        });
+    }
+
     // ── GET /api/meal-planner?start=2026-05-16&end=2026-05-22 ─────────
     public function getData(Request $request)
     {
@@ -38,12 +87,13 @@ class MealPlannerController extends Controller
             ->keyBy(fn($p) => Carbon::parse($p->tanggal)->format('Y-m-d'));
 
         $result = [];
-        $cur = $start->copy();
+        $cur    = $start->copy();
+
         while ($cur <= $end) {
             $iso     = $cur->toDateString();
             $planner = $planners->get($iso);
+            $meals   = ['SA' => null, 'SI' => null, 'MA' => null];
 
-            $meals = ['SA' => null, 'SI' => null, 'MA' => null];
             if ($planner) {
                 foreach ($planner->details as $detail) {
                     $resep = $detail->resep;
@@ -114,7 +164,6 @@ class MealPlannerController extends Controller
                 ['max_calorie' => null]
             );
 
-            // Replace slot yang sama
             MealPlannerDetail::where('meal_planner_id', $planner->id)
                 ->where('meal_time', $request->meal_time)
                 ->delete();
@@ -126,6 +175,9 @@ class MealPlannerController extends Controller
             ]);
         });
 
+        // Sync cart dari SEMUA resep user supaya bahan selalu akurat
+        $this->syncCart($userId);
+
         $resep = Resep::find($request->resep_id);
 
         return response()->json([
@@ -133,7 +185,9 @@ class MealPlannerController extends Controller
             'resep_id'  => $resep->id,
             'nama'      => $resep->title,
             'kalori'    => (int)($resep->calorie ?? 0),
-            'thumbnail' => $resep->thumbnail ? asset('storage/' . $resep->thumbnail) : null,
+            'thumbnail' => $resep->thumbnail
+                ? asset('storage/' . $resep->thumbnail)
+                : null,
         ]);
     }
 
@@ -148,48 +202,8 @@ class MealPlannerController extends Controller
 
         $detail->delete();
 
-        // ── AUTO RECALCULATE user_cart setelah hapus resep ──
-        // Ambil semua resep_id yang masih ada di planner user ini
-        $resepIds = MealPlannerDetail::whereHas('mealPlanner', fn($q) =>
-            $q->where('user_id', $userId)
-        )->pluck('resep_id')->unique();
-
-        DB::transaction(function () use ($userId, $resepIds) {
-            if ($resepIds->isEmpty()) {
-                // Tidak ada resep sama sekali → kosongkan cart
-                UserCart::where('user_id', $userId)->delete();
-                return;
-            }
-
-            // Hitung kebutuhan bahan dari semua resep yang masih ada
-            $bahanNeeds = DB::table('resep_bahan')
-                ->whereIn('resep_id', $resepIds)
-                ->select('bahan_id', DB::raw('SUM(gram_total) as total_gram'))
-                ->groupBy('bahan_id')
-                ->get()
-                ->keyBy('bahan_id');
-
-            $bahanIds = $bahanNeeds->keys()->toArray();
-
-            // Hapus bahan di cart yang sudah tidak dibutuhkan resep manapun
-            UserCart::where('user_id', $userId)
-                ->whereNotIn('bahan_id', $bahanIds)
-                ->delete();
-
-            // Update atau buat bahan yang masih dibutuhkan
-            foreach ($bahanNeeds as $need) {
-                UserCart::updateOrCreate(
-                    [
-                        'user_id'  => $userId,
-                        'bahan_id' => $need->bahan_id,
-                    ],
-                    [
-                        'gram_total' => $need->total_gram,
-                        'is_done'    => 0,
-                    ]
-                );
-            }
-        });
+        // Sync cart setelah hapus — bahan yang tidak dipakai ikut hilang
+        $this->syncCart($userId);
 
         return response()->json(['success' => true]);
     }
@@ -204,39 +218,20 @@ class MealPlannerController extends Controller
 
         $userId = Auth::id();
 
-        // Kumpulkan semua resep_id dalam range
-        $resepIds = MealPlannerDetail::whereHas('mealPlanner', fn($q) =>
+        $adaResep = MealPlannerDetail::whereHas('mealPlanner', fn($q) =>
             $q->where('user_id', $userId)
               ->whereBetween('tanggal', [$request->start, $request->end])
-        )->pluck('resep_id')->unique();
+        )->exists();
 
-        if ($resepIds->isEmpty()) {
+        if (!$adaResep) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak ada resep di rentang tanggal ini.',
             ], 422);
         }
 
-        $bahanNeeds = DB::table('resep_bahan')
-            ->whereIn('resep_id', $resepIds)
-            ->select('bahan_id', DB::raw('SUM(gram_total) as total_gram'))
-            ->groupBy('bahan_id')
-            ->get();
-
-        DB::transaction(function () use ($userId, $bahanNeeds) {
-            foreach ($bahanNeeds as $need) {
-                UserCart::updateOrCreate(
-                    [
-                        'user_id'  => $userId,
-                        'bahan_id' => $need->bahan_id,
-                    ],
-                    [
-                        'gram_total' => $need->total_gram,
-                        'is_done'    => 0,
-                    ]
-                );
-            }
-        });
+        // Sync cart hanya dari resep dalam range yang di-generate
+        $this->syncCart($userId, $request->start, $request->end);
 
         return response()->json([
             'success'  => true,
