@@ -5,39 +5,29 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SearchResepRequest;
 use App\Http\Resources\ResepResource;
-use App\Models\Bahan;
+use App\Services\BahanService;
 use App\Services\ResepService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ResepApiController extends Controller
 {
     public function __construct(
-        protected ResepService $resepService
+        protected ResepService $resepService,
+        protected BahanService $bahanService,
     ) {}
 
-    public function search(SearchResepRequest $request): JsonResponse 
+    public function search(SearchResepRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $keyword = $validated['q'] ?? null;
-        
-        $bahanParam = $request->query('bahan') ?? $request->input('bahan');
-        $bahanIds = [];
+        $keyword  = $request->validated('q');
+        $bahanIds = $this->bahanService->parseIdsFromParam($request->validated('bahan'));
 
-        if ($bahanParam && trim($bahanParam) !== '') {
-            $cleanBahanParam = preg_replace('/[^0-9,]/', '', $bahanParam);
-            $bahanIds = collect(explode(',', $cleanBahanParam))
-                ->map(fn($id) => (int) trim($id))
-                ->filter()
-                ->values()
-                ->toArray();
-        }
-
-        $reseps = $this->resepService->searchByBahans($bahanIds, $keyword, 10);
+        $reseps = $this->resepService->searchByBahans($bahanIds, $keyword);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Berhasil mengambil data resep.',
+            'success'    => true,
+            'message'    => 'Berhasil mengambil data resep.',
             'pagination' => [
                 'current_page'   => $reseps->currentPage(),
                 'last_page'      => $reseps->lastPage(),
@@ -49,35 +39,29 @@ class ResepApiController extends Controller
         ]);
     }
 
-    public function getBahansByIds(Request $request): JsonResponse 
+    public function renderCards(Request $request): JsonResponse
     {
-        $idsParam = $request->query('ids') ?? $request->input('ids');
+        $resepsData = $request->input('reseps', []);
 
-        if (!$idsParam) {
+        $html = collect($resepsData)
+            ->map(fn(array $resep) => view('components.pencarian-resep.resep-card', ['resep' => $resep])->render())
+            ->implode('');
+
+        return response()->json([
+            'success' => true,
+            'html'    => $html,
+        ]);
+    }
+
+    public function getBahansByIds(Request $request): JsonResponse
+    {
+        $bahanIds = $this->bahanService->parseIdsFromParam($request->query('ids'));
+
+        if (empty($bahanIds)) {
             return response()->json(['success' => true, 'total' => 0, 'data' => []]);
         }
 
-        if (is_array($idsParam)) {
-            $idsParam = implode(',', $idsParam);
-        }
-
-        $cleanParam = preg_replace('/[^0-9,]/', '', $idsParam);
-        
-        $ids = collect(explode(',', $cleanParam))
-            ->map(fn ($id) => (int) trim($id))
-            ->filter()
-            ->unique()
-            ->values()
-            ->toArray();
-
-        if (empty($ids)) {
-            return response()->json(['success' => true, 'total' => 0, 'data' => []]);
-        }
-
-        $bahans = Bahan::query()
-            ->whereIn('id', $ids)
-            ->orderBy('nama')
-            ->get(['id', 'nama']);
+        $bahans = $this->bahanService->getByIds($bahanIds);
 
         return response()->json([
             'success' => true,

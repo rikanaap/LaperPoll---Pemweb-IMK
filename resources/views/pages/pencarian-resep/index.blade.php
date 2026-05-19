@@ -10,36 +10,47 @@
 @endpush
 
 @section('content')
-<x-navbar :back-url="route('landing.index')" />
-<main class="search-page font-jakarta" 
-    data-page="search" 
-    data-search-url="{{ url('/api/resep/search') }}" 
-    data-bahan-url="{{ url('/api/bahan/by-ids') }}" 
-    data-filter-url="{{ route('pencarian.resep') }}" {{-- 🌟 Diubah ke pencarian.resep --}}
-    data-search-page-url="{{ route('pencarian.resep') }}">
+
+<main
+    class="search-page font-jakarta"
+    data-page="search"
+    data-search-url="{{ route('api.resep.search') }}"
+    data-bahan-url="{{ route('api.bahan.by-ids') }}"
+    data-filter-url="{{ route('pencarian.resep') }}"
+    data-search-page-url="{{ route('pencarian.resep') }}"
+    data-render-url="{{ route('api.resep.render-cards') }}"
+>
+    <x-navbar :back-url="route('landing.index')" />
 
 
     <section class="search-layout">
+
         {{-- SIDEBAR --}}
         <aside class="search-sidebar">
-            {{-- GLOBAL SEARCH TEXT --}}
+
+            {{-- SEARCH INPUT --}}
             <div class="input" id="searchWrapper">
                 <span class="material-icons-round">search</span>
-                {{-- 🌟 Tambahkan value dari controller jika ada input pencarian sebelumnya --}}
-                <input type="text" id="searchInput" class="input-data" placeholder="Cari nama resep atau bahan..." autocomplete="off" value="{{ $keyword ?? '' }}">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="input-data"
+                    placeholder="Cari nama resep atau bahan..."
+                    autocomplete="off"
+                    value="{{ $keyword ?? '' }}"
+                >
             </div>
 
             <p class="text-body font-medium section-title">Bahan Populer Minggu Ini</p>
 
-            {{-- LIST BAHAN --}}
+            {{-- DAFTAR BAHAN --}}
             <section class="bahan-wrapper" aria-label="Daftar bahan">
                 <div class="bahan-list">
-                    @forelse($bahans as $huruf => $kelompokBahan)
+                    @forelse ($bahans as $huruf => $kelompokBahan)
                         <div class="bahan-group">
                             <span class="group-letter">{{ $huruf }}</span>
-                            @foreach($kelompokBahan as $bahan)
-                                {{-- 🌟 Pastikan komponen bahan-item lo tahu kalau bahannya sedang ter-check (opsional tergantung logic komponen) --}}
-                                <x-bahan-item :bahan="$bahan" />
+                            @foreach ($kelompokBahan as $bahan)
+                                <x-pencarian-resep.bahan-item :bahan="$bahan" />
                             @endforeach
                         </div>
                     @empty
@@ -50,10 +61,14 @@
 
             <div id="selectedInfo" class="selected-info hidden">0 bahan dipilih</div>
 
-            {{-- ACTION BUTTON --}}
+            {{-- ACTION BUTTONS --}}
             <div class="action-buttons-wrapper">
-                <button id="hapusSemuaBtn" class="action-btn hapus-btn" type="button" disabled>Hapus Semua</button>
-                <button id="terapkanBtn" class="action-btn terapkan-btn disabled" type="button" disabled>Terapkan</button>
+                <button id="hapusSemuaBtn" class="action-btn hapus-btn" type="button" disabled>
+                    Hapus Semua
+                </button>
+                <button id="terapkanBtn" class="action-btn terapkan-btn disabled" type="button" disabled>
+                    Terapkan
+                </button>
             </div>
 
             <div class="divider-wrap">
@@ -66,12 +81,16 @@
                 <span class="material-icons-round">swap_horiz</span>
                 <span>Swipe Untuk Mencari</span>
             </a>
+
         </aside>
 
-        {{-- RESULT --}}
+        {{-- RESULT PANEL --}}
         <section class="search-result" aria-label="Hasil pencarian resep">
+
             <div class="result-header-wrapper">
-                <p id="resultInfoText" class="result-info-text">Pilih bahan atau ketik nama resep untuk memulai</p>
+                <p id="resultInfoText" class="result-info-text">
+                    Pilih bahan atau ketik nama resep untuk memulai
+                </p>
                 <div id="selectedChips" class="selected-chips-wrapper" role="list"></div>
             </div>
 
@@ -79,23 +98,20 @@
             <div id="resepContainer" class="resep-container hidden"></div>
 
             {{-- LOADING --}}
-            <div id="loadingState" class="loading-state hidden" aria-live="polite">
-                <div class="loading-spinner"></div>
-                <p>Sedang mencari resep...</p>
-            </div>
+            <x-pencarian-resep.loading-state message="Sedang mencari resep..." />
 
             {{-- EMPTY STATE --}}
-            <div id="resultPlaceholder" class="result-placeholder">
-                <span class="material-icons-round">restaurant_menu</span>
-                <h3>Rekomendasi Resep</h3>
-                <p>Masukkan kata kunci pencarian atau pilih kombinasi bahan dapurmu.</p>
-            </div>
+            <x-pencarian-resep.empty-state
+                id="resultPlaceholder"
+                title="Rekomendasi Resep"
+                message="Masukkan kata kunci pencarian atau pilih kombinasi bahan dapurmu."
+            />
 
             {{-- LOAD MORE --}}
-            <div id="loadMoreWrapper" class="load-more-wrapper hidden">
-                <button id="loadMoreBtn" class="load-more-btn" type="button">Muat Lebih Banyak</button>
-            </div>
+            <x-pencarian-resep.load-more />
+
         </section>
+
     </section>
 </main>
 @endsection

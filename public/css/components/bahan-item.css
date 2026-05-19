@@ -56,4 +56,6 @@
     width: 18px;
     height: 18px;
     accent-color: #ff7a00;
+    cursor: pointer;
+    flex-shrink: 0;
 }
