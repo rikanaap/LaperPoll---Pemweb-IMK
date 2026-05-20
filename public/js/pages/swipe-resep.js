@@ -1,302 +1,346 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const swipeCards = document.getElementById('swipeCards');
-  const likedHistory = document.getElementById('likedContainer');
-  const dislikedHistory = document.getElementById('dislikedContainer');
-  const mobileLikedHistory = document.getElementById('mobileLikedContainer');
-  const mobileDislikedHistory = document.getElementById('mobileDislikedContainer');
-  const counterText = document.getElementById('counterText');
-  const progressBar = document.getElementById('progressBar');
-  const mobileProgressBar = document.getElementById('mobileProgressBar');
-  const emptyState = document.getElementById('emptyState');
-  const likeBtn = document.getElementById('likeBtn');
-  const dislikeBtn = document.getElementById('dislikeBtn');
-  const historyDrawer = document.getElementById('historyDrawer');
-  const drawerHeader = document.getElementById('drawerHeader');
-  const drawerOverlay = document.getElementById('drawerOverlay');
-  const arrowIcon = document.getElementById('drawerArrow');
+document.addEventListener('DOMContentLoaded', () => {
+    const el = {
+        swipeCards:          document.getElementById('swipeCards'),
+        likedContainer:      document.getElementById('likedContainer'),
+        dislikedContainer:   document.getElementById('dislikedContainer'),
+        mobileLiked:         document.getElementById('mobileLikedContainer'),
+        mobileDisliked:      document.getElementById('mobileDislikedContainer'),
+        counterText:         document.getElementById('counterText'),
+        progressBar:         document.getElementById('progressBar'),
+        mobileProgressBar:   document.getElementById('mobileProgressBar'),
+        emptyState:          document.getElementById('emptyState'),
+        likeBtn:             document.getElementById('likeBtn'),
+        dislikeBtn:          document.getElementById('dislikeBtn'),
+        historyDrawer:       document.getElementById('historyDrawer'),
+        drawerHeader:        document.getElementById('drawerHeader'),
+        drawerOverlay:       document.getElementById('drawerOverlay'),
+        drawerArrow:         document.getElementById('drawerArrow'),
+    };
 
-  const state = {
-    cards: [],
-    disliked: [],
-    currentLiked: [],
-    likedGroups: [],
-    redirecting: false,
-    drawerOpen: false
-  };
+    const MAX_LIKED       = 3;
+    const SWIPE_THRESHOLD = 120;
+    const SESSION_KEY    = 'swipeRasaState';
+    const CARD_COLORS     = ['orange', 'rose', 'violet', 'teal', 'blue', 'amber'];
 
-  init();
+    const state = {
+        cards:        [],
+        disliked:     [],
+        currentLiked: [],
+        likedGroups:  [],
+        redirecting:  false,
+        drawerOpen:   false,
+    };
 
-  async function init() {
-    resetCurrentLiked();
-    loadState();
-    await fetchRasa();
-    renderCards();
-    updateHistory();
-    updateProgress();
-    initHistoryDrawer();
-  }
+    init();
 
-  function resetCurrentLiked() {
-    state.currentLiked = [];
-  }
-
-  function loadState() {
-    const saved = sessionStorage.getItem('swipeRasaState');
-    if (!saved) return;
-    try {
-      const parsed = JSON.parse(saved);
-      state.disliked = parsed.disliked || [];
-      state.likedGroups = parsed.likedGroups || [];
-    } catch (err) {
-      console.error(err);
+    async function init() {
+        loadState();
+        await fetchRasa();
+        renderCards();
+        updateHistory();
+        updateProgress();
+        initDrawer();
+        bindActionButtons();
     }
-  }
 
-  function saveState() {
-    sessionStorage.setItem(
-      'swipeRasaState',
-      JSON.stringify({
-        disliked: state.disliked,
-        likedGroups: state.likedGroups
-      })
-    );
-  }
-
-  async function fetchRasa() {
-    try {
-      const res = await fetch(window.swipeConfig.apiUrl);
-      const result = await res.json();
-      if (!result.success) return;
-      const excludedIds = [
-        ...state.disliked.map(item => item.id)
-      ];
-      state.cards = result.data.filter(
-        item => !excludedIds.includes(item.id)
-      );
-    } catch (err) {
-      console.error(err);
+    function loadState() {
+        try {
+            const saved = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}');
+            state.disliked     = saved.disliked     ?? [];
+            state.likedGroups  = saved.likedGroups  ?? [];
+        } catch {
+            // State tetap bersih jika parse gagal
+        }
     }
-  }
 
-  function renderCards() {
-    swipeCards.innerHTML = '';
-    if (!state.cards.length) {
-      emptyState.style.display = 'flex';
-      swipeCards.appendChild(emptyState);
-      if (state.currentLiked.length > 0 && !state.redirecting) {
-        navigateToFilterPage();
-      }
-      return;
+    function saveState() {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+            disliked:    state.disliked,
+            likedGroups: state.likedGroups,
+        }));
     }
-    emptyState.style.display = 'none';
-    const visible = state.cards.slice(0, 3);
-    visible.forEach((rasa, index) => {
-      const card = createCard(rasa, index);
-      swipeCards.appendChild(card);
-    });
-  }
 
-  function createCard(rasa, index) {
-    const card = document.createElement('div');
-    card.className = 'swipe-card';
-    card.style.zIndex = 100 - index;
-    card.innerHTML = `
-      <div class="swipe-icon-wrapper">
-        <span class="material-icons-round">restaurant</span>
-      </div>
-      <h2 class="swipe-title">${rasa.title ?? '-'}</h2>
-      <p class="swipe-desc">${rasa.description ?? '-'}</p>
-    `;
-    addSwipeEvents(card, rasa);
-    return card;
-  }
+    async function fetchRasa() {
+        try {
+            const res    = await fetch(window.swipeConfig.apiUrl);
+            const result = await res.json();
 
-  function addSwipeEvents(card, rasa) {
-    let startX = 0;
-    let currentX = 0;
-    let dragging = false;
+            if (!result.success) return;
 
-    card.addEventListener('pointerdown', (e) => {
-      if (card !== swipeCards.querySelector('.swipe-card:first-child')) return;
-      startX = e.clientX;
-      dragging = true;
-      card.style.transition = 'none';
-    });
+            const excludedIds = new Set(state.disliked.map(item => item.id));
 
-    window.addEventListener('pointermove', (e) => {
-      if (!dragging) return;
-      currentX = e.clientX - startX;
-      const x = Math.max(-180, Math.min(180, currentX));
-      card.style.transform = `translateX(${x}px) rotate(${x / 18}deg)`;
-    });
-
-    window.addEventListener('pointerup', () => {
-      if (!dragging) return;
-      dragging = false;
-      card.style.transition = '.3s ease';
-      if (currentX > 120) {
-        swipeRight(card, rasa);
-      } else if (currentX < -120) {
-        swipeLeft(card, rasa);
-      } else {
-        card.style.transform = '';
-      }
-      currentX = 0;
-    });
-  }
-
-  function swipeRight(card, rasa) {
-    card.style.transform = 'translateX(420px) rotate(25deg)';
-    card.style.opacity = '0';
-    setTimeout(() => {
-      likeCard(rasa);
-    }, 200);
-  }
-
-  function swipeLeft(card, rasa) {
-    card.style.transform = 'translateX(-420px) rotate(-25deg)';
-    card.style.opacity = '0';
-    setTimeout(() => {
-      dislikeCard(rasa);
-    }, 200);
-  }
-
-  likeBtn?.addEventListener('click', () => {
-    const rasa = state.cards[0];
-    const card = swipeCards.querySelector('.swipe-card:first-child');
-    if (rasa && card) swipeRight(card, rasa);
-  });
-
-  dislikeBtn?.addEventListener('click', () => {
-    const rasa = state.cards[0];
-    const card = swipeCards.querySelector('.swipe-card:first-child');
-    if (rasa && card) swipeLeft(card, rasa);
-  });
-
-  function likeCard(rasa) {
-    if (!rasa) return;
-    state.currentLiked.push(rasa);
-    removeCard(rasa.id);
-    updateHistory();
-    updateProgress();
-    
-    if (state.currentLiked.length >= 3 || state.cards.length === 0) {
-      const group = {
-        id: Date.now(),
-        items: [...state.currentLiked]
-      };
-      state.likedGroups.unshift(group);
-      saveState();
-      sessionStorage.setItem('selectedRasa', JSON.stringify(state.currentLiked));
-      state.redirecting = true;
-      setTimeout(() => {
-        navigateToFilterPage();
-      }, 700);
+            state.cards = result.data
+                .filter(item => !excludedIds.has(item.id))
+                .map(item => ({
+                    ...item,
+                    colorClass: pickColor(item.id),
+                }));
+        } catch (err) {
+            console.error('[SwipeResep] fetchRasa error:', err);
+        }
     }
-  }
 
-  function dislikeCard(rasa) {
-    if (!rasa) return;
-    state.disliked.push(rasa);
-    removeCard(rasa.id);
-    saveState();
-    updateHistory();
-  }
+    function pickColor(id) {
+        return CARD_COLORS[id % CARD_COLORS.length];
+    }
 
-  function removeCard(id) {
-    state.cards = state.cards.filter(item => item.id !== id);
-    renderCards();
-  }
+    function renderCards() {
+        el.swipeCards.innerHTML = '';
 
-  function navigateToFilterPage() {
-    sessionStorage.setItem('selectedRasa', JSON.stringify(state.currentLiked));
-    const ids = state.currentLiked.map(r => r.id).join(',');
-    window.location.href = `${window.swipeConfig.redirectUrl}?filters=${ids}`;
-  }
+        if (!state.cards.length) {
+            el.emptyState.style.display = 'flex';
+            el.swipeCards.appendChild(el.emptyState);
 
-  function updateHistory() {
-    const likedHTML = state.likedGroups.length
-      ? state.likedGroups.map(group => {
-          const names = group.items.map(item => item.title).join(' • ');
-          return `
-            <button class="history-chip liked liked-group-chip" data-ids="${group.items.map(i => i.id).join(',')}">
-              ❤️ ${names}
-            </button>
-          `;
-        }).join('')
-      : `<p class="empty-history">Belum ada history rasa</p>`;
+            if (state.currentLiked.length > 0 && !state.redirecting) {
+                state.redirecting = true;
+                navigateToFilterPage();
+            }
+            return;
+        }
 
-    const dislikedHTML = state.disliked.length
-      ? state.disliked.map(item => `
-          <div class="history-chip disliked">
-            <span>❌ ${item.title}</span>
-            <button class="remove-disliked" data-id="${item.id}">×</button>
-          </div>
-        `).join('')
-      : `<p class="empty-history">Belum ada rasa dilewati</p>`;
+        el.emptyState.style.display = 'none';
 
-    likedHistory.innerHTML = likedHTML;
-    dislikedHistory.innerHTML = dislikedHTML;
-    if (mobileLikedHistory) mobileLikedHistory.innerHTML = likedHTML;
-    if (mobileDislikedHistory) mobileDislikedHistory.innerHTML = dislikedHTML;
-    bindHistoryEvents();
-  }
+        state.cards.slice(0, 3).forEach((rasa, index) => {
+            const card = buildCardElement(rasa, index);
+            el.swipeCards.appendChild(card);
+        });
+    }
 
-  function bindHistoryEvents() {
-    document.querySelectorAll('.liked-group-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const ids = chip.dataset.ids;
+    function buildCardElement(rasa, index) {
+        const card = document.createElement('div');
+        card.className = `swipe-card swipe-card--${rasa.colorClass}`;
+        card.style.zIndex = 100 - index;
+        card.setAttribute('role', 'article');
+        card.setAttribute('aria-label', `Rasa: ${rasa.title}`);
+        card.innerHTML = `
+            <div class="swipe-card__icon-wrapper">
+                <span class="material-icons-round">restaurant</span>
+            </div>
+            <h2 class="swipe-card__title">${escapeHtml(rasa.title ?? '-')}</h2>
+            <p class="swipe-card__desc">${escapeHtml(rasa.description ?? '-')}</p>
+        `;
+        attachSwipeEvents(card, rasa);
+        return card;
+    }
+
+    function attachSwipeEvents(card, rasa) {
+        let startX   = 0;
+        let currentX = 0;
+        let dragging = false;
+
+        const isTopCard = () => card === el.swipeCards.querySelector('.swipe-card:first-child');
+
+        card.addEventListener('pointerdown', (e) => {
+            if (!isTopCard() || state.redirecting) return;
+            startX   = e.clientX;
+            dragging = true;
+            card.style.transition = 'none';
+        });
+
+        window.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            currentX = e.clientX - startX;
+            const clamped = Math.max(-180, Math.min(180, currentX));
+            card.style.transform = `translateX(${clamped}px) rotate(${clamped / 18}deg)`;
+        });
+
+        window.addEventListener('pointerup', () => {
+            if (!dragging) return;
+            dragging = false;
+            card.style.transition = '.3s ease';
+
+            if (currentX > SWIPE_THRESHOLD) {
+                animateSwipe(card, 'right', () => onLike(rasa));
+            } else if (currentX < -SWIPE_THRESHOLD) {
+                animateSwipe(card, 'left', () => onDislike(rasa));
+            } else {
+                card.style.transform = '';
+            }
+            currentX = 0;
+        });
+    }
+
+    function animateSwipe(card, direction, callback) {
+        const x      = direction === 'right' ? 420 : -420;
+        const rotate = direction === 'right' ? 25 : -25;
+        card.style.transform = `translateX(${x}px) rotate(${rotate}deg)`;
+        card.style.opacity   = '0';
+        setTimeout(callback, 200);
+    }
+
+    function onLike(rasa) {
+        if (!rasa || state.redirecting) return;
+
+        state.currentLiked.push(rasa);
+        updateProgress();
+        
+        const shouldRedirect = state.currentLiked.length >= MAX_LIKED || state.cards.length === 1;
+
+        if (shouldRedirect) {
+            state.redirecting = true;
+            const group = { id: Date.now(), items: [...state.currentLiked] };
+            state.likedGroups.unshift(group);
+            saveState();
+            
+            removeCardFromState(rasa.id);
+            updateHistory();
+            
+            setTimeout(navigateToFilterPage, 500);
+        } else {
+            removeCardFromState(rasa.id);
+            updateHistory();
+        }
+    }
+
+    function onDislike(rasa) {
+        if (!rasa || state.redirecting) return;
+        state.disliked.push(rasa);
+        removeCardFromState(rasa.id);
+        saveState();
+        updateHistory();
+    }
+
+    function removeCardFromState(id) {
+        state.cards = state.cards.filter(item => item.id !== id);
+        renderCards();
+    }
+
+    function navigateToFilterPage() {
+        sessionStorage.setItem('selectedRasa', JSON.stringify(state.currentLiked));
+        const ids = state.currentLiked.map(r => r.id).join(',');
         window.location.href = `${window.swipeConfig.redirectUrl}?filters=${ids}`;
-      });
-    });
-
-    document.querySelectorAll('.remove-disliked').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = Number(btn.dataset.id);
-        restoreDisliked(id);
-      });
-    });
-  }
-
-  function restoreDisliked(id) {
-    const item = state.disliked.find(i => i.id === id);
-    if (!item) return;
-    state.disliked = state.disliked.filter(i => i.id !== id);
-    state.cards.unshift(item);
-    saveState();
-    updateHistory();
-    renderCards();
-  }
-
-  function updateProgress() {
-    const total = state.currentLiked.length;
-    counterText.innerText = `${total} / 3`;
-    const percent = (total / 3) * 100;
-    progressBar.style.width = `${percent}%`;
-    if (mobileProgressBar) mobileProgressBar.style.width = `${percent}%`;
-  }
-
-  function initHistoryDrawer() {
-    if (!historyDrawer || !drawerHeader) return;
-    drawerHeader.addEventListener('click', toggleDrawer);
-    drawerOverlay?.addEventListener('click', closeDrawer);
-  }
-
-  function toggleDrawer() {
-    state.drawerOpen = !state.drawerOpen;
-    historyDrawer.classList.toggle('is-open', state.drawerOpen);
-    drawerOverlay?.classList.toggle('active', state.drawerOpen);
-    if (arrowIcon) {
-      arrowIcon.style.transform = state.drawerOpen ? 'rotate(180deg)' : 'rotate(0deg)';
     }
-    document.body.style.overflow = state.drawerOpen ? 'hidden' : '';
-  }
 
-  function closeDrawer() {
-    state.drawerOpen = false;
-    historyDrawer.classList.remove('is-open');
-    drawerOverlay?.classList.remove('active');
-    if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
-    document.body.style.overflow = '';
-  }
+    function bindActionButtons() {
+        el.likeBtn?.addEventListener('click', () => {
+            if (state.redirecting) return;
+            const rasa = state.cards[0];
+            const card = el.swipeCards.querySelector('.swipe-card:first-child');
+            if (rasa && card) animateSwipe(card, 'right', () => onLike(rasa));
+        });
+
+        el.dislikeBtn?.addEventListener('click', () => {
+            if (state.redirecting) return;
+            const rasa = state.cards[0];
+            const card = el.swipeCards.querySelector('.swipe-card:first-child');
+            if (rasa && card) animateSwipe(card, 'left', () => onDislike(rasa));
+        });
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* 12. UPDATE HISTORY & CHIPS                                         */
+    /* ------------------------------------------------------------------ */
+    function updateHistory() {
+        const likedHtml    = buildLikedHtml();
+        const dislikedHtml = buildDislikedHtml();
+
+        if (el.likedContainer)    el.likedContainer.innerHTML    = likedHtml;
+        if (el.dislikedContainer) el.dislikedContainer.innerHTML = dislikedHtml;
+        if (el.mobileLiked)       el.mobileLiked.innerHTML       = likedHtml;
+        if (el.mobileDisliked)    el.mobileDisliked.innerHTML    = dislikedHtml;
+
+        bindHistoryChipEvents();
+    }
+
+    function buildLikedHtml() {
+        if (!state.likedGroups.length) {
+            return '<p class="history-section__empty">Belum ada history rasa</p>';
+        }
+        return state.likedGroups.map(group => {
+            const names = group.items.map(item => escapeHtml(item.title)).join(' • ');
+            return `
+                <button
+                    class="history-chip history-chip--liked liked-group-chip"
+                    data-ids="${group.items.map(i => i.id).join(',')}"
+                    aria-label="Ulangi pilihan rasa: ${names}"
+                >
+                    ❤️ ${names}
+                </button>
+            `;
+        }).join('');
+    }
+
+    function buildDislikedHtml() {
+        if (!state.disliked.length) {
+            return '<p class="history-section__empty">Belum ada rasa dilewati</p>';
+        }
+        return state.disliked.map(item => `
+            <div class="history-chip history-chip--disliked">
+                <span>❌ ${escapeHtml(item.title)}</span>
+                <button
+                    class="history-chip__remove remove-disliked"
+                    data-id="${item.id}"
+                    aria-label="Kembalikan rasa ${escapeHtml(item.title)}"
+                >×</button>
+            </div>
+        `).join('');
+    }
+
+    function bindHistoryChipEvents() {
+        document.querySelectorAll('.liked-group-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const ids = chip.dataset.ids;
+                window.location.href = `${window.swipeConfig.redirectUrl}?filters=${ids}`;
+            });
+        });
+
+        document.querySelectorAll('.remove-disliked').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (state.redirecting) return;
+                restoreDisliked(Number(btn.dataset.id));
+            });
+        });
+    }
+
+    function restoreDisliked(id) {
+        const item = state.disliked.find(i => i.id === id);
+        if (!item) return;
+        state.disliked = state.disliked.filter(i => i.id !== id);
+        state.cards.unshift(item);
+        saveState();
+        updateHistory();
+        renderCards();
+    }
+
+    function updateProgress() {
+        const total   = state.currentLiked.length;
+        const percent = (total / MAX_LIKED) * 100;
+
+        if (el.counterText) el.counterText.innerText = `${total} / ${MAX_LIKED}`;
+        if (el.progressBar) el.progressBar.style.width = `${percent}%`;
+        if (el.mobileProgressBar) el.mobileProgressBar.style.width = `${percent}%`;
+    }
+
+    function initDrawer() {
+        el.drawerHeader?.addEventListener('click', toggleDrawer);
+        el.drawerOverlay?.addEventListener('click', closeDrawer);
+    }
+
+    function toggleDrawer() {
+        state.drawerOpen = !state.drawerOpen;
+        el.historyDrawer?.classList.toggle('is-open', state.drawerOpen);
+        el.drawerOverlay?.classList.toggle('is-active', state.drawerOpen);
+        if (el.drawerArrow) {
+            el.drawerArrow.style.transform = state.drawerOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+        document.body.style.overflow = state.drawerOpen ? 'hidden' : '';
+    }
+
+    function closeDrawer() {
+        state.drawerOpen = false;
+        el.historyDrawer?.classList.remove('is-open');
+        el.drawerOverlay?.classList.remove('is-active');
+        if (el.drawerArrow) el.drawerArrow.style.transform = 'rotate(0deg)';
+        document.body.style.overflow = '';
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 });
