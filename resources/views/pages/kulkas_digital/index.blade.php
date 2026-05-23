@@ -19,12 +19,9 @@
         </a>
     </div>
 
-    {{-- FLASH --}}
-    @if(session('success'))
-        <div class="kd-flash">
-            <span class="material-icons-round">check_circle</span>
-            <span class="font-jakarta text-body">{{ session('success') }}</span>
-        </div>
+    {{-- TOAST trigger (dari session redirect) --}}
+    @if(session('toast'))
+        <span id="kdSessionToast" data-msg="{{ session('toast') }}" style="display:none;"></span>
     @endif
 
     {{-- SEARCH --}}
@@ -123,8 +120,7 @@
                                 <form action="{{ route('kulkas.destroy', $beli['id']) }}"
                                       method="POST" style="display:inline;">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="kd-del-btn"
-                                        onclick="return confirm('Hapus pembelian ini?')">
+                                    <button type="button" class="kd-del-btn kd-hapus-btn">
                                         <span class="material-icons-round">delete_outline</span>
                                     </button>
                                 </form>
@@ -135,7 +131,7 @@
                                     <span class="kd-detail-label font-jakarta">Jumlah</span>
                                     <span class="kd-detail-val font-jakarta font-semibold">
                                         <span class="material-icons-round kd-iicon">scale</span>
-                                        {{ $beli['jumlah'] }}
+                                        {{ $beli['jumlah'] }} gram
                                     </span>
                                 </div>
 
@@ -290,6 +286,28 @@
            style="display:none; font-size:0.8rem; color:#6B5B54; margin-top:0.5rem;">
             Memproses...
         </p>
+    </div>
+</div>
+
+{{-- ── MODAL KONFIRMASI HAPUS (custom) ── --}}
+<div id="modalHapus" style="display:none; position:fixed; inset:0; z-index:999; align-items:center; justify-content:center; padding:1rem;">
+    <div class="modal-overlay" id="modalHapusOverlay"></div>
+    <div class="modal-box">
+        <div class="modal-resep-icon" style="background:#FEF2F2; border-radius:50%; padding:0.75rem;">
+            <span class="material-icons-round" style="color:#DC2626; font-size:2rem;">delete_outline</span>
+        </div>
+        <h3 class="modal-title font-jakarta font-bold">Hapus Pembelian?</h3>
+        <p class="modal-desc font-jakarta font-regular">
+            Stok bahan ini akan dihapus dari kulkas digitalmu.
+        </p>
+        <div class="modal-actions" style="width:100%;">
+            <button class="modal-btn-cancel font-jakarta font-medium" id="modalHapusCancel">Batal</button>
+            <button class="modal-btn-confirm font-jakarta font-bold" id="modalHapusConfirm"
+                    style="background:#DC2626;">
+                <span class="material-icons-round" style="font-size:1rem; vertical-align:middle;">delete</span>
+                Hapus
+            </button>
+        </div>
     </div>
 </div>
 
