@@ -70,35 +70,21 @@
             <div class="tb-group">
                 <label class="tb-label font-jakarta font-semibold">
                     <span class="material-icons-round tb-label-icon">scale</span>
-                    Jumlah
+                    Jumlah (gram)
                 </label>
                 <div class="tb-jumlah-row">
                     <div class="input tb-jumlah-input">
                         <button type="button" class="tb-counter-btn" id="btnMinus">
                             <span class="material-icons-round">remove</span>
                         </button>
-                        <input type="number" id="jumlahAngka" value="{{ old('jumlahAngka', 100) }}" min="1"
+                        <input type="number" id="jumlahAngka" name="jumlah"
+                               value="{{ old('jumlah', 100) }}" min="1" max="99999"
                                class="input-data font-jakarta text-body tb-counter-val">
                         <button type="button" class="tb-counter-btn" id="btnPlus">
                             <span class="material-icons-round">add</span>
                         </button>
                     </div>
-                    <div class="tb-satuan-wrap">
-                        <div class="tb-satuan-chips" id="satuanChips">
-                            <button type="button" class="tb-satuan-chip active" data-satuan="gram">gram</button>
-                            <button type="button" class="tb-satuan-chip" data-satuan="kg">kg</button>
-                            <button type="button" class="tb-satuan-chip" data-satuan="ml">ml</button>
-                            <button type="button" class="tb-satuan-chip" data-satuan="liter">liter</button>
-                            <button type="button" class="tb-satuan-chip" data-satuan="butir">butir</button>
-                            <button type="button" class="tb-satuan-chip" data-satuan="buah">buah</button>
-                            <button type="button" class="tb-satuan-chip tb-satuan-other" id="satuanOtherBtn">lainnya...</button>
-                        </div>
-                        <input type="text" id="satuanCustom"
-                               class="input input-data font-jakarta text-body tb-satuan-custom-input"
-                               placeholder="Tulis satuan..."
-                               style="display:none;"
-                               autocomplete="off">
-                    </div>
+                    <span class="tb-satuan-label font-jakarta font-semibold">gram</span>
                 </div>
             </div>
 
@@ -120,35 +106,40 @@
                 </div>
             </div>
 
-            {{-- TANGGAL BELI --}}
-            <div class="tb-group" id="sectionBoughtDate">
-                <label class="tb-label font-jakarta font-semibold" for="boughtDate">
-                    <span class="material-icons-round tb-label-icon">shopping_bag</span>
-                    Tanggal Beli
-                </label>
-                <div class="input">
-                    <span class="material-icons-round">calendar_today</span>
-                    <input type="date" id="boughtDate" name="bought_date"
-                           class="input-data font-jakarta text-body"
-                           value="{{ old('bought_date', date('Y-m-d')) }}">
-                </div>
-                <p class="tb-hint font-jakarta">Tanggal kamu membeli bahan ini</p>
-            </div>
+            {{-- TANGGAL BELI + EXPIRED dalam wrapper fixed-height agar card tidak gerak saat toggle --}}
+            <div class="tb-date-section-wrap">
 
-            {{-- TANGGAL EXPIRED --}}
-            <div class="tb-group" id="sectionExpiredDate" style="display:none;">
-                <label class="tb-label font-jakarta font-semibold">
-                    <span class="material-icons-round tb-label-icon">event_busy</span>
-                    Tanggal Expired
-                </label>
-                <div id="expiredChips" class="tb-chips" style="display:none;"></div>
-                <div class="input">
-                    <span class="material-icons-round">event_busy</span>
-                    <input type="date" id="expiredDate" name="expired_date"
-                           class="input-data font-jakarta text-body"
-                           value="{{ old('expired_date') }}">
+                {{-- TANGGAL BELI --}}
+                <div class="tb-group tb-date-section" id="sectionBoughtDate">
+                    <label class="tb-label font-jakarta font-semibold" for="boughtDate">
+                        <span class="material-icons-round tb-label-icon">shopping_bag</span>
+                        Tanggal Beli
+                    </label>
+                    <div class="input">
+                        <span class="material-icons-round">calendar_today</span>
+                        <input type="date" id="boughtDate" name="bought_date"
+                               class="input-data font-jakarta text-body"
+                               value="{{ old('bought_date', date('Y-m-d')) }}">
+                    </div>
+                    <p class="tb-hint font-jakarta">Tanggal kamu membeli bahan ini</p>
                 </div>
-                <p class="tb-hint font-jakarta" id="expiredHint">Isi tanggal kedaluwarsa bahan ini</p>
+
+                {{-- TANGGAL EXPIRED --}}
+                <div class="tb-group tb-date-section" id="sectionExpiredDate" style="display:none;">
+                    <label class="tb-label font-jakarta font-semibold">
+                        <span class="material-icons-round tb-label-icon">event_busy</span>
+                        Tanggal Expired
+                    </label>
+                    <div id="expiredChips" class="tb-chips" style="display:none;"></div>
+                    <div class="input">
+                        <span class="material-icons-round">event_busy</span>
+                        <input type="date" id="expiredDate" name="expired_date"
+                               class="input-data font-jakarta text-body"
+                               value="{{ old('expired_date') }}">
+                    </div>
+                    <p class="tb-hint font-jakarta" id="expiredHint">Isi tanggal kedaluwarsa bahan ini</p>
+                </div>
+
             </div>
 
             {{-- SUBMIT --}}

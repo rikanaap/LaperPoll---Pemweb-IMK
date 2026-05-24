@@ -9,7 +9,7 @@
 @section('content')
 <main class="pr-page">
 
-    <x-navbar :back="true"></x-navbar>
+    <x-navbar :backUrl="route('meal-planner.index')"></x-navbar>
 
     {{-- HEADER --}}
     <div class="pr-header">

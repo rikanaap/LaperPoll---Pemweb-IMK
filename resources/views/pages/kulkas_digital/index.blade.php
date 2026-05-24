@@ -9,7 +9,7 @@
 @section('content')
 <main class="kd-main">
 
-    <x-navbar :back="true"></x-navbar>
+    <x-navbar :backUrl="route('profile.index')"></x-navbar>
 
     {{-- HEADER --}}
     <div class="kd-header">
@@ -82,11 +82,22 @@
                     <p class="kd-nama font-jakarta font-semibold">{{ $item['nama'] }}</p>
 
                     <div class="kd-info-pills">
+                        {{-- Total semua pembelian --}}
                         <span class="kd-pill">
                             <span class="material-icons-round kd-pill-icon">scale</span>
-                            {{ $firstBeli['jumlah'] }}
+                            {{ $item['stok_gram'] }} gram
                         </span>
-                        @if($firstBeli['sisa_hari'] !== null)
+
+                        {{-- Tanggal beli (untuk bahan tanpa expiry / mode beli) --}}
+                        @if(!$item['has_expiry'] && $firstBeli['bought_date'])
+                            <span class="kd-pill">
+                                <span class="material-icons-round kd-pill-icon">shopping_bag</span>
+                                {{ $firstBeli['bought_date'] }}
+                            </span>
+                        @endif
+
+                        {{-- Sisa hari expired (untuk bahan dengan expiry) --}}
+                        @if($item['has_expiry'] && $firstBeli['sisa_hari'] !== null)
                             <span class="kd-pill {{ $firstBeli['sisa_hari'] <= 3 ? 'kd-pill-warn' : '' }}">
                                 <span class="material-icons-round kd-pill-icon">event_busy</span>
                                 @if($firstBeli['sisa_hari'] > 0)

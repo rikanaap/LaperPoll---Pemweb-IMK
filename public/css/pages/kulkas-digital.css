@@ -6,11 +6,11 @@
     gap: 1rem;
     min-height: 100vh;
     background-color: #FFF8F5;
-    padding: 0 0.7rem 2rem;
+    padding: 0 1rem 2rem;
 }
 
 .navbar {
-    margin: 0 -0.7rem;
+    margin: 0 -1rem;
     padding-left: 1rem;
     padding-right: 1rem;
 }
@@ -110,7 +110,7 @@
 }
 .kd-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
 .kd-card.expanded {
-    grid-column: span 2;
+    grid-column: 1 / -1;
     border-color: #8C2A1A;
     cursor: default;
 }
@@ -121,7 +121,6 @@
     flex-direction: column;
     gap: 0.45rem;
     padding: 0.85rem 0.8rem;
-    min-height: 5.5rem;
 }
 
 /* Baris badge + more count */
@@ -458,7 +457,7 @@
     }
     .navbar  { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
     .kd-grid { grid-template-columns: repeat(3, 1fr); }
-    .kd-card.expanded { grid-column: span 3; }
+    .kd-card.expanded { grid-column: 1 / -1; }
 }
 
 /* ── DESKTOP ── */
@@ -470,7 +469,7 @@
         padding: 0 2rem 2rem;
     }
     .kd-grid { grid-template-columns: repeat(4, 1fr); }
-    .kd-card.expanded { grid-column: span 2; }
+    .kd-card.expanded { grid-column: 1 / -1; }
 }
 
 /* ── MODAL BAHAN DETAIL LIST (takaran per bahan) ── */
