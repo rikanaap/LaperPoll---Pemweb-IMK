@@ -71,10 +71,12 @@ function renderResep(data) {
 
     if (!data.length) {
         resepList.innerHTML = `
-            <div class="resep-empty">
-                <span class="material-icons-round resep-empty-icon">search_off</span>
-                <p class="font-jakarta font-semibold">Resep tidak ditemukan</p>
-                <p class="font-jakarta font-regular">Coba kata kunci lain</p>
+            <div class="resep-empty" style="grid-column:1/-1;">
+                <div class="resep-empty-icon-wrap">
+                    <span class="material-icons-round">search_off</span>
+                </div>
+                <p class="resep-empty-title font-jakarta font-bold">Resep tidak ditemukan</p>
+                <p class="resep-empty-sub font-jakarta font-regular">Coba kata kunci lain</p>
             </div>
         `;
         return;
@@ -88,28 +90,26 @@ function renderResep(data) {
         const dur  = formatDurasi(resep.cook_duration);
 
         card.innerHTML = `
-            <div class="resep-card-content">
-                <div class="resep-thumb">
-                    ${resep.thumbnail
-                        ? `<img src="${esc(resep.thumbnail)}" alt="${esc(resep.nama)}">`
-                        : `<span class="material-icons-round">restaurant</span>`
-                    }
-                    ${resep.kalori ? `<span class="resep-thumb-kal">${resep.kalori} kal</span>` : ''}
-                </div>
-                <div class="resep-detail">
-                    <p class="resep-nama font-jakarta font-semibold">${esc(resep.nama)}</p>
-                    <div class="resep-meta">
-                        ${resep.kalori ? `
-                        <span class="resep-meta-item font-jakarta">
-                            <span class="material-icons-round">local_fire_department</span>
-                            ${resep.kalori} kal
-                        </span>` : ''}
-                        ${dur ? `
-                        <span class="resep-meta-item font-jakarta">
-                            <span class="material-icons-round">schedule</span>
-                            ${dur}
-                        </span>` : ''}
-                    </div>
+            <div class="resep-thumb">
+                ${resep.thumbnail
+                    ? `<img src="${esc(resep.thumbnail)}" alt="${esc(resep.nama)}">`
+                    : `<span class="material-icons-round">restaurant</span>`
+                }
+                ${resep.kalori ? `<span class="resep-thumb-kal">${resep.kalori} kal</span>` : ''}
+            </div>
+            <div class="resep-detail">
+                <p class="resep-nama font-jakarta font-bold">${esc(resep.nama)}</p>
+                <div class="resep-meta">
+                    ${resep.kalori ? `
+                    <span class="resep-kal-badge font-jakarta">
+                        <span class="material-icons-round">local_fire_department</span>
+                        ${resep.kalori} kal
+                    </span>` : ''}
+                    ${dur ? `
+                    <span class="resep-meta-item font-jakarta">
+                        <span class="material-icons-round">schedule</span>
+                        ${dur}
+                    </span>` : ''}
                 </div>
             </div>
             <div class="resep-arrow-wrap">

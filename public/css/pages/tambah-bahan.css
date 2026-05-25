@@ -273,9 +273,14 @@
     font-weight: 500;
     font-family: var(--font-jakarta, sans-serif);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
-.tb-date-toggle-btn .material-icons-round { font-size: 1rem !important; }
+.tb-date-toggle-btn .material-icons-round { font-size: 1rem !important; transition: color 0.2s; }
+.tb-date-toggle-btn:hover:not(.active) {
+    background: rgba(230, 81, 0, 0.08);
+    color: #E65100;
+}
+.tb-date-toggle-btn:hover:not(.active) .material-icons-round { color: #E65100; }
 .tb-date-toggle-btn.active {
     background: white;
     color: #8C2A1A;
@@ -411,4 +416,132 @@ input[type="date"] { font-family: 'Plus Jakarta Sans', monospace; color-scheme: 
 @media (min-width: 1024px) {
     .tb-main { max-width: unset; }
     .tb-card { max-width: 600px; }
+}
+/* ── CUSTOM CALENDAR PICKER ── */
+.tb-cal-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    background: #F9F9F9;
+    border: 1.5px solid #EFE5DF;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-jakarta, sans-serif);
+    color: #6B5B54;
+    text-align: left;
+    position: relative;
+}
+.tb-cal-trigger:hover {
+    border-color: #E65100;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.1);
+    color: #2D1A11;
+}
+.tb-cal-trigger .material-icons-round { color: #B87C5A; font-size: 1.2rem; flex-shrink: 0; }
+.tb-cal-trigger:hover .material-icons-round { color: #E65100; }
+.tb-cal-trigger-text { flex: 1; font-size: 0.9rem; font-weight: 500; }
+.tb-cal-trigger-text.has-value { color: #2D1A11; font-weight: 600; }
+.tb-cal-chevron { font-size: 1.1rem !important; transition: transform 0.2s; }
+.tb-cal-trigger.open .tb-cal-chevron { transform: rotate(180deg); }
+.tb-cal-trigger.open {
+    border-color: #E65100;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.1);
+}
+
+.tb-cal-popup {
+    background: white;
+    border-radius: 1.25rem;
+    border: 1.5px solid #EFE5DF;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 1rem;
+    margin-top: 0.5rem;
+    overflow: hidden;
+    animation: tbCalIn 0.2s ease;
+}
+@keyframes tbCalIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.tb-cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+.tb-cal-nav-btn {
+    width: 2rem; height: 2rem;
+    border-radius: 50%;
+    border: none;
+    background: #F4F5F7;
+    color: #4A2A1A;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+}
+.tb-cal-nav-btn:hover { background: #FFE8D6; color: #E65100; }
+.tb-cal-nav-btn .material-icons-round { font-size: 1.1rem !important; }
+.tb-cal-month-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #2D1A11;
+    font-family: var(--font-jakarta, sans-serif);
+}
+
+.tb-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+.tb-cal-day-name {
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #B87C5A;
+    padding: 0.25rem 0;
+    font-family: var(--font-jakarta, sans-serif);
+}
+.tb-cal-empty { /* placeholder */ }
+.tb-cal-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-family: var(--font-jakarta, sans-serif);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #2D1A11;
+    border: none;
+    background: transparent;
+}
+.tb-cal-cell:hover:not(.tb-cal-disabled) {
+    background: #FFE8D6;
+    color: #E65100;
+}
+.tb-cal-cell.tb-cal-today {
+    background: #FFF0E8;
+    color: #E65100;
+    font-weight: 700;
+    border: 1.5px solid #E65100;
+}
+.tb-cal-cell.tb-cal-selected {
+    background: #E65100 !important;
+    color: white !important;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(230, 81, 0, 0.35);
+}
+.tb-cal-cell.tb-cal-past {
+    color: #C9B9B3;
+    cursor: default;
+}
+.tb-cal-cell.tb-cal-future-only {
+    color: #C9B9B3;
+    cursor: default;
 }

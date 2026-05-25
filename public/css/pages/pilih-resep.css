@@ -1,32 +1,35 @@
-/* pilih-resep.css — Full Redesign */
+/* pilih-resep.css — Redesign v2 */
 
 .pr-page {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    height: fit-content;
     background: #FFF8F5;
 }
 
-.navbar {
-    background: #FFF8F5;
-    padding: 0 1rem;
+/* ── NAVBAR — jangan override padding global ── */
+.pr-page .navbar {
+    background: white;
+    padding: 0.25rem 1.25rem;       /* sama dengan global, tidak mepet ujung */
+    border-bottom: 1px solid #F4E8E0;
 }
 
 /* ── HEADER ── */
 .pr-header {
-    padding: 0.75rem 1rem 0;
+    padding: 1.25rem 1.25rem 0;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-}
-.pr-title {
-    font-size: 1.35rem;
-    color: #8C2A1A;
-    line-height: 1;
+    gap: 0.75rem;
 }
 
-/* Slot pills */
+.pr-title {
+    font-size: 1.5rem;
+    color: #8C2A1A;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+/* Slot info pills */
 .pr-slot-info {
     display: flex;
     flex-wrap: wrap;
@@ -36,15 +39,17 @@
 .slot-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.3rem 0.75rem;
+    gap: 0.35rem;
+    padding: 0.35rem 0.875rem;
     background: #FFF4EE;
     border: 1.5px solid #FECDA3;
     border-radius: 2rem;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     color: #7C3514;
+    font-family: var(--font-jakarta);
+    font-weight: 600;
 }
-.slot-pill .material-icons-round { font-size: 0.85rem !important; color: #E65100; }
+.slot-pill .material-icons-round { font-size: 0.9rem !important; color: #E65100; }
 .slot-pill-waktu {
     background: #FFFBEB;
     border-color: #FDE68A;
@@ -56,18 +61,20 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.6rem 0.875rem;
+    padding: 0.65rem 0.9rem;
     background: #FEF3C7;
-    border-radius: 0.75rem;
+    border-radius: 0.875rem;
     color: #92400E;
-    font-size: 0.8rem;
-    border: 1px solid #FDE68A;
+    font-size: 0.82rem;
+    border: 1.5px solid #FDE68A;
+    font-family: var(--font-jakarta);
+    font-weight: 500;
 }
 .pr-warning .material-icons-round { font-size: 1rem !important; color: #D97706; }
 
 /* ── SEARCH (sticky) ── */
 .pr-search-wrap {
-    padding: 0.875rem 1rem 0.5rem;
+    padding: 1rem 1.25rem 0.75rem;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -77,19 +84,21 @@
 
 /* ── COUNT TEXT ── */
 .pr-count-bar {
-    padding: 0.5rem 1rem 0;
+    padding: 0.75rem 1.25rem 0.25rem;
 }
 .pr-count-text {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: #B87C5A;
     font-family: var(--font-jakarta);
+    font-weight: 500;
 }
 
 /* ── LIST ── */
 .resep-menus {
     display: flex;
     flex-direction: column;
-    padding: 0.25rem 1rem 2rem;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem 5rem;
     height: fit-content;
 }
 
@@ -97,137 +106,204 @@
 .resep-card {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.875rem 0;
-    border-bottom: 1px solid #F4E8E0;
-    cursor: pointer;
-    transition: background 0.12s;
-    gap: 0.75rem;
-    margin: 0 -1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-.resep-card:last-child { border-bottom: none; }
-.resep-card:hover { background: #FFF4EE; }
-.resep-card.no-slot { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
-
-.resep-card-content {
-    display: flex;
-    align-items: center;
     gap: 0.875rem;
-    flex: 1;
-    min-width: 0;
+    padding: 0.875rem 1rem;
+    background: white;
+    border-radius: 1.25rem;
+    border: 1.5px solid #F0E4DC;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    height: fit-content;
+}
+.resep-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: transparent;
+    border-radius: 1.25rem 0 0 1.25rem;
+    transition: background 0.18s;
+}
+.resep-card:hover {
+    border-color: #E65100;
+    box-shadow: 0 4px 16px rgba(230, 81, 0, 0.12);
+    transform: translateY(-1px);
+}
+.resep-card:hover::before { background: #E65100; }
+.resep-card:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.resep-card.no-slot {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 /* Thumbnail */
 .resep-thumb {
-    width: 3.5rem; height: 3.5rem;
+    width: 3.75rem;
+    height: 3.75rem;
     border-radius: 0.875rem;
-    background: #FFF4EE;
+    background: linear-gradient(135deg, #FFF4EE 0%, #FFE8D6 100%);
     flex-shrink: 0;
     overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid #F4E8E0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #F4E8E0;
     position: relative;
 }
-.resep-thumb img { width:100%; height:100%; object-fit:cover; }
-.resep-thumb .material-icons-round { font-size: 1.5rem !important; color: #FECDA3; }
+.resep-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.resep-thumb .material-icons-round { font-size: 1.6rem !important; color: #FECDA3; }
 .resep-thumb-kal {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: rgba(0,0,0,0.45);
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(140, 42, 26, 0.75);
     color: white;
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     font-family: var(--font-jakarta);
     font-weight: 700;
     text-align: center;
-    padding: 1px 0 2px;
-    border-radius: 0 0 0.875rem 0.875rem;
+    padding: 2px 0 3px;
+    border-radius: 0 0 0.75rem 0.75rem;
+    backdrop-filter: blur(2px);
 }
 
 /* Detail */
-.resep-detail { flex:1; min-width:0; display:flex; flex-direction:column; gap:0.25rem; }
+.resep-detail {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
 .resep-nama {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-family: var(--font-jakarta);
-    font-weight: 600;
-    color: #172D23;
+    font-weight: 700;
+    color: #1A1A1A;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     margin: 0;
 }
-.resep-meta { display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; }
+.resep-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
 .resep-meta-item {
-    display: flex; align-items: center; gap: 0.2rem;
-    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.72rem;
     font-family: var(--font-jakarta);
     font-weight: 500;
     color: #B87C5A;
 }
-.resep-meta-item .material-icons-round { font-size: 0.8rem !important; color: #E65100; }
+.resep-meta-item .material-icons-round { font-size: 0.82rem !important; color: #E65100; }
 
-/* Arrow circle */
+/* Badge kalori di card */
+.resep-kal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.2rem 0.55rem;
+    background: #FFF4EE;
+    border: 1px solid #FECDA3;
+    border-radius: 2rem;
+    font-size: 0.7rem;
+    font-family: var(--font-jakarta);
+    font-weight: 600;
+    color: #7C3514;
+}
+.resep-kal-badge .material-icons-round { font-size: 0.78rem !important; color: #E65100; }
+
+/* Arrow */
 .resep-arrow-wrap {
-    width: 2rem; height: 2rem;
+    width: 2.25rem;
+    height: 2.25rem;
     border-radius: 50%;
     background: #FFF4EE;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    transition: background 0.15s;
+    transition: all 0.18s;
+    border: 1.5px solid #F4E8E0;
 }
-.resep-card:hover .resep-arrow-wrap { background: #E65100; }
-.resep-arrow { font-size: 0.8rem !important; color: #E65100; transition: color 0.15s; }
+.resep-card:hover .resep-arrow-wrap {
+    background: #E65100;
+    border-color: #E65100;
+}
+.resep-arrow { font-size: 0.85rem !important; color: #E65100; transition: color 0.18s; }
 .resep-card:hover .resep-arrow { color: white; }
 
 /* ── EMPTY ── */
 .resep-empty {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 0.625rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
     padding: 4rem 2rem;
     text-align: center;
-    height: fit-content;
 }
-.resep-empty-icon {
-    width: 4rem; height: 4rem; border-radius: 50%;
+.resep-empty-icon-wrap {
+    width: 5rem; height: 5rem;
+    border-radius: 50%;
     background: #FFF4EE;
+    border: 2px solid #FECDA3;
     display: flex; align-items: center; justify-content: center;
 }
-.resep-empty-icon .material-icons-round { font-size: 2rem !important; color: #FECDA3; }
-.resep-empty p:first-of-type { font-size: 0.95rem; color: #172D23; font-family: var(--font-jakarta); font-weight: 600; }
-.resep-empty p:last-of-type  { font-size: 0.8rem; color: #6B5B54; font-family: var(--font-jakarta); }
+.resep-empty-icon-wrap .material-icons-round { font-size: 2.25rem !important; color: #E65100; }
+.resep-empty-title { font-size: 1rem; color: #172D23; font-family: var(--font-jakarta); font-weight: 700; margin: 0; }
+.resep-empty-sub   { font-size: 0.82rem; color: #6B5B54; font-family: var(--font-jakarta); margin: 0; }
 
 /* ── LOADING ── */
 .pr-loading-overlay {
     position: fixed; inset: 0;
-    background: rgba(255,248,245,0.9);
+    background: rgba(255, 248, 245, 0.92);
     z-index: 500;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     gap: 1rem;
+    backdrop-filter: blur(4px);
 }
 .pr-spinner {
-    width: 2.25rem; height: 2.25rem;
+    width: 2.5rem; height: 2.5rem;
     border: 3px solid #F4E8E0;
     border-top-color: #8C2A1A;
     border-radius: 50%;
     animation: prSpin 0.7s linear infinite;
 }
 @keyframes prSpin { to { transform: rotate(360deg); } }
-.pr-loading-overlay p { font-size: 0.875rem; color: #8C2A1A; font-family: var(--font-jakarta); font-weight: 600; }
+.pr-loading-overlay p {
+    font-size: 0.9rem;
+    color: #8C2A1A;
+    font-family: var(--font-jakarta);
+    font-weight: 600;
+}
 
 /* ── RESPONSIVE ── */
+@media (min-width: 640px) {
+    .resep-menus {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
 @media (min-width: 768px) {
-    /* counter-act body padding: 0 2rem dari media.css */
     .pr-page        { margin: 0 -2rem; }
-    .navbar         { padding: 0 2rem; }
-    .pr-header      { padding: 0.75rem 2rem 0; }
-    .pr-search-wrap { padding: 0.875rem 2rem 0.5rem; }
-    .pr-count-bar   { padding: 0.5rem 2rem 0; }
-    .resep-menus    { padding: 0.25rem 2rem 2rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; }
-    .resep-card     { margin: 0; padding: 0.875rem; border-radius: 1rem; border: 1px solid #F4E8E0; }
-    .resep-card:hover { border-color: #E65100; }
+    .pr-page .navbar { padding: 0.25rem 2.25rem; }
+    .pr-header      { padding: 1.25rem 2.25rem 0; }
+    .pr-search-wrap { padding: 1rem 2.25rem 0.75rem; }
+    .pr-count-bar   { padding: 0.75rem 2.25rem 0.25rem; }
+    .resep-menus    { padding: 0.75rem 2.25rem 5rem; }
 }
 @media (min-width: 1024px) {
-    .resep-menus { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+    .resep-menus { grid-template-columns: repeat(3, 1fr); }
 }

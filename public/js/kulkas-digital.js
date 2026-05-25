@@ -17,12 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         toast._timer = setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // Auto-show toast dari session (setelah redirect)
-    const sessionToast = document.getElementById('kdSessionToast');
-    if (sessionToast) {
-        showToast(sessionToast.dataset.msg, 'success');
-    }
-
     // ── CHIP COUNTER ─────────────────────────────────────────────────
     function updateChipCounts(query = '') {
         const cards  = document.querySelectorAll('.kd-card');

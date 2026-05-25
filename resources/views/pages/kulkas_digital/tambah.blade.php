@@ -111,16 +111,18 @@
 
                 {{-- TANGGAL BELI --}}
                 <div class="tb-group tb-date-section" id="sectionBoughtDate">
-                    <label class="tb-label font-jakarta font-semibold" for="boughtDate">
+                    <label class="tb-label font-jakarta font-semibold">
                         <span class="material-icons-round tb-label-icon">shopping_bag</span>
                         Tanggal Beli
                     </label>
-                    <div class="input">
+                    <input type="hidden" id="boughtDate" name="bought_date"
+                           value="{{ old('bought_date', date('Y-m-d')) }}">
+                    <button type="button" class="tb-cal-trigger" id="boughtCalTrigger">
                         <span class="material-icons-round">calendar_today</span>
-                        <input type="date" id="boughtDate" name="bought_date"
-                               class="input-data font-jakarta text-body"
-                               value="{{ old('bought_date', date('Y-m-d')) }}">
-                    </div>
+                        <span class="tb-cal-trigger-text font-jakarta" id="boughtCalText">Pilih tanggal beli</span>
+                        <span class="material-icons-round tb-cal-chevron">expand_more</span>
+                    </button>
+                    <div class="tb-cal-popup" id="boughtCalPopup" style="display:none;"></div>
                     <p class="tb-hint font-jakarta">Tanggal kamu membeli bahan ini</p>
                 </div>
 
@@ -131,12 +133,14 @@
                         Tanggal Expired
                     </label>
                     <div id="expiredChips" class="tb-chips" style="display:none;"></div>
-                    <div class="input">
+                    <input type="hidden" id="expiredDate" name="expired_date"
+                           value="{{ old('expired_date') }}">
+                    <button type="button" class="tb-cal-trigger" id="expiredCalTrigger">
                         <span class="material-icons-round">event_busy</span>
-                        <input type="date" id="expiredDate" name="expired_date"
-                               class="input-data font-jakarta text-body"
-                               value="{{ old('expired_date') }}">
-                    </div>
+                        <span class="tb-cal-trigger-text font-jakarta" id="expiredCalText">Pilih tanggal expired</span>
+                        <span class="material-icons-round tb-cal-chevron">expand_more</span>
+                    </button>
+                    <div class="tb-cal-popup" id="expiredCalPopup" style="display:none;"></div>
                     <p class="tb-hint font-jakarta" id="expiredHint">Isi tanggal kedaluwarsa bahan ini</p>
                 </div>
 

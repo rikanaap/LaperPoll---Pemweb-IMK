@@ -19,10 +19,7 @@
         </a>
     </div>
 
-    {{-- TOAST trigger (dari session redirect) --}}
-    @if(session('toast'))
-        <span id="kdSessionToast" data-msg="{{ session('toast') }}" style="display:none;"></span>
-    @endif
+    {{-- Toast ditangani global oleh x-popup-toast di layout --}}
 
     {{-- SEARCH --}}
     <div class="input">

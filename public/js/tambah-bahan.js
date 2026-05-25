@@ -61,15 +61,25 @@
             if (activeDateType === 'bought') {
                 sectionBought.style.display  = '';
                 sectionExpired.style.display = 'none';
-                if (expiredDateInput) expiredDateInput.value = '';
+                if (expiredDateInput) {
+                    expiredDateInput.value = '';
+                    const expiredTextEl = document.getElementById('expiredCalText');
+                    if (expiredTextEl) { expiredTextEl.textContent = 'Pilih tanggal expired'; expiredTextEl.classList.remove('has-value'); }
+                }
                 if (boughtDateInput && !boughtDateInput.value) {
-                    boughtDateInput.value = new Date().toISOString().split('T')[0];
+                    const todayISO = new Date().toISOString().split('T')[0];
+                    boughtDateInput.value = todayISO;
+                    if (boughtDateInput._calUpdate) boughtDateInput._calUpdate(todayISO);
                 }
                 setWrapHeight(false);
             } else {
                 sectionBought.style.display  = 'none';
                 sectionExpired.style.display = '';
-                if (boughtDateInput) boughtDateInput.value = '';
+                if (boughtDateInput) {
+                    boughtDateInput.value = '';
+                    const boughtTextEl = document.getElementById('boughtCalText');
+                    if (boughtTextEl) { boughtTextEl.textContent = 'Pilih tanggal beli'; boughtTextEl.classList.remove('has-value'); }
+                }
                 if (selectedBahan?.has_expiry && defaultExpiryDays) {
                     showExpiredChips(defaultExpiryDays);
                     autoFillExpired(defaultExpiryDays);
@@ -176,7 +186,10 @@
         const base = new Date();
         base.setHours(0, 0, 0, 0);
         base.setDate(base.getDate() + days);
-        expiredDateInput.value = base.toISOString().split('T')[0];
+        const iso = base.toISOString().split('T')[0];
+        expiredDateInput.value = iso;
+        // Update custom calendar display if initialized
+        if (expiredDateInput._calUpdate) expiredDateInput._calUpdate(iso);
     }
 
     // ── MODAL KONFIRMASI BAHAN BARU ───────────────────────────────────────
@@ -308,10 +321,209 @@
     if (boughtDateInput && !boughtDateInput.value) {
         boughtDateInput.value = new Date().toISOString().split('T')[0];
     }
+    // Sync calendar display after calendar IIFE also runs DOMContentLoaded
+    setTimeout(() => {
+        if (boughtDateInput?.value && boughtDateInput._calUpdate) {
+            boughtDateInput._calUpdate(boughtDateInput.value);
+        }
+        if (expiredDateInput?.value && expiredDateInput._calUpdate) {
+            expiredDateInput._calUpdate(expiredDateInput.value);
+        }
+    }, 50);
 
     if (bahanIdInput?.value && searchInput?.value) {
         const found = bahanList.find(b => b.id == bahanIdInput.value);
         if (found) { selectedBahan = found; defaultExpiryDays = found.expired_expectancy_day; }
     }
+
+})();
+// ── CUSTOM CALENDAR PICKER ────────────────────────────────────────────
+(function() {
+    'use strict';
+
+    const BULAN = ['Januari','Februari','Maret','April','Mei','Juni',
+                   'Juli','Agustus','September','Oktober','November','Desember'];
+    const HARI  = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+
+    function toISO(d) {
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+    function formatDisplay(iso) {
+        if (!iso) return '';
+        const [y,m,d] = iso.split('-');
+        return `${parseInt(d)} ${BULAN[parseInt(m)-1]} ${y}`;
+    }
+    function parseISO(iso) {
+        const [y,m,d] = iso.split('-').map(Number);
+        return new Date(y, m-1, d);
+    }
+
+    function createCalendar(opts) {
+        // opts: { hiddenInputId, triggerId, textId, popupId, allowPast, minDate }
+        const hiddenInput = document.getElementById(opts.hiddenInputId);
+        const trigger     = document.getElementById(opts.triggerId);
+        const textEl      = document.getElementById(opts.textId);
+        const popup       = document.getElementById(opts.popupId);
+        if (!hiddenInput || !trigger || !popup) return;
+
+        const today   = new Date(); today.setHours(0,0,0,0);
+        const todayISO = toISO(today);
+
+        let curYear  = today.getFullYear();
+        let curMonth = today.getMonth();
+        let selected = hiddenInput.value ? hiddenInput.value : null;
+
+        // If already has a value, set display
+        if (selected) {
+            textEl.textContent = formatDisplay(selected);
+            textEl.classList.add('has-value');
+        }
+
+        function render() {
+            const firstDay  = new Date(curYear, curMonth, 1).getDay(); // 0=Sun
+            const daysInMon = new Date(curYear, curMonth+1, 0).getDate();
+            // offset: Mon=0 start
+            const offset = firstDay === 0 ? 6 : firstDay - 1;
+
+            let html = `
+                <div class="tb-cal-nav">
+                    <button type="button" class="tb-cal-nav-btn" id="${opts.popupId}_prev">
+                        <span class="material-icons-round">chevron_left</span>
+                    </button>
+                    <span class="tb-cal-month-label font-jakarta">${BULAN[curMonth]} ${curYear}</span>
+                    <button type="button" class="tb-cal-nav-btn" id="${opts.popupId}_next">
+                        <span class="material-icons-round">chevron_right</span>
+                    </button>
+                </div>
+                <div class="tb-cal-grid">
+            `;
+
+            ['Sen','Sel','Rab','Kam','Jum','Sab','Min'].forEach(h => {
+                html += `<span class="tb-cal-day-name font-jakarta">${h}</span>`;
+            });
+
+            for (let i = 0; i < offset; i++) html += `<span class="tb-cal-empty"></span>`;
+
+            for (let day = 1; day <= daysInMon; day++) {
+                const d   = new Date(curYear, curMonth, day);
+                const iso = toISO(d);
+                let cls   = 'tb-cal-cell font-jakarta';
+
+                const isPast   = iso < todayISO;
+                const isFuture = iso > todayISO;
+
+                if (!opts.allowPast && isPast) {
+                    cls += ' tb-cal-past';
+                } else if (opts.futureOnly && !isFuture) {
+                    cls += ' tb-cal-past';
+                } else {
+                    if (iso === todayISO) cls += ' tb-cal-today';
+                    if (iso === selected)  cls += ' tb-cal-selected';
+                }
+
+                html += `<span class="${cls}" data-date="${iso}">${day}</span>`;
+            }
+            html += '</div>';
+            popup.innerHTML = html;
+
+            popup.querySelector(`#${opts.popupId}_prev`)?.addEventListener('click', e => {
+                e.stopPropagation();
+                if (--curMonth < 0) { curMonth = 11; curYear--; }
+                render();
+            });
+            popup.querySelector(`#${opts.popupId}_next`)?.addEventListener('click', e => {
+                e.stopPropagation();
+                if (++curMonth > 11) { curMonth = 0; curYear++; }
+                render();
+            });
+
+            popup.querySelectorAll('.tb-cal-cell:not(.tb-cal-past):not(.tb-cal-future-only)').forEach(cell => {
+                cell.addEventListener('click', e => {
+                    e.stopPropagation();
+                    selected = cell.dataset.date;
+                    hiddenInput.value = selected;
+                    textEl.textContent = formatDisplay(selected);
+                    textEl.classList.add('has-value');
+                    closePopup();
+                    // Trigger change event so tambah-bahan.js can react
+                    hiddenInput.dispatchEvent(new Event('change'));
+                });
+            });
+        }
+
+        function openPopup() {
+            // If current selected, show that month
+            if (selected) {
+                const d = parseISO(selected);
+                curYear = d.getFullYear();
+                curMonth = d.getMonth();
+            }
+            render();
+            popup.style.display = '';
+            trigger.classList.add('open');
+        }
+
+        function closePopup() {
+            popup.style.display = 'none';
+            trigger.classList.remove('open');
+        }
+
+        trigger.addEventListener('click', e => {
+            e.stopPropagation();
+            if (popup.style.display === 'none' || popup.style.display === '') {
+                if (popup.style.display === 'none') {
+                    openPopup();
+                } else {
+                    closePopup();
+                }
+            }
+        });
+
+        // Toggle on click
+        let isOpen = false;
+        trigger.onclick = (e) => {
+            e.stopPropagation();
+            isOpen = !isOpen;
+            if (isOpen) { openPopup(); } else { closePopup(); }
+            isOpen = popup.style.display !== 'none';
+        };
+
+        document.addEventListener('click', e => {
+            if (!popup.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
+                closePopup();
+                isOpen = false;
+            }
+        });
+
+        // expose for external update (e.g. when autoFillExpired is called)
+        hiddenInput._calUpdate = (iso) => {
+            selected = iso;
+            textEl.textContent = formatDisplay(iso);
+            textEl.classList.add('has-value');
+        };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Bought date calendar — allow past dates too
+        createCalendar({
+            hiddenInputId: 'boughtDate',
+            triggerId:     'boughtCalTrigger',
+            textId:        'boughtCalText',
+            popupId:       'boughtCalPopup',
+            allowPast:     true,
+        });
+
+        // Expired date calendar — future only
+        createCalendar({
+            hiddenInputId: 'expiredDate',
+            triggerId:     'expiredCalTrigger',
+            textId:        'expiredCalText',
+            popupId:       'expiredCalPopup',
+            allowPast:     false,
+        });
+
+        // Patch autoFillExpired to also update calendar display
+        const origAutoFillExpired = window._tbAutoFillExpired;
+    });
 
 })();
