@@ -32,37 +32,53 @@ class MealPlannerController extends Controller
     // ─────────────────────────────────────────────────────────────────
     private function syncCart(int $userId, ?string $start = null, ?string $end = null): void
     {
-        $resepIds = MealPlannerDetail::whereHas('mealPlanner', function ($q) use ($userId, $start, $end) {
+        // Ambil semua resep_id dari meal planner (TANPA unique — satu resep bisa muncul berkali-kali)
+        $resepIdList = MealPlannerDetail::whereHas('mealPlanner', function ($q) use ($userId, $start, $end) {
             $q->where('user_id', $userId);
             if ($start && $end) {
                 $q->whereBetween('tanggal', [$start, $end]);
             }
-        })->pluck('resep_id')->unique();
+        })->pluck('resep_id'); // sengaja tidak ->unique() agar ayam kecap 3x = 3 porsi
 
-        DB::transaction(function () use ($userId, $resepIds) {
-            if ($resepIds->isEmpty()) {
+        DB::transaction(function () use ($userId, $resepIdList) {
+            if ($resepIdList->isEmpty()) {
                 UserCart::where('user_id', $userId)->delete();
                 return;
             }
 
-            $bahanNeeds = DB::table('resep_bahan')
-                ->whereIn('resep_id', $resepIds)
-                ->select('bahan_id', DB::raw('SUM(gram_total) as total_gram'))
-                ->groupBy('bahan_id')
-                ->get()
-                ->keyBy('bahan_id');
+            // Hitung berapa kali tiap resep muncul di meal planner
+            $resepCount = $resepIdList->countBy(); // ['resep_id' => jumlah_kemunculan]
+
+            // Untuk setiap bahan, hitung total gram = gram_per_resep × jumlah_kemunculan_resep
+            $bahanNeeds = collect();
+            foreach ($resepCount as $resepId => $count) {
+                $bahans = DB::table('resep_bahan')
+                    ->where('resep_id', $resepId)
+                    ->select('bahan_id', 'gram_total')
+                    ->get();
+
+                foreach ($bahans as $b) {
+                    $key = $b->bahan_id;
+                    $bahanNeeds[$key] = ($bahanNeeds[$key] ?? 0) + ($b->gram_total * $count);
+                }
+            }
+
+            if ($bahanNeeds->isEmpty()) {
+                UserCart::where('user_id', $userId)->delete();
+                return;
+            }
 
             $bahanIdsNeeded = $bahanNeeds->keys()->toArray();
 
-            // Hapus bahan yang tidak dibutuhkan lagi — ini yang selama ini kurang
+            // Hapus bahan yang tidak dibutuhkan lagi
             UserCart::where('user_id', $userId)
                 ->whereNotIn('bahan_id', $bahanIdsNeeded)
                 ->delete();
 
-            foreach ($bahanNeeds as $need) {
+            foreach ($bahanNeeds as $bahanId => $totalGram) {
                 UserCart::updateOrCreate(
-                    ['user_id'  => $userId, 'bahan_id' => $need->bahan_id],
-                    ['gram_total' => $need->total_gram, 'is_done' => 0]
+                    ['user_id' => $userId, 'bahan_id' => $bahanId],
+                    ['gram_total' => $totalGram, 'is_done' => 0]
                 );
             }
         });

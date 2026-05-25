@@ -46,18 +46,28 @@
         <div class="nb-filter-custom">
             <div class="nb-filter-row">
                 <label class="font-jakarta font-medium nb-filter-field-label">Dari</label>
-                <div class="input nb-filter-input">
-                    <span class="material-icons-round">calendar_today</span>
-                    <input type="date" id="filterStart" class="input-data font-jakarta"
+                <div class="nb-cal-wrap">
+                    <input type="hidden" id="filterStart"
                            value="{{ $start ? $start->format('Y-m-d') : date('Y-m-d') }}">
+                    <button type="button" class="nb-cal-trigger" id="filterStartTrigger">
+                        <span class="material-icons-round">calendar_today</span>
+                        <span class="nb-cal-trigger-text font-jakarta" id="filterStartText">Pilih tanggal</span>
+                        <span class="material-icons-round nb-cal-chevron">expand_more</span>
+                    </button>
+                    <div class="nb-cal-popup" id="filterStartPopup" style="display:none;"></div>
                 </div>
             </div>
             <div class="nb-filter-row">
                 <label class="font-jakarta font-medium nb-filter-field-label">Sampai</label>
-                <div class="input nb-filter-input">
-                    <span class="material-icons-round">calendar_today</span>
-                    <input type="date" id="filterEnd" class="input-data font-jakarta"
+                <div class="nb-cal-wrap">
+                    <input type="hidden" id="filterEnd"
                            value="{{ $end ? $end->format('Y-m-d') : date('Y-m-d') }}">
+                    <button type="button" class="nb-cal-trigger" id="filterEndTrigger">
+                        <span class="material-icons-round">calendar_today</span>
+                        <span class="nb-cal-trigger-text font-jakarta" id="filterEndText">Pilih tanggal</span>
+                        <span class="material-icons-round nb-cal-chevron">expand_more</span>
+                    </button>
+                    <div class="nb-cal-popup" id="filterEndPopup" style="display:none;"></div>
                 </div>
             </div>
         </div>
@@ -193,10 +203,11 @@
 
 @push('scripts')
 <script>
-    window.csrfToken   = "{{ csrf_token() }}";
-    window.nbApiToggle = "{{ url('/api/nota-belanja/toggle') }}";
-    window.nbApiHapus  = "{{ url('/api/nota-belanja/hapus-selesai') }}";
-    window.notaUrl     = "{{ route('nota.index') }}";
+    window.csrfToken     = "{{ csrf_token() }}";
+    window.nbApiToggle   = "{{ url('/api/nota-belanja/toggle') }}";
+    window.nbApiHapus    = "{{ url('/api/nota-belanja/hapus-selesai') }}";
+    window.notaUrl       = "{{ route('nota.index') }}";
+    window.nbGenerateUrl = "{{ route('api.meal-planner.generate-nota') }}";
 </script>
 <script src="{{ asset('js/nota-belanja.js') }}"></script>
 @endpush
