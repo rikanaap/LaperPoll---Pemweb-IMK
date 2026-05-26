@@ -18,9 +18,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\DetailResepController;
 use App\Http\Controllers\TimerResepController;
+use App\Http\Controllers\UlasanController;
 
 
-// ─── PUBLIC ─────────────────────────────────────────────────────────────────
+// ─── PUBLIC ──────────────────────────────────────────────────────────────────
 
 Route::get('/', [LandingPage::class, 'index'])->name('landing.index');
 
@@ -35,17 +36,25 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('/logout',     [AuthController::class, 'logout'])    ->name('auth.logout');
 });
 
-Route::get('/main-menu',         [MainMenu::class, 'index'])          ->name('main-menu.index');
+Route::get('/main-menu',          [MainMenu::class, 'index'])          ->name('main-menu.index');
 Route::get('/main-menu?m=favorit',[MainMenu::class, 'favoritPengguna'])->name('main-menu.favorit');
-Route::get('/main-menu?m=hari',  [MainMenu::class, 'resepHariIni'])  ->name('main-menu.hari-ini');
+Route::get('/main-menu?m=hari',   [MainMenu::class, 'resepHariIni'])  ->name('main-menu.hari-ini');
 
+// ── DETAIL RESEP ──────────────────────────────────────────────────────────────
 Route::get('/detail-resep/{id}', [DetailResepController::class, 'showDetail'])->name('detail.resep');
-Route::get('/timer-resep',  fn() => view('pages.timer_resep.timer_resep'));
-Route::get('/ulasan',       fn() => view('pages.ulasan.ulasan'));
 
+// ── TIMER RESEP ───────────────────────────────────────────────────────────────
+Route::get('/timer-resep/{id}', [TimerResepController::class, 'show'])->name('timer.resep');
+
+// ── ULASAN ────────────────────────────────────────────────────────────────────
+Route::get('/ulasan/{id}',   [UlasanController::class, 'show'])  ->name('ulasan.show');
+Route::post('/ulasan/{id}',  [UlasanController::class, 'store']) ->name('ulasan.store');
+
+// ── PENCARIAN RESEP ───────────────────────────────────────────────────────────
 Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])
     ->name('pencarian.resep');
 
+// ── SWIPE RASA ────────────────────────────────────────────────────────────────
 Route::get('/swipe-rasa', [SwipeResepController::class, 'index'])
     ->name('swipe.rasa');
 
@@ -53,47 +62,41 @@ Route::get('/filter-resep-swipe', [SwipeResepController::class, 'showFilter'])
     ->name('swipe.filter');
 
 
-// ─────────────────────────────────────────────────────────
-// API Routes (publik)
-// ─────────────────────────────────────────────────────────
+// ─── API PUBLIK ───────────────────────────────────────────────────────────────
 
 Route::prefix('api')->name('api.')->group(function () {
 
     // Resep
     Route::prefix('resep')->name('resep.')->group(function () {
-        Route::get('search', [ResepApiController::class, 'search'])
-            ->name('search');
-        Route::post('render-cards', [ResepApiController::class, 'renderCards'])
-            ->name('render-cards');
+        Route::get('search',        [ResepApiController::class, 'search'])     ->name('search');
+        Route::post('render-cards', [ResepApiController::class, 'renderCards'])->name('render-cards');
     });
 
     // Bahan
     Route::prefix('bahan')->name('bahan.')->group(function () {
-        Route::get('by-ids', [ResepApiController::class, 'getBahansByIds'])
-            ->name('by-ids');
+        Route::get('by-ids', [ResepApiController::class, 'getBahansByIds'])->name('by-ids');
     });
 
-    Route::get('/bahans', [BahansController::class, 'apiList'])
-        ->name('bahans');
+    Route::get('/bahans', [BahansController::class, 'apiList'])->name('bahans');
 
-
+    // Swipe
     Route::prefix('swipe')->name('swipe.')->group(function () {
-        Route::get('/rasa', [SwipeResepApiController::class, 'getRasa'])
-            ->name('rasa');
-        Route::get('/filter-resep-swipe', [SwipeResepApiController::class, 'filterSwipe'])
-            ->name('filter.resep.swipe');
+        Route::get('/rasa',              [SwipeResepApiController::class, 'getRasa'])      ->name('rasa');
+        Route::get('/filter-resep-swipe',[SwipeResepApiController::class, 'filterSwipe']) ->name('filter.resep.swipe');
     });
 });
 
-// ─── AUTH REQUIRED ───────────────────────────────────────────────────────────
+
+// ─── AUTH REQUIRED ────────────────────────────────────────────────────────────
+
 Route::middleware(['auth'])->group(function () {
 
     Route::post('/favorit/toggle/{id}', [FavoriteController::class, 'toggle'])->name('favorit.toggle');
 
     // ── KULKAS DIGITAL ────────────────────────────────────────────────────────
-    Route::get('/kulkas-digital',        [KulkasDigitalController::class, 'index']) ->name('kulkas.index');
-    Route::get('/kulkas-digital/tambah', [KulkasDigitalController::class, 'tambah'])->name('kulkas.tambah');
-    Route::post('/kulkas-digital',       [KulkasDigitalController::class, 'store']) ->name('kulkas.store');
+    Route::get('/kulkas-digital',        [KulkasDigitalController::class, 'index'])    ->name('kulkas.index');
+    Route::get('/kulkas-digital/tambah', [KulkasDigitalController::class, 'tambah'])  ->name('kulkas.tambah');
+    Route::post('/kulkas-digital',       [KulkasDigitalController::class, 'store'])   ->name('kulkas.store');
     // ⚠️ pakai-resep HARUS di atas /{id}
     Route::post('/kulkas-digital/pakai-resep', [KulkasDigitalController::class, 'pakaiResep'])->name('kulkas.pakai-resep');
     Route::delete('/kulkas-digital/{id}',      [KulkasDigitalController::class, 'destroy'])   ->name('kulkas.destroy');
@@ -102,13 +105,12 @@ Route::middleware(['auth'])->group(function () {
     // ── MEAL PLANNER ──────────────────────────────────────────────────────────
     Route::get('/meal-planner', [MealPlannerController::class, 'index'])->name('meal-planner.index');
 
-    // API meal planner — sesuai controller kamu
     Route::prefix('api/meal-planner')->group(function () {
-        Route::get('/',                  [MealPlannerController::class, 'getData'])    ->name('api.meal-planner.data');
-        Route::post('/kalori',           [MealPlannerController::class, 'setKalori']) ->name('api.meal-planner.kalori');
-        Route::post('/tambah',           [MealPlannerController::class, 'tambahResep'])->name('api.meal-planner.tambah');
-        Route::delete('/detail/{id}',    [MealPlannerController::class, 'hapusDetail'])->name('api.meal-planner.hapus');
-        Route::post('/generate-nota',    [MealPlannerController::class, 'generateNota'])->name('api.meal-planner.generate-nota');
+        Route::get('/',               [MealPlannerController::class, 'getData'])     ->name('api.meal-planner.data');
+        Route::post('/kalori',        [MealPlannerController::class, 'setKalori'])  ->name('api.meal-planner.kalori');
+        Route::post('/tambah',        [MealPlannerController::class, 'tambahResep'])->name('api.meal-planner.tambah');
+        Route::delete('/detail/{id}', [MealPlannerController::class, 'hapusDetail'])->name('api.meal-planner.hapus');
+        Route::post('/generate-nota', [MealPlannerController::class, 'generateNota'])->name('api.meal-planner.generate-nota');
     });
 
     // ── PILIH RESEP ───────────────────────────────────────────────────────────
@@ -118,17 +120,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/nota-belanja', [NotaBelanjaController::class, 'index'])->name('nota.index');
 
     Route::prefix('api/nota-belanja')->group(function () {
-        Route::patch('/toggle/{id}',  [NotaBelanjaController::class, 'toggle'])      ->name('api.nota.toggle');
+        Route::patch('/toggle/{id}',    [NotaBelanjaController::class, 'toggle'])      ->name('api.nota.toggle');
         Route::delete('/hapus-selesai', [NotaBelanjaController::class, 'hapusSelesai'])->name('api.nota.hapus-selesai');
-        Route::delete('/{id}',        [NotaBelanjaController::class, 'destroy'])     ->name('api.nota.destroy');
+        Route::delete('/{id}',          [NotaBelanjaController::class, 'destroy'])     ->name('api.nota.destroy');
     });
 
     // ── PROFILE ───────────────────────────────────────────────────────────────
-    Route::get('/profile', fn() => view('pages.profile.index'))->name('profile.index');
+    Route::get('/profile',          [ProfileController::class, 'index']) ->name('profile.index');
+    Route::get('/profile/edit',     [ProfileController::class, 'edit'])  ->name('profile.edit');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
 });
 
-// ─── ADMIN ───────────────────────────────────────────────────────────────────
+
+// ─── ADMIN ────────────────────────────────────────────────────────────────────
+
 Route::prefix('admin/bahans')->name('admin.bahans.')->group(function () {
     Route::get('/',             [BahansController::class, 'index'])  ->name('index');
     Route::get('/tambah',       [BahansController::class, 'create']) ->name('create');

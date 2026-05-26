@@ -1,128 +1,253 @@
-        /* HEADER */
-        .header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-        }
+/* =============================================
+   EDIT PROFILE PAGE — LaperPoll
+   Ikut pola kulkas-digital.css
+   ============================================= */
 
-        .back-arrow {
-            font-size: 24px;
-            color: #ff5722;
-            cursor: pointer;
-            text-decoration: none;
-        }
+.ep-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 100vh;
+    background-color: #FFF8F5;
+    padding: 0 1rem 5rem;
+}
 
-        .logo {
-            font-family: 'Verdana', sans-serif; 
-            font-weight: bold;
-            font-size: 20px;
-            color: #d84315;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+.ep-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 
-   
-        .avatar-section {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            margin-bottom: 30px;
-            position: relative;
-        }
+/* ── Page Header ── */
+.ep-page-header { margin-bottom: 0.25rem; }
+.ep-page-title  { font-size: 1.15rem; color: var(--secondary-normal); }
+.ep-page-sub    { font-size: 0.75rem; color: var(--primary-darker); margin-top: 0.15rem; }
 
-        .avatar-wrapper {
-            position: relative;
-            width: 100px;
-            height: 100px;
-        }
+/* ── Alerts ── */
+.ep-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.8rem;
+}
+.ep-alert .material-icons-round { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.05rem; }
+.ep-alert-success { background-color: #ECFDF3; border: 1px solid #6CE9A6; color: #027A48; }
+.ep-alert-success .material-icons-round { color: #027A48; }
+.ep-alert-error   { background-color: #FEF3F2; border: 1px solid #FCA5A5; color: #B91C1C; }
+.ep-alert-error .material-icons-round   { color: #B91C1C; }
+.ep-alert ul { margin: 0; padding: 0 0 0 0.75rem; list-style: disc; }
 
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ddd;
-        }
+/* ── Form ── */
+.ep-form { display: flex; flex-direction: column; gap: 1rem; }
 
-        
-        .edit-photo-btn {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            color: #ff5722;
-            font-size: 16px;
-        }
+/* Avatar */
+.ep-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.25rem;
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid var(--primary-normal);
+}
 
-    
-        #photoInput {
-            display: none;
-        }
+.ep-avatar-wrapper {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border: 3px solid var(--orange-normal);
+    box-shadow: 0 4px 16px rgba(230,81,0,0.2);
+}
+.ep-avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-       
-        .form-section {
-            padding: 0 25px;
-        }
+.ep-avatar-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    gap: 0.2rem;
+}
+.ep-avatar-wrapper:hover .ep-avatar-overlay { opacity: 1; }
+.ep-avatar-overlay .material-icons-round { color: white; font-size: 1.5rem; }
+.ep-avatar-overlay-text { font-size: 0.6rem; color: white; font-weight: 600; font-family: var(--font-jakarta); }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+.hidden-input { display: none; }
+.ep-avatar-hint { font-size: 0.625rem; color: var(--primary-darker); }
 
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 5px;
-            margin-left: 5px;
-        }
+/* Fields card */
+.ep-fields {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid var(--primary-normal);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            font-size: 14px;
-            color: #333;
-        }
+.ep-field-group { display: flex; flex-direction: column; gap: 0.35rem; }
 
-        .form-control:focus {
-            outline: none;
-            border-color: #ff5722;
-            background-color: #fff;
-        }
+.ep-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--secondary-normal);
+}
+.ep-label .material-icons-round { font-size: 0.9rem; color: var(--orange-normal); }
 
- 
-        .button-section {
-            padding: 20px 25px;
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
+.ep-input-wrapper { position: relative; }
 
-        .update-btn {
-            width: 100%;
-            padding: 15px;
-            background-color: #ff5722; 
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+.ep-input {
+    width: 100%;
+    padding: 0.65rem 0.875rem;
+    border: 1.5px solid var(--primary-normal);
+    border-radius: 0.625rem;
+    font-size: 0.813rem;
+    font-family: var(--font-jakarta);
+    color: var(--secondary-normal);
+    background-color: #FAFAFA;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    box-sizing: border-box;
+}
+.ep-input::placeholder { color: var(--primary-dark); }
+.ep-input:focus {
+    border-color: var(--orange-normal);
+    box-shadow: 0 0 0 3px rgba(230,81,0,0.12);
+    background-color: white;
+}
+.ep-input-error { border-color: var(--accent-normal); }
+.ep-input-error:focus { border-color: var(--accent-normal); box-shadow: 0 0 0 3px rgba(236,68,72,0.12); }
+.ep-input-wrapper .ep-input { padding-right: 2.75rem; }
 
-        .update-btn:hover {
-            background-color: #e64a19;
-        } 
+.ep-toggle-pass {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+.ep-toggle-pass .material-icons-round { font-size: 1.1rem; color: var(--primary-darker); }
+
+.ep-field-error { font-size: 0.625rem; color: var(--accent-normal); font-weight: 500; }
+
+.ep-field-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--primary-darker);
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0.1rem 0;
+}
+.ep-field-divider::before,
+.ep-field-divider::after { content: ''; flex: 1; height: 1px; background: var(--primary-normal); }
+
+/* Actions */
+.ep-actions { display: flex; flex-direction: column; gap: 0.625rem; }
+
+.ep-btn-save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem;
+    background-color: var(--orange-normal);
+    color: white;
+    border: none;
+    border-radius: 0.875rem;
+    font-size: 0.875rem;
+    font-family: var(--font-jakarta);
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 4px 12px rgba(230,81,0,0.35);
+    font-weight: 600;
+}
+.ep-btn-save .material-icons-round { font-size: 1.1rem; color: white; }
+.ep-btn-save:hover { background-color: var(--orange-normal-hover); transform: translateY(-1px); }
+.ep-btn-save:active { transform: translateY(0); }
+
+.ep-btn-cancel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    background-color: transparent;
+    color: var(--primary-darker);
+    border: 1.5px solid var(--primary-normal);
+    border-radius: 0.875rem;
+    font-size: 0.875rem;
+    font-family: var(--font-jakarta);
+    text-decoration: none;
+    transition: background-color 0.15s;
+    font-weight: 600;
+}
+.ep-btn-cancel:hover { background-color: var(--primary-normal); }
+
+/* ─────────────────────────────────────────────
+   TABLET (≥ 768px)
+   ───────────────────────────────────────────── */
+@media (min-width: 768px) {
+    .ep-main {
+        margin-left: -2rem;
+        margin-right: -2rem;
+        width: calc(100% + 4rem);
+        padding: 0 2rem 5rem;
+    }
+
+    .navbar { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
+
+    .ep-container {
+        max-width: 620px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .ep-avatar-wrapper { width: 110px; height: 110px; }
+
+    .ep-actions {
+        flex-direction: row;
+    }
+    .ep-btn-save, .ep-btn-cancel { flex: 1; }
+}
+
+/* ─────────────────────────────────────────────
+   DESKTOP (≥ 1024px)
+   ───────────────────────────────────────────── */
+@media (min-width: 1024px) {
+    .ep-main {
+        margin-left: -2rem;
+        margin-right: -2rem;
+        width: calc(100% + 4rem);
+        padding: 0 3rem 5rem;
+    }
+
+    .navbar { margin: 0 -3rem; padding-left: 3rem; padding-right: 3rem; }
+
+    .ep-container {
+        max-width: 680px;
+    }
+
+    .ep-fields { padding: 1.5rem; }
+    .ep-avatar-wrapper { width: 120px; height: 120px; }
+}

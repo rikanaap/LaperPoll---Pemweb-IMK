@@ -1,228 +1,169 @@
 @extends('layouts.app')
 
-@section('title', 'Meal Planner - LaperPoll')
+@section('title', 'Profil - LaperPoll')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/profile.css') }}">
 @endpush
 
+@section('content')
+<main class="profile-main font-jakarta">
 
-<body class="font-jakarta">
-    <main class="main-content flex flex-col">
-        <x-navbar :back="true"></x-navbar>
+    <x-navbar backUrl="back"></x-navbar>
 
-        <section class="profile-section flex flex-col gap-4">
-            <div class="profile-top flex flex-row gap-3">
-                <div class="avatar-wrapper">
-                    <img src="../assets/images/Image_DummyProfile.png" alt="Foto Profil" class="avatar">
+    {{-- HERO --}}
+    <section class="profile-hero">
+        <div class="profile-hero-bg"></div>
+        <div class="profile-hero-content">
+
+            <div class="avatar-container">
+                <div class="avatar-ring">
+                    <img
+                        src="{{ $user->profile_photo ? Storage::url($user->profile_photo) : asset('assets/images/Image_DummyProfile.png') }}"
+                        alt="Foto {{ $user->name }}"
+                        class="avatar-img">
                 </div>
-                <div class="profile-info flex flex-col gap-1">
-                    <h1 class="font-jakarta font-bold text-title1 text-secondary-normal">Chef Moni</h1>
-                    <p class="font-jakarta font-regular text-body text-primary-darker">@masterchefmoni</p>
-                </div>
-                <a href="edit-profile.html" class="edit-btn" aria-label="Edit profil">
+                <a href="{{ route('profile.edit') }}" class="avatar-edit-btn" aria-label="Edit profil">
                     <span class="material-icons-round">edit</span>
                 </a>
             </div>
 
-            <div class="profile-stats flex flex-row">
-                <div class="stat-item flex flex-col gap-1">
-                    <p class="font-jakarta font-bold text-title1 text-secondary-normal">4</p>
-                    <p class="font-jakarta font-regular text-caption text-primary-darker">Resep</p>
+            <div class="profile-identity">
+                <h1 class="profile-name font-bold">{{ $user->name }}</h1>
+                <p class="profile-email">{{ $user->email }}</p>
+            </div>
+
+            <div class="profile-stats-row">
+                <div class="stat-bubble">
+                    <span class="stat-number">{{ $resepCount }}</span>
+                    <span class="stat-label">Resep</span>
                 </div>
-                <div class="stat-divider"></div>
-                <a href="koneksi.html?tab=pengikut" class="stat-item flex flex-col gap-1 stat-link">
-                    <p class="font-jakarta font-bold text-title1 text-secondary-normal"> 6 </p>
-                    <p class="font-jakarta font-regular text-caption text-primary-darker">Pengikut</p>
+                <div class="stat-divider-v"></div>
+                <a href="#" class="stat-bubble stat-link">
+                    <span class="stat-number">{{ $followerCount }}</span>
+                    <span class="stat-label">Pengikut</span>
                 </a>
-                <div class="stat-divider"></div>
-                <a href="koneksi.html?tab=mengikuti" class="stat-item flex flex-col gap-1 stat-link">
-                    <p class="font-jakarta font-bold text-title1 text-secondary-normal"> 4 </p>
-                    <p class="font-jakarta font-regular text-caption text-primary-darker">Mengikuti</p>
+                <div class="stat-divider-v"></div>
+                <a href="#" class="stat-bubble stat-link">
+                    <span class="stat-number">{{ $followingCount }}</span>
+                    <span class="stat-label">Mengikuti</span>
                 </a>
             </div>
 
-        </section>
+        </div>
+    </section>
 
-        <section class="favorit-shortcut-section">
-        <a href="{{ url('/favorit') }}" class="favorit-shortcut-btn font-jakarta font-semibold">
-            <span class="material-icons-round">favorite</span>
-            Resep Favorit Saya
-            <span class="material-icons-round favorit-shortcut-arrow">chevron_right</span>
-            <span class="favorit-shortcut-badge" id="favorit-badge">0</span>
+    {{-- QUICK ACTIONS --}}
+    <section class="quick-actions-section">
+        <a href="{{ url('/favorit') }}" class="quick-action-btn">
+            <div class="quick-action-icon favorit-icon">
+                <span class="material-icons-round">favorite</span>
+            </div>
+            <div class="quick-action-text">
+                <span class="quick-action-title">Resep Favorit</span>
+                <span class="quick-action-sub">{{ $favoritCount }} resep tersimpan</span>
+            </div>
+            <span class="material-icons-round quick-action-arrow">chevron_right</span>
         </a>
-        </section>
-        
-        <section class="resep-grid-section flex flex-col gap-3">
 
-            <div class="resep-card-grid">
-                <div class="resep-card">
-                    <div class="resep-card-header flex flex-row gap-2">
-                        <div class="resep-card-avatar">CM</div>
-                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
-                        <span class="material-icons-round verified-icon">check_circle</span>
-                    </div>
-                    <div class="resep-card-img">
-                        <span class="material-icons-round resep-card-emoji">lunch_dining</span>
-                    </div>
-                    <div class="resep-card-info flex flex-col gap-1">
-                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Rendang Daging Sapi</p>
-                        <div class="resep-card-meta flex flex-row gap-3">
-                            <span class="meta-item font-jakarta text-caption">⭐ 5.0</span>
-                            <span class="meta-item font-jakarta text-caption">🕐 90 mnt</span>
-                        </div>
-                        <div class="resep-card-footer flex flex-row">
-                            <span class="font-jakarta text-caption text-primary-darker">👁 312</span>
-                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="resep-card">
-                    <div class="resep-card-header flex flex-row gap-2">
-                        <div class="resep-card-avatar">CM</div>
-                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
-                        <span class="material-icons-round verified-icon">check_circle</span>
-                    </div>
-                    <div class="resep-card-img">
-                        <span class="material-icons-round resep-card-emoji">eco</span>
-                    </div>
-                    <div class="resep-card-info flex flex-col gap-1">
-                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Gado-Gado Spesial</p>
-                        <div class="resep-card-meta flex flex-row gap-3">
-                            <span class="meta-item font-jakarta text-caption">⭐ 4.8</span>
-                            <span class="meta-item font-jakarta text-caption">🕐 30 mnt</span>
-                        </div>
-                        <div class="resep-card-footer flex flex-row">
-                            <span class="font-jakarta text-caption text-primary-darker">👁 189</span>
-                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="resep-card">
-                    <div class="resep-card-header flex flex-row gap-2">
-                        <div class="resep-card-avatar">CM</div>
-                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
-                        <span class="material-icons-round verified-icon">check_circle</span>
-                    </div>
-                    <div class="resep-card-img">
-                        <span class="material-icons-round resep-card-emoji">ramen_dining</span>
-                    </div>
-                    <div class="resep-card-info flex flex-col gap-1">
-                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Soto Ayam Lamongan</p>
-                        <div class="resep-card-meta flex flex-row gap-3">
-                            <span class="meta-item font-jakarta text-caption">⭐ 5.0</span>
-                            <span class="meta-item font-jakarta text-caption">🕐 60 mnt</span>
-                        </div>
-                        <div class="resep-card-footer flex flex-row">
-                            <span class="font-jakarta text-caption text-primary-darker">👁 445</span>
-                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="resep-card">
-                    <div class="resep-card-header flex flex-row gap-2">
-                        <div class="resep-card-avatar">CM</div>
-                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
-                        <span class="material-icons-round verified-icon">check_circle</span>
-                    </div>
-                    <div class="resep-card-img">
-                        <span class="material-icons-round resep-card-emoji">cake</span>
-                    </div>
-                    <div class="resep-card-info flex flex-col gap-1">
-                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Bolu Kukus Pelangi</p>
-                        <div class="resep-card-meta flex flex-row gap-3">
-                            <span class="meta-item font-jakarta text-caption">⭐ 4.9</span>
-                            <span class="meta-item font-jakarta text-caption">🕐 45 mnt</span>
-                        </div>
-                        <div class="resep-card-footer flex flex-row">
-                            <span class="font-jakarta text-caption text-primary-darker">👁 98</span>
-                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="resep-card">
-                    <div class="resep-card-header flex flex-row gap-2">
-                        <div class="resep-card-avatar ">CM</div>
-                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
-                        <span class="material-icons-round verified-icon">check_circle</span>
-                    </div>
-                    <div class="resep-card-img">
-                        <span class="material-icons-round resep-card-emoji">rice_bowl</span>
-                    </div>
-                    <div class="resep-card-info flex flex-col gap-1">
-                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Nasi Goreng Kampung</p>
-                        <div class="resep-card-meta flex flex-row gap-3">
-                            <span class="meta-item font-jakarta text-caption">⭐ 4.7</span>
-                            <span class="meta-item font-jakarta text-caption">🕐 20 mnt</span>
-                        </div>
-                        <div class="resep-card-footer flex flex-row">
-                            <span class="font-jakarta text-caption text-primary-darker">👁 203</span>
-                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="resep-card">
-                    <div class="resep-card-header flex flex-row gap-2">
-                        <div class="resep-card-avatar ">CM</div>
-                        <p class="font-jakarta font-medium text-caption text-secondary-normal">Chef Moni</p>
-                        <span class="material-icons-round verified-icon">check_circle</span>
-                    </div>
-                    <div class="resep-card-img">
-                        <span class="material-icons-round resep-card-emoji">breakfast_dining</span>
-                    </div>
-                    <div class="resep-card-info flex flex-col gap-1">
-                        <p class="font-jakarta font-semibold text-body text-secondary-normal">Pancake Coklat</p>
-                        <div class="resep-card-meta flex flex-row gap-3">
-                            <span class="meta-item font-jakarta text-caption">⭐ 4.6</span>
-                            <span class="meta-item font-jakarta text-caption">🕐 25 mnt</span>
-                        </div>
-                        <div class="resep-card-footer flex flex-row">
-                            <span class="font-jakarta text-caption text-primary-darker">👁 157</span>
-                            <span class="material-icons-round bookmark-icon">bookmark_border</span>
-                        </div>
-                    </div>
-                </div>
-
+        <a href="{{ route('profile.edit') }}" class="quick-action-btn">
+            <div class="quick-action-icon edit-icon">
+                <span class="material-icons-round">manage_accounts</span>
             </div>
-        </section>
+            <div class="quick-action-text">
+                <span class="quick-action-title">Edit Profil</span>
+                <span class="quick-action-sub">Ubah nama, email, foto</span>
+            </div>
+            <span class="material-icons-round quick-action-arrow">chevron_right</span>
+        </a>
+    </section>
 
-    </main>
-
-    <div class="fab-overlay" id="fabOverlay"></div>
-
-    <div class="fab-container" id="fabContainer">
-        <div class="fab-menu" id="fabMenu">
-            <a href="kulkas-digital.html" class="fab-item flex flex-row gap-3">
-                <span class="fab-item-label font-jakarta font-semibold text-body">Kulkas Digital</span>
-                <div class="fab-item-icon">
-                    <span class="material-icons-round">kitchen</span>
-                </div>
-            </a>
-            <a href="nota-belanja.html" class="fab-item flex flex-row gap-3">
-                <span class="fab-item-label font-jakarta font-semibold text-body">Nota Belanja</span>
-                <div class="fab-item-icon">
-                    <span class="material-icons-round">receipt_long</span>
-                </div>
-            </a>
-            <a href="meal-planner.html" class="fab-item flex flex-row gap-3">
-                <span class="fab-item-label font-jakarta font-semibold text-body">Meal Planner</span>
-                <div class="fab-item-icon">
-                    <span class="material-icons-round">calendar_month</span>
-                </div>
-            </a>
+    {{-- RESEP SAYA --}}
+    <section class="my-resep-section">
+        <div class="section-header">
+            <h2 class="section-title font-semibold">Resep Saya</h2>
+            @if($resepCount > 12)
+                <a href="#" class="see-all-link">Lihat semua</a>
+            @endif
         </div>
 
-        <button class="fab-btn" id="fabBtn" aria-label="Menu">
-            <span class="material-icons-round fab-icon" id="fabIcon">add</span>
-        </button>
+        @if($resepUser->isEmpty())
+            <div class="empty-resep">
+                <span class="material-icons-round empty-icon">restaurant_menu</span>
+                <p class="empty-title font-semibold">Belum ada resep</p>
+                <p class="empty-sub">Mulai bagikan resep andalanmu!</p>
+            </div>
+        @else
+            <div class="resep-grid">
+                @foreach($resepUser as $resep)
+                    <a href="{{ route('detail.resep', $resep->id) }}" class="resep-card-link">
+                        <div class="resep-card">
+                            <div class="resep-card-thumb">
+                                @if($resep->thumbnail)
+                                    <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
+                                         class="resep-thumb-img"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                    <div class="resep-thumb-placeholder" style="display:none">
+                                        <span class="material-icons-round">restaurant</span>
+                                    </div>
+                                @else
+                                    <div class="resep-thumb-placeholder">
+                                        <span class="material-icons-round">restaurant</span>
+                                    </div>
+                                @endif
+                                @if($resep->current_star > 0)
+                                    <div class="resep-rating-badge">
+                                        <span class="material-icons-round">star</span>
+                                        {{ number_format($resep->current_star, 1) }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="resep-card-info">
+                                <p class="resep-card-title font-semibold">{{ $resep->title }}</p>
+                                <div class="resep-card-meta">
+                                    <span class="resep-meta-item">
+                                        <span class="material-icons-round">schedule</span>
+                                        {{ $resep->cook_duration }}
+                                    </span>
+                                    <span class="resep-meta-item">
+                                        <span class="material-icons-round">visibility</span>
+                                        {{ $resep->views_count }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+    </section>
 
+</main>
+
+{{-- FAB --}}
+<div class="fab-overlay" id="fabOverlay"></div>
+<div class="fab-container" id="fabContainer">
+    <div class="fab-menu" id="fabMenu">
+        <a href="{{ route('kulkas.index') }}" class="fab-item">
+            <span class="fab-item-label font-semibold">Kulkas Digital</span>
+            <div class="fab-item-icon"><span class="material-icons-round">kitchen</span></div>
+        </a>
+        <a href="{{ route('nota.index') }}" class="fab-item">
+            <span class="fab-item-label font-semibold">Nota Belanja</span>
+            <div class="fab-item-icon"><span class="material-icons-round">receipt_long</span></div>
+        </a>
+        <a href="{{ route('meal-planner.index') }}" class="fab-item">
+            <span class="fab-item-label font-semibold">Meal Planner</span>
+            <div class="fab-item-icon"><span class="material-icons-round">calendar_month</span></div>
+        </a>
     </div>
+    <button class="fab-btn" id="fabBtn" aria-label="Menu">
+        <span class="material-icons-round fab-icon" id="fabIcon">add</span>
+    </button>
+</div>
 
-    <script src="../js/profile.js"></script>
-</body>
-</html>
+@push('scripts')
+<script src="{{ asset('js/profile.js') }}"></script>
+@endpush
+
+@endsection

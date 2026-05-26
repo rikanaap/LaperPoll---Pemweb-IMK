@@ -2,6 +2,7 @@
 
     @php
     $backUrl = $backUrl ?? false;
+    $user = $user ?? Auth::user();
     @endphp
     {{-- Jika kosong -> search --}}
     @if (!$backUrl)
