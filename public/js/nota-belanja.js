@@ -106,10 +106,36 @@ document.getElementById('bahanList')?.addEventListener('change', async e => {
 });
 
 // ── Hapus semua yang sudah dibeli ────────────────────────────
+// ── Modal hapus selesai ──────────────────────────────────────
+const modalHapusSelesai        = document.getElementById('modalHapusSelesai');
+const modalHapusSelesaiOverlay = document.getElementById('modalHapusSelesaiOverlay');
+const modalHapusSelesaiCancel  = document.getElementById('modalHapusSelesaiCancel');
+const modalHapusSelesaiConfirm = document.getElementById('modalHapusSelesaiConfirm');
+const modalHapusSelesaiDesc    = document.getElementById('modalHapusSelesaiDesc');
+
+function showModalHapusSelesai(count) {
+    return new Promise(resolve => {
+        modalHapusSelesaiDesc.textContent = `${count} bahan yang sudah dibeli akan dihapus dari nota.`;
+        modalHapusSelesai.style.display = 'flex';
+        const cleanup = (result) => {
+            modalHapusSelesai.style.display = 'none';
+            modalHapusSelesaiConfirm.removeEventListener('click', onConfirm);
+            modalHapusSelesaiCancel.removeEventListener('click', onCancel);
+            modalHapusSelesaiOverlay.removeEventListener('click', onCancel);
+            resolve(result);
+        };
+        const onConfirm = () => cleanup(true);
+        const onCancel  = () => cleanup(false);
+        modalHapusSelesaiConfirm.addEventListener('click', onConfirm);
+        modalHapusSelesaiCancel.addEventListener('click', onCancel);
+        modalHapusSelesaiOverlay.addEventListener('click', onCancel);
+    });
+}
+
 document.getElementById('hapusSelesaiBtn')?.addEventListener('click', async () => {
     const doneEls = document.querySelectorAll('.nb-item.nb-item-done');
     if (doneEls.length === 0) return;
-    if (!confirm(`Hapus ${doneEls.length} bahan yang sudah dibeli dari nota?`)) return;
+    if (!await showModalHapusSelesai(doneEls.length)) return;
 
     try {
         const data = await api(window.nbApiHapus, 'DELETE');

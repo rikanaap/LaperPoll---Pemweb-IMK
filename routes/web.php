@@ -76,8 +76,6 @@ Route::prefix('api')->name('api.')->group(function () {
     Route::get('/bahans', [BahansController::class, 'apiList'])
         ->name('bahans');
 
-    Route::post('/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])
-        ->name('kulkas.bahan.baru');
 
     Route::prefix('swipe')->name('swipe.')->group(function () {
         Route::get('/rasa', [SwipeResepApiController::class, 'getRasa'])
@@ -99,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
     // ⚠️ pakai-resep HARUS di atas /{id}
     Route::post('/kulkas-digital/pakai-resep', [KulkasDigitalController::class, 'pakaiResep'])->name('kulkas.pakai-resep');
     Route::delete('/kulkas-digital/{id}',      [KulkasDigitalController::class, 'destroy'])   ->name('kulkas.destroy');
+    Route::post('/api/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])->name('kulkas.bahan.baru');
 
     // ── MEAL PLANNER ──────────────────────────────────────────────────────────
     Route::get('/meal-planner', [MealPlannerController::class, 'index'])->name('meal-planner.index');

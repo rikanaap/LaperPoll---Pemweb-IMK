@@ -34,7 +34,23 @@
         </button>
     </div>
 
-    {{-- ── FILTER DROPDOWN ── --}}
+    {{-- ── MODAL HAPUS SELESAI ── --}}
+<div id="modalHapusSelesai" style="display:none; position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:1.5rem;">
+    <div class="nb-modal-overlay" id="modalHapusSelesaiOverlay"></div>
+    <div class="nb-modal-box">
+        <div class="nb-modal-icon-wrap">
+            <span class="material-icons-round" style="font-size:2rem;color:#E65100;">delete_sweep</span>
+        </div>
+        <h3 class="font-jakarta font-bold nb-modal-title">Hapus bahan selesai?</h3>
+        <p class="font-jakarta nb-modal-desc" id="modalHapusSelesaiDesc"></p>
+        <div class="nb-modal-actions">
+            <button class="nb-modal-cancel font-jakarta font-semibold" id="modalHapusSelesaiCancel">Batal</button>
+            <button class="nb-modal-confirm font-jakarta font-bold" id="modalHapusSelesaiConfirm">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+
+{{-- ── FILTER DROPDOWN ── --}}
     <div class="nb-filter-dropdown hidden" id="filterDropdown">
         <p class="font-jakarta font-semibold nb-filter-label">Filter Rentang Tanggal</p>
         <div class="nb-filter-presets">
