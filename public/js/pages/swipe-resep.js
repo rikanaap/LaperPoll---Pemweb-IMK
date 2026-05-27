@@ -1,25 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
     const el = {
-        swipeCards:          document.getElementById('swipeCards'),
-        likedContainer:      document.getElementById('likedContainer'),
-        dislikedContainer:   document.getElementById('dislikedContainer'),
-        mobileLiked:         document.getElementById('mobileLikedContainer'),
-        mobileDisliked:      document.getElementById('mobileDislikedContainer'),
-        counterText:         document.getElementById('counterText'),
-        progressBar:         document.getElementById('progressBar'),
-        mobileProgressBar:   document.getElementById('mobileProgressBar'),
-        emptyState:          document.getElementById('emptyState'),
-        likeBtn:             document.getElementById('likeBtn'),
-        dislikeBtn:          document.getElementById('dislikeBtn'),
-        historyDrawer:       document.getElementById('historyDrawer'),
-        drawerHeader:        document.getElementById('drawerHeader'),
-        drawerOverlay:       document.getElementById('drawerOverlay'),
-        drawerArrow:         document.getElementById('drawerArrow'),
+        swipeCards:       document.getElementById('swipeCards'),
+        likedContainer:   document.getElementById('likedContainer'),
+        dislikedContainer:document.getElementById('dislikedContainer'),
+        mobileLiked:      document.getElementById('mobileLikedContainer'),
+        mobileDisliked:   document.getElementById('mobileDislikedContainer'),
+        counterText:      document.getElementById('counterText'),
+        progressBar:      document.getElementById('progressBar'),
+        mobileProgressBar:document.getElementById('mobileProgressBar'),
+        emptyState:       document.getElementById('emptyState'),
+        likeBtn:          document.getElementById('likeBtn'),
+        dislikeBtn:       document.getElementById('dislikeBtn'),
+        historyDrawer:    document.getElementById('historyDrawer'),
+        drawerHeader:     document.getElementById('drawerHeader'),
+        drawerOverlay:    document.getElementById('drawerOverlay'),
+        drawerArrow:      document.getElementById('drawerArrow'),
     };
 
     const MAX_LIKED       = 3;
-    const SWIPE_THRESHOLD = 120;
-    const SESSION_KEY    = 'swipeRasaState';
+    const SWIPE_THRESHOLD = 100;
+    const SESSION_KEY     = 'swipeRasaState';
     const CARD_COLORS     = ['orange', 'rose', 'violet', 'teal', 'blue', 'amber'];
 
     const state = {
@@ -27,11 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
         disliked:     [],
         currentLiked: [],
         likedGroups:  [],
-        redirecting:  false,
-        drawerOpen:   false,
+        drag: {
+            active:   false,
+            startX:   0,
+            currentX: 0,
+            card:     null,
+            rasa:     null,
+        },
+        redirecting: false,
+        drawerOpen:  false,
     };
-
-    init();
 
     async function init() {
         loadState();
@@ -39,17 +44,20 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCards();
         updateHistory();
         updateProgress();
+        initDragListeners();
+        initHistoryEvents();
         initDrawer();
         bindActionButtons();
     }
 
     function loadState() {
         try {
-            const saved = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}');
-            state.disliked     = saved.disliked     ?? [];
-            state.likedGroups  = saved.likedGroups  ?? [];
+            const saved       = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}');
+            state.disliked    = saved.disliked    ?? [];
+            state.likedGroups = saved.likedGroups ?? [];
         } catch {
-            // State tetap bersih jika parse gagal
+            state.disliked    = [];
+            state.likedGroups = [];
         }
     }
 
@@ -67,21 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!result.success) return;
 
-            const excludedIds = new Set(state.disliked.map(item => item.id));
+            const excluded = new Set(state.disliked.map(d => d.id));
 
             state.cards = result.data
-                .filter(item => !excludedIds.has(item.id))
-                .map(item => ({
-                    ...item,
-                    colorClass: pickColor(item.id),
-                }));
-        } catch (err) {
-            console.error('[SwipeResep] fetchRasa error:', err);
+                .filter(item => !excluded.has(item.id))
+                .map(item => ({ ...item, colorClass: CARD_COLORS[item.id % CARD_COLORS.length] }));
+        } catch {
+            state.cards = [];
         }
-    }
-
-    function pickColor(id) {
-        return CARD_COLORS[id % CARD_COLORS.length];
     }
 
     function renderCards() {
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (state.currentLiked.length > 0 && !state.redirecting) {
                 state.redirecting = true;
-                navigateToFilterPage();
+                redirect();
             }
             return;
         }
@@ -101,71 +102,71 @@ document.addEventListener('DOMContentLoaded', () => {
         el.emptyState.style.display = 'none';
 
         state.cards.slice(0, 3).forEach((rasa, index) => {
-            const card = buildCardElement(rasa, index);
+            const card           = document.createElement('div');
+            card.className       = `swipe-card swipe-card--${rasa.colorClass}`;
+            card.style.zIndex    = 100 - index;
+            card.dataset.rasaId  = rasa.id;
+            card.setAttribute('role', 'article');
+            card.setAttribute('aria-label', `Rasa: ${rasa.title}`);
+            card.innerHTML = `
+                <div class="swipe-card__icon-wrapper" aria-hidden="true">
+                    <span class="material-icons-round">restaurant</span>
+                </div>
+                <h2 class="swipe-card__title">${escape(rasa.title ?? '-')}</h2>
+                <p class="swipe-card__desc">${escape(rasa.description ?? '-')}</p>
+            `;
             el.swipeCards.appendChild(card);
         });
     }
 
-    function buildCardElement(rasa, index) {
-        const card = document.createElement('div');
-        card.className = `swipe-card swipe-card--${rasa.colorClass}`;
-        card.style.zIndex = 100 - index;
-        card.setAttribute('role', 'article');
-        card.setAttribute('aria-label', `Rasa: ${rasa.title}`);
-        card.innerHTML = `
-            <div class="swipe-card__icon-wrapper">
-                <span class="material-icons-round">restaurant</span>
-            </div>
-            <h2 class="swipe-card__title">${escapeHtml(rasa.title ?? '-')}</h2>
-            <p class="swipe-card__desc">${escapeHtml(rasa.description ?? '-')}</p>
-        `;
-        attachSwipeEvents(card, rasa);
-        return card;
-    }
+    function initDragListeners() {
+        el.swipeCards.addEventListener('pointerdown', (e) => {
+            if (state.redirecting || state.drag.active) return;
 
-    function attachSwipeEvents(card, rasa) {
-        let startX   = 0;
-        let currentX = 0;
-        let dragging = false;
+            const topCard = el.swipeCards.querySelector('.swipe-card');
+            if (!topCard) return;
 
-        const isTopCard = () => card === el.swipeCards.querySelector('.swipe-card:first-child');
+            const rasa = state.cards.find(c => c.id === Number(topCard.dataset.rasaId));
+            if (!rasa) return;
 
-        card.addEventListener('pointerdown', (e) => {
-            if (!isTopCard() || state.redirecting) return;
-            startX   = e.clientX;
-            dragging = true;
-            card.style.transition = 'none';
+            state.drag = { active: true, startX: e.clientX, currentX: 0, card: topCard, rasa };
+            topCard.style.transition = 'none';
+            topCard.setPointerCapture(e.pointerId);
         });
 
-        window.addEventListener('pointermove', (e) => {
-            if (!dragging) return;
-            currentX = e.clientX - startX;
-            const clamped = Math.max(-180, Math.min(180, currentX));
-            card.style.transform = `translateX(${clamped}px) rotate(${clamped / 18}deg)`;
+        el.swipeCards.addEventListener('pointermove', (e) => {
+            if (!state.drag.active) return;
+
+            const delta           = e.clientX - state.drag.startX;
+            const clamped         = Math.max(-200, Math.min(200, delta));
+            state.drag.currentX   = delta;
+            state.drag.card.style.transform = `translateX(${clamped}px) rotate(${clamped / 18}deg)`;
         });
 
-        window.addEventListener('pointerup', () => {
-            if (!dragging) return;
-            dragging = false;
+        el.swipeCards.addEventListener('pointerup', () => {
+            if (!state.drag.active) return;
+
+            const { card, rasa, currentX } = state.drag;
+            state.drag = { active: false, startX: 0, currentX: 0, card: null, rasa: null };
             card.style.transition = '.3s ease';
 
-            if (currentX > SWIPE_THRESHOLD) {
-                animateSwipe(card, 'right', () => onLike(rasa));
-            } else if (currentX < -SWIPE_THRESHOLD) {
-                animateSwipe(card, 'left', () => onDislike(rasa));
-            } else {
-                card.style.transform = '';
-            }
-            currentX = 0;
+            if (currentX > SWIPE_THRESHOLD)       animateSwipe(card, 'right', () => onLike(rasa));
+            else if (currentX < -SWIPE_THRESHOLD) animateSwipe(card, 'left',  () => onDislike(rasa));
+            else                                  card.style.transform = '';
+        });
+
+        el.swipeCards.addEventListener('pointercancel', () => {
+            if (!state.drag.active) return;
+            const { card } = state.drag;
+            state.drag = { active: false, startX: 0, currentX: 0, card: null, rasa: null };
+            if (card) { card.style.transition = '.3s ease'; card.style.transform = ''; }
         });
     }
 
-    function animateSwipe(card, direction, callback) {
-        const x      = direction === 'right' ? 420 : -420;
-        const rotate = direction === 'right' ? 25 : -25;
-        card.style.transform = `translateX(${x}px) rotate(${rotate}deg)`;
+    function animateSwipe(card, direction, cb) {
+        card.style.transform = `translateX(${direction === 'right' ? 480 : -480}px) rotate(${direction === 'right' ? 28 : -28}deg)`;
         card.style.opacity   = '0';
-        setTimeout(callback, 200);
+        setTimeout(cb, 220);
     }
 
     function onLike(rasa) {
@@ -173,21 +174,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         state.currentLiked.push(rasa);
         updateProgress();
-        
-        const shouldRedirect = state.currentLiked.length >= MAX_LIKED || state.cards.length === 1;
 
-        if (shouldRedirect) {
+        const done = state.currentLiked.length >= MAX_LIKED || state.cards.length === 1;
+
+        removeCard(rasa.id);
+
+        if (done) {
             state.redirecting = true;
-            const group = { id: Date.now(), items: [...state.currentLiked] };
-            state.likedGroups.unshift(group);
+            state.likedGroups.unshift({ id: Date.now(), items: [...state.currentLiked] });
             saveState();
-            
-            removeCardFromState(rasa.id);
             updateHistory();
-            
-            setTimeout(navigateToFilterPage, 500);
+            setTimeout(redirect, 400);
         } else {
-            removeCardFromState(rasa.id);
             updateHistory();
         }
     }
@@ -195,68 +193,52 @@ document.addEventListener('DOMContentLoaded', () => {
     function onDislike(rasa) {
         if (!rasa || state.redirecting) return;
         state.disliked.push(rasa);
-        removeCardFromState(rasa.id);
+        removeCard(rasa.id);
         saveState();
         updateHistory();
     }
 
-    function removeCardFromState(id) {
-        state.cards = state.cards.filter(item => item.id !== id);
+    function removeCard(id) {
+        state.cards = state.cards.filter(c => c.id !== id);
         renderCards();
     }
 
-    function navigateToFilterPage() {
-        sessionStorage.setItem('selectedRasa', JSON.stringify(state.currentLiked));
+    function redirect() {
         const ids = state.currentLiked.map(r => r.id).join(',');
         window.location.href = `${window.swipeConfig.redirectUrl}?filters=${ids}`;
     }
 
     function bindActionButtons() {
         el.likeBtn?.addEventListener('click', () => {
-            if (state.redirecting) return;
+            if (state.redirecting || state.drag.active) return;
             const rasa = state.cards[0];
-            const card = el.swipeCards.querySelector('.swipe-card:first-child');
+            const card = el.swipeCards.querySelector('.swipe-card');
             if (rasa && card) animateSwipe(card, 'right', () => onLike(rasa));
         });
 
         el.dislikeBtn?.addEventListener('click', () => {
-            if (state.redirecting) return;
+            if (state.redirecting || state.drag.active) return;
             const rasa = state.cards[0];
-            const card = el.swipeCards.querySelector('.swipe-card:first-child');
+            const card = el.swipeCards.querySelector('.swipe-card');
             if (rasa && card) animateSwipe(card, 'left', () => onDislike(rasa));
         });
     }
 
-    /* ------------------------------------------------------------------ */
-    /* 12. UPDATE HISTORY & CHIPS                                         */
-    /* ------------------------------------------------------------------ */
     function updateHistory() {
-        const likedHtml    = buildLikedHtml();
-        const dislikedHtml = buildDislikedHtml();
-
-        if (el.likedContainer)    el.likedContainer.innerHTML    = likedHtml;
-        if (el.dislikedContainer) el.dislikedContainer.innerHTML = dislikedHtml;
-        if (el.mobileLiked)       el.mobileLiked.innerHTML       = likedHtml;
-        if (el.mobileDisliked)    el.mobileDisliked.innerHTML    = dislikedHtml;
-
-        bindHistoryChipEvents();
+        const liked    = buildLikedHtml();
+        const disliked = buildDislikedHtml();
+        [el.likedContainer, el.mobileLiked].forEach(el => el && (el.innerHTML = liked));
+        [el.dislikedContainer, el.mobileDisliked].forEach(el => el && (el.innerHTML = disliked));
     }
 
     function buildLikedHtml() {
         if (!state.likedGroups.length) {
             return '<p class="history-section__empty">Belum ada history rasa</p>';
         }
+
         return state.likedGroups.map(group => {
-            const names = group.items.map(item => escapeHtml(item.title)).join(' • ');
-            return `
-                <button
-                    class="history-chip history-chip--liked liked-group-chip"
-                    data-ids="${group.items.map(i => i.id).join(',')}"
-                    aria-label="Ulangi pilihan rasa: ${names}"
-                >
-                    ❤️ ${names}
-                </button>
-            `;
+            const names = group.items.map(i => escape(i.title)).join(' • ');
+            return `<button class="history-chip history-chip--liked liked-group-chip" data-ids="${group.items.map(i => i.id).join(',')}" type="button" aria-label="Ulangi: ${names}">❤️ ${names}</button>`;
         }).join('');
     }
 
@@ -264,78 +246,59 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!state.disliked.length) {
             return '<p class="history-section__empty">Belum ada rasa dilewati</p>';
         }
+
         return state.disliked.map(item => `
             <div class="history-chip history-chip--disliked">
-                <span>❌ ${escapeHtml(item.title)}</span>
-                <button
-                    class="history-chip__remove remove-disliked"
-                    data-id="${item.id}"
-                    aria-label="Kembalikan rasa ${escapeHtml(item.title)}"
-                >×</button>
+                <span>❌ ${escape(item.title)}</span>
+                <button class="history-chip__remove remove-disliked" data-id="${item.id}" type="button" aria-label="Kembalikan ${escape(item.title)}">×</button>
             </div>
         `).join('');
     }
 
-    function bindHistoryChipEvents() {
-        document.querySelectorAll('.liked-group-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const ids = chip.dataset.ids;
-                window.location.href = `${window.swipeConfig.redirectUrl}?filters=${ids}`;
-            });
-        });
+    function initHistoryEvents() {
+        document.addEventListener('click', (e) => {
+            const chip = e.target.closest('.liked-group-chip');
+            if (chip) {
+                window.location.href = `${window.swipeConfig.redirectUrl}?filters=${chip.dataset.ids}`;
+                return;
+            }
 
-        document.querySelectorAll('.remove-disliked').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (state.redirecting) return;
-                restoreDisliked(Number(btn.dataset.id));
-            });
+            const btn = e.target.closest('.remove-disliked');
+            if (btn && !state.redirecting) {
+                const id   = Number(btn.dataset.id);
+                const item = state.disliked.find(d => d.id === id);
+                if (!item) return;
+                state.disliked = state.disliked.filter(d => d.id !== id);
+                state.cards.push({ ...item, colorClass: CARD_COLORS[item.id % CARD_COLORS.length] });
+                saveState();
+                updateHistory();
+                renderCards();
+            }
         });
-    }
-
-    function restoreDisliked(id) {
-        const item = state.disliked.find(i => i.id === id);
-        if (!item) return;
-        state.disliked = state.disliked.filter(i => i.id !== id);
-        state.cards.unshift(item);
-        saveState();
-        updateHistory();
-        renderCards();
     }
 
     function updateProgress() {
-        const total   = state.currentLiked.length;
-        const percent = (total / MAX_LIKED) * 100;
-
-        if (el.counterText) el.counterText.innerText = `${total} / ${MAX_LIKED}`;
-        if (el.progressBar) el.progressBar.style.width = `${percent}%`;
-        if (el.mobileProgressBar) el.mobileProgressBar.style.width = `${percent}%`;
+        const pct = Math.min((state.currentLiked.length / MAX_LIKED) * 100, 100);
+        if (el.counterText)        el.counterText.textContent       = `${state.currentLiked.length} / ${MAX_LIKED}`;
+        if (el.progressBar)        el.progressBar.style.width       = `${pct}%`;
+        if (el.mobileProgressBar)  el.mobileProgressBar.style.width = `${pct}%`;
     }
 
     function initDrawer() {
-        el.drawerHeader?.addEventListener('click', toggleDrawer);
-        el.drawerOverlay?.addEventListener('click', closeDrawer);
+        el.drawerHeader?.addEventListener('click', () => setDrawer(!state.drawerOpen));
+        el.drawerOverlay?.addEventListener('click', () => setDrawer(false));
     }
 
-    function toggleDrawer() {
-        state.drawerOpen = !state.drawerOpen;
-        el.historyDrawer?.classList.toggle('is-open', state.drawerOpen);
-        el.drawerOverlay?.classList.toggle('is-active', state.drawerOpen);
-        if (el.drawerArrow) {
-            el.drawerArrow.style.transform = state.drawerOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-        }
-        document.body.style.overflow = state.drawerOpen ? 'hidden' : '';
+    function setDrawer(open) {
+        state.drawerOpen = open;
+        el.historyDrawer?.classList.toggle('is-open', open);
+        el.drawerOverlay?.classList.toggle('is-active', open);
+        if (el.drawerArrow) el.drawerArrow.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+        document.body.style.overflow = open ? 'hidden' : '';
     }
 
-    function closeDrawer() {
-        state.drawerOpen = false;
-        el.historyDrawer?.classList.remove('is-open');
-        el.drawerOverlay?.classList.remove('is-active');
-        if (el.drawerArrow) el.drawerArrow.style.transform = 'rotate(0deg)';
-        document.body.style.overflow = '';
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
+    function escape(str) {
+        if (str == null) return '';
         return String(str)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -343,4 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
     }
+
+    init();
 });

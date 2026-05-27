@@ -3,51 +3,65 @@
 @section('title', 'Swipe Rasa - LaperPoll')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/pages/swipe-resep.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pages/swipe-resep.css') }}">
 @endpush
 
 @section('content')
 <main class="swipe-page font-jakarta">
+
     <x-navbar :backUrl="route('pencarian.resep')" />
 
     <div class="swipe-wrapper">
         <div class="swipe-split-layout">
 
-            {{-- LEFT PANEL: Info & Progress --}}
+            {{-- Panel kiri: info & progress --}}
             <x-swipe-resep.info-panel />
 
-            {{-- CENTER PANEL: Kartu Swipe --}}
-            <section class="swipe-interaction-panel">
-                {{-- Header mobile --}}
-                <div class="mobile-info-header">
+            {{-- Panel tengah: swipe cards --}}
+            <section class="swipe-interaction-panel" aria-label="Area swipe rasa">
+
+                {{-- Header info (mobile only) --}}
+                <div class="mobile-info-header" aria-hidden="true">
                     <span class="badge-pill">Pilih 3 Rasa</span>
                     <h1 class="mobile-info-header__title">Swipe Rasa Favorit</h1>
-                    <div class="progress-box__track progress-box__track--mobile">
+                    <div class="progress-box__track progress-box__track--mobile" role="progressbar" aria-valuemin="0" aria-valuemax="3">
                         <div id="mobileProgressBar" class="progress-box__fill"></div>
                     </div>
                 </div>
 
-                {{-- Area kartu swipe --}}
+                {{-- Card area --}}
                 <div class="swipe-container">
-                    <div id="swipeCards" class="swipe-cards" role="region" aria-label="Kartu rasa">
-                        <div id="emptyState" class="swipe-empty-state" style="display:none;" aria-live="polite">
+                    <div
+                        id="swipeCards"
+                        class="swipe-cards"
+                        role="region"
+                        aria-label="Kartu pilihan rasa"
+                        aria-live="polite"
+                    >
+                        <div
+                            id="emptyState"
+                            class="swipe-empty-state"
+                            style="display: none;"
+                            role="status"
+                        >
                             Tidak ada rasa tersedia
                         </div>
                     </div>
 
-                    {{-- Tombol like & dislike --}}
                     <x-swipe-resep.action-buttons />
                 </div>
+
             </section>
 
-            {{-- RIGHT PANEL: Riwayat (Desktop) --}}
+            {{-- Panel kanan: history (desktop only) --}}
             <x-swipe-resep.history-panel />
 
         </div>
     </div>
 
-    {{-- MOBILE: Drawer riwayat --}}
+    {{-- Drawer riwayat (mobile only) --}}
     <x-swipe-resep.history-drawer />
+
 </main>
 @endsection
 
@@ -58,5 +72,5 @@
         redirectUrl: "{{ route('swipe.filter') }}"
     };
 </script>
-<script src="{{ asset('js/pages/swipe-resep.js') }}"></script>
+<script src="{{ asset('js/pages/swipe-resep.js') }}" defer></script>
 @endpush
