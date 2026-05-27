@@ -16,15 +16,16 @@ class ResepSwipeResource extends JsonResource
             'title'         => $this->title ?? 'Tanpa Judul',
             'description'   => $this->description,
             'thumbnail'     => $this->thumbnail ? Storage::url($this->thumbnail) : null,
-            'current_star'  => (float) ($this->current_star ?? 0.0),
+            'current_star'  => round((float) ($this->current_star ?? 0), 1),
             'views_count'   => (int) ($this->views_count ?? 0),
             'cook_duration' => $this->cook_duration,
             'match_count'   => (int) ($this->match_count ?? 0),
-            'user'          => $this->user ? ['name' => $this->user->name] : ['name' => 'Unknown'],
-            'filters'       => $this->filters ? $this->filters->map(fn($f) => [
-                'id'    => $f->id,
-                'title' => $f->title
-            ]) : []
+            'user'          => [
+                'name' => $this->whenLoaded('user', fn() => $this->user->name, 'Unknown'),
+            ],
+            'filters' => $this->whenLoaded('filters', fn() =>
+                $this->filters->map(fn($f) => ['id' => $f->id, 'title' => $f->title])
+            , []),
         ];
     }
 }
