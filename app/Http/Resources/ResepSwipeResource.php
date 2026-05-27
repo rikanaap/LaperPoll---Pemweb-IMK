@@ -12,6 +12,7 @@ class ResepSwipeResource extends JsonResource
     {
         return [
             'id'            => $this->id,
+            'detail_url'    => route('detail.resep', $this->id),
             'title'         => $this->title ?? 'Tanpa Judul',
             'description'   => $this->description,
             'thumbnail'     => $this->thumbnail ? Storage::url($this->thumbnail) : null,

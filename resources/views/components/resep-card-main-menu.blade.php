@@ -1,4 +1,4 @@
-<a href="{{ route('detail_resep.index', ['id'=>$resep->id]) }}" class="no-underline text-inherit block">
+<a href="{{ route('detail.resep', $resep->id) }}" class="no-underline text-inherit block">
     <div class="resep">
         <div class="resep-content">
             <div class="resep-logo">

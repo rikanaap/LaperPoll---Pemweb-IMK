@@ -1,4 +1,3 @@
-
 (() => {
     const CONFIG = {
         mobileBreakpoint: 768,
@@ -208,7 +207,9 @@
          * Render satu card resep lengkap.
          */
         recipeCard(resep) {
+            const detailUrl = resep.detail_url || `/detail-resep/${resep.id}`;
             return `
+                <a href="${detailUrl}" class="resep-card-link" style="text-decoration:none;color:inherit;display:block;">
                 <div class="resep">
                     <div class="resep-banner">
                         ${templates._thumbnail(resep)}
@@ -242,7 +243,8 @@
                             </div>
                         </div>
                     </div>
-                </div>`;
+                </div>
+                </a>`;
         },
     };
 

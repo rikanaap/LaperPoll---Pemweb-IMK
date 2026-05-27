@@ -1,161 +1,284 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Resep - LaperPoll')
+@section('title', '{{ $resep->title }} - LaperPoll')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/pages/detail-resep.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pages/detail-resep.css') }}">
 @endpush
 
-{{-- [UBAH] data-recipe-id: dari hardcoded "roti-bakar-keju" → $resep->id --}}
-<main class="main-content flex flex-col font-jakarta" data-recipe-id="{{ $resep->id }}">
-  <x-navbar :back="true"></x-navbar>
+@section('content')
+<main class="dr-main font-jakarta" data-recipe-id="{{ $resep->id }}">
 
-  <section>
-    <div class="recipe-header-container">
-      <div class="header-left">
-        <h1 class="recipe-title">{{ $resep->title }}</h1>
-        <div class="recipe-meta">
-          <span class="meta-item">
-            <span class="material-icons-round">timer</span>{{ $resep->cook_duration }}
-          </span>
-          
-          <span class="meta-item">
-            <span class="material-icons-round">icecream</span>
-            {{ $resep->resep_filters}}
-          </span>
+    <x-navbar backUrl="back"></x-navbar>
+
+    {{-- ── HERO IMAGE ── --}}
+    <section class="dr-hero">
+        @if($resep->thumbnail)
+            <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}" class="dr-hero-img"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="dr-hero-placeholder" style="display:none">
+                <span class="material-icons-round">restaurant</span>
+            </div>
+        @else
+            <div class="dr-hero-placeholder">
+                <span class="material-icons-round">restaurant</span>
+            </div>
+        @endif
+
+        {{-- Favorite btn --}}
+        <button class="dr-fav-btn {{ $isFavorited ? 'active' : '' }}"
+                id="drFavBtn"
+                data-resep-id="{{ $resep->id }}"
+                aria-label="Favoritkan resep">
+            <span class="material-icons-round">{{ $isFavorited ? 'favorite' : 'favorite_border' }}</span>
+        </button>
+    </section>
+
+    {{-- ── INFO RESEP ── --}}
+    <section class="dr-info-section">
+        <div class="dr-info-left">
+            <h1 class="dr-title font-bold">{{ $resep->title }}</h1>
+            <div class="dr-meta-row">
+                <span class="dr-meta-chip">
+                    <span class="material-icons-round">schedule</span>
+                    {{ $resep->cook_duration }}
+                </span>
+                @if($resep->calorie)
+                    <span class="dr-meta-chip">
+                        <span class="material-icons-round">local_fire_department</span>
+                        {{ $resep->calorie }} kkal
+                    </span>
+                @endif
+                @foreach($resep->filters->take(2) as $filter)
+                    <span class="dr-meta-chip dr-chip-filter">{{ $filter->name }}</span>
+                @endforeach
+            </div>
         </div>
-      </div>
 
-      <div class="header-right">
-        <div class="author-section">
-          <div class="author-text">
-            <span class="created-by font-jakarta">Dibuat oleh</span>
-            {{-- [UBAH] Username: dari hardcoded "@RotiRoni" → relasi user --}}
-            <span class="author-username font-jakarta font-semibold">
-              {{ $resep->user->name ?? 'Anonim' }}
-            </span>
-          </div>
-          
-          <img
-            src="{{ $resep->user->avatar
-              ? Storage::url($resep->user->avatar)
-              : asset('assets/images/Image_DummyProfile.png') }}"
-            alt="Author"
-            class="author-avatar">
+        <div class="dr-info-right">
+            {{-- Author --}}
+            <div class="dr-author">
+                <img src="{{ $resep->user->profile_photo
+                    ? Storage::url($resep->user->profile_photo)
+                    : asset('assets/images/Image_DummyProfile.png') }}"
+                     alt="{{ $resep->user->name ?? 'Anonim' }}"
+                     class="dr-author-avatar">
+                <div class="dr-author-text">
+                    <span class="dr-author-label">Dibuat oleh</span>
+                    <span class="dr-author-name font-semibold">{{ $resep->user->name ?? 'Anonim' }}</span>
+                </div>
+            </div>
+
+            {{-- Rating --}}
+            <div class="dr-rating">
+                @php
+                    $star  = $ratingAvg;
+                    $full  = floor($star);
+                    $half  = ($star - $full) >= 0.3 ? 1 : 0;
+                    $empty = 5 - $full - $half;
+                @endphp
+                <div class="dr-stars">
+                    @for($i = 0; $i < $full; $i++)
+                        <span class="material-icons-round">star</span>
+                    @endfor
+                    @if($half)
+                        <span class="material-icons-round">star_half</span>
+                    @endif
+                    @for($i = 0; $i < $empty; $i++)
+                        <span class="material-icons-round">star_border</span>
+                    @endfor
+                </div>
+                <span class="dr-rating-num">{{ $ratingAvg > 0 ? $ratingAvg : '-' }}</span>
+                <span class="dr-rating-count">({{ $totalUlasan }})</span>
+            </div>
         </div>
-        
+    </section>
 
-        <div class="rating-section">
-          
-          <div class="stars">
-            @php
-              $star  = $resep->current_star;
-              $full  = floor($star);
-              $half  = ($star - $full) >= 0.3 ? 1 : 0;
-              $empty = 5 - $full - $half;
-            @endphp
+    {{-- ── BAHAN-BAHAN ── --}}
+    <section class="dr-card">
+        <div class="dr-card-header">
+            <h2 class="dr-card-title font-semibold">Bahan-bahan</h2>
+            <div class="dr-unit-toggle" id="unitToggle">
+                <span class="material-icons-round dr-unit-icon">scale</span>
+                <span class="dr-unit-label" id="unitLabel">Gram</span>
+                <span class="material-icons-round dr-unit-arrow" id="unitArrow">expand_more</span>
+                <div class="dr-unit-dropdown" id="unitDropdown">
+                    <button class="dr-unit-option active" data-value="gram">Gram</button>
+                    <button class="dr-unit-option" data-value="miligram">Miligram</button>
+                    <button class="dr-unit-option" data-value="kilogram">Kilogram</button>
+                    <button class="dr-unit-option" data-value="sdm">Sdm</button>
+                </div>
+            </div>
+        </div>
 
-            @for ($i = 0; $i < $full; $i++)
-              <span class="material-icons-round">star</span>
-            @endfor
+        <div class="dr-chips-grid">
+            @forelse($resep->bahans as $bahan)
+                <div class="dr-chip" data-gram="{{ $bahan->pivot->gram_total }}">
+                    <span class="dr-chip-amt">{{ $bahan->pivot->gram_total }}g</span>
+                    {{ $bahan->nama }}
+                </div>
+            @empty
+                <p class="dr-empty-text">Bahan belum tersedia.</p>
+            @endforelse
+        </div>
+    </section>
 
-            @if ($half)
-              <span class="material-icons-round">star_half</span>
+    {{-- ── LANGKAH MEMASAK ── --}}
+    <section class="dr-card">
+        <h2 class="dr-card-title font-semibold" style="margin-bottom:1rem">Cara Membuat</h2>
+
+        @forelse($resep->langkahs->sortBy('step_order') as $langkah)
+            <div class="dr-step-item {{ !$loop->last ? 'dr-step-line' : '' }}">
+                <div class="dr-step-num font-bold">{{ $langkah->step_order }}</div>
+                <div class="dr-step-body">
+                    @if($langkah->step_duration && $langkah->step_duration !== '00:00:00')
+                        <span class="dr-step-duration">
+                            <span class="material-icons-round">timer</span>
+                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $langkah->step_duration)->format('i') }} menit
+                        </span>
+                    @endif
+                    <p class="dr-step-text">{{ $langkah->description }}</p>
+                </div>
+            </div>
+        @empty
+            <div class="dr-step-empty">
+                <span class="material-icons-round">info_outline</span>
+                <p>Langkah memasak belum tersedia untuk resep ini.</p>
+            </div>
+        @endforelse
+    </section>
+
+    {{-- ── SECTION ULASAN ── --}}
+    <section class="dr-ulasan-section">
+        <div class="dr-ulasan-header">
+            <h2 class="dr-card-title font-semibold">Ulasan</h2>
+            <span class="dr-ulasan-count">{{ $totalUlasan }} ulasan</span>
+        </div>
+
+        {{-- Form tulis ulasan (hanya untuk user login & belum ulasan) --}}
+        @auth
+            @if(!$sudahUlasan)
+                <div class="dr-ulasan-form-card">
+                    <p class="dr-ulasan-form-title font-semibold">Tulis Ulasanmu</p>
+                    <form action="{{ route('ulasan.store', $resep->id) }}" method="POST"
+                          enctype="multipart/form-data" class="dr-ulasan-form">
+                        @csrf
+
+                        {{-- Bintang --}}
+                        <div class="dr-star-input" id="starInput">
+                            @for($i = 1; $i <= 5; $i++)
+                                <span class="material-icons-round dr-star-pick" data-val="{{ $i }}">star_border</span>
+                            @endfor
+                        </div>
+                        <input type="hidden" name="rating" id="ratingInput" value="0">
+
+                        {{-- Deskripsi --}}
+                        <textarea name="description" class="dr-ulasan-textarea"
+                                  placeholder="Bagaimana pengalamanmu memasak resep ini?" rows="3"></textarea>
+
+                        {{-- Upload foto --}}
+                        <div class="dr-photo-upload" id="photoUploadArea">
+                            <span class="material-icons-round">add_photo_alternate</span>
+                            <span class="dr-photo-upload-text">Tambah foto (opsional, maks. 3)</span>
+                            <input type="file" name="photos[]" id="photoInput"
+                                   accept="image/*" multiple class="hidden-input">
+                        </div>
+                        <div class="dr-photo-previews" id="photoPreviews"></div>
+
+                        <button type="submit" class="dr-ulasan-submit font-semibold">
+                            <span class="material-icons-round">send</span>
+                            Kirim Ulasan
+                        </button>
+                    </form>
+                </div>
+            @else
+                <div class="dr-sudah-ulasan">
+                    <span class="material-icons-round">check_circle</span>
+                    Kamu sudah memberikan ulasan untuk resep ini.
+                </div>
             @endif
+        @else
+            <a href="{{ route('auth.sign-in') }}" class="dr-login-prompt">
+                <span class="material-icons-round">login</span>
+                Login untuk menulis ulasan
+            </a>
+        @endauth
 
-            @for ($i = 0; $i < $empty; $i++)
-              <span class="material-icons-round">star_border</span>
-            @endfor
-          </div>
-          <span class="rating-score">{{ $resep->current_star }}</span>
-        </div>
-      </div>
-    </div>
-  </section>
+        {{-- Daftar ulasan --}}
+        @if($resep->feedbacks->isEmpty())
+            <div class="dr-ulasan-empty">
+                <span class="material-icons-round">chat_bubble_outline</span>
+                <p>Belum ada ulasan. Jadilah yang pertama!</p>
+            </div>
+        @else
+            <div class="dr-ulasan-list">
+                @foreach($resep->feedbacks->sortByDesc('created_at') as $fb)
+                    <div class="dr-ulasan-item">
+                        <div class="dr-ulasan-user">
+                            <img src="{{ $fb->user->profile_photo
+                                ? Storage::url($fb->user->profile_photo)
+                                : asset('assets/images/Image_DummyProfile.png') }}"
+                                 alt="{{ $fb->user->name ?? 'User' }}"
+                                 class="dr-ulasan-avatar">
+                            <div class="dr-ulasan-user-info">
+                                <span class="dr-ulasan-name font-semibold">{{ $fb->user->name ?? 'User' }}</span>
+                                <span class="dr-ulasan-date">{{ $fb->created_at->diffForHumans() }}</span>
+                            </div>
+                            <div class="dr-ulasan-stars">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <span class="material-icons-round {{ $i <= $fb->rating ? 'star-filled' : 'star-empty' }}">
+                                        {{ $i <= $fb->rating ? 'star' : 'star_border' }}
+                                    </span>
+                                @endfor
+                            </div>
+                        </div>
+                        @if($fb->description)
+                            <p class="dr-ulasan-desc">{{ $fb->description }}</p>
+                        @endif
+                        @if($fb->photos->isNotEmpty())
+                            <div class="dr-ulasan-photos">
+                                @foreach($fb->photos as $photo)
+                                    <img src="{{ asset($photo->path) }}" alt="Foto ulasan"
+                                         class="dr-ulasan-photo"
+                                         onclick="openPhotoModal(this.src)">
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </section>
 
-  <section class="recipe-hero">
-    <img
-      src="{{ asset($resep->thumbnail) }}"
-      alt="{{ $resep->title }}"
-      class="hero-image">
-    <div class="hero-overlay">
-      <span class="material-icons-round favorite-icon">favorite_border</span>
-      <span class="material-icons-round play-icon">play_circle_outline</span>
-    </div>
-    <div class="carousel-dots">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
-  </section>
-
-  <section class="sidebar-card flex-flex-col">
-    <div class="sidebar-card-header">
-      <span class="sidebar-section-title font-jakarta font-semibold">Bahan-bahan</span>
-      <div class="unit-toggle wrapper font-jakarta">
-        <span class="unit-icon">&#9878</span>
-        <select class="unit-select">
-          <option value="gram">Gram</option>
-          <option value="miligram">Miligram</option>
-          <option value="kilogram">Kilogram</option>
-          <option value="sendok_makan">Sdm</option>
-        </select>
-      </div>
-    </div>
-
-    {{--
-      [UBAH] Chips bahan: dari hardcoded → loop dari relasi bahans (belongsToMany)
-      Akses gram pakai ->pivot->gram_total karena relasinya many-to-many dengan withPivot
-    --}}
-    <div class="chips-grid">
-      @forelse ($resep->bahans as $bahan)
-        <div class="chip font-jakarta">
-          <span class="amt">{{ $bahan->pivot->gram_total }}g</span>
-          {{ $bahan->nama }}
-        </div>
-      @empty
-        <p class="font-jakarta text-sm">Bahan belum tersedia.</p>
-      @endforelse
-    </div>
-  </section>
-
-  {{--
-    [UBAH] Langkah memasak: dari hardcoded → loop dari relasi langkahs
-    Diurutkan berdasarkan step_order, kolom isi adalah description
-    step_duration ditampilkan jika ada isinya
-  --}}
-  <section>
-    <div class="steps-card">
-      <h2 class="section-title font-jakarta font-semibold">Cara Membuat</h2>
-
-      @forelse ($resep->langkahs->sortBy('step_order') as $langkah)
-        <div class="step-item">
-          <div class="step-num font-jakarta font-bold">{{ $langkah->step_order }}</div>
-          <div class="step-body">
-         
-              <div class="step-title">
-              </div>
-            <p class="step-text font-jakarta font-semibold">{{ $langkah->description }}</p>
-          </div>
-        </div>
-      @empty
-        <p class="font-jakarta text-sm">Langkah memasak belum tersedia.</p>
-      @endforelse
-
-    </div>
-  </section>
-
-  <section>
-    <a href="{{ url('/timer-resep') }}">
-      <button class="button font-jakarta font-semibold">
-        Buat sekarang
-        <span class="arrow-forward material-icons-round">arrow_forward</span>
-      </button>
-    </a>
-  </section>
+    {{-- Spacer bawah buat tombol fixed --}}
+    <div style="height: 5rem"></div>
 
 </main>
 
-<script src="{{ asset('js/detail-resep.js') }}"></script>
+{{-- ── TOMBOL BUAT SEKARANG (fixed bottom) ── --}}
+<div class="dr-bottom-bar">
+    <a href="{{ route('timer.resep', $resep->id) }}" class="dr-cook-btn font-semibold">
+        Buat Sekarang
+        <span class="material-icons-round">arrow_forward</span>
+    </a>
+</div>
 
-</html>
+{{-- Modal foto ulasan --}}
+<div class="dr-photo-modal" id="photoModal" onclick="closePhotoModal()">
+    <button class="dr-photo-modal-close" onclick="closePhotoModal()">
+        <span class="material-icons-round">close</span>
+    </button>
+    <img src="" alt="Foto" class="dr-photo-modal-img" id="photoModalImg">
+</div>
+
+@push('scripts')
+<script>
+    const CSRF_TOKEN     = "{{ csrf_token() }}";
+    const FAVORIT_URL    = "{{ route('favorit.toggle', $resep->id) }}";
+    const IS_AUTH        = {{ Auth::check() ? 'true' : 'false' }};
+    const SIGN_IN_URL    = "{{ route('auth.sign-in') }}";
+</script>
+<script src="{{ asset('js/detail-resep.js') }}"></script>
+@endpush
+
+@endsection

@@ -26,6 +26,7 @@ class ResepResource extends JsonResource
 
         return [
             'id'                  => $this->id,
+            'detail_url'          => route('detail.resep', $this->id),
             'title'               => $this->title,
             'description'         => $this->description,
             'slug'                => $this->slug,

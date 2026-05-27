@@ -212,6 +212,12 @@ document.addEventListener('DOMContentLoaded', () => {
         modalMasakTitle.textContent = resepItem.dataset.resepNama;
         renderBahanDetailList(bahanDetail, modalMasakList);
 
+        // Set link ke detail resep
+        const detailLink = document.getElementById('modalMasakDetailLink');
+        if (detailLink && currentResepId) {
+            detailLink.href = `/detail-resep/${currentResepId}`;
+        }
+
         modalMasakLoading.style.display = 'none';
         modalMasakConfirm.disabled      = false;
         modalMasak.style.display        = 'flex';

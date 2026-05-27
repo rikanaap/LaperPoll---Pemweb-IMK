@@ -290,6 +290,13 @@
             </button>
         </div>
 
+        <a href="#" id="modalMasakDetailLink"
+           style="display:block; text-align:center; margin-top:0.75rem; font-size:0.75rem;
+                  color:var(--orange-normal); font-family:var(--font-jakarta); text-decoration:none;">
+            <span class="material-icons-round" style="font-size:0.85rem; vertical-align:middle;">open_in_new</span>
+            Lihat detail resep lengkap
+        </a>
+
         <p class="modal-loading font-jakarta font-regular" id="modalMasakLoading"
            style="display:none; font-size:0.8rem; color:#6B5B54; margin-top:0.5rem;">
             Memproses...
