@@ -41,7 +41,7 @@
             <div class="dr-meta-row">
                 <span class="dr-meta-chip">
                     <span class="material-icons-round">schedule</span>
-                    {{ $resep->cook_duration }}
+                    {{ $resep->cook_duration_formatted }}
                 </span>
                 @if($resep->calorie)
                     <span class="dr-meta-chip">
@@ -155,28 +155,50 @@
             <span class="dr-ulasan-count">{{ $totalUlasan }} ulasan</span>
         </div>
 
-        {{-- Form tulis ulasan (hanya untuk user login & belum ulasan) --}}
+        {{-- Rating breakdown --}}
+        @if($totalUlasan > 0)
+        <div class="dr-rating-breakdown">
+            <div class="dr-rating-big">
+                <span class="dr-rating-big-num font-bold">{{ $ratingAvg }}</span>
+                <div class="dr-rating-big-stars">
+                    @php $full=$ratingAvg|0; $half=($ratingAvg-$full)>=0.3?1:0; $empty=5-$full-$half; @endphp
+                    @for($i=0;$i<$full;$i++) <span class="material-icons-round">star</span> @endfor
+                    @if($half) <span class="material-icons-round">star_half</span> @endif
+                    @for($i=0;$i<$empty;$i++) <span class="material-icons-round">star_border</span> @endfor
+                </div>
+                <span class="dr-rating-big-total">dari {{ $totalUlasan }} ulasan</span>
+            </div>
+            <div class="dr-rating-bars">
+                @foreach($ratingBreakdown as $star => $data)
+                <div class="dr-rating-bar-row">
+                    <span class="dr-rating-bar-label">{{ $star }}</span>
+                    <span class="material-icons-round dr-rating-bar-star">star</span>
+                    <div class="dr-rating-bar-track">
+                        <div class="dr-rating-bar-fill" style="width:{{ $data['percent'] }}%"></div>
+                    </div>
+                    <span class="dr-rating-bar-count">{{ $data['count'] }}</span>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- Form / sudah ulasan --}}
         @auth
             @if(!$sudahUlasan)
                 <div class="dr-ulasan-form-card">
                     <p class="dr-ulasan-form-title font-semibold">Tulis Ulasanmu</p>
                     <form action="{{ route('ulasan.store', $resep->id) }}" method="POST"
-                          enctype="multipart/form-data" class="dr-ulasan-form">
+                          enctype="multipart/form-data" class="dr-ulasan-form" id="drUlasanForm">
                         @csrf
-
-                        {{-- Bintang --}}
                         <div class="dr-star-input" id="starInput">
                             @for($i = 1; $i <= 5; $i++)
                                 <span class="material-icons-round dr-star-pick" data-val="{{ $i }}">star_border</span>
                             @endfor
                         </div>
                         <input type="hidden" name="rating" id="ratingInput" value="0">
-
-                        {{-- Deskripsi --}}
                         <textarea name="description" class="dr-ulasan-textarea"
                                   placeholder="Bagaimana pengalamanmu memasak resep ini?" rows="3"></textarea>
-
-                        {{-- Upload foto --}}
                         <div class="dr-photo-upload" id="photoUploadArea">
                             <span class="material-icons-round">add_photo_alternate</span>
                             <span class="dr-photo-upload-text">Tambah foto (opsional, maks. 3)</span>
@@ -184,7 +206,6 @@
                                    accept="image/*" multiple class="hidden-input">
                         </div>
                         <div class="dr-photo-previews" id="photoPreviews"></div>
-
                         <button type="submit" class="dr-ulasan-submit font-semibold">
                             <span class="material-icons-round">send</span>
                             Kirim Ulasan
@@ -192,9 +213,49 @@
                     </form>
                 </div>
             @else
-                <div class="dr-sudah-ulasan">
-                    <span class="material-icons-round">check_circle</span>
-                    Kamu sudah memberikan ulasan untuk resep ini.
+                {{-- Tampilkan ulasan sendiri + tombol edit/hapus --}}
+                <div class="dr-my-ulasan-card">
+                    <div class="dr-my-ulasan-top">
+                        <span class="dr-my-ulasan-badge font-semibold">
+                            <span class="material-icons-round">verified</span>
+                            Ulasanmu
+                        </span>
+                        <div class="dr-my-ulasan-actions">
+                            <a href="{{ route('ulasan.edit', [$resep->id, $myFeedback->id]) }}"
+                               class="dr-ulasan-action-btn dr-ulasan-edit">
+                                <span class="material-icons-round">edit</span>
+                                Edit
+                            </a>
+                            <form action="{{ route('ulasan.destroy', [$resep->id, $myFeedback->id]) }}"
+                                  method="POST" id="drDeleteForm">
+                                @csrf @method('DELETE')
+                                <button type="button" class="dr-ulasan-action-btn dr-ulasan-delete"
+                                        onclick="drConfirmDelete()">
+                                    <span class="material-icons-round">delete</span>
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="dr-my-stars">
+                        @for($i=1;$i<=5;$i++)
+                            <span class="material-icons-round {{ $i<=$myFeedback->rating ? 'dr-star-on' : 'dr-star-off' }}">
+                                {{ $i<=$myFeedback->rating ? 'star' : 'star_border' }}
+                            </span>
+                        @endfor
+                        <span class="dr-my-date">{{ $myFeedback->created_at->diffForHumans() }}</span>
+                    </div>
+                    @if($myFeedback->description)
+                        <p class="dr-my-desc">{{ $myFeedback->description }}</p>
+                    @endif
+                    @if($myFeedback->photos && $myFeedback->photos->isNotEmpty())
+                        <div class="dr-ulasan-photos">
+                            @foreach($myFeedback->photos as $photo)
+                                <img src="{{ asset($photo->path) }}" alt="Foto ulasan"
+                                     class="dr-ulasan-photo" onclick="openPhotoModal(this.src)">
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             @endif
         @else
@@ -213,6 +274,7 @@
         @else
             <div class="dr-ulasan-list">
                 @foreach($resep->feedbacks->sortByDesc('created_at') as $fb)
+                    @if(Auth::check() && $fb->user_id === Auth::id()) @continue @endif
                     <div class="dr-ulasan-item">
                         <div class="dr-ulasan-user">
                             <img src="{{ $fb->user->profile_photo
@@ -225,9 +287,9 @@
                                 <span class="dr-ulasan-date">{{ $fb->created_at->diffForHumans() }}</span>
                             </div>
                             <div class="dr-ulasan-stars">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <span class="material-icons-round {{ $i <= $fb->rating ? 'star-filled' : 'star-empty' }}">
-                                        {{ $i <= $fb->rating ? 'star' : 'star_border' }}
+                                @for($i=1;$i<=5;$i++)
+                                    <span class="material-icons-round {{ $i<=$fb->rating ? 'star-filled' : 'star-empty' }}">
+                                        {{ $i<=$fb->rating ? 'star' : 'star_border' }}
                                     </span>
                                 @endfor
                             </div>
@@ -239,8 +301,7 @@
                             <div class="dr-ulasan-photos">
                                 @foreach($fb->photos as $photo)
                                     <img src="{{ asset($photo->path) }}" alt="Foto ulasan"
-                                         class="dr-ulasan-photo"
-                                         onclick="openPhotoModal(this.src)">
+                                         class="dr-ulasan-photo" onclick="openPhotoModal(this.src)">
                                 @endforeach
                             </div>
                         @endif
@@ -250,8 +311,7 @@
         @endif
     </section>
 
-    {{-- Spacer bawah buat tombol fixed --}}
-    <div style="height: 5rem"></div>
+    <div style="height:5rem"></div>
 
 </main>
 
@@ -263,7 +323,20 @@
     </a>
 </div>
 
-{{-- Modal foto ulasan --}}
+{{-- Delete confirm modal --}}
+<div class="dr-confirm-overlay" id="drConfirmOverlay" onclick="closeDrConfirm()"></div>
+<div class="dr-confirm-modal" id="drConfirmModal">
+    <div class="dr-confirm-box">
+        <div class="dr-confirm-icon">🗑️</div>
+        <p class="dr-confirm-title font-bold">Hapus Ulasan?</p>
+        <p class="dr-confirm-sub">Ulasan yang dihapus tidak bisa dikembalikan.</p>
+        <div class="dr-confirm-actions">
+            <button class="dr-confirm-cancel font-semibold" onclick="closeDrConfirm()">Batal</button>
+            <button class="dr-confirm-ok font-semibold"
+                    onclick="document.getElementById('drDeleteForm').submit()">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
 <div class="dr-photo-modal" id="photoModal" onclick="closePhotoModal()">
     <button class="dr-photo-modal-close" onclick="closePhotoModal()">
         <span class="material-icons-round">close</span>

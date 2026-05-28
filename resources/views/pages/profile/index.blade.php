@@ -9,7 +9,8 @@
 @section('content')
 <main class="profile-main font-jakarta">
 
-    <x-navbar backUrl="back"></x-navbar>
+    {{-- NAVBAR dengan hamburger di kanan --}}
+    <x-navbar backUrl="back" :hamburger="true"></x-navbar>
 
     {{-- HERO --}}
     <section class="profile-hero">
@@ -39,15 +40,19 @@
                     <span class="stat-label">Resep</span>
                 </div>
                 <div class="stat-divider-v"></div>
-                <a href="#" class="stat-bubble stat-link">
+                <button class="stat-bubble stat-link"
+                        onclick="openFollowModal('followers')"
+                        data-followers-url="{{ route('follow.followers', $user->id) }}">
                     <span class="stat-number">{{ $followerCount }}</span>
                     <span class="stat-label">Pengikut</span>
-                </a>
+                </button>
                 <div class="stat-divider-v"></div>
-                <a href="#" class="stat-bubble stat-link">
+                <button class="stat-bubble stat-link"
+                        onclick="openFollowModal('following')"
+                        data-following-url="{{ route('follow.following', $user->id) }}">
                     <span class="stat-number">{{ $followingCount }}</span>
                     <span class="stat-label">Mengikuti</span>
-                </a>
+                </button>
             </div>
 
         </div>
@@ -55,7 +60,7 @@
 
     {{-- QUICK ACTIONS --}}
     <section class="quick-actions-section">
-        <a href="{{ url('/favorit') }}" class="quick-action-btn">
+        <a href="{{ route('favorit.index') }}" class="quick-action-btn">
             <div class="quick-action-icon favorit-icon">
                 <span class="material-icons-round">favorite</span>
             </div>
@@ -92,6 +97,11 @@
                 <span class="material-icons-round empty-icon">restaurant_menu</span>
                 <p class="empty-title font-semibold">Belum ada resep</p>
                 <p class="empty-sub">Mulai bagikan resep andalanmu!</p>
+                {{-- Placeholder tombol tambah resep — logic oleh teman --}}
+                <button class="profile-add-resep-btn font-semibold" disabled title="Segera hadir">
+                    <span class="material-icons-round">add_circle</span>
+                    Tambah Resep
+                </button>
             </div>
         @else
             <div class="resep-grid">
@@ -123,7 +133,7 @@
                                 <div class="resep-card-meta">
                                     <span class="resep-meta-item">
                                         <span class="material-icons-round">schedule</span>
-                                        {{ $resep->cook_duration }}
+                                        {{ $resep->cook_duration_formatted }}
                                     </span>
                                     <span class="resep-meta-item">
                                         <span class="material-icons-round">visibility</span>
@@ -135,10 +145,250 @@
                     </a>
                 @endforeach
             </div>
+
+            {{-- Tombol tambah resep di bawah grid — placeholder, logic oleh teman --}}
+            <button class="profile-add-resep-btn font-semibold" disabled title="Segera hadir">
+                <span class="material-icons-round">add_circle</span>
+                Tambah Resep Baru
+            </button>
         @endif
     </section>
 
 </main>
+
+{{-- ── HAMBURGER SIDEBAR ── --}}
+<div class="profile-sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="profile-sidebar" id="profileSidebar" aria-label="Menu navigasi">
+
+    {{-- Header sidebar --}}
+    <div class="sidebar-header">
+        <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="LaperPoll" class="sidebar-logo">
+        <button class="sidebar-close" id="sidebarClose" aria-label="Tutup menu">
+            <span class="material-icons-round">close</span>
+        </button>
+    </div>
+
+    {{-- User info mini --}}
+    <div class="sidebar-user">
+        <img src="{{ $user->profile_photo ? Storage::url($user->profile_photo) : asset('assets/images/Image_DummyProfile.png') }}"
+             alt="{{ $user->name }}" class="sidebar-avatar">
+        <div>
+            <p class="sidebar-user-name font-semibold">{{ $user->name }}</p>
+            <p class="sidebar-user-email">{{ $user->email }}</p>
+        </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    {{-- Menu items --}}
+    <nav class="sidebar-nav">
+        <a href="#sidebar-about" class="sidebar-item" onclick="showSidebarSection('about')">
+            <span class="material-icons-round">info</span>
+            Tentang LaperPoll
+        </a>
+        <a href="#sidebar-team" class="sidebar-item" onclick="showSidebarSection('team')">
+            <span class="material-icons-round">group</span>
+            Tim Kami
+        </a>
+        <a href="#sidebar-faq" class="sidebar-item" onclick="showSidebarSection('faq')">
+            <span class="material-icons-round">help_outline</span>
+            FAQ
+        </a>
+        <a href="#sidebar-contact" class="sidebar-item" onclick="showSidebarSection('contact')">
+            <span class="material-icons-round">contact_support</span>
+            Hubungi Kami
+        </a>
+    </nav>
+
+    <div class="sidebar-divider"></div>
+
+    {{-- Logout --}}
+    <form action="{{ route('auth.logout') }}" method="POST" class="sidebar-logout-form">
+        @csrf
+        <button type="submit" class="sidebar-logout font-semibold">
+            <span class="material-icons-round">logout</span>
+            Keluar
+        </button>
+    </form>
+
+</aside>
+
+{{-- ── SIDEBAR CONTENT PANELS ── --}}
+
+{{-- Tentang LaperPoll --}}
+<div class="sidebar-panel" id="panel-about">
+    <div class="sidebar-panel-box">
+        <div class="sidebar-panel-header">
+            <button class="sidebar-panel-back" onclick="closeSidebarSection()">
+                <span class="material-icons-round">arrow_back</span>
+            </button>
+            <h2 class="sidebar-panel-title font-bold">Tentang LaperPoll</h2>
+        </div>
+        <div class="sidebar-panel-body">
+            <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="LaperPoll" class="sidebar-about-logo">
+            <p class="sidebar-about-tagline font-semibold">"Laper Banget? Nyari Resep ya LaperPoll aja"</p>
+            <p class="sidebar-about-desc">LaperPoll adalah aplikasi resep masakan yang membantu kamu menemukan inspirasi memasak berdasarkan bahan yang tersedia, selera rasa, dan kebutuhan nutrisi harianmu.</p>
+            <div class="sidebar-about-features">
+                <div class="sidebar-feature-item">
+                    <span class="material-icons-round">swipe</span>
+                    <p>Swipe Rasa untuk menemukan resep sesuai selera</p>
+                </div>
+                <div class="sidebar-feature-item">
+                    <span class="material-icons-round">kitchen</span>
+                    <p>Kulkas Digital untuk masak dari bahan yang ada</p>
+                </div>
+                <div class="sidebar-feature-item">
+                    <span class="material-icons-round">calendar_month</span>
+                    <p>Meal Planner untuk mengatur pola makan sehat</p>
+                </div>
+                <div class="sidebar-feature-item">
+                    <span class="material-icons-round">timer</span>
+                    <p>Timer Resep untuk panduan memasak step-by-step</p>
+                </div>
+            </div>
+            <p class="sidebar-about-version">Versi 1.0.0 · © 2025 LaperPoll</p>
+        </div>
+    </div>
+</div>
+
+{{-- Tim Kami --}}
+<div class="sidebar-panel" id="panel-team">
+    <div class="sidebar-panel-box">
+        <div class="sidebar-panel-header">
+            <button class="sidebar-panel-back" onclick="closeSidebarSection()">
+                <span class="material-icons-round">arrow_back</span>
+            </button>
+            <h2 class="sidebar-panel-title font-bold">Tim Kami</h2>
+        </div>
+        <div class="sidebar-panel-body">
+            <p class="sidebar-team-sub">Kelompok 12 — Pemrograman Web & IMK</p>
+            <div class="sidebar-team-grid">
+                {{-- Ganti nama, foto, role sesuai tim kalian --}}
+                <div class="sidebar-member-card">
+                    <div class="sidebar-member-avatar">
+                        <span class="material-icons-round">person</span>
+                    </div>
+                    <p class="sidebar-member-name font-semibold">Anggota 1</p>
+                    <p class="sidebar-member-role">Project Lead</p>
+                </div>
+                <div class="sidebar-member-card">
+                    <div class="sidebar-member-avatar">
+                        <span class="material-icons-round">person</span>
+                    </div>
+                    <p class="sidebar-member-name font-semibold">Anggota 2</p>
+                    <p class="sidebar-member-role">Frontend Dev</p>
+                </div>
+                <div class="sidebar-member-card">
+                    <div class="sidebar-member-avatar">
+                        <span class="material-icons-round">person</span>
+                    </div>
+                    <p class="sidebar-member-name font-semibold">Anggota 3</p>
+                    <p class="sidebar-member-role">Backend Dev</p>
+                </div>
+                <div class="sidebar-member-card">
+                    <div class="sidebar-member-avatar">
+                        <span class="material-icons-round">person</span>
+                    </div>
+                    <p class="sidebar-member-name font-semibold">Anggota 4</p>
+                    <p class="sidebar-member-role">UI/UX Designer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- FAQ --}}
+<div class="sidebar-panel" id="panel-faq">
+    <div class="sidebar-panel-box">
+        <div class="sidebar-panel-header">
+            <button class="sidebar-panel-back" onclick="closeSidebarSection()">
+                <span class="material-icons-round">arrow_back</span>
+            </button>
+            <h2 class="sidebar-panel-title font-bold">FAQ</h2>
+        </div>
+        <div class="sidebar-panel-body">
+            <div class="sidebar-faq-list">
+                @php
+                $faqs = [
+                    ['q' => 'Apa itu LaperPoll?', 'a' => 'LaperPoll adalah aplikasi resep masakan yang membantu kamu menemukan resep berdasarkan bahan, selera, dan kebutuhan nutrisi.'],
+                    ['q' => 'Bagaimana cara menggunakan Swipe Rasa?', 'a' => 'Geser kartu ke kanan untuk menyukai rasa, ke kiri untuk melewati. Setelah memilih beberapa rasa, LaperPoll akan menampilkan resep yang cocok.'],
+                    ['q' => 'Apakah LaperPoll gratis?', 'a' => 'Ya, LaperPoll sepenuhnya gratis untuk digunakan.'],
+                    ['q' => 'Bagaimana cara menambah bahan ke Kulkas Digital?', 'a' => 'Buka menu Kulkas Digital, ketuk tombol tambah, lalu pilih bahan yang kamu miliki beserta jumlahnya.'],
+                    ['q' => 'Apakah saya bisa mengubah ulasan yang sudah dikirim?', 'a' => 'Ya, kamu bisa mengedit atau menghapus ulasanmu dari halaman detail resep atau halaman ulasan.'],
+                ];
+                @endphp
+                @foreach($faqs as $faq)
+                <div class="sidebar-faq-item" onclick="toggleFaq(this)">
+                    <div class="sidebar-faq-q">
+                        <p class="font-semibold">{{ $faq['q'] }}</p>
+                        <span class="material-icons-round sidebar-faq-arrow">expand_more</span>
+                    </div>
+                    <p class="sidebar-faq-a">{{ $faq['a'] }}</p>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Hubungi Kami --}}
+<div class="sidebar-panel" id="panel-contact">
+    <div class="sidebar-panel-box">
+        <div class="sidebar-panel-header">
+            <button class="sidebar-panel-back" onclick="closeSidebarSection()">
+                <span class="material-icons-round">arrow_back</span>
+            </button>
+            <h2 class="sidebar-panel-title font-bold">Hubungi Kami</h2>
+        </div>
+        <div class="sidebar-panel-body">
+            <p class="sidebar-contact-sub">Ada pertanyaan atau masukan? Hubungi kami melalui:</p>
+            <div class="sidebar-contact-list">
+                <a href="tel:628990042" class="sidebar-contact-item">
+                    <div class="sidebar-contact-icon">
+                        <span class="material-icons-round">phone</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold sidebar-contact-label">Telepon</p>
+                        <p class="sidebar-contact-value">62-899-0042</p>
+                    </div>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="sidebar-contact-item">
+                    <div class="sidebar-contact-icon sidebar-contact-ig">
+                        <span class="material-icons-round">photo_camera</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold sidebar-contact-label">Instagram</p>
+                        <p class="sidebar-contact-value">@laperpoll</p>
+                    </div>
+                </a>
+            </div>
+            <p class="sidebar-contact-hours">Kami melayani pertanyaan pada hari kerja, 09.00–17.00 WIB.</p>
+        </div>
+    </div>
+</div>
+
+{{-- ── FOLLOW MODAL ── --}}
+<div class="follow-overlay" id="followOverlay" onclick="closeFollowModal()"></div>
+<div class="follow-modal" id="followModal">
+    <div class="follow-modal-handle"></div>
+    <div class="follow-modal-header">
+        <h3 class="follow-modal-title font-bold" id="followModalTitle">Pengikut</h3>
+        <button class="follow-modal-close" onclick="closeFollowModal()">
+            <span class="material-icons-round">close</span>
+        </button>
+    </div>
+    <div class="follow-modal-body" id="followModalBody">
+        <div class="follow-loading" id="followLoading">
+            <span class="material-icons-round follow-spin">autorenew</span>
+            <p>Memuat...</p>
+        </div>
+        <div class="follow-list" id="followList"></div>
+        <div class="follow-empty" id="followEmpty" style="display:none">
+            <span class="material-icons-round">person_off</span>
+            <p id="followEmptyText">Belum ada pengikut</p>
+        </div>
+    </div>
+</div>
 
 {{-- FAB --}}
 <div class="fab-overlay" id="fabOverlay"></div>
@@ -163,6 +413,9 @@
 </div>
 
 @push('scripts')
+<script>
+    const PROFILE_USER_ID = {{ Auth::id() ?? 'null' }};
+</script>
 <script src="{{ asset('js/profile.js') }}"></script>
 @endpush
 

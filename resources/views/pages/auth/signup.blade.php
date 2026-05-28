@@ -15,7 +15,7 @@
     <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
 
     <!-- SIGNUP FORM DESIGN START -->
-    <form method="post" action="{{ route('auth.auth.register') }}">
+    <form method="post" action="{{ route('auth.register') }}">
         <div id="signupForm" class="form flex flex-col">
             <div class="auth-text flex flex-col">
                 <h1 class="font-jakarta text-h4 font-bold">Sign Up</h1>

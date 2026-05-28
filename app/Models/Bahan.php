@@ -12,18 +12,17 @@ class Bahan extends Model
     protected $fillable = [
         'nama',
         'kategori',
-        'expired_expectancy_day'
+        'expired_expectancy_day',
     ];
 
-
     public function reseps()
-        {
-            return $this->belongsToMany(
-                Resep::class,
-                'resep_bahan'
-            )->withPivot('gram_total')
-            ->withTimestamps();
-        }
+    {
+        return $this->belongsToMany(
+            Resep::class,
+            'resep_bahan'
+        )->withPivot('gram_total')
+         ->withTimestamps();
+    }
 
     public function resepBahans()
     {

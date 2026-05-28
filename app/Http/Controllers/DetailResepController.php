@@ -20,29 +20,35 @@ class DetailResepController extends Controller
             'feedbacks.photos',
         ])->findOrFail($id);
 
-        // Increment views
         $resep->increment('views_count');
 
-        // Hitung rating breakdown
-        $totalUlasan  = $resep->feedbacks->count();
-        $ratingAvg    = $totalUlasan > 0 ? round($resep->feedbacks->avg('rating'), 1) : 0;
+        $totalUlasan = $resep->feedbacks->count();
+        $ratingAvg   = $totalUlasan > 0 ? round($resep->feedbacks->avg('rating'), 1) : 0;
 
-        // Cek apakah user sudah favoritkan
+        // Breakdown rating per bintang (1–5)
+        $ratingBreakdown = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $count = $resep->feedbacks->where('rating', $i)->count();
+            $ratingBreakdown[$i] = [
+                'count'   => $count,
+                'percent' => $totalUlasan > 0 ? round(($count / $totalUlasan) * 100) : 0,
+            ];
+        }
+
         $isFavorited = Auth::check()
             ? $resep->favoritedBy()->where('user_id', Auth::id())->exists()
             : false;
 
-        // Cek apakah user sudah pernah kasih ulasan
-        $sudahUlasan = Auth::check()
-            ? $resep->feedbacks()->where('user_id', Auth::id())->exists()
-            : false;
+        $sudahUlasan = false;
+        $myFeedback  = null;
+        if (Auth::check()) {
+            $myFeedback  = $resep->feedbacks->where('user_id', Auth::id())->first();
+            $sudahUlasan = $myFeedback !== null;
+        }
 
         return view('pages.detail_resep.detail_resep', compact(
-            'resep',
-            'totalUlasan',
-            'ratingAvg',
-            'isFavorited',
-            'sudahUlasan',
+            'resep', 'totalUlasan', 'ratingAvg',
+            'ratingBreakdown', 'isFavorited', 'sudahUlasan', 'myFeedback'
         ));
     }
 }

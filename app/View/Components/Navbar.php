@@ -14,10 +14,13 @@ class Navbar extends Component
      */
     public $user;
     public $backUrl;
-    public function __construct($backUrl = false)
+    public $hamburger;
+
+    public function __construct($backUrl = false, $hamburger = false)
     {
-        $this->user = Auth::user();
-        $this->backUrl = $backUrl;
+        $this->user      = Auth::user();
+        $this->backUrl   = $backUrl;
+        $this->hamburger = $hamburger;
     }
 
     /**

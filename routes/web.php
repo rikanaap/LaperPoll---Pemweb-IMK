@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PencarianResepController;
 use App\Http\Controllers\SwipeResepController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\KulkasDigitalController;
 use App\Http\Controllers\BahansController;
 use App\Http\Controllers\MealPlannerController;
@@ -31,9 +32,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/sign-in',     [AuthController::class, 'signIn'])    ->name('sign-in');
     Route::get('/sign-up',     [AuthController::class, 'signUp'])    ->name('sign-up');
     Route::get('/forgot-pass', [AuthController::class, 'forgotPass'])->name('forgot-pass');
-    Route::post('/register',   [AuthController::class, 'register'])  ->name('auth.register');
-    Route::post('/login',      [AuthController::class, 'login'])     ->name('auth.login');
-    Route::post('/logout',     [AuthController::class, 'logout'])    ->name('auth.logout');
+    Route::post('/register',   [AuthController::class, 'register'])  ->name('register');
+    Route::post('/login',      [AuthController::class, 'login'])     ->name('login');
+    Route::post('/logout',     [AuthController::class, 'logout'])    ->name('logout');
 });
 
 Route::get('/main-menu',          [MainMenu::class, 'index'])          ->name('main-menu.index');
@@ -49,6 +50,9 @@ Route::get('/timer-resep/{id}', [TimerResepController::class, 'show'])->name('ti
 // ── ULASAN ────────────────────────────────────────────────────────────────────
 Route::get('/ulasan/{id}',   [UlasanController::class, 'show'])  ->name('ulasan.show');
 Route::post('/ulasan/{id}',  [UlasanController::class, 'store']) ->name('ulasan.store');
+Route::get('/ulasan/{resepId}/edit/{feedbackId}',    [UlasanController::class, 'edit'])   ->name('ulasan.edit');
+Route::patch('/ulasan/{resepId}/update/{feedbackId}',[UlasanController::class, 'update']) ->name('ulasan.update');
+Route::delete('/ulasan/{resepId}/delete/{feedbackId}',[UlasanController::class, 'destroy'])->name('ulasan.destroy');
 
 // ── PENCARIAN RESEP ───────────────────────────────────────────────────────────
 Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])
@@ -92,6 +96,7 @@ Route::prefix('api')->name('api.')->group(function () {
 Route::middleware(['auth'])->group(function () {
 
     Route::post('/favorit/toggle/{id}', [FavoriteController::class, 'toggle'])->name('favorit.toggle');
+    Route::get('/favorit',              [FavoriteController::class, 'index']) ->name('favorit.index');
 
     // ── KULKAS DIGITAL ────────────────────────────────────────────────────────
     Route::get('/kulkas-digital',        [KulkasDigitalController::class, 'index'])    ->name('kulkas.index');
@@ -129,6 +134,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile',          [ProfileController::class, 'index']) ->name('profile.index');
     Route::get('/profile/edit',     [ProfileController::class, 'edit'])  ->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // ── FOLLOW ────────────────────────────────────────────────────────────────
+    Route::get('/follow/{userId}/followers', [FollowController::class, 'followers'])->name('follow.followers');
+    Route::get('/follow/{userId}/following', [FollowController::class, 'following'])->name('follow.following');
+    Route::post('/follow/{userId}/toggle',   [FollowController::class, 'toggle'])   ->name('follow.toggle');
 
 });
 

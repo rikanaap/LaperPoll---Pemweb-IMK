@@ -14,7 +14,7 @@
 <div class="auth-section flex flex-col">
     <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
 
-    <form method="post" action="{{ route('auth.auth.login') }}">
+    <form method="post" action="{{ route('auth.login') }}">
         @csrf
         <div class="form flex flex-col">
             <div class="auth-text flex flex-col">

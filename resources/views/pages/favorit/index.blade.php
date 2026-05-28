@@ -1,120 +1,106 @@
 @extends('layouts.app')
 
-@section('title', 'Main Menu - LaperPoll')
+@section('title', 'Resep Favorit - LaperPoll')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/favorit.css') }}">
 @endpush
 
-<main class="main-content flex flex-col font-jakarta">
-    <x-navbar :back="true"></x-navbar>
-    <section class="profile-card">
-        <div class="profile-info">
-            <img src="https://i.pravatar.cc/150?u=chefmoni" alt="Chef Moni" class="avatar">
-            <div class="profile-text">
-                <h2>Chef Moni <i class="fa-solid fa-pen edit-icon"></i></h2>
-                <p>@masterchefmoni</p>
-            </div>
-        </div>
-        <div class="profile-stats">
-            <div class="stat-item"><strong>4</strong><span>Resep</span></div>
-            <div class="stat-item"><strong>6</strong><span>Pengikut</span></div>
-            <div class="stat-item"><strong>4</strong><span>Mengikuti</span></div>
-        </div>
-    </section>
+@section('content')
+<main class="fav-main font-jakarta">
 
-    <!-- Judul Halaman -->
-    <div class="section-title">
-        <i class="fa-solid fa-heart heart-active"></i>
-        <h3>Resep Favorit Saya</h3>
-        <i class="fa-solid fa-chevron-right arrow"></i>
-        <span class="count">3</span>
-    </div>
+    <x-navbar :backUrl="route('profile.index')"></x-navbar>
 
-   
-    <div class="recipe-grid">
-    
-    <div class="recipe-card">
-        <div class="card-header">
-            <div class="chef-info">
-                <span class="chef-initial">CM</span>
-                <span class="chef-name">Chef Moni</span>
-                <i class="fa-solid fa-circle-check verified"></i>
-            </div>
+    {{-- Header --}}
+    <div class="fav-header">
+        <div class="fav-header-icon">
+            <span class="material-icons-round">favorite</span>
         </div>
-        <div class="recipe-image-placeholder">
-            <i class="fa-solid fa-hamburger placeholder-icon"></i>
-            <button class="fav-btn active" onclick="toggleFavorite(this)">
-                <i class="fa-solid fa-heart"></i>
-            </button>
-        </div>
-        <div class="card-body">
-            <h4>Rendang Daging Sapi</h4>
-            <div class="meta-info">
-                <span><i class="fa-solid fa-star"></i> 5.0</span>
-                <span><i class="fa-regular fa-clock"></i> 90 mnt</span>
-            </div>
-            <div class="card-footer">
-                <span><i class="fa-regular fa-eye"></i> 312</span>
-                <i class="fa-regular fa-bookmark bookmark-icon"></i>
-            </div>
+        <div>
+            <h1 class="fav-title font-bold">Resep Favorit</h1>
+            <p class="fav-sub">{{ $favorites->count() }} resep tersimpan</p>
         </div>
     </div>
 
-    
-    <div class="recipe-card">
-        <div class="card-header">
-            <div class="chef-info">
-                <span class="chef-initial">CM</span>
-                <span class="chef-name">Chef Moni</span>
-                <i class="fa-solid fa-circle-check verified"></i>
-            </div>
+    {{-- Grid --}}
+    @if($favorites->isEmpty())
+        <div class="fav-empty">
+            <span class="material-icons-round fav-empty-icon">favorite_border</span>
+            <p class="fav-empty-title font-semibold">Belum ada resep favorit</p>
+            <p class="fav-empty-sub">Ketuk ikon hati di detail resep untuk menyimpannya di sini.</p>
+            <a href="{{ route('main-menu.index') }}" class="fav-empty-btn font-semibold">
+                <span class="material-icons-round">explore</span>
+                Jelajahi Resep
+            </a>
         </div>
-        <div class="recipe-image-placeholder">
-            <i class="fa-solid fa-leaf placeholder-icon"></i>
-            <button class="fav-btn active" onclick="toggleFavorite(this)">
-                <i class="fa-solid fa-heart"></i>
-            </button>
-        </div>
-        <div class="card-body">
-            <h4>Gado-Gado Spesial</h4>
-            <div class="meta-info">
-                <span><i class="fa-solid fa-star"></i> 4.8</span>
-                <span><i class="fa-regular fa-clock"></i> 30 mnt</span>
-            </div>
-            <div class="card-footer">
-                <span><i class="fa-regular fa-eye"></i> 189</span>
-                <i class="fa-regular fa-bookmark bookmark-icon"></i>
-            </div>
-        </div>
-    </div>
+    @else
+        <div class="fav-grid">
+            @foreach($favorites as $resep)
+                <a href="{{ route('detail.resep', $resep->id) }}" class="fav-card-link">
+                    <div class="fav-card">
+                        {{-- Thumbnail --}}
+                        <div class="fav-card-thumb">
+                            @if($resep->thumbnail)
+                                <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
+                                     class="fav-thumb-img"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                <div class="fav-thumb-placeholder" style="display:none">
+                                    <span class="material-icons-round">restaurant</span>
+                                </div>
+                            @else
+                                <div class="fav-thumb-placeholder">
+                                    <span class="material-icons-round">restaurant</span>
+                                </div>
+                            @endif
 
-    
-    <div class="recipe-card">
-        <div class="card-header">
-            <div class="chef-info">
-                <span class="chef-initial">CM</span>
-                <span class="chef-name">Chef Moni</span>
-                <i class="fa-solid fa-circle-check verified"></i>
-            </div>
+                            {{-- Tombol hapus favorit --}}
+                            <button class="fav-remove-btn"
+                                    data-resep-id="{{ $resep->id }}"
+                                    aria-label="Hapus dari favorit">
+                                <span class="material-icons-round">favorite</span>
+                            </button>
+
+                            {{-- Badge rating --}}
+                            @if($resep->current_star > 0)
+                                <div class="fav-rating-badge">
+                                    <span class="material-icons-round">star</span>
+                                    {{ number_format($resep->current_star, 1) }}
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Info --}}
+                        <div class="fav-card-info">
+                            <p class="fav-card-title font-semibold">{{ $resep->title }}</p>
+                            <p class="fav-card-author">
+                                <span class="material-icons-round">person</span>
+                                {{ $resep->user->name ?? 'Anonim' }}
+                            </p>
+                            <div class="fav-card-meta">
+                                <span class="fav-meta-item">
+                                    <span class="material-icons-round">schedule</span>
+                                    {{ $resep->cook_duration_formatted }}
+                                </span>
+                                <span class="fav-meta-item">
+                                    <span class="material-icons-round">visibility</span>
+                                    {{ $resep->views_count }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
         </div>
-        <div class="recipe-image-placeholder">
-            <i class="fa-solid fa-bowl-rice placeholder-icon"></i>
-            <button class="fav-btn active" onclick="toggleFavorite(this)">
-                <i class="fa-solid fa-heart"></i>
-            </button>
-        </div>
-        <div class="card-body">
-            <h4>Soto Ayam Lamongan</h4>
-            <div class="meta-info">
-                <span><i class="fa-solid fa-star"></i> 5.0</span>
-                <span><i class="fa-regular fa-clock"></i> 60 mnt</span>
-            </div>
-            <div class="card-footer">
-                <span><i class="fa-regular fa-eye"></i> 445</span>
-                <i class="fa-regular fa-bookmark bookmark-icon"></i>
-            </div>
-        </div>
-    </div>
-    </div>
+    @endif
+
 </main>
+
+@push('scripts')
+<script>
+    const CSRF_TOKEN = "{{ csrf_token() }}";
+    const TOGGLE_BASE_URL = "{{ url('/favorit/toggle') }}";
+</script>
+<script src="{{ asset('js/favorit.js') }}"></script>
+@endpush
+
+@endsection

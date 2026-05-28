@@ -1,11 +1,16 @@
-// ulasan.js — LaperPoll
+// ulasan.js — LaperPoll CRUD
 
 // ─── STAR RATING ─────────────────────────────────────────────────────────────
-const starPicks    = document.querySelectorAll('.ul-star-pick');
-const ratingInput  = document.getElementById('ulRatingInput');
-const ratingHint   = document.getElementById('ulRatingHint');
+const starPicks   = document.querySelectorAll('.ul-star-pick');
+const ratingInput = document.getElementById('ulRatingInput');
+const ratingHint  = document.getElementById('ulRatingHint');
 
 const HINTS = ['', 'Sangat Buruk 😞', 'Kurang Baik 😕', 'Cukup 😐', 'Baik 😊', 'Luar Biasa 🤩'];
+
+// Init highlight kalau edit mode (rating sudah ada)
+if (ratingInput && parseInt(ratingInput.value) > 0) {
+    highlightStars(parseInt(ratingInput.value), true);
+}
 
 starPicks.forEach((star, idx) => {
     star.addEventListener('mouseenter', () => highlightStars(idx + 1, false));
@@ -22,12 +27,12 @@ function highlightStars(count, save) {
         s.classList.toggle('active', i < count);
     });
     if (ratingHint) {
-        ratingHint.textContent = HINTS[count] || 'Pilih bintang';
+        ratingHint.textContent = count > 0 ? HINTS[count] : 'Pilih bintang';
         ratingHint.classList.toggle('selected', count > 0 && save);
     }
 }
 
-// ─── PHOTO UPLOAD PREVIEW ────────────────────────────────────────────────────
+// ─── PHOTO UPLOAD PREVIEW ─────────────────────────────────────────────────────
 const photoUpload = document.getElementById('ulPhotoUpload');
 const photoInput  = document.getElementById('ulPhotoInput');
 const photoGrid   = document.getElementById('ulPhotoGrid');
@@ -37,8 +42,10 @@ if (photoUpload && photoInput) {
     photoUpload.addEventListener('click', () => photoInput.click());
 
     photoInput.addEventListener('change', function () {
-        const existing = photoGrid?.querySelectorAll('.ul-preview-wrap').length || 0;
-        const slots    = MAX_PHOTOS - existing;
+        const existing  = photoGrid?.querySelectorAll('.ul-preview-wrap').length || 0;
+        const markedDel = document.querySelectorAll('.ul-delete-check:checked').length || 0;
+        const currentCount = existing;
+        const slots = MAX_PHOTOS - currentCount + markedDel;
 
         if (slots <= 0) {
             showToast(`Maksimal ${MAX_PHOTOS} foto.`, 'warn');
@@ -71,23 +78,44 @@ if (photoUpload && photoInput) {
     });
 }
 
-// ─── VALIDASI SUBMIT ─────────────────────────────────────────────────────────
-const ulasanForm = document.getElementById('ulasanForm');
+// ─── TOGGLE HAPUS FOTO EXISTING (edit mode) ───────────────────────────────────
+function toggleDeletePhoto(checkbox, photoId) {
+    const wrap = document.getElementById(`existing-${photoId}`);
+    if (!wrap) return;
+    wrap.classList.toggle('marked', checkbox.checked);
+}
 
+// ─── VALIDASI SUBMIT ──────────────────────────────────────────────────────────
+const ulasanForm = document.getElementById('ulasanForm');
 if (ulasanForm) {
     ulasanForm.addEventListener('submit', function (e) {
         const rating = parseInt(ratingInput?.value || 0);
         if (rating < 1 || rating > 5) {
             e.preventDefault();
             showToast('Pilih rating bintang terlebih dahulu!', 'warn');
-            // Scroll ke bintang
             document.getElementById('ulStars')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            return;
         }
     });
 }
 
-// ─── PHOTO MODAL ─────────────────────────────────────────────────────────────
+// ─── DELETE CONFIRM MODAL ─────────────────────────────────────────────────────
+function confirmDelete() {
+    const modal   = document.getElementById('ulConfirmModal');
+    const overlay = document.getElementById('ulConfirmOverlay');
+    if (modal)   modal.style.display   = 'flex';
+    if (overlay) overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeConfirm() {
+    const modal   = document.getElementById('ulConfirmModal');
+    const overlay = document.getElementById('ulConfirmOverlay');
+    if (modal)   modal.style.display   = 'none';
+    if (overlay) overlay.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// ─── PHOTO MODAL ──────────────────────────────────────────────────────────────
 const ulModal    = document.getElementById('ulModal');
 const ulModalImg = document.getElementById('ulModalImg');
 
@@ -105,10 +133,10 @@ function closeModal() {
 }
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') { closeModal(); closeConfirm(); }
 });
 
-// ─── TOAST ───────────────────────────────────────────────────────────────────
+// ─── TOAST ────────────────────────────────────────────────────────────────────
 function showToast(msg, type = 'info') {
     const existing = document.querySelector('.ul-toast');
     if (existing) existing.remove();

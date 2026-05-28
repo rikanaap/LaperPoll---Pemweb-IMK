@@ -90,4 +90,22 @@ class Resep extends Model
     {
         return $this->hasMany(MealPlannerDetail::class);
     }
+
+    /**
+     * Format cook_duration dari HH:MM:SS jadi "X jam Y menit" atau "Y menit"
+     */
+    public function getCookDurationFormattedAttribute(): string
+    {
+        $raw = $this->cook_duration;
+        if (!$raw) return '-';
+
+        $parts = explode(':', $raw);
+        $hours   = isset($parts[0]) ? (int)$parts[0] : 0;
+        $minutes = isset($parts[1]) ? (int)$parts[1] : 0;
+
+        if ($hours > 0 && $minutes > 0) return "{$hours} jam {$minutes} menit";
+        if ($hours > 0)                 return "{$hours} jam";
+        if ($minutes > 0)               return "{$minutes} menit";
+        return '< 1 menit';
+    }
 }

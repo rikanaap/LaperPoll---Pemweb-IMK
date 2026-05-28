@@ -328,3 +328,209 @@
 
     .ul-list { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ── MY REVIEW CARD ── */
+.ul-my-review-card {
+    background: white;
+    border-radius: 1rem;
+    border: 2px solid var(--orange-light-active);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ul-my-review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.ul-my-review-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.813rem;
+    color: var(--orange-dark);
+}
+.ul-my-review-label .material-icons-round { font-size: 1rem; color: var(--orange-normal); }
+
+.ul-my-review-actions { display: flex; gap: 0.5rem; }
+
+.ul-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: var(--font-jakarta);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+}
+.ul-action-btn .material-icons-round { font-size: 0.85rem; }
+.ul-action-btn:hover { transform: translateY(-1px); }
+
+.ul-action-edit {
+    background: var(--orange-light);
+    color: var(--orange-dark);
+    border: 1px solid var(--orange-light-active);
+}
+.ul-action-edit:hover { background: var(--orange-light-active); }
+
+.ul-action-delete {
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    border: 1px solid var(--accent-light-hover);
+}
+.ul-action-delete:hover { background: var(--accent-light-hover); }
+
+.ul-my-stars {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.ul-my-date { font-size: 0.625rem; color: var(--primary-darker); margin-left: 0.4rem; }
+
+.ul-my-desc {
+    font-size: 0.813rem;
+    color: var(--secondary-normal);
+    line-height: 1.55;
+}
+
+/* ── EXISTING PHOTOS (edit mode) ── */
+.ul-existing-photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ul-existing-wrap {
+    position: relative;
+    width: 72px;
+    height: 72px;
+}
+
+.ul-existing-img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 0.625rem;
+    border: 1px solid var(--primary-normal);
+    transition: opacity 0.2s;
+}
+
+.ul-existing-delete {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 22px;
+    height: 22px;
+    background: var(--accent-normal);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.ul-existing-delete input { display: none; }
+.ul-existing-delete .material-icons-round { font-size: 0.75rem; color: white; }
+
+.ul-existing-wrap.marked .ul-existing-img {
+    opacity: 0.35;
+    border-color: var(--accent-normal);
+}
+.ul-existing-wrap.marked .ul-existing-delete {
+    background: #fff;
+    border: 1.5px solid var(--accent-normal);
+}
+.ul-existing-wrap.marked .ul-existing-delete .material-icons-round { color: var(--accent-normal); }
+
+.ul-existing-hint {
+    font-size: 0.625rem;
+    color: var(--primary-darker);
+}
+
+/* ── DELETE CONFIRM MODAL ── */
+.ul-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 150;
+}
+
+.ul-confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 160;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    pointer-events: none;
+}
+
+.ul-confirm-box {
+    background: white;
+    border-radius: 1.25rem;
+    padding: 1.75rem 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 320px;
+    width: 100%;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+    pointer-events: auto;
+    animation: modalPop 0.25s ease;
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.ul-confirm-icon { font-size: 2.5rem; line-height: 1; }
+.ul-confirm-title { font-size: 1rem; color: var(--secondary-normal); margin-top: 0.25rem; }
+.ul-confirm-sub   { font-size: 0.75rem; color: var(--primary-darker); }
+
+.ul-confirm-actions {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+.ul-confirm-cancel {
+    flex: 1;
+    padding: 0.75rem;
+    background: transparent;
+    color: var(--primary-darker);
+    border: 1.5px solid var(--primary-normal);
+    border-radius: 0.875rem;
+    font-size: 0.813rem;
+    font-family: var(--font-jakarta);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.ul-confirm-cancel:hover { background: var(--primary-normal); }
+
+.ul-confirm-ok {
+    flex: 1;
+    padding: 0.75rem;
+    background: var(--accent-normal);
+    color: white;
+    border: none;
+    border-radius: 0.875rem;
+    font-size: 0.813rem;
+    font-family: var(--font-jakarta);
+    cursor: pointer;
+    transition: background 0.15s;
+    box-shadow: 0 4px 12px rgba(236,68,72,0.3);
+}
+.ul-confirm-ok:hover { background: var(--accent-normal-hover); }

@@ -604,3 +604,62 @@ form{
     display: none !important;
 }
 
+
+/* ── NAVBAR HAMBURGER BUTTON ── */
+.navbar-hamburger-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-hamburger-inner {
+    position: relative;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border: 2px solid white;
+}
+
+.navbar-hamburger-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.55);
+}
+
+.navbar-hamburger-lines {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.navbar-hamburger-lines span {
+    display: block;
+    width: 14px;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.2s;
+}
+
+/* Animasi open state */
+.navbar-hamburger-btn.open .navbar-hamburger-lines span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+.navbar-hamburger-btn.open .navbar-hamburger-lines span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.navbar-hamburger-btn.open .navbar-hamburger-lines span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}

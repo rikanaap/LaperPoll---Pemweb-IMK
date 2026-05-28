@@ -35,8 +35,8 @@
             </p>
             <div class="ul-resep-rating">
                 @php
-                    $avg  = $resep->feedbacks->avg('rating') ?? 0;
-                    $full = floor($avg); $half = ($avg - $full) >= 0.3 ? 1 : 0;
+                    $avg   = $resep->feedbacks->avg('rating') ?? 0;
+                    $full  = floor($avg); $half = ($avg - $full) >= 0.3 ? 1 : 0;
                     $empty = 5 - $full - $half;
                 @endphp
                 @for($i = 0; $i < $full;  $i++) <span class="material-icons-round ul-star-filled">star</span> @endfor
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    {{-- ── ALERT ── --}}
+    {{-- ── ALERTS ── --}}
     @if(session('success'))
         <div class="ul-alert ul-alert-success">
             <span class="material-icons-round">check_circle</span>
@@ -67,85 +67,171 @@
         </div>
     @endif
 
-    {{-- ── FORM ULASAN ── --}}
     @auth
-        @if(!$sudahUlasan)
-            <div class="ul-form-card">
-                <h2 class="ul-form-title font-semibold">
-                    {{ $dariTimer ? 'Bagikan Hasil Masakanmu' : 'Tulis Ulasanmu' }}
-                </h2>
-                <p class="ul-form-sub">
-                    {{ $dariTimer
-                        ? 'Ceritakan pengalamanmu masak resep ini — tips, hasil, dan foto masakanmu!'
-                        : 'Bagaimana pengalaman memasak resep ini?' }}
-                </p>
+        @if(!$sudahUlasan || isset($editMode))
 
-                <form action="{{ route('ulasan.store', $resep->id) }}" method="POST"
-                      enctype="multipart/form-data" class="ul-form" id="ulasanForm">
+        {{-- ── FORM CREATE / EDIT ── --}}
+        <div class="ul-form-card">
+            <h2 class="ul-form-title font-semibold">
+                @if(isset($editMode)) Edit Ulasanmu
+                @elseif($dariTimer) Bagikan Hasil Masakanmu
+                @else Tulis Ulasanmu
+                @endif
+            </h2>
+            <p class="ul-form-sub">
+                @if(isset($editMode)) Perbarui rating, deskripsi, atau foto ulasanmu.
+                @elseif($dariTimer) Ceritakan pengalamanmu masak resep ini — tips, hasil, dan foto masakanmu!
+                @else Bagaimana pengalaman memasak resep ini?
+                @endif
+            </p>
+
+            @if(isset($editMode))
+                <form action="{{ route('ulasan.update', [$resep->id, $feedback->id]) }}"
+                      method="POST" enctype="multipart/form-data" class="ul-form" id="ulasanForm">
                     @csrf
+                    @method('PATCH')
+            @else
+                <form action="{{ route('ulasan.store', $resep->id) }}"
+                      method="POST" enctype="multipart/form-data" class="ul-form" id="ulasanForm">
+                    @csrf
+            @endif
 
-                    {{-- Rating bintang --}}
-                    <div class="ul-rating-section">
-                        <p class="ul-field-label">
-                            <span class="material-icons-round">star</span>
-                            Rating
-                        </p>
-                        <div class="ul-stars" id="ulStars">
-                            @for($i = 1; $i <= 5; $i++)
-                                <span class="material-icons-round ul-star-pick" data-val="{{ $i }}">star_border</span>
-                            @endfor
-                        </div>
-                        <input type="hidden" name="rating" id="ulRatingInput" value="0">
-                        <p class="ul-rating-hint" id="ulRatingHint">Pilih bintang</p>
+                {{-- Rating bintang --}}
+                <div class="ul-rating-section">
+                    <p class="ul-field-label">
+                        <span class="material-icons-round">star</span>
+                        Rating
+                    </p>
+                    <div class="ul-stars" id="ulStars">
+                        @for($i = 1; $i <= 5; $i++)
+                            <span class="material-icons-round ul-star-pick" data-val="{{ $i }}">
+                                {{ isset($editMode) && $feedback->rating >= $i ? 'star' : 'star_border' }}
+                            </span>
+                        @endfor
                     </div>
+                    <input type="hidden" name="rating" id="ulRatingInput"
+                           value="{{ isset($editMode) ? $feedback->rating : '0' }}">
+                    <p class="ul-rating-hint {{ isset($editMode) ? 'selected' : '' }}" id="ulRatingHint">
+                        {{ isset($editMode) ? '' : 'Pilih bintang' }}
+                    </p>
+                </div>
 
-                    {{-- Deskripsi --}}
+                {{-- Deskripsi --}}
+                <div class="ul-field-group">
+                    <label class="ul-field-label" for="ulDesc">
+                        <span class="material-icons-round">rate_review</span>
+                        Ceritakan pengalamanmu
+                    </label>
+                    <textarea id="ulDesc" name="description" class="ul-textarea"
+                              placeholder="Bagaimana rasanya? Tips memasak? Apa yang kamu suka?"
+                              rows="4">{{ isset($editMode) ? old('description', $feedback->description) : old('description') }}</textarea>
+                </div>
+
+                {{-- Foto existing (edit mode) --}}
+                @if(isset($editMode) && $feedback->photos->isNotEmpty())
                     <div class="ul-field-group">
-                        <label class="ul-field-label" for="ulDesc">
-                            <span class="material-icons-round">rate_review</span>
-                            Ceritakan pengalamanmu
-                        </label>
-                        <textarea id="ulDesc" name="description" class="ul-textarea"
-                                  placeholder="Bagaimana rasanya? Tips memasak? Apa yang kamu suka?" rows="4">{{ old('description') }}</textarea>
-                    </div>
-
-                    {{-- Upload foto --}}
-                    <div class="ul-field-group">
                         <p class="ul-field-label">
-                            <span class="material-icons-round">photo_camera</span>
-                            Foto hasil masakan <span class="ul-optional">(opsional, maks. 3)</span>
+                            <span class="material-icons-round">photo_library</span>
+                            Foto saat ini
                         </p>
-                        <div class="ul-photo-upload" id="ulPhotoUpload">
-                            <span class="material-icons-round ul-photo-icon">add_photo_alternate</span>
-                            <span class="ul-photo-text">Ketuk untuk tambah foto</span>
-                            <input type="file" name="photos[]" id="ulPhotoInput"
-                                   accept="image/*" multiple class="ul-hidden-input">
+                        <div class="ul-existing-photos">
+                            @foreach($feedback->photos as $photo)
+                                <div class="ul-existing-wrap" id="existing-{{ $photo->id }}">
+                                    <img src="{{ asset($photo->path) }}" alt="Foto ulasan" class="ul-existing-img">
+                                    <label class="ul-existing-delete">
+                                        <input type="checkbox" name="delete_photos[]"
+                                               value="{{ $photo->id }}" class="ul-delete-check"
+                                               onchange="toggleDeletePhoto(this, {{ $photo->id }})">
+                                        <span class="material-icons-round">delete</span>
+                                    </label>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="ul-photo-grid" id="ulPhotoGrid"></div>
+                        <p class="ul-existing-hint">Centang foto untuk menghapusnya</p>
                     </div>
+                @endif
 
-                    {{-- Submit --}}
-                    <button type="submit" class="ul-btn-submit font-semibold" id="ulBtnSubmit">
-                        <span class="material-icons-round">send</span>
-                        Kirim Ulasan
-                    </button>
+                {{-- Upload foto baru --}}
+                <div class="ul-field-group">
+                    <p class="ul-field-label">
+                        <span class="material-icons-round">photo_camera</span>
+                        {{ isset($editMode) ? 'Tambah foto baru' : 'Foto hasil masakan' }}
+                        <span class="ul-optional">(opsional, maks. 3)</span>
+                    </p>
+                    <div class="ul-photo-upload" id="ulPhotoUpload">
+                        <span class="material-icons-round ul-photo-icon">add_photo_alternate</span>
+                        <span class="ul-photo-text">Ketuk untuk tambah foto</span>
+                        <input type="file" name="photos[]" id="ulPhotoInput"
+                               accept="image/*" multiple class="ul-hidden-input">
+                    </div>
+                    <div class="ul-photo-grid" id="ulPhotoGrid"></div>
+                </div>
 
-                    <a href="{{ route('detail.resep', $resep->id) }}" class="ul-btn-skip font-semibold">
-                        Lewati
-                    </a>
+                {{-- Submit --}}
+                <button type="submit" class="ul-btn-submit font-semibold" id="ulBtnSubmit">
+                    <span class="material-icons-round">{{ isset($editMode) ? 'save' : 'send' }}</span>
+                    {{ isset($editMode) ? 'Simpan Perubahan' : 'Kirim Ulasan' }}
+                </button>
 
-                </form>
-            </div>
-        @else
-            <div class="ul-sudah-card">
-                <span class="material-icons-round ul-sudah-icon">check_circle</span>
-                <p class="ul-sudah-title font-bold">Ulasan sudah dikirim!</p>
-                <p class="ul-sudah-sub">Kamu sudah memberikan ulasan untuk resep ini.</p>
-                <a href="{{ route('detail.resep', $resep->id) }}" class="ul-btn-back font-semibold">
-                    <span class="material-icons-round">arrow_back</span>
-                    Kembali ke Resep
+                <a href="{{ route('detail.resep', $resep->id) }}" class="ul-btn-skip font-semibold">
+                    Batal
                 </a>
+
+            </form>
+        </div>
+
+        @else
+
+        {{-- ── SUDAH ULASAN — tampilkan ulasan + tombol edit/hapus ── --}}
+        <div class="ul-my-review-card">
+            <div class="ul-my-review-header">
+                <p class="ul-my-review-label font-semibold">
+                    <span class="material-icons-round">verified</span>
+                    Ulasanmu
+                </p>
+                <div class="ul-my-review-actions">
+                    <a href="{{ route('ulasan.edit', [$resep->id, $myFeedback->id]) }}"
+                       class="ul-action-btn ul-action-edit" title="Edit ulasan">
+                        <span class="material-icons-round">edit</span>
+                        Edit
+                    </a>
+                    <form action="{{ route('ulasan.destroy', [$resep->id, $myFeedback->id]) }}"
+                          method="POST" id="deleteForm">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="ul-action-btn ul-action-delete"
+                                onclick="confirmDelete()" title="Hapus ulasan">
+                            <span class="material-icons-round">delete</span>
+                            Hapus
+                        </button>
+                    </form>
+                </div>
             </div>
+
+            {{-- Bintang --}}
+            <div class="ul-my-stars">
+                @for($i = 1; $i <= 5; $i++)
+                    <span class="material-icons-round {{ $i <= $myFeedback->rating ? 'ul-star-filled' : 'ul-star-empty' }}">
+                        {{ $i <= $myFeedback->rating ? 'star' : 'star_border' }}
+                    </span>
+                @endfor
+                <span class="ul-my-date">{{ $myFeedback->created_at->diffForHumans() }}</span>
+            </div>
+
+            @if($myFeedback->description)
+                <p class="ul-my-desc">{{ $myFeedback->description }}</p>
+            @endif
+
+            @if($myFeedback->photos->isNotEmpty())
+                <div class="ul-item-photos">
+                    @foreach($myFeedback->photos as $photo)
+                        <img src="{{ asset($photo->path) }}" alt="Foto ulasan"
+                             class="ul-item-photo" onclick="openModal(this.src)">
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
         @endif
     @else
         <div class="ul-login-card">
@@ -159,7 +245,7 @@
         </div>
     @endauth
 
-    {{-- ── DAFTAR ULASAN ── --}}
+    {{-- ── DAFTAR SEMUA ULASAN ── --}}
     <section class="ul-list-section">
         <div class="ul-list-header">
             <h2 class="ul-list-title font-semibold">Semua Ulasan</h2>
@@ -218,6 +304,22 @@
     <button class="ul-modal-close"><span class="material-icons-round">close</span></button>
     <img src="" id="ulModalImg" class="ul-modal-img" alt="Foto ulasan">
 </div>
+
+{{-- Delete confirmation modal --}}
+<div class="ul-confirm-modal" id="ulConfirmModal" style="display:none">
+    <div class="ul-confirm-box">
+        <div class="ul-confirm-icon">🗑️</div>
+        <h3 class="ul-confirm-title font-bold">Hapus Ulasan?</h3>
+        <p class="ul-confirm-sub">Ulasan yang dihapus tidak bisa dikembalikan.</p>
+        <div class="ul-confirm-actions">
+            <button class="ul-confirm-cancel font-semibold" onclick="closeConfirm()">Batal</button>
+            <button class="ul-confirm-ok font-semibold" onclick="document.getElementById('deleteForm').submit()">
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+<div class="ul-confirm-overlay" id="ulConfirmOverlay" onclick="closeConfirm()" style="display:none"></div>
 
 @push('scripts')
 <script src="{{ asset('js/ulasan.js') }}"></script>

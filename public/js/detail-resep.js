@@ -77,7 +77,9 @@ if (favBtn) {
             const data = await res.json();
 
             const icon = favBtn.querySelector('.material-icons-round');
-            if (data.favorited) {
+            // FavoriteController return isFavorite
+            const isFav = data.isFavorite ?? data.favorited ?? false;
+            if (isFav) {
                 icon.textContent = 'favorite';
                 favBtn.classList.add('active');
             } else {
@@ -197,4 +199,17 @@ function showToast(msg, type = 'info') {
     toast.textContent = msg;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
+}
+
+// ─── DELETE CONFIRM (ulasan di detail resep) ──────────────────────────────────
+function drConfirmDelete() {
+    document.getElementById('drConfirmModal')?.classList.add('open');
+    document.getElementById('drConfirmOverlay')?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDrConfirm() {
+    document.getElementById('drConfirmModal')?.classList.remove('open');
+    document.getElementById('drConfirmOverlay')?.classList.remove('open');
+    document.body.style.overflow = '';
 }
