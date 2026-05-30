@@ -159,14 +159,17 @@ function renderUserItem(user) {
     const isSelf = AUTH_USER_ID && user.id === AUTH_USER_ID;
     const btnClass = isSelf ? 'self' : (user.is_following ? 'unfollow' : 'follow');
     const btnText  = isSelf ? '' : (user.is_following ? 'Mengikuti' : 'Ikuti');
+    const profileUrl = isSelf ? '/profile' : `/profile/${user.id}`;
 
     return `
         <div class="follow-user-item">
-            <img src="${avatar}" alt="${user.name}" class="follow-user-avatar"
-                 onerror="this.src='/assets/images/Image_DummyProfile.png'">
-            <div class="follow-user-info">
-                <p class="follow-user-name">${user.name}</p>
-            </div>
+            <a href="${profileUrl}" style="display:flex;align-items:center;gap:0.75rem;flex:1;text-decoration:none;">
+                <img src="${avatar}" alt="${user.name}" class="follow-user-avatar"
+                     onerror="this.src='/assets/images/Image_DummyProfile.png'">
+                <div class="follow-user-info">
+                    <p class="follow-user-name">${user.name}</p>
+                </div>
+            </a>
             <button class="follow-btn ${btnClass}"
                     data-user-id="${user.id}"
                     data-following="${user.is_following ? '1' : '0'}">

@@ -774,3 +774,33 @@ button.stat-bubble {
         transform: translateX(-50%) translateY(0);
     }
 }
+
+/* ── PUBLIC PROFILE — follow button ── */
+.pub-follow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    padding: 0.45rem 1.25rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: var(--font-jakarta);
+    border: 2px solid white;
+    cursor: pointer;
+    background: white;
+    color: var(--orange-normal);
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    text-decoration: none;
+}
+.pub-follow-btn .material-icons-round { font-size: 1rem; color: var(--orange-normal); }
+.pub-follow-btn:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+.pub-follow-btn.following {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border-color: rgba(255,255,255,0.6);
+}
+.pub-follow-btn.following .material-icons-round { color: white; }
+.pub-follow-btn.following:hover { background: rgba(255,255,255,0.3); }

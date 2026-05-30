@@ -58,15 +58,33 @@
         <div class="dr-info-right">
             {{-- Author --}}
             <div class="dr-author">
-                <img src="{{ $resep->user->profile_photo
-                    ? Storage::url($resep->user->profile_photo)
-                    : asset('assets/images/Image_DummyProfile.png') }}"
-                     alt="{{ $resep->user->name ?? 'Anonim' }}"
-                     class="dr-author-avatar">
-                <div class="dr-author-text">
-                    <span class="dr-author-label">Dibuat oleh</span>
-                    <span class="dr-author-name font-semibold">{{ $resep->user->name ?? 'Anonim' }}</span>
-                </div>
+                <a href="{{ route('profile.public', $resep->user_id) }}" class="dr-author-link">
+                    <img src="{{ $resep->user->profile_photo
+                        ? Storage::url($resep->user->profile_photo)
+                        : asset('assets/images/Image_DummyProfile.png') }}"
+                         alt="{{ $resep->user->name ?? 'Anonim' }}"
+                         class="dr-author-avatar">
+                    <div class="dr-author-text">
+                        <span class="dr-author-label">Dibuat oleh</span>
+                        <span class="dr-author-name font-semibold">{{ $resep->user->name ?? 'Anonim' }}</span>
+                    </div>
+                </a>
+
+                {{-- Tombol follow — sembunyikan kalau resep milik sendiri atau guest --}}
+                @auth
+                    @if(Auth::id() !== $resep->user_id)
+                        <button class="dr-follow-btn {{ $isFollowing ? 'following' : '' }}"
+                                id="drFollowBtn"
+                                data-user-id="{{ $resep->user_id }}">
+                            <span class="material-icons-round">
+                                {{ $isFollowing ? 'person_remove' : 'person_add' }}
+                            </span>
+                            <span class="dr-follow-label">
+                                {{ $isFollowing ? 'Mengikuti' : 'Ikuti' }}
+                            </span>
+                        </button>
+                    @endif
+                @endauth
             </div>
 
             {{-- Rating --}}

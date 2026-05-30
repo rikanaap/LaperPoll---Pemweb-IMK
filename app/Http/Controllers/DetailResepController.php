@@ -41,14 +41,20 @@ class DetailResepController extends Controller
 
         $sudahUlasan = false;
         $myFeedback  = null;
+        $isFollowing = false;
+
         if (Auth::check()) {
             $myFeedback  = $resep->feedbacks->where('user_id', Auth::id())->first();
             $sudahUlasan = $myFeedback !== null;
+            // Cek apakah sudah follow author resep ini
+            $isFollowing = \App\Models\UserFollow::where('user_id', Auth::id())
+                ->where('to_user_id', $resep->user_id)
+                ->exists();
         }
 
         return view('pages.detail_resep.detail_resep', compact(
             'resep', 'totalUlasan', 'ratingAvg',
-            'ratingBreakdown', 'isFavorited', 'sudahUlasan', 'myFeedback'
+            'ratingBreakdown', 'isFavorited', 'sudahUlasan', 'myFeedback', 'isFollowing'
         ));
     }
 }

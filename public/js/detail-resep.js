@@ -213,3 +213,50 @@ function closeDrConfirm() {
     document.getElementById('drConfirmOverlay')?.classList.remove('open');
     document.body.style.overflow = '';
 }
+
+// ─── FOLLOW BUTTON (author) ───────────────────────────────────────────────────
+const drFollowBtn = document.getElementById('drFollowBtn');
+
+if (drFollowBtn) {
+    drFollowBtn.addEventListener('click', async () => {
+        if (!IS_AUTH) { window.location.href = SIGN_IN_URL; return; }
+
+        const userId = drFollowBtn.dataset.userId;
+        drFollowBtn.disabled = true;
+
+        try {
+            const res  = await fetch(`/follow/${userId}/toggle`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': CSRF_TOKEN,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const icon  = drFollowBtn.querySelector('.material-icons-round');
+                const label = drFollowBtn.querySelector('.dr-follow-label');
+
+                if (data.is_following) {
+                    drFollowBtn.classList.add('following');
+                    icon.textContent  = 'person_remove';
+                    label.textContent = 'Mengikuti';
+                } else {
+                    drFollowBtn.classList.remove('following');
+                    icon.textContent  = 'person_add';
+                    label.textContent = 'Ikuti';
+                }
+
+                // Animasi pop
+                drFollowBtn.style.transform = 'scale(1.1)';
+                setTimeout(() => drFollowBtn.style.transform = '', 200);
+            }
+        } catch (err) {
+            console.error('Gagal toggle follow:', err);
+        } finally {
+            drFollowBtn.disabled = false;
+        }
+    });
+}

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PencarianResepController;
 use App\Http\Controllers\SwipeResepController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicProfileController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\KulkasDigitalController;
 use App\Http\Controllers\BahansController;
@@ -40,6 +41,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
 Route::get('/main-menu',          [MainMenu::class, 'index'])          ->name('main-menu.index');
 Route::get('/main-menu?m=favorit',[MainMenu::class, 'favoritPengguna'])->name('main-menu.favorit');
 Route::get('/main-menu?m=hari',   [MainMenu::class, 'resepHariIni'])  ->name('main-menu.hari-ini');
+
+// ── PROFIL PUBLIK (bisa diakses guest) ───────────────────────────────────────
+Route::get('/profile/{userId}', [PublicProfileController::class, 'show'])->name('profile.public');
 
 // ── DETAIL RESEP ──────────────────────────────────────────────────────────────
 Route::get('/detail-resep/{id}', [DetailResepController::class, 'showDetail'])->name('detail.resep');
@@ -135,10 +139,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit',     [ProfileController::class, 'edit'])  ->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    // ── FOLLOW ────────────────────────────────────────────────────────────────
-    Route::get('/follow/{userId}/followers', [FollowController::class, 'followers'])->name('follow.followers');
-    Route::get('/follow/{userId}/following', [FollowController::class, 'following'])->name('follow.following');
-    Route::post('/follow/{userId}/toggle',   [FollowController::class, 'toggle'])   ->name('follow.toggle');
+// ── PROFIL PUBLIK (bisa diakses guest) ───────────────────────────────────────
+Route::get('/profile/{id}', [PublicProfileController::class, 'show'])->name('profile.public');
+
+// ── FOLLOW (auth required) ────────────────────────────────────────────────────
+Route::get('/follow/{userId}/followers', [FollowController::class, 'followers'])->name('follow.followers');
+Route::get('/follow/{userId}/following', [FollowController::class, 'following'])->name('follow.following');
+Route::post('/follow/{userId}/toggle',   [FollowController::class, 'toggle'])   ->name('follow.toggle');
 
 });
 

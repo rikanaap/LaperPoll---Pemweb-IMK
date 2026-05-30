@@ -859,3 +859,56 @@
     box-shadow: 0 4px 12px rgba(236,68,72,0.3);
 }
 .dr-confirm-ok:hover { background: var(--accent-normal-hover); }
+
+.dr-author-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    flex: 1;
+}
+.dr-author-link:hover .dr-author-name {
+    color: var(--orange-normal);
+    text-decoration: underline;
+}
+
+.dr-author { align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+
+.dr-follow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    font-family: var(--font-jakarta);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    background: var(--orange-normal);
+    color: white;
+    box-shadow: 0 2px 8px rgba(230,81,0,0.3);
+    white-space: nowrap;
+}
+.dr-follow-btn .material-icons-round { font-size: 0.85rem; color: white; }
+.dr-follow-btn:hover { background: var(--orange-normal-hover); transform: translateY(-1px); }
+.dr-follow-btn:active { transform: scale(0.95); }
+
+.dr-follow-btn.following {
+    background: var(--primary-normal);
+    color: var(--secondary-normal);
+    box-shadow: none;
+}
+.dr-follow-btn.following .material-icons-round { color: var(--secondary-normal); }
+.dr-follow-btn.following:hover { background: var(--primary-normal-hover); }
+
+/* Author link to public profile */
+.dr-author-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+.dr-author-link:hover { opacity: 0.8; }
