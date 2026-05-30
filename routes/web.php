@@ -22,6 +22,11 @@ use App\Http\Controllers\DetailResepController;
 use App\Http\Controllers\TimerResepController;
 use App\Http\Controllers\UlasanController;
 
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminResepController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminBahanController;
+
 
 // ─── PUBLIC ──────────────────────────────────────────────────────────────────
 
@@ -159,4 +164,33 @@ Route::prefix('admin/bahans')->name('admin.bahans.')->group(function () {
     Route::get('/{bahan}/edit', [BahansController::class, 'edit'])   ->name('edit');
     Route::put('/{bahan}',      [BahansController::class, 'update']) ->name('update');
     Route::delete('/{bahan}',   [BahansController::class, 'destroy'])->name('destroy');
+});
+
+ 
+Route::prefix('admin')->name('admin.')->group(function () {
+ 
+    Route::get('/',        [AdminDashboardController::class, 'index'])->name('dashboard');
+ 
+    Route::prefix('resep')->name('resep.')->group(function () {
+        Route::get('/',                    [AdminResepController::class, 'index'])->name('index');
+        Route::get('/{resep}',             [AdminResepController::class, 'show'])->name('show');
+        Route::patch('/{resep}/publish',   [AdminResepController::class, 'togglePublish'])->name('togglePublish');
+        Route::delete('/{resep}',          [AdminResepController::class, 'destroy'])->name('destroy');
+    });
+ 
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('/',                  [AdminUserController::class, 'index'])->name('index');
+        Route::post('/',                 [AdminUserController::class, 'store'])->name('store');
+        Route::patch('/{user}',          [AdminUserController::class, 'update'])->name('update');
+        Route::patch('/{user}/verify',   [AdminUserController::class, 'verify'])->name('verify');
+        Route::delete('/{user}',         [AdminUserController::class, 'destroy'])->name('destroy');
+    });
+
+        Route::prefix('bahan')->name('bahan.')->group(function () {
+        Route::get('/',          [AdminBahanController::class, 'index'])->name('index');
+        Route::post('/',         [AdminBahanController::class, 'store'])->name('store');
+        Route::patch('/{bahan}', [AdminBahanController::class, 'update'])->name('update');
+        Route::delete('/{bahan}',[AdminBahanController::class, 'destroy'])->name('destroy');
+    });
+ 
 });

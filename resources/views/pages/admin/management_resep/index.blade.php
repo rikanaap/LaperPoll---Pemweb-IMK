@@ -1,0 +1,340 @@
+@extends('layouts.admin')
+
+@section('title', 'Manajemen Resep')
+@section('page-title', 'Manajemen Resep')
+@section('breadcrumb', 'Admin / Resep')
+
+@section('content')
+
+{{-- ── Flash Message ─────────────────────────────────────────── --}}
+@if(session('success'))
+    <div class="alert alert--success">
+        <span class="material-icons-round">check_circle</span>
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert--error">
+        <span class="material-icons-round">error</span>
+        {{ session('error') }}
+    </div>
+@endif
+
+{{-- ── Page Header ───────────────────────────────────────────── --}}
+<div class="page-header">
+    <div class="page-header__left">
+        <h1>Daftar Resep</h1>
+        <p>Kelola semua resep yang ada di platform</p>
+    </div>
+</div>
+
+{{-- ── Table Card ────────────────────────────────────────────── --}}
+<div class="card">
+
+    {{-- Filter Bar — server-side, pakai GET form --}}
+    <div class="card__header">
+        <form method="GET" action="{{ route('admin.resep.index') }}" class="filter-bar" id="filterForm">
+
+            <div class="filter-bar__search">
+                <span class="material-icons-round">search</span>
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Cari judul resep..."
+                    value="{{ request('search') }}"
+                    autocomplete="off"
+                >
+            </div>
+
+            <select name="status" onchange="document.getElementById('filterForm').submit()">
+                <option value="">Semua Status</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Published</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Draft</option>
+            </select>
+
+            <select name="filter_id" onchange="document.getElementById('filterForm').submit()">
+                <option value="">Semua Kategori</option>
+                @foreach($filters as $filter)
+                    <option
+                        value="{{ $filter->id }}"
+                        {{ request('filter_id') == $filter->id ? 'selected' : '' }}
+                    >
+                        {{ $filter->title }}
+                    </option>
+                @endforeach
+            </select>
+
+            {{-- Submit tersembunyi, trigger dari enter di search --}}
+            <button type="submit" style="display:none">Cari</button>
+
+            @if(request()->hasAny(['search', 'status', 'filter_id']))
+                <a href="{{ route('admin.resep.index') }}" class="btn btn--secondary btn--sm">
+                    <span class="material-icons-round">close</span>
+                    Reset
+                </a>
+            @endif
+
+        </form>
+    </div>
+
+    {{-- Table --}}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:40px">#</th>
+                    <th>Resep</th>
+                    <th>Author</th>
+                    <th>Kategori</th>
+                    <th>Rating</th>
+                    <th>Views</th>
+                    <th>Status</th>
+                    <th>Dibuat</th>
+                    <th style="width:110px">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($reseps as $resep)
+                <tr>
+                    {{-- Nomor urut tetap konsisten meski paginate --}}
+                    <td class="td-sub">{{ $reseps->firstItem() + $loop->index }}</td>
+
+                    {{-- Resep --}}
+                    <td>
+                        <div class="td-user">
+                            @if($resep->thumbnail)
+                                <img
+                                    src="{{ Storage::url($resep->thumbnail) }}"
+                                    class="resep-thumb"
+                                    alt="{{ $resep->title }}"
+                                    loading="lazy"
+                                >
+                            @else
+                                <div class="resep-thumb resep-thumb--placeholder">
+                                    <span class="material-icons-round">image</span>
+                                </div>
+                            @endif
+                            <div>
+                                <div class="td-name">{{ Str::limit($resep->title, 32) }}</div>
+                                <div class="td-sub">
+                                    {{ $resep->cook_duration }}
+                                    @if($resep->calorie)
+                                        · {{ number_format($resep->calorie) }} kkal
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    {{-- Author --}}
+                    <td>
+                        <div class="td-user">
+                            <div class="td-avatar">
+                                @if($resep->user?->profile_photo)
+                                    <img
+                                        src="{{ Storage::url($resep->user->profile_photo) }}"
+                                        alt="{{ $resep->user->name }}"
+                                    >
+                                @else
+                                    {{ strtoupper(substr($resep->user?->name ?? 'U', 0, 1)) }}
+                                @endif
+                            </div>
+                            <span class="td-name">{{ $resep->user?->name ?? '—' }}</span>
+                        </div>
+                    </td>
+
+                    {{-- Kategori --}}
+                    <td>
+                        @if($resep->mainFilter)
+                            <span class="badge badge--blue">{{ $resep->mainFilter->title }}</span>
+                        @else
+                            <span class="td-sub">—</span>
+                        @endif
+                    </td>
+
+                    {{-- Rating --}}
+                    <td>
+                        <div class="star-display">
+                            <span class="material-icons-round">star</span>
+                            {{ number_format($resep->current_star, 1) }}
+                        </div>
+                    </td>
+
+                    {{-- Views --}}
+                    <td>{{ number_format($resep->views_count) }}</td>
+
+                    {{-- Status --}}
+                    <td>
+                        <span class="badge {{ $resep->is_published ? 'badge--green' : 'badge--gray' }}">
+                            <span class="material-icons-round">
+                                {{ $resep->is_published ? 'check_circle' : 'unpublished' }}
+                            </span>
+                            {{ $resep->is_published ? 'Published' : 'Draft' }}
+                        </span>
+                    </td>
+
+                    {{-- Tanggal --}}
+                    <td class="td-sub">{{ $resep->created_at->format('d M Y') }}</td>
+
+                    {{-- Aksi --}}
+                    <td>
+                        <div class="td-actions">
+
+                            {{-- Detail --}}
+                            <a
+                                href="{{ route('admin.resep.show', $resep) }}"
+                                class="icon-btn"
+                                title="Lihat Detail"
+                            >
+                                <span class="material-icons-round">visibility</span>
+                            </a>
+
+                            {{-- Toggle Publish --}}
+                            <form
+                                method="POST"
+                                action="{{ route('admin.resep.togglePublish', $resep) }}"
+                                style="display:contents"
+                            >
+                                @csrf
+                                @method('PATCH')
+                                <button
+                                    type="submit"
+                                    class="icon-btn icon-btn--success"
+                                    title="{{ $resep->is_published ? 'Unpublish' : 'Publish' }}"
+                                >
+                                    <span class="material-icons-round">
+                                        {{ $resep->is_published ? 'unpublished' : 'publish' }}
+                                    </span>
+                                </button>
+                            </form>
+
+                            {{-- Hapus --}}
+                            <button
+                                class="icon-btn icon-btn--danger"
+                                title="Hapus Resep"
+                                onclick="confirmDelete(
+                                    '{{ route('admin.resep.destroy', $resep) }}',
+                                    '{{ addslashes($resep->title) }}'
+                                )"
+                            >
+                                <span class="material-icons-round">delete</span>
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="9">
+                        <div class="empty-state">
+                            <span class="material-icons-round">menu_book</span>
+                            <h3>Belum ada resep</h3>
+                            <p>
+                                @if(request()->hasAny(['search', 'status', 'filter_id']))
+                                    Tidak ada resep yang cocok dengan filter yang dipilih.
+                                @else
+                                    Resep yang ditambahkan user akan muncul di sini.
+                                @endif
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    {{-- Pagination --}}
+    @if($reseps->hasPages())
+    <div class="pagination">
+        <span class="pagination__info">
+            Menampilkan {{ $reseps->firstItem() }}–{{ $reseps->lastItem() }}
+            dari {{ number_format($reseps->total()) }} resep
+        </span>
+        <div class="pagination__btns">
+            {{-- Prev --}}
+            <button
+                class="pagination__btn"
+                {{ $reseps->onFirstPage() ? 'disabled' : '' }}
+                onclick="window.location='{{ $reseps->previousPageUrl() }}'"
+            >
+                <span class="material-icons-round">chevron_left</span>
+            </button>
+
+            {{-- Page numbers — tampilkan max 7 page, sisanya ellipsis --}}
+            @php
+                $currentPage = $reseps->currentPage();
+                $lastPage    = $reseps->lastPage();
+                $start       = max(1, $currentPage - 3);
+                $end         = min($lastPage, $currentPage + 3);
+            @endphp
+
+            @if($start > 1)
+                <button class="pagination__btn" onclick="window.location='{{ $reseps->url(1) }}'">1</button>
+                @if($start > 2)
+                    <span class="pagination__btn" style="pointer-events:none">…</span>
+                @endif
+            @endif
+
+            @for($i = $start; $i <= $end; $i++)
+                <button
+                    class="pagination__btn {{ $currentPage === $i ? 'is-active' : '' }}"
+                    onclick="window.location='{{ $reseps->url($i) }}'"
+                >{{ $i }}</button>
+            @endfor
+
+            @if($end < $lastPage)
+                @if($end < $lastPage - 1)
+                    <span class="pagination__btn" style="pointer-events:none">…</span>
+                @endif
+                <button class="pagination__btn" onclick="window.location='{{ $reseps->url($lastPage) }}'">
+                    {{ $lastPage }}
+                </button>
+            @endif
+
+            {{-- Next --}}
+            <button
+                class="pagination__btn"
+                {{ ! $reseps->hasMorePages() ? 'disabled' : '' }}
+                onclick="window.location='{{ $reseps->nextPageUrl() }}'"
+            >
+                <span class="material-icons-round">chevron_right</span>
+            </button>
+        </div>
+    </div>
+    @endif
+
+</div>
+
+@endsection
+
+@push('scripts')
+<script>
+function confirmDelete(url, name) {
+    if (!confirm(`Hapus resep "${name}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    form.innerHTML = `
+        <input type="hidden" name="_token"  value="{{ csrf_token() }}">
+        <input type="hidden" name="_method" value="DELETE">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Submit filter form saat user selesai mengetik (debounce 400ms)
+const searchInput = document.querySelector('input[name="search"]');
+if (searchInput) {
+    let debounceTimer;
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            document.getElementById('filterForm').submit();
+        }, 400);
+    });
+}
+</script>
+@endpush
