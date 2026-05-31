@@ -18,9 +18,41 @@
         </div>
         <div>
             <h1 class="fav-title font-bold">Resep Favorit</h1>
-            <p class="fav-sub">{{ $favorites->count() }} resep tersimpan</p>
+            <p class="fav-sub" id="favCount">{{ $favorites->count() }} resep tersimpan</p>
         </div>
     </div>
+
+    {{-- Search + Sort --}}
+    @if(!$favorites->isEmpty())
+    <div class="fav-toolbar">
+        <div class="fav-search-wrap">
+            <span class="material-icons-round fav-search-icon">search</span>
+            <input type="text" id="favSearch" class="fav-search-input"
+                   placeholder="Cari resep favorit...">
+            <button class="fav-search-clear" id="favSearchClear" style="display:none">
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+        <div class="fav-sort-wrap" id="favSortToggle">
+            <span class="material-icons-round">sort</span>
+            <span class="fav-sort-label" id="favSortLabel">Terbaru</span>
+            <span class="material-icons-round fav-sort-arrow">expand_more</span>
+            <div class="fav-sort-dropdown" id="favSortDropdown">
+                <button class="fav-sort-option active" data-sort="newest">Terbaru</button>
+                <button class="fav-sort-option" data-sort="oldest">Terlama</button>
+                <button class="fav-sort-option" data-sort="rating">Rating Tertinggi</button>
+                <button class="fav-sort-option" data-sort="name">A - Z</button>
+            </div>
+        </div>
+    </div>
+
+    {{-- No result state --}}
+    <div class="fav-no-result" id="favNoResult" style="display:none">
+        <span class="material-icons-round">search_off</span>
+        <p class="fav-empty-title font-semibold">Resep tidak ditemukan</p>
+        <p class="fav-empty-sub">Coba kata kunci lain.</p>
+    </div>
+    @endif
 
     {{-- Grid --}}
     @if($favorites->isEmpty())
@@ -34,9 +66,13 @@
             </a>
         </div>
     @else
-        <div class="fav-grid">
-            @foreach($favorites as $resep)
-                <a href="{{ route('detail.resep', $resep->id) }}" class="fav-card-link">
+        <div class="fav-grid" id="favGrid">
+                @foreach($favorites as $resep)
+                <a href="{{ route('detail.resep', $resep->id) }}" class="fav-card-link"
+                   data-title="{{ strtolower($resep->title) }}"
+                   data-author="{{ strtolower($resep->user->name ?? '') }}"
+                   data-rating="{{ $resep->current_star }}"
+                   data-date="{{ $resep->pivot->created_at ?? $resep->created_at }}">
                     <div class="fav-card">
                         {{-- Thumbnail --}}
                         <div class="fav-card-thumb">

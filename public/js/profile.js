@@ -250,3 +250,48 @@ function confirmUnfollow() {
 }
 
 document.getElementById('unfollowOverlay')?.addEventListener('click', closeUnfollowConfirm);
+
+// ─── SORT RESEP DI PROFIL ─────────────────────────────────────────────────────
+const profSortToggle  = document.getElementById('profSortToggle');
+const profSortLabel   = document.getElementById('profSortLabel');
+const profSortOptions = document.querySelectorAll('.prof-sort-option');
+const profResepGrid   = document.getElementById('profResepGrid');
+let profCurrentSort   = 'newest';
+
+profSortToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profSortToggle.classList.toggle('open');
+});
+
+document.addEventListener('click', () => {
+    profSortToggle?.classList.remove('open');
+});
+
+profSortOptions.forEach(opt => {
+    opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profCurrentSort = opt.dataset.sort;
+        profSortLabel.textContent = opt.textContent;
+        profSortOptions.forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        profSortToggle.classList.remove('open');
+        sortProfResep();
+    });
+});
+
+function sortProfResep() {
+    if (!profResepGrid) return;
+    const cards = Array.from(profResepGrid.querySelectorAll('.resep-card-link'));
+
+    cards.sort((a, b) => {
+        switch (profCurrentSort) {
+            case 'newest': return new Date(b.dataset.date)    - new Date(a.dataset.date);
+            case 'rating': return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+            case 'views':  return parseInt(b.dataset.views)    - parseInt(a.dataset.views);
+            case 'name':   return a.dataset.title.localeCompare(b.dataset.title, 'id');
+            default:       return 0;
+        }
+    });
+
+    cards.forEach(card => profResepGrid.appendChild(card));
+}

@@ -87,7 +87,19 @@
     <section class="my-resep-section">
         <div class="section-header">
             <h2 class="section-title font-semibold">Resep Saya</h2>
-            @if($resepCount > 12)
+            @if(!$resepUser->isEmpty())
+            <div class="prof-sort-wrap" id="profSortToggle">
+                <span class="material-icons-round">sort</span>
+                <span class="prof-sort-label" id="profSortLabel">Terbaru</span>
+                <span class="material-icons-round prof-sort-arrow">expand_more</span>
+                <div class="prof-sort-dropdown" id="profSortDropdown">
+                    <button class="prof-sort-option active" data-sort="newest">Terbaru</button>
+                    <button class="prof-sort-option" data-sort="rating">Rating</button>
+                    <button class="prof-sort-option" data-sort="views">Terpopuler</button>
+                    <button class="prof-sort-option" data-sort="name">A - Z</button>
+                </div>
+            </div>
+            @elseif($resepCount > 12)
                 <a href="#" class="see-all-link">Lihat semua</a>
             @endif
         </div>
@@ -104,9 +116,13 @@
                 </button>
             </div>
         @else
-            <div class="resep-grid">
+            <div class="resep-grid" id="profResepGrid">
                 @foreach($resepUser as $resep)
-                    <a href="{{ route('detail.resep', $resep->id) }}" class="resep-card-link">
+                    <a href="{{ route('detail.resep', $resep->id) }}" class="resep-card-link"
+                       data-title="{{ strtolower($resep->title) }}"
+                       data-rating="{{ $resep->current_star }}"
+                       data-views="{{ $resep->views_count }}"
+                       data-date="{{ $resep->created_at }}">
                         <div class="resep-card">
                             <div class="resep-card-thumb">
                                 @if($resep->thumbnail)

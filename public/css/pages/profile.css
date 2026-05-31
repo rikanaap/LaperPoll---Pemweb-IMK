@@ -821,3 +821,53 @@ button.stat-bubble {
     pointer-events: none;
 }
 .ul-confirm-modal[style*="flex"] { pointer-events: auto; }
+
+/* ── SORT RESEP DI PROFIL ── */
+.prof-sort-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.35rem 0.75rem;
+    background: white;
+    border: 1.5px solid var(--primary-normal);
+    border-radius: 2rem;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.15s;
+}
+.prof-sort-wrap:hover { border-color: var(--orange-normal); }
+.prof-sort-wrap.open  { border-color: var(--orange-normal); box-shadow: 0 0 0 3px rgba(230,81,0,0.1); }
+.prof-sort-wrap .material-icons-round { font-size: 0.85rem; color: var(--orange-normal); }
+.prof-sort-label { font-size: 0.68rem; font-weight: 600; color: var(--secondary-normal); font-family: var(--font-jakarta); }
+.prof-sort-arrow { transition: transform 0.2s; }
+.prof-sort-wrap.open .prof-sort-arrow { transform: rotate(180deg); }
+
+.prof-sort-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: white;
+    border: 1.5px solid var(--orange-light-active);
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    overflow: hidden;
+    z-index: 50;
+    min-width: 130px;
+}
+.prof-sort-wrap.open .prof-sort-dropdown { display: block; animation: dropdownFade 0.15s ease; }
+@keyframes dropdownFade {
+    from { opacity:0; transform:translateY(-6px); }
+    to   { opacity:1; transform:translateY(0); }
+}
+.prof-sort-option {
+    display: block; width: 100%;
+    padding: 0.55rem 0.875rem;
+    text-align: left; font-size: 0.75rem;
+    font-family: var(--font-jakarta); font-weight: 500;
+    color: var(--secondary-normal); background: none; border: none; cursor: pointer;
+    transition: background 0.1s;
+}
+.prof-sort-option:hover  { background: var(--orange-light); color: var(--orange-dark); }
+.prof-sort-option.active { background: var(--orange-light); color: var(--orange-normal); font-weight: 700; }
