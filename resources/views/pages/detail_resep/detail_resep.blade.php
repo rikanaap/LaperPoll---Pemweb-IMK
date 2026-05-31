@@ -341,6 +341,22 @@
     </a>
 </div>
 
+{{-- Unfollow confirm modal --}}
+<div class="lp-confirm-overlay" id="drUnfollowOverlay" onclick="closeDrUnfollowConfirm()"></div>
+<div class="lp-confirm-modal" id="drUnfollowModal">
+    <div class="lp-confirm-box">
+        <div class="lp-confirm-icon">👋</div>
+        <p class="lp-confirm-title font-bold">Berhenti Mengikuti?</p>
+        <p class="lp-confirm-sub">Kamu tidak akan melihat konten dari user ini.</p>
+        <div class="lp-confirm-actions">
+            <button class="lp-confirm-cancel font-semibold" onclick="closeDrUnfollowConfirm()">Batal</button>
+            <button class="lp-confirm-ok font-semibold"
+                    style="background:var(--orange-normal);box-shadow:0 4px 12px rgba(230,81,0,0.3)"
+                    onclick="confirmDrUnfollow()">Ya, Berhenti</button>
+        </div>
+    </div>
+</div>
+
 {{-- Delete confirm modal --}}
 <div class="dr-confirm-overlay" id="drConfirmOverlay" onclick="closeDrConfirm()"></div>
 <div class="dr-confirm-modal" id="drConfirmModal">

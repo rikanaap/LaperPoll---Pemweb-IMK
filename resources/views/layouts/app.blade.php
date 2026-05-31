@@ -35,5 +35,5 @@
 </body>
 {{-- Page-specific JS --}}
 @stack('scripts')
-
+<script src="{{ asset('js/toast.js') }}"></script>
 </html>

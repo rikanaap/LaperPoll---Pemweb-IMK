@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '{{ $user->name }} - LaperPoll')
+@section('title', $user->name . ' - LaperPoll')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/profile.css') }}">
@@ -138,5 +138,22 @@
 </script>
 <script src="{{ asset('js/public-profile.js') }}"></script>
 @endpush
+
+{{-- Unfollow confirm modal --}}
+<div class="lp-confirm-overlay" id="pubUnfollowOverlay"></div>
+<div class="lp-confirm-modal" id="pubUnfollowModal">
+    <div class="lp-confirm-box">
+        <div class="lp-confirm-icon">👋</div>
+        <h3 class="lp-confirm-title font-bold">Berhenti Mengikuti?</h3>
+        <p class="lp-confirm-sub">Kamu tidak akan melihat konten dari user ini di feedmu.</p>
+        <div class="lp-confirm-actions">
+            <button class="lp-confirm-cancel font-semibold" onclick="closePubUnfollowConfirm()">Batal</button>
+            <button class="lp-confirm-ok font-semibold" onclick="confirmPubUnfollow()"
+                    style="background:var(--orange-normal);box-shadow:0 4px 12px rgba(230,81,0,0.3)">
+                Ya, Berhenti
+            </button>
+        </div>
+    </div>
+</div>
 
 @endsection

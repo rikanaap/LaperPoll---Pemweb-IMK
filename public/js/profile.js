@@ -180,32 +180,73 @@ function renderUserItem(user) {
 
 function bindFollowButtons() {
     document.querySelectorAll('.follow-btn:not(.self)').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const userId = btn.dataset.userId;
-            btn.disabled = true;
-
-            try {
-                const res  = await fetch(`/follow/${userId}/toggle`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': CSRF,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    btn.classList.toggle('follow',   !data.is_following);
-                    btn.classList.toggle('unfollow',  data.is_following);
-                    btn.textContent = data.is_following ? 'Mengikuti' : 'Ikuti';
-                    btn.dataset.following = data.is_following ? '1' : '0';
-                }
-            } catch (err) {
-                console.error('Gagal toggle follow:', err);
-            } finally {
-                btn.disabled = false;
+        btn.addEventListener('click', () => {
+            const isFollowing = btn.dataset.following === '1';
+            if (isFollowing) {
+                // Tampilkan konfirmasi unfollow
+                openUnfollowConfirm(btn);
+            } else {
+                doFollow(btn);
             }
         });
     });
 }
+
+async function doFollow(btn) {
+    const userId = btn.dataset.userId;
+
+    // Loading state
+    const originalHtml = btn.innerHTML;
+    btn.disabled  = true;
+    btn.innerHTML = '<span class="material-icons-round lp-spin">autorenew</span>';
+
+    try {
+        const res  = await fetch(`/follow/${userId}/toggle`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': CSRF,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            btn.classList.toggle('follow',   !data.is_following);
+            btn.classList.toggle('unfollow',  data.is_following);
+            btn.innerHTML      = data.is_following ? 'Mengikuti' : 'Ikuti';
+            btn.dataset.following = data.is_following ? '1' : '0';
+            lpToast(data.is_following ? 'Berhasil mengikuti!' : 'Berhenti mengikuti.', data.is_following ? 'success' : 'info');
+        }
+    } catch (err) {
+        console.error('Gagal toggle follow:', err);
+        btn.innerHTML = originalHtml;
+        lpToast('Gagal, coba lagi.', 'error');
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+// ── UNFOLLOW CONFIRM MODAL ────────────────────────────────────────────────────
+let pendingUnfollowBtn = null;
+
+function openUnfollowConfirm(btn) {
+    pendingUnfollowBtn = btn;
+    document.getElementById('unfollowModal')?.classList.add('open');
+    document.getElementById('unfollowOverlay')?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeUnfollowConfirm() {
+    pendingUnfollowBtn = null;
+    document.getElementById('unfollowModal')?.classList.remove('open');
+    document.getElementById('unfollowOverlay')?.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function confirmUnfollow() {
+    closeUnfollowConfirm();
+    if (pendingUnfollowBtn) doFollow(pendingUnfollowBtn);
+}
+
+document.getElementById('unfollowOverlay')?.addEventListener('click', closeUnfollowConfirm);

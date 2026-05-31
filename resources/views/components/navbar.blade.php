@@ -48,7 +48,9 @@
     </button>
     @elseif($user)
     <a href="{{ route('profile.index') }}">
-        <img src="{{ asset('assets/images/Image_DummyProfile.png') }}"
+        <img src="{{ $user->profile_photo
+                ? Storage::url($user->profile_photo)
+                : asset('assets/images/Image_DummyProfile.png') }}"
              alt="Profil Foto"
              class="profile">
     </a>

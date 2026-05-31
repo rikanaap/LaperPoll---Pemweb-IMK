@@ -13,7 +13,7 @@
                     <!-- Duration Resep -->
                     <div>
                         <span class="material-icons-round text-title2">watch_later</span>
-                        <p class="text-body font-jakarta font-medium text-black">{{ $resep->cook_duration }}</p>
+                        <p class="text-body font-jakarta font-medium text-black">{{ $resep->cook_duration_formatted }}</p>
                     </div>
 
                     <!-- Resep Tersedia atau Bahan Kurang -->

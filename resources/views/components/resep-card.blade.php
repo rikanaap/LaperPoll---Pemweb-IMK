@@ -20,7 +20,7 @@
                     <div class="resep-content-detail">
                         <div class="info-item">
                             <span class="material-icons-round icon-time">schedule</span>
-                            <p class="font-jakarta">{{ $resep->cook_duration }}</p>
+                            <p class="font-jakarta">{{ $resep->cook_duration_formatted }}</p>
                         </div>
                         <div class="info-item">
                             <span class="material-icons-round icon-star">star</span>

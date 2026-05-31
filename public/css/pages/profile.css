@@ -804,3 +804,20 @@ button.stat-bubble {
 }
 .pub-follow-btn.following .material-icons-round { color: white; }
 .pub-follow-btn.following:hover { background: rgba(255,255,255,0.3); }
+
+/* ── SPIN LOADING STATE ── */
+.lp-spin {
+    animation: lpSpin 0.7s linear infinite;
+    display: inline-block !important;
+    font-size: 1rem !important;
+    color: inherit !important;
+}
+@keyframes lpSpin { to { transform: rotate(360deg); } }
+
+/* ── UNFOLLOW CONFIRM (reuse ul-confirm styles) ── */
+.ul-confirm-modal {
+    position: fixed; inset: 0; z-index: 160;
+    align-items: center; justify-content: center; padding: 1.5rem;
+    pointer-events: none;
+}
+.ul-confirm-modal[style*="flex"] { pointer-events: auto; }

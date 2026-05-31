@@ -42,9 +42,6 @@ Route::get('/main-menu',          [MainMenu::class, 'index'])          ->name('m
 Route::get('/main-menu?m=favorit',[MainMenu::class, 'favoritPengguna'])->name('main-menu.favorit');
 Route::get('/main-menu?m=hari',   [MainMenu::class, 'resepHariIni'])  ->name('main-menu.hari-ini');
 
-// ── PROFIL PUBLIK (bisa diakses guest) ───────────────────────────────────────
-Route::get('/profile/{userId}', [PublicProfileController::class, 'show'])->name('profile.public');
-
 // ── DETAIL RESEP ──────────────────────────────────────────────────────────────
 Route::get('/detail-resep/{id}', [DetailResepController::class, 'showDetail'])->name('detail.resep');
 

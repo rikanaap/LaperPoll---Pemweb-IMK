@@ -367,6 +367,23 @@
     </div>
 </div>
 
+{{-- ── UNFOLLOW CONFIRM MODAL ── --}}
+<div class="lp-confirm-overlay" id="unfollowOverlay"></div>
+<div class="lp-confirm-modal" id="unfollowModal">
+    <div class="lp-confirm-box">
+        <div class="lp-confirm-icon">👋</div>
+        <h3 class="lp-confirm-title font-bold">Berhenti Mengikuti?</h3>
+        <p class="lp-confirm-sub">Kamu tidak akan melihat konten dari user ini di feedmu.</p>
+        <div class="lp-confirm-actions">
+            <button class="lp-confirm-cancel font-semibold" onclick="closeUnfollowConfirm()">Batal</button>
+            <button class="lp-confirm-ok font-semibold" onclick="confirmUnfollow()"
+                    style="background:var(--orange-normal);box-shadow:0 4px 12px rgba(230,81,0,0.3)">
+                Ya, Berhenti
+            </button>
+        </div>
+    </div>
+</div>
+
 {{-- ── FOLLOW MODAL ── --}}
 <div class="follow-overlay" id="followOverlay" onclick="closeFollowModal()"></div>
 <div class="follow-modal" id="followModal">

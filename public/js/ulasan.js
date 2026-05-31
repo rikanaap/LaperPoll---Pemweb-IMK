@@ -48,7 +48,7 @@ if (photoUpload && photoInput) {
         const slots = MAX_PHOTOS - currentCount + markedDel;
 
         if (slots <= 0) {
-            showToast(`Maksimal ${MAX_PHOTOS} foto.`, 'warn');
+            lpToast(`Maksimal ${MAX_PHOTOS} foto.`, 'warn');
             this.value = '';
             return;
         }
@@ -56,7 +56,7 @@ if (photoUpload && photoInput) {
         Array.from(this.files).slice(0, slots).forEach(file => {
             if (!file.type.startsWith('image/')) return;
             if (file.size > 2 * 1024 * 1024) {
-                showToast('Ukuran foto maksimal 2 MB.', 'warn');
+                lpToast('Ukuran foto maksimal 2 MB.', 'warn');
                 return;
             }
             const reader = new FileReader();
@@ -92,7 +92,7 @@ if (ulasanForm) {
         const rating = parseInt(ratingInput?.value || 0);
         if (rating < 1 || rating > 5) {
             e.preventDefault();
-            showToast('Pilih rating bintang terlebih dahulu!', 'warn');
+            lpToast('Pilih rating bintang terlebih dahulu!', 'warn');
             document.getElementById('ulStars')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     });
@@ -137,7 +137,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ─── TOAST ────────────────────────────────────────────────────────────────────
-function showToast(msg, type = 'info') {
+function lpToast(msg, type = 'info') {
     const existing = document.querySelector('.ul-toast');
     if (existing) existing.remove();
 

@@ -1,3 +1,4 @@
+<a href="{{ route('detail.resep', $resep->id) }}" style="text-decoration:none;color:inherit;">
 <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] items-center flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
     <img src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop" alt="" class="w-full aspect-square rounded-[0.5rem]">
     <div class="flex flex-col gap-[0.1rem] items-start">
@@ -5,11 +6,11 @@
         <div class="flex gap-[0.18rem]">
             <div class="flex gap-[0.1rem]">
                 <span class="material-icons-round text-[0.45rem] font-light text-black">watch_later</span>
-                <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">{{ $resep->cook_duration }}</>
+                <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">{{ $resep->cook_duration_formatted }}</p>
             </div>
             <div class="flex gap-[0.1rem]">
                 <span class="material-icons-round text-[0.45rem] text-black">menu_book</span>
-                <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</>
+                <p class="font-jakarta text-[0.4rem]/[120%] font-medium text-black">Bahan Tersedia</p>
             </div>
         </div>
         <div class="flex gap-[0.125rem]">
@@ -25,3 +26,4 @@
         </div>
     </div>
 </div>
+</a>
