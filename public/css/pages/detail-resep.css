@@ -912,3 +912,32 @@
     transition: opacity 0.15s;
 }
 .dr-author-link:hover { opacity: 0.8; }
+
+/* ── FLASH MESSAGE ── */
+.dr-flash {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.875rem;
+    font-size: 0.813rem;
+    font-family: var(--font-jakarta);
+    animation: flashIn 0.3s ease;
+}
+@keyframes flashIn {
+    from { opacity:0; transform: translateY(-6px); }
+    to   { opacity:1; transform: translateY(0); }
+}
+.dr-flash .material-icons-round { font-size: 1.1rem; flex-shrink: 0; }
+.dr-flash-success {
+    background: #ECFDF3;
+    border: 1px solid #6CE9A6;
+    color: #027A48;
+}
+.dr-flash-success .material-icons-round { color: #027A48; }
+.dr-flash-error {
+    background: #FEF3F2;
+    border: 1px solid #FCA5A5;
+    color: #B91C1C;
+}
+.dr-flash-error .material-icons-round { color: #B91C1C; }

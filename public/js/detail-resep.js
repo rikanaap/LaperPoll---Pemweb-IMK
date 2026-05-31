@@ -294,3 +294,13 @@ function confirmDrUnfollow() {
     closeDrUnfollowConfirm();
     doDrFollow();
 }
+
+// ─── AUTO HIDE FLASH MESSAGE ──────────────────────────────────────────────────
+document.querySelectorAll('.dr-flash').forEach(flash => {
+    setTimeout(() => {
+        flash.style.transition = 'opacity 0.4s, transform 0.4s';
+        flash.style.opacity    = '0';
+        flash.style.transform  = 'translateY(-6px)';
+        setTimeout(() => flash.remove(), 400);
+    }, 4000);
+});

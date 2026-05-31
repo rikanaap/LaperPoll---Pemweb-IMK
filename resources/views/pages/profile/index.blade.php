@@ -279,34 +279,49 @@
         <div class="sidebar-panel-body">
             <p class="sidebar-team-sub">Kelompok 12 — Pemrograman Web & IMK</p>
             <div class="sidebar-team-grid">
-                {{-- Ganti nama, foto, role sesuai tim kalian --}}
                 <div class="sidebar-member-card">
                     <div class="sidebar-member-avatar">
-                        <span class="material-icons-round">person</span>
+                        <img src="{{ asset('assets/images/team/harmoni.jpg') }}"
+                             alt="Harmoni"
+                             class="sidebar-member-photo"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <span class="material-icons-round" style="display:none">person</span>
                     </div>
-                    <p class="sidebar-member-name font-semibold">Anggota 1</p>
-                    <p class="sidebar-member-role">Project Lead</p>
+                    <p class="sidebar-member-name font-semibold">Harmoni Natanael S.</p>
+                    <p class="sidebar-member-role">Project Lead, Full Stack Dev & UI/UX Designer</p>
                 </div>
                 <div class="sidebar-member-card">
                     <div class="sidebar-member-avatar">
-                        <span class="material-icons-round">person</span>
+                        <img src="{{ asset('assets/images/team/ikbal.jpg') }}"
+                             alt="Ikbal"
+                             class="sidebar-member-photo"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <span class="material-icons-round" style="display:none">person</span>
                     </div>
-                    <p class="sidebar-member-name font-semibold">Anggota 2</p>
-                    <p class="sidebar-member-role">Frontend Dev</p>
+                    <p class="sidebar-member-name font-semibold">Ikbal Miftahudin</p>
+                    <p class="sidebar-member-role">Full Stack Dev, UI/UX Designer & System Architect</p>
                 </div>
                 <div class="sidebar-member-card">
                     <div class="sidebar-member-avatar">
-                        <span class="material-icons-round">person</span>
+                        <img src="{{ asset('assets/images/team/ihsan.jpg') }}"
+                             alt="Ihsan"
+                             class="sidebar-member-photo"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <span class="material-icons-round" style="display:none">person</span>
                     </div>
-                    <p class="sidebar-member-name font-semibold">Anggota 3</p>
-                    <p class="sidebar-member-role">Backend Dev</p>
+                    <p class="sidebar-member-name font-semibold">M. Ihsan Ansori</p>
+                    <p class="sidebar-member-role">Full Stack Dev & UI/UX Designer</p>
                 </div>
                 <div class="sidebar-member-card">
                     <div class="sidebar-member-avatar">
-                        <span class="material-icons-round">person</span>
+                        <img src="{{ asset('assets/images/team/iqbal.jpg') }}"
+                             alt="Iqbal"
+                             class="sidebar-member-photo"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                        <span class="material-icons-round" style="display:none">person</span>
                     </div>
-                    <p class="sidebar-member-name font-semibold">Anggota 4</p>
-                    <p class="sidebar-member-role">UI/UX Designer</p>
+                    <p class="sidebar-member-name font-semibold">M. Iqbal Ramadhan</p>
+                    <p class="sidebar-member-role">Full Stack Dev & UI/UX Designer</p>
                 </div>
             </div>
         </div>

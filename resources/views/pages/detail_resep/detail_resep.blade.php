@@ -11,6 +11,20 @@
 
     <x-navbar backUrl="back"></x-navbar>
 
+    {{-- Flash messages --}}
+    @if(session('success'))
+        <div class="dr-flash dr-flash-success">
+            <span class="material-icons-round">check_circle</span>
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="dr-flash dr-flash-error">
+            <span class="material-icons-round">error</span>
+            {{ session('error') }}
+        </div>
+    @endif
+
     {{-- ── HERO IMAGE ── --}}
     <section class="dr-hero">
         @if($resep->thumbnail)
