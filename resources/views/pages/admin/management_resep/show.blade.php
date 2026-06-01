@@ -50,7 +50,7 @@
 
             @if($resep->thumbnail)
                 <img
-                    src="{{ Storage::url($resep->thumbnail) }}"
+                    src="{{ $resep->thumbnail_url }}"
                     alt="{{ $resep->title }}"
                     class="resep-detail-thumb"
                 >

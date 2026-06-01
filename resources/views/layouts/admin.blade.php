@@ -71,7 +71,9 @@
         </nav>
 
         <div class="sidebar__footer">
-            <div class="sidebar__user">
+
+            {{-- Info user --}}
+            <!-- <div class="sidebar__user">
                 <div class="sidebar__user-avatar">
                     @if(auth()->user()?->profile_photo)
                         <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="">
@@ -83,8 +85,17 @@
                     <div class="sidebar__user-name">{{ auth()->user()->name ?? 'Admin' }}</div>
                     <div class="sidebar__user-role">{{ auth()->user()?->is_admin ? 'Super Admin' : 'Admin' }}</div>
                 </div>
-                <span class="material-icons-round" style="font-size:18px!important;color:var(--text-muted)">more_vert</span>
-            </div>
+            </div> -->
+
+            {{-- ✅ Tombol logout --}}
+            <form method="POST" action="{{ route('auth.logout') }}">
+                @csrf
+                <button type="submit" class="sidebar__logout">
+                    <span class="material-icons-round">logout</span>
+                    Keluar
+                </button>
+            </form>
+
         </div>
 
     </aside>
@@ -94,7 +105,6 @@
 
         <header class="topbar">
 
-            {{-- Hamburger — hanya tampil di mobile --}}
             <button class="topbar__hamburger" id="sidebarToggle" type="button" aria-label="Buka menu">
                 <span class="material-icons-round">menu</span>
             </button>
@@ -104,12 +114,12 @@
                 <div class="topbar__breadcrumb">@yield('breadcrumb', 'Admin / Dashboard')</div>
             </div>
 
-            <div class="topbar__actions">
+            <!-- <div class="topbar__actions">
                 <button class="topbar__btn" type="button" title="Notifikasi">
                     <span class="material-icons-round">notifications</span>
                     <span class="topbar__btn-dot"></span>
                 </button>
-            </div>
+            </div> -->
 
         </header>
 

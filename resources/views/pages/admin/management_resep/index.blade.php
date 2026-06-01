@@ -81,7 +81,7 @@
                         <div class="td-user">
                             @if($resep->thumbnail)
                                 <img
-                                    src="{{ Storage::url($resep->thumbnail) }}"
+                                    src="{{ $resep->thumbnail_url }}"
                                     class="resep-thumb"
                                     alt="{{ $resep->title }}"
                                     loading="lazy"

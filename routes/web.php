@@ -165,7 +165,7 @@ Route::prefix('admin/bahans')->name('admin.bahans.')->group(function () {
 });
 
  
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function () {
  
     Route::get('/',        [AdminDashboardController::class, 'index'])->name('dashboard');
  

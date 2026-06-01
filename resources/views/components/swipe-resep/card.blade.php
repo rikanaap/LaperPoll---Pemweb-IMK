@@ -11,9 +11,7 @@
 @props(['resep', 'totalSelection' => 3])
 
 @php
-    $imageUrl = $resep->thumbnail
-        ? Storage::url($resep->thumbnail)
-        : asset('images/default-food.jpg');
+    $imageUrl = $resep->thumbnail_url ?? asset('images/default-food.jpg');
 
     $duration = $resep->cook_duration;
     if ($duration && str_contains($duration, ':')) {

@@ -91,7 +91,7 @@
                         <td>
                             <div class="td-user">
                                 @if($resep->thumbnail)
-                                    <img src="{{ Storage::url($resep->thumbnail) }}" class="resep-thumb" alt="{{ $resep->title }}">
+                                    <img src="{{ $resep->thumbnail_url }}" class="resep-thumb" alt="{{ $resep->title }}">
                                 @else
                                     <div class="resep-thumb resep-thumb--placeholder">
                                         <span class="material-icons-round">image</span>

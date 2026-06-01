@@ -30,7 +30,7 @@ class ResepResource extends JsonResource
             'title'               => $this->title,
             'description'         => $this->description,
             'slug'                => $this->slug,
-            'thumbnail'           => $this->thumbnail ? asset('storage/' . $this->thumbnail) : null,
+            'thumbnail'             => $this->thumbnail_url,
             'cook_duration'       => $this->cook_duration,
             'rating'              => $this->current_star ?? 5.0,
             'views'               => $this->views_count ?? 0,

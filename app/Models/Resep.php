@@ -36,6 +36,19 @@ class Resep extends Model
     |--------------------------------------------------------------------------
     */
 
+    // app/Models/Resep.php — tambahkan method ini
+
+    public function getThumbnailUrlAttribute(): ?string
+{
+    if (! $this->thumbnail) return null;
+
+    if (str_starts_with($this->thumbnail, 'images/')) {
+        return asset('assets/' . $this->thumbnail);
+    }
+
+    return \Illuminate\Support\Facades\Storage::url($this->thumbnail);
+}
+
     public function user()
     {
         return $this->belongsTo(User::class);

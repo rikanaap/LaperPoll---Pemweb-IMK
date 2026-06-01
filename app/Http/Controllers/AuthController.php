@@ -13,10 +13,12 @@ class AuthController extends Controller
     {
         return view('pages.auth.signin');
     }
+
     public function signUp()
     {
         return view('pages.auth.signup');
     }
+
     public function forgotPass()
     {
         return view('pages.auth.forgotpass');
@@ -25,16 +27,16 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'                  => 'required|string|max:255',
-            'email'                 => 'required|email|unique:users,email',
-            'password'              => 'required|min:6|confirmed',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed',
         ], [
-            'name.required'         => 'Nama lengkap wajib diisi.',
-            'email.required'        => 'Email wajib diisi.',
-            'email.unique'          => 'Email sudah terdaftar.',
-            'password.required'     => 'Password wajib diisi.',
-            'password.min'          => 'Password minimal 6 karakter.',
-            'password.confirmed'    => 'Konfirmasi password tidak cocok.',
+            'name.required'      => 'Nama lengkap wajib diisi.',
+            'email.required'     => 'Email wajib diisi.',
+            'email.unique'       => 'Email sudah terdaftar.',
+            'password.required'  => 'Password wajib diisi.',
+            'password.min'       => 'Password minimal 6 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
         $user = User::create([
@@ -48,7 +50,6 @@ class AuthController extends Controller
         return redirect()->route('main-menu.index');
     }
 
-    // Proses Login
     public function login(Request $request)
     {
         $request->validate([
@@ -66,6 +67,11 @@ class AuthController extends Controller
             $request->session()->regenerate();
             session()->flash('toast', 'Selamat datang, ' . Auth::user()->name . '! 👋');
             session()->flash('toast_type', 'success');
+
+            if (Auth::user()->is_admin) {
+                return redirect()->route('admin.dashboard');
+            }
+
             return redirect()->route('landing.index');
         }
 
@@ -77,12 +83,19 @@ class AuthController extends Controller
         ])->withInput($request->only('email'));
     }
 
-    // Logout
     public function logout(Request $request)
     {
+        // ✅ Simpan dulu sebelum session di-invalidate
+        $isAdmin = Auth::user()?->is_admin;
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        if ($isAdmin) {
+            return redirect()->route('auth.sign-in');
+        }
+
         return redirect()->route('landing.index');
     }
 }
