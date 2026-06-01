@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserFilterRequest extends FormRequest
+class FilterQueryRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,8 +15,7 @@ class UserFilterRequest extends FormRequest
     {
         return [
             'search' => ['nullable', 'string', 'max:100'],
-            'verif'  => ['nullable', 'in:verified,unverified'],
-            'role'   => ['nullable', 'in:admin,user'],
+            'level'  => ['nullable', 'integer', 'in:1,2,3'], // ✅ fix
             'page'   => ['nullable', 'integer', 'min:1'],
         ];
     }
@@ -25,8 +24,7 @@ class UserFilterRequest extends FormRequest
     {
         return [
             'search' => $this->string('search')->value() ?: null,
-            'verif'  => $this->input('verif'),
-            'role'   => $this->input('role'),
+            'level'  => $this->input('level'),
         ];
     }
 }

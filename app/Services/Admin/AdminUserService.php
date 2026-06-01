@@ -12,11 +12,12 @@ class AdminUserService
 {
     private const PER_PAGE = 15;
 
-    // Persyaratan verifikasi
-    private const VERIF_MIN_RESEP     = 50;
-    private const VERIF_MIN_FAVORIT   = 300;
-    private const VERIF_MIN_FOLLOWERS = 80;
-    private const VERIF_MIN_VIEWS     = 1000;
+    private const VERIF_REQUIREMENTS = [
+        'resep'     => 50,
+        'favorit'   => 300,
+        'followers' => 80,
+        'views'     => 1000,
+    ];
 
     // ──────────────────────────────────────────────────────────
     // Read
@@ -25,26 +26,22 @@ class AdminUserService
     public function getPaginatedUsers(array $filters): LengthAwarePaginator
     {
         return User::query()
-            // Jumlah resep milik user
             ->withCount('reseps')
-            // Jumlah followers
             ->withCount('followers')
-            // Total favorit: jumlah baris di tabel favorites yang resep-nya milik user ini
-            ->withCount(['reseps as favorites_count' => function ($query) {
-                $query->whereHas('favoritedBy');
-            }])
-            // Total views: sum views_count dari semua resep milik user
+            ->withCount(['reseps as favorites_count' => fn ($q) =>
+                $q->whereHas('favoritedBy')
+            ])
             ->addSelect([
                 'total_views' => DB::table('reseps')
                     ->selectRaw('COALESCE(SUM(views_count), 0)')
                     ->whereColumn('reseps.user_id', 'users.id'),
             ])
-            ->when($filters['search'], function ($q, $search) {
-                $q->where(function ($q) use ($search) {
+            ->when($filters['search'], fn ($q, $search) =>
+                $q->where(fn ($q) =>
                     $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
+                      ->orWhere('email', 'like', "%{$search}%")
+                )
+            )
             ->when($filters['verif'] === 'verified',   fn ($q) => $q->whereNotNull('email_verified_at'))
             ->when($filters['verif'] === 'unverified', fn ($q) => $q->whereNull('email_verified_at'))
             ->when($filters['role'] === 'admin', fn ($q) => $q->where('is_admin', true))
@@ -56,28 +53,27 @@ class AdminUserService
 
     public function buildVerifData(LengthAwarePaginator $users): Collection
     {
-        return $users->getCollection()->mapWithKeys(function (User $user) {
-            $totalResep     = (int) ($user->reseps_count    ?? 0);
-            $totalFavorit   = (int) ($user->favorites_count ?? 0);
-            $totalFollowers = (int) ($user->followers_count ?? 0);
-            $totalViews     = (int) ($user->total_views     ?? 0);
+        $req = self::VERIF_REQUIREMENTS;
+
+        return $users->getCollection()->mapWithKeys(function (User $user) use ($req) {
+            $stats = $this->extractUserStats($user);
 
             return [
                 $user->id => [
-                    'resep_count'     => $totalResep,
-                    'favorit_count'   => $totalFavorit,
-                    'followers_count' => $totalFollowers,
-                    'views_count'     => $totalViews,
+                    'resep_count'     => $stats['resep'],
+                    'favorit_count'   => $stats['favorit'],
+                    'followers_count' => $stats['followers'],
+                    'views_count'     => $stats['views'],
 
-                    'pass_resep'     => $totalResep     >= self::VERIF_MIN_RESEP,
-                    'pass_favorit'   => $totalFavorit   >= self::VERIF_MIN_FAVORIT,
-                    'pass_followers' => $totalFollowers >= self::VERIF_MIN_FOLLOWERS,
-                    'pass_views'     => $totalViews     >= self::VERIF_MIN_VIEWS,
+                    'pass_resep'     => $stats['resep']     >= $req['resep'],
+                    'pass_favorit'   => $stats['favorit']   >= $req['favorit'],
+                    'pass_followers' => $stats['followers'] >= $req['followers'],
+                    'pass_views'     => $stats['views']     >= $req['views'],
 
-                    'min_resep'     => self::VERIF_MIN_RESEP,
-                    'min_favorit'   => self::VERIF_MIN_FAVORIT,
-                    'min_followers' => self::VERIF_MIN_FOLLOWERS,
-                    'min_views'     => self::VERIF_MIN_VIEWS,
+                    'min_resep'     => $req['resep'],
+                    'min_favorit'   => $req['favorit'],
+                    'min_followers' => $req['followers'],
+                    'min_views'     => $req['views'],
                 ],
             ];
         });
@@ -92,26 +88,21 @@ class AdminUserService
             ->where('reseps.user_id', $user->id)
             ->count();
 
-        $totalViews = DB::table('reseps')
+        $totalViews = (int) DB::table('reseps')
             ->where('user_id', $user->id)
             ->sum('views_count');
 
-        return $user->reseps_count    >= self::VERIF_MIN_RESEP
-            && $favorites             >= self::VERIF_MIN_FAVORIT
-            && $user->followers_count >= self::VERIF_MIN_FOLLOWERS
-            && $totalViews            >= self::VERIF_MIN_VIEWS;
+        $req = self::VERIF_REQUIREMENTS;
+
+        return $user->reseps_count    >= $req['resep']
+            && $favorites             >= $req['favorit']
+            && $user->followers_count >= $req['followers']
+            && $totalViews            >= $req['views'];
     }
 
-
-    public function createUser(array $data): User
-    {
-        return User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'password' => Hash::make($data['password']),
-            'is_admin' => (bool) ($data['is_admin'] ?? false),
-        ]);
-    }
+    // ──────────────────────────────────────────────────────────
+    // Write
+    // ──────────────────────────────────────────────────────────
 
     public function updateUser(User $user, array $data): User
     {
@@ -132,6 +123,10 @@ class AdminUserService
 
     public function verifyUser(User $user): User
     {
+        if ($user->email_verified_at !== null) {
+            return $user;
+        }
+
         if (! $this->meetsVerifRequirements($user)) {
             throw new \RuntimeException("User \"{$user->name}\" belum memenuhi syarat verifikasi.");
         }
@@ -151,5 +146,19 @@ class AdminUserService
         $user->delete();
 
         return $name;
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // Private helpers
+    // ──────────────────────────────────────────────────────────
+
+    private function extractUserStats(User $user): array
+    {
+        return [
+            'resep'     => (int) ($user->reseps_count    ?? 0),
+            'favorit'   => (int) ($user->favorites_count ?? 0),
+            'followers' => (int) ($user->followers_count ?? 0),
+            'views'     => (int) ($user->total_views     ?? 0),
+        ];
     }
 }

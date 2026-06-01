@@ -15,13 +15,11 @@ class AdminResepController extends Controller
         private readonly AdminResepService $resepService
     ) {}
 
-    // ──────────────────────────────────────────────────────────
-
     public function index(ResepFilterRequest $request): View
     {
         return view('pages.admin.management_resep.index', [
             'reseps'   => $this->resepService->getPaginatedReseps($request->filters()),
-            'filters'  => $this->resepService->getAllFilters(),
+            'kategoris' => $this->resepService->getAllFilters(), // ✅ key match dengan view
         ]);
     }
 
@@ -36,11 +34,10 @@ class AdminResepController extends Controller
     {
         $isPublished = $this->resepService->togglePublish($resep);
 
-        $message = $isPublished
+        return back()->with('success', $isPublished
             ? "Resep \"{$resep->title}\" berhasil dipublish."
-            : "Resep \"{$resep->title}\" berhasil di-unpublish.";
-
-        return back()->with('success', $message);
+            : "Resep \"{$resep->title}\" berhasil di-unpublish."
+        );
     }
 
     public function destroy(Resep $resep): RedirectResponse

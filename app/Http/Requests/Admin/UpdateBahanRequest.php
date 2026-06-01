@@ -25,8 +25,8 @@ class UpdateBahanRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama bahan wajib diisi.',
-            'nama.unique'   => 'Nama bahan sudah digunakan oleh bahan lain.',
+            'nama.required'                  => 'Nama bahan wajib diisi.',
+            'nama.unique'                    => 'Nama bahan sudah digunakan oleh bahan lain.',
             'expired_expectancy_day.integer' => 'Ekspektasi expired harus berupa angka.',
             'expired_expectancy_day.min'     => 'Ekspektasi expired minimal 1 hari.',
             'expired_expectancy_day.max'     => 'Ekspektasi expired maksimal 3650 hari (10 tahun).',

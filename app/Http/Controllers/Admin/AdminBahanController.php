@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BahanFilterRequest;
 use App\Http\Requests\Admin\StoreBahanRequest;
 use App\Http\Requests\Admin\UpdateBahanRequest;
 use App\Models\Bahan;
 use App\Services\Admin\AdminBahanService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class AdminBahanController extends Controller
@@ -17,17 +17,10 @@ class AdminBahanController extends Controller
         private readonly AdminBahanService $bahanService
     ) {}
 
-    // ──────────────────────────────────────────────────────────
-
-    public function index(Request $request): View
+    public function index(BahanFilterRequest $request): View
     {
-        $filters = [
-            'search'  => $request->string('search')->toString() ?: null,
-            'expired' => $request->input('expired'),
-        ];
-
         return view('pages.admin.management_bahan.index', [
-            'bahans' => $this->bahanService->getPaginatedBahans($filters),
+            'bahans' => $this->bahanService->getPaginatedBahans($request->filters()),
         ]);
     }
 

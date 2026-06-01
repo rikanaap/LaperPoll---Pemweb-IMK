@@ -12,15 +12,6 @@ class AdminResepService
 {
     private const PER_PAGE = 15;
 
-    // ──────────────────────────────────────────────────────────
-    // Read
-    // ──────────────────────────────────────────────────────────
-
-    /**
-     * Ambil daftar resep dengan filter, search, dan pagination.
-     *
-     * @param array{search: ?string, status: ?bool, filter_id: ?int} $filters
-     */
     public function getPaginatedReseps(array $filters): LengthAwarePaginator
     {
         return Resep::with(['user', 'mainFilter'])
@@ -37,7 +28,7 @@ class AdminResepService
             ->paginate(self::PER_PAGE)
             ->withQueryString();
     }
-    
+
     public function getResepDetail(Resep $resep): Resep
     {
         return $resep->load([
@@ -52,42 +43,34 @@ class AdminResepService
         ]);
     }
 
-    /**
-     * Ambil semua filter/kategori untuk dropdown.
-     */
     public function getAllFilters(): Collection
     {
         return Filter::orderBy('title')->get();
     }
 
-    // ──────────────────────────────────────────────────────────
-    // Write
-    // ──────────────────────────────────────────────────────────
-
     /**
-     * Toggle status published sebuah resep.
-     * Return true jika sekarang published, false jika di-unpublish.
+     * Toggle publish. Return true = sekarang published.
      */
     public function togglePublish(Resep $resep): bool
     {
         $resep->update(['is_published' => ! $resep->is_published]);
 
-        return $resep->is_published;
+        return $resep->fresh()->is_published; // ✅ ambil nilai terbaru dari DB
     }
 
     /**
-     * Hapus resep beserta thumbnail-nya dari storage.
+     * Hapus resep + thumbnail dari storage.
+     * Return title resep untuk flash message.
      */
     public function deleteResep(Resep $resep): string
     {
         $title = $resep->title;
 
-        // Hapus thumbnail dari storage jika ada
-        if ($resep->thumbnail && Storage::exists($resep->thumbnail)) {
-            Storage::delete($resep->thumbnail);
+        if ($resep->thumbnail && Storage::disk('public')->exists($resep->thumbnail)) {
+            Storage::disk('public')->delete($resep->thumbnail);
         }
 
-        $resep->delete(); // cascade ke langkahs, bahans, dsb via migration
+        $resep->delete();
 
         return $title;
     }

@@ -14,7 +14,6 @@ class UpdateUserRequest extends FormRequest
 
     public function rules(): array
     {
-        // Ambil user dari route model binding
         $userId = $this->route('user')?->id;
 
         return [

@@ -46,7 +46,7 @@ class AdminBahanService
 
     /**
      * Hapus bahan.
-     * Cek dulu apakah bahan masih dipakai di resep — kalau iya, tolak.
+     * Tolak kalau masih dipakai di resep.
      *
      * @throws \RuntimeException
      */

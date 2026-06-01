@@ -6,23 +6,10 @@
 
 @section('content')
 
-{{-- ── Flash Message ─────────────────────────────────────────── --}}
-@if(session('success'))
-    <div class="alert alert--success">
-        <span class="material-icons-round">check_circle</span>
-        {{ session('success') }}
-    </div>
-@endif
+<x-admin.alert />
 
-@if(session('error'))
-    <div class="alert alert--error">
-        <span class="material-icons-round">error</span>
-        {{ session('error') }}
-    </div>
-@endif
-
-{{-- ── Stat Cards ────────────────────────────────────────────── --}}
-<div class="stat-grid">
+{{-- Stat Cards --}}
+<div class="stat-grid stat-grid--5">
 
     <div class="stat-card">
         <div class="stat-card__top">
@@ -31,7 +18,7 @@
             </div>
         </div>
         <div class="stat-card__value">{{ number_format($total_users) }}</div>
-        <div class="stat-card__label">Total User Terdaftar</div>
+        <div class="stat-card__label">Total User</div>
     </div>
 
     <div class="stat-card">
@@ -47,6 +34,26 @@
     <div class="stat-card">
         <div class="stat-card__top">
             <div class="stat-card__icon stat-card__icon--green">
+                <span class="material-icons-round">kitchen</span>
+            </div>
+        </div>
+        <div class="stat-card__value">{{ number_format($total_bahan) }}</div>
+        <div class="stat-card__label">Total Bahan</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card__top">
+            <div class="stat-card__icon stat-card__icon--purple">
+                <span class="material-icons-round">filter_list</span>
+            </div>
+        </div>
+        <div class="stat-card__value">{{ number_format($total_filter) }}</div>
+        <div class="stat-card__label">Total Filter</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card__top">
+            <div class="stat-card__icon stat-card__icon--blue">
                 <span class="material-icons-round">verified</span>
             </div>
         </div>
@@ -54,19 +61,9 @@
         <div class="stat-card__label">User Terverifikasi</div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-card__top">
-            <div class="stat-card__icon stat-card__icon--purple">
-                <span class="material-icons-round">star</span>
-            </div>
-        </div>
-        <div class="stat-card__value">{{ number_format($total_feedback) }}</div>
-        <div class="stat-card__label">Total Feedback</div>
-    </div>
-
 </div>
 
-{{-- ── Grid: Resep Terbaru + User Terbaru ───────────────────── --}}
+{{-- Grid: Resep + User Terbaru --}}
 <div class="grid-2 mb-4">
 
     {{-- Resep Terbaru --}}
@@ -76,11 +73,8 @@
                 <div class="card__title">Resep Terbaru</div>
                 <div class="card__subtitle">5 resep terakhir ditambahkan</div>
             </div>
-            <a href="{{ route('admin.resep.index') }}" class="btn btn--secondary btn--sm">
-                Lihat Semua
-            </a>
+            <a href="{{ route('admin.resep.index') }}" class="btn btn--secondary btn--sm">Lihat Semua</a>
         </div>
-
         <div class="table-wrap">
             <table>
                 <thead>
@@ -96,34 +90,25 @@
                     <tr>
                         <td>
                             <div class="td-user">
-                                {{-- Thumbnail --}}
                                 @if($resep->thumbnail)
-                                    <img
-                                        src="{{ Storage::url($resep->thumbnail) }}"
-                                        class="resep-thumb"
-                                        alt="{{ $resep->title }}"
-                                    >
+                                    <img src="{{ Storage::url($resep->thumbnail) }}" class="resep-thumb" alt="{{ $resep->title }}">
                                 @else
                                     <div class="resep-thumb resep-thumb--placeholder">
                                         <span class="material-icons-round">image</span>
                                     </div>
                                 @endif
-
                                 <div>
                                     <div class="td-name">{{ Str::limit($resep->title, 28) }}</div>
                                     <div class="td-sub">{{ $resep->cook_duration }}</div>
                                 </div>
                             </div>
                         </td>
-
-                        <td>{{ $resep->user->name ?? '—' }}</td>
-
+                        <td class="td-sub">{{ $resep->user?->name ?? '—' }}</td>
                         <td>
                             <span class="badge {{ $resep->is_published ? 'badge--green' : 'badge--gray' }}">
                                 {{ $resep->is_published ? 'Published' : 'Draft' }}
                             </span>
                         </td>
-
                         <td>
                             <div class="star-display">
                                 <span class="material-icons-round">star</span>
@@ -153,11 +138,8 @@
                 <div class="card__title">User Terbaru</div>
                 <div class="card__subtitle">5 user terakhir bergabung</div>
             </div>
-            <a href="{{ route('admin.user.index') }}" class="btn btn--secondary btn--sm">
-                Lihat Semua
-            </a>
+            <a href="{{ route('admin.user.index') }}" class="btn btn--secondary btn--sm">Lihat Semua</a>
         </div>
-
         <div class="table-wrap">
             <table>
                 <thead>
@@ -175,10 +157,7 @@
                             <div class="td-user">
                                 <div class="td-avatar">
                                     @if($user->profile_photo)
-                                        <img
-                                            src="{{ Storage::url($user->profile_photo) }}"
-                                            alt="{{ $user->name }}"
-                                        >
+                                        <img src="{{ Storage::url($user->profile_photo) }}" alt="{{ $user->name }}">
                                     @else
                                         {{ strtoupper(substr($user->name, 0, 1)) }}
                                     @endif
@@ -189,18 +168,13 @@
                                 </div>
                             </div>
                         </td>
-
                         <td>
                             <span class="badge {{ $user->email_verified_at ? 'badge--green' : 'badge--orange' }}">
                                 {{ $user->email_verified_at ? 'Verified' : 'Unverified' }}
                             </span>
                         </td>
-
                         <td>{{ $user->reseps_count }}</td>
-
-                        <td class="td-sub">
-                            {{ $user->created_at->format('d M Y') }}
-                        </td>
+                        <td class="td-sub">{{ $user->created_at->format('d M Y') }}</td>
                     </tr>
                     @empty
                     <tr>

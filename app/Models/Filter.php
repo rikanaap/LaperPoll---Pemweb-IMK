@@ -15,7 +15,35 @@ class Filter extends Model
         'description'
     ];
 
+    // ──────────────────────────────────────────────────────────
+    // Static helpers
+    // ──────────────────────────────────────────────────────────
 
+    public static function levelLabel(?int $level): string
+    {
+        if (is_null($level)) return '—';
+
+        return match($level) {
+            1       => 'Jenis Makanan',
+            2       => 'Metode Masak',
+            3       => 'Rasa / Preferensi',
+            default => "Level {$level}",
+        };
+    }
+
+    public static function levelColor(?int $level): string
+    {
+        return match($level) {
+            1       => 'badge--blue',
+            2       => 'badge--orange',
+            3       => 'badge--green',
+            default => 'badge--gray',
+        };
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // Relationships
+    // ──────────────────────────────────────────────────────────
 
     public function reseps()
     {

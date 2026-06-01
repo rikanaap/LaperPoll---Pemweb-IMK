@@ -6,28 +6,17 @@
 
 @section('content')
 
-{{-- ── Flash --}}
-@if(session('success'))
-    <div class="alert alert--success">
-        <span class="material-icons-round">check_circle</span>
-        {{ session('success') }}
-    </div>
-@endif
+<x-admin.alert />
 
-{{-- ── Page Header ───────────────────────────────────────────── --}}
 <div class="page-header">
     <div class="page-header__left">
         <h1>{{ $resep->title }}</h1>
         <p>Detail lengkap resep beserta bahan, langkah, dan feedback</p>
     </div>
-    <div style="display:flex;gap:.6rem;align-items:center">
-        {{-- Toggle Publish --}}
+    <div class="page-header__actions">
         <form method="POST" action="{{ route('admin.resep.togglePublish', $resep) }}" style="display:contents">
             @csrf @method('PATCH')
-            <button
-                type="submit"
-                class="btn {{ $resep->is_published ? 'btn--secondary' : 'btn--success' }}"
-            >
+            <button type="submit" class="btn {{ $resep->is_published ? 'btn--secondary' : 'btn--success' }}">
                 <span class="material-icons-round">
                     {{ $resep->is_published ? 'unpublished' : 'publish' }}
                 </span>
@@ -35,7 +24,6 @@
             </button>
         </form>
 
-        {{-- Hapus --}}
         <button
             class="btn btn--danger"
             onclick="confirmDelete('{{ route('admin.resep.destroy', $resep) }}', '{{ addslashes($resep->title) }}')"
@@ -53,81 +41,71 @@
 
 <div class="grid-2 mb-4">
 
-    {{-- ── Info Utama ──────────────────────────────────────── --}}
+    {{-- Info Utama --}}
     <div class="card">
         <div class="card__header">
             <div class="card__title">Informasi Resep</div>
         </div>
-        <div style="padding:1.1rem 1.25rem">
+        <div class="card__body">
 
-            {{-- Thumbnail --}}
             @if($resep->thumbnail)
                 <img
                     src="{{ Storage::url($resep->thumbnail) }}"
                     alt="{{ $resep->title }}"
-                    style="width:100%;height:200px;object-fit:cover;border-radius:var(--radius-md);margin-bottom:1rem"
+                    class="resep-detail-thumb"
                 >
             @endif
 
-            {{-- Meta rows --}}
-            @php
-                $metas = [
-                    ['label' => 'Author',       'value' => $resep->user?->name ?? '—'],
-                    ['label' => 'Kategori',      'value' => $resep->mainFilter?->title ?? '—'],
-                    ['label' => 'Durasi Masak',  'value' => $resep->cook_duration],
-                    ['label' => 'Kalori',        'value' => $resep->calorie ? number_format($resep->calorie) . ' kkal' : '—'],
-                    ['label' => 'Rating',        'value' => number_format($resep->current_star, 1) . ' / 5'],
-                    ['label' => 'Total Views',   'value' => number_format($resep->views_count)],
-                    ['label' => 'Dibuat',        'value' => $resep->created_at->format('d M Y, H:i')],
-                ];
-            @endphp
+            <div class="detail-meta">
+                @php
+                    $metas = [
+                        ['label' => 'Author',      'value' => $resep->user?->name ?? '—'],
+                        ['label' => 'Kategori',     'value' => $resep->mainFilter?->title ?? '—'],
+                        ['label' => 'Durasi Masak', 'value' => $resep->cook_duration],
+                        ['label' => 'Kalori',       'value' => $resep->calorie ? number_format($resep->calorie) . ' kkal' : '—'],
+                        ['label' => 'Rating',       'value' => number_format($resep->current_star, 1) . ' / 5'],
+                        ['label' => 'Total Views',  'value' => number_format($resep->views_count)],
+                        ['label' => 'Dibuat',       'value' => $resep->created_at->format('d M Y, H:i')],
+                    ];
+                @endphp
 
-            <div style="display:flex;flex-direction:column;gap:.6rem">
                 @foreach($metas as $meta)
-                <div style="display:flex;justify-content:space-between;font-size:.82rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
-                    <span style="color:var(--text-muted);font-weight:600">{{ $meta['label'] }}</span>
-                    <span style="font-weight:700;color:var(--text-primary)">{{ $meta['value'] }}</span>
-                </div>
+                    <div class="detail-meta__row">
+                        <span class="detail-meta__label">{{ $meta['label'] }}</span>
+                        <span class="detail-meta__value">{{ $meta['value'] }}</span>
+                    </div>
                 @endforeach
 
-                {{-- Status --}}
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;padding:.5rem 0">
-                    <span style="color:var(--text-muted);font-weight:600">Status</span>
+                <div class="detail-meta__row">
+                    <span class="detail-meta__label">Status</span>
                     <span class="badge {{ $resep->is_published ? 'badge--green' : 'badge--gray' }}">
                         {{ $resep->is_published ? 'Published' : 'Draft' }}
                     </span>
                 </div>
             </div>
 
-            {{-- Deskripsi --}}
             @if($resep->description)
-                <div style="margin-top:1rem">
-                    <div style="font-size:.75rem;font-weight:700;color:var(--text-muted);margin-bottom:.4rem">
-                        DESKRIPSI
-                    </div>
-                    <p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6">
-                        {{ $resep->description }}
-                    </p>
+                <div class="detail-section">
+                    <div class="detail-section__label">DESKRIPSI</div>
+                    <p class="detail-section__text">{{ $resep->description }}</p>
                 </div>
             @endif
 
-            {{-- Filter Tags --}}
             @if($resep->filters->isNotEmpty())
-                <div style="margin-top:1rem">
-                    <div style="font-size:.75rem;font-weight:700;color:var(--text-muted);margin-bottom:.5rem">
-                        TAGS / FILTER
-                    </div>
-                    <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+                <div class="detail-section">
+                    <div class="detail-section__label">TAGS / FILTER</div>
+                    <div class="badge-group">
                         @foreach($resep->filters as $filter)
                             <span class="badge badge--blue">{{ $filter->title }}</span>
                         @endforeach
                     </div>
                 </div>
             @endif
+
         </div>
     </div>
 
-    {{-- ── Bahan-Bahan ──────────────────────────────────────── --}}
+    {{-- Bahan-Bahan --}}
     <div class="card">
         <div class="card__header">
             <div>
@@ -146,9 +124,7 @@
                 <tbody>
                     @forelse($resep->bahans as $bahan)
                     <tr>
-                        <td>
-                            <span class="td-name">{{ $bahan->nama }}</span>
-                        </td>
+                        <td><span class="td-name">{{ $bahan->nama }}</span></td>
                         <td class="td-sub">{{ number_format($bahan->pivot->gram_total) }} gram</td>
                     </tr>
                     @empty
@@ -168,7 +144,7 @@
 
 </div>
 
-{{-- ── Langkah-Langkah ──────────────────────────────────────── --}}
+{{-- Langkah Memasak --}}
 <div class="card mb-4">
     <div class="card__header">
         <div>
@@ -176,32 +152,26 @@
             <div class="card__subtitle">{{ $resep->langkahs->count() }} langkah</div>
         </div>
     </div>
-    <div style="padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:.75rem">
+    <div class="card__body">
         @forelse($resep->langkahs->sortBy('step_order') as $langkah)
-        <div style="display:flex;gap:1rem;padding:1rem;background:var(--bg-page);border-radius:var(--radius-md);border:1px solid var(--border)">
-            <div style="width:32px;height:32px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0">
-                {{ $langkah->step_order }}
-            </div>
-            <div style="flex:1">
-                <p style="font-size:.83rem;color:var(--text-primary);line-height:1.6;margin-bottom:.4rem">
-                    {{ $langkah->description }}
-                </p>
-                @if($langkah->step_duration)
-                    <span class="badge badge--orange">
-                        <span class="material-icons-round">timer</span>
-                        {{ $langkah->step_duration }}
-                    </span>
-                @endif
-                @if($langkah->langkahBahans->isNotEmpty())
-                    <div style="margin-top:.5rem;display:flex;flex-wrap:wrap;gap:.3rem">
-                        @foreach($langkah->langkahBahans as $lb)
-                            <span class="badge badge--blue">
-                                {{ $lb->resepBahan->bahan->nama ?? '—' }}
-                                ({{ number_format($lb->gram_total) }}g)
-                            </span>
-                        @endforeach
-                    </div>
-                @endif
+        <div class="step-card">
+            <div class="step-card__number">{{ $langkah->step_order }}</div>
+            <div class="step-card__content">
+                <p class="step-card__desc">{{ $langkah->description }}</p>
+                <div class="step-card__meta">
+                    @if($langkah->step_duration)
+                        <span class="badge badge--orange">
+                            <span class="material-icons-round">timer</span>
+                            {{ $langkah->step_duration }}
+                        </span>
+                    @endif
+                    @foreach($langkah->langkahBahans as $lb)
+                        <span class="badge badge--blue">
+                            {{ $lb->resepBahan->bahan->nama ?? '—' }}
+                            ({{ number_format($lb->gram_total) }}g)
+                        </span>
+                    @endforeach
+                </div>
             </div>
         </div>
         @empty
@@ -213,7 +183,7 @@
     </div>
 </div>
 
-{{-- ── Feedback ──────────────────────────────────────────────── --}}
+{{-- Feedback --}}
 <div class="card">
     <div class="card__header">
         <div>
@@ -255,10 +225,8 @@
                             {{ number_format($feedback->rating, 1) }}
                         </div>
                     </td>
-                    <td style="max-width:280px">
-                        <span style="font-size:.8rem;color:var(--text-secondary)">
-                            {{ $feedback->description ? Str::limit($feedback->description, 80) : '—' }}
-                        </span>
+                    <td class="td-desc">
+                        {{ $feedback->description ? Str::limit($feedback->description, 80) : '—' }}
                     </td>
                     <td class="td-sub">{{ $feedback->created_at->format('d M Y') }}</td>
                 </tr>
@@ -283,7 +251,6 @@
 <script>
 function confirmDelete(url, name) {
     if (!confirm(`Hapus resep "${name}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
-
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = url;

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Requests\Admin\UserFilterRequest;
 use App\Models\User;
@@ -17,7 +16,6 @@ class AdminUserController extends Controller
         private readonly AdminUserService $userService
     ) {}
 
-
     public function index(UserFilterRequest $request): View
     {
         $users = $this->userService->getPaginatedUsers($request->filters());
@@ -26,15 +24,6 @@ class AdminUserController extends Controller
             'users'     => $users,
             'verifData' => $this->userService->buildVerifData($users),
         ]);
-    }
-
-    public function store(StoreUserRequest $request): RedirectResponse
-    {
-        $user = $this->userService->createUser($request->validated());
-
-        return redirect()
-            ->route('admin.user.index')
-            ->with('success', "User \"{$user->name}\" berhasil ditambahkan.");
     }
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse

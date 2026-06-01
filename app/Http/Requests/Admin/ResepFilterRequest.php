@@ -8,7 +8,7 @@ class ResepFilterRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; 
+        return true;
     }
 
     public function rules(): array
@@ -17,16 +17,15 @@ class ResepFilterRequest extends FormRequest
             'search'    => ['nullable', 'string', 'max:100'],
             'status'    => ['nullable', 'in:0,1'],
             'filter_id' => ['nullable', 'integer', 'exists:filters,id'],
-            'page'      => ['nullable', 'integer', 'min:1'],
         ];
     }
 
     public function filters(): array
     {
         return [
-            'search'    => $this->string('search')->toString() ?: null,
-            'status'    => $this->filled('status') ? (bool) $this->input('status') : null,
-            'filter_id' => $this->filled('filter_id') ? (int) $this->input('filter_id') : null,
+            'search'    => $this->string('search')->trim()->value() ?: null,
+            'status'    => $this->has('status') ? (bool) $this->input('status') : null,
+            'filter_id' => $this->integer('filter_id') ?: null,
         ];
     }
 }
