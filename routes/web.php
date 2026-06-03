@@ -30,13 +30,21 @@ use App\Http\Controllers\Admin\AdminResepController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminBahanController;
 use App\Http\Controllers\Admin\AdminFilterController;
-
+use App\Http\Controllers\TambahResepController;
 
 // ─── PUBLIC ──────────────────────────────────────────────────────────────────
 
 Route::get('/', [LandingPage::class, 'index'])->name('landing.index');
 
 Route::get('/unauthorized', fn() => view('pages.unauthorized.index'))->name('unauthorized');
+
+Route::get('/public/view/{filename}', function ($filename) {
+    $path = public_path('assets/' . $filename);
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    return Response::file($path);
+})->name('public');
 
 Route::get('/public/view/{filename}', function ($filename) {
     $path = public_path('assets/' . $filename);
@@ -68,8 +76,8 @@ Route::get('/main-menu',           [MainMenu::class, 'index'])         ->name('m
 Route::get('/main-menu?m=favorit', [MainMenu::class, 'favoritPengguna'])->name('main-menu.favorit');
 Route::get('/main-menu?m=hari',    [MainMenu::class, 'resepHariIni'])  ->name('main-menu.hari-ini');
 
-// ── DETAIL RESEP ──────────────────────────────────────────────────────────────
-Route::get('/detail-resep/{id}', [DetailResepController::class, 'showDetail'])->name('detail.resep');
+Route::get('/detail-resep/{id}', [DetailResepController::class, 'showwDetail'])
+    ->name('detail.resep');
 
 // ── TIMER RESEP ───────────────────────────────────────────────────────────────
 Route::get('/timer-resep/{id}', [TimerResepController::class, 'show'])->name('timer.resep');
@@ -97,7 +105,7 @@ Route::get('/follow/{userId}/following', [FollowController::class, 'following'])
 Route::prefix('api')->name('api.')->group(function () {
 
     Route::prefix('resep')->name('resep.')->group(function () {
-        Route::get('search',        [ResepApiController::class, 'search'])     ->name('search');
+        Route::get('search',        [ResepApiController::class, 'search'])->name('search');
         Route::post('render-cards', [ResepApiController::class, 'renderCards'])->name('render-cards');
     });
 
@@ -126,7 +134,7 @@ Route::middleware(['auth'])->group(function () {
 
     // ── FAVORIT ───────────────────────────────────────────────────────────────
     Route::post('/favorit/toggle/{id}', [FavoriteController::class, 'toggle'])->name('favorit.toggle');
-    Route::get('/favorit',              [FavoriteController::class, 'index']) ->name('favorit.index');
+    Route::get('/favorit',              [FavoriteController::class, 'index'])->name('favorit.index');
 
     // ── KULKAS DIGITAL ────────────────────────────────────────────────────────
     Route::get('/kulkas-digital',        [KulkasDigitalController::class, 'index'])     ->name('kulkas.index');
@@ -134,7 +142,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/kulkas-digital',       [KulkasDigitalController::class, 'store'])     ->name('kulkas.store');
     // ⚠️ pakai-resep HARUS di atas /{id}
     Route::post('/kulkas-digital/pakai-resep', [KulkasDigitalController::class, 'pakaiResep'])->name('kulkas.pakai-resep');
-    Route::delete('/kulkas-digital/{id}',      [KulkasDigitalController::class, 'destroy'])   ->name('kulkas.destroy');
+    Route::delete('/kulkas-digital/{id}',      [KulkasDigitalController::class, 'destroy'])->name('kulkas.destroy');
     Route::post('/api/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])->name('kulkas.bahan.baru');
 
     // ── MEAL PLANNER ──────────────────────────────────────────────────────────
@@ -155,14 +163,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/nota-belanja', [NotaBelanjaController::class, 'index'])->name('nota.index');
 
     Route::prefix('api/nota-belanja')->group(function () {
-        Route::patch('/toggle/{id}',    [NotaBelanjaController::class, 'toggle'])      ->name('api.nota.toggle');
+        Route::patch('/toggle/{id}',    [NotaBelanjaController::class, 'toggle'])->name('api.nota.toggle');
         Route::delete('/hapus-selesai', [NotaBelanjaController::class, 'hapusSelesai'])->name('api.nota.hapus-selesai');
-        Route::delete('/{id}',          [NotaBelanjaController::class, 'destroy'])     ->name('api.nota.destroy');
+        Route::delete('/{id}',          [NotaBelanjaController::class, 'destroy'])->name('api.nota.destroy');
     });
 
     // ── PROFILE ───────────────────────────────────────────────────────────────
-    Route::get('/profile',          [ProfileController::class, 'index']) ->name('profile.index');
-    Route::get('/profile/edit',     [ProfileController::class, 'edit'])  ->name('profile.edit');
+    Route::get('/profile',          [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit',     [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     // ── FOLLOW ────────────────────────────────────────────────────────────────
@@ -177,11 +185,11 @@ Route::middleware(['auth'])->group(function () {
 
 // ⚠️ Route ini tidak pakai middleware auth.admin — pastikan ini disengaja
 Route::prefix('admin/bahans')->name('admin.bahans.')->group(function () {
-    Route::get('/',             [BahansController::class, 'index'])  ->name('index');
-    Route::get('/tambah',       [BahansController::class, 'create']) ->name('create');
-    Route::post('/',            [BahansController::class, 'store'])  ->name('store');
-    Route::get('/{bahan}/edit', [BahansController::class, 'edit'])   ->name('edit');
-    Route::put('/{bahan}',      [BahansController::class, 'update']) ->name('update');
+    Route::get('/',             [BahansController::class, 'index'])->name('index');
+    Route::get('/tambah',       [BahansController::class, 'create'])->name('create');
+    Route::post('/',            [BahansController::class, 'store'])->name('store');
+    Route::get('/{bahan}/edit', [BahansController::class, 'edit'])->name('edit');
+    Route::put('/{bahan}',      [BahansController::class, 'update'])->name('update');
     Route::delete('/{bahan}',   [BahansController::class, 'destroy'])->name('destroy');
 });
 

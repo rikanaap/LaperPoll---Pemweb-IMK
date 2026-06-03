@@ -1,0 +1,358 @@
+@extends('layouts.app')
+
+@section('title', 'LaperPoll')
+
+@push('styles')
+
+@endpush
+
+@push('links')
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{{ asset('css/pages/tambah-resep.css') }}">
+@endpush
+
+@section('content')
+<main class="main-content flex flex-col">
+    <x-navbar />
+    <section class="resep-forms flex flex-col">
+        <div class="forms flex flex-col gap-2">
+            <div class="form-indicator flex flex-row gap-3">
+                <div class="indicator-wrapper flex flex-row">
+                    <div class="indicator"></div>
+                    <div class="indicator i-enable "></div>
+                    <div class="indicator i-enable"></div>
+                </div>
+                <p class="font-poppins text-title2 text-accent-normal font-semibold">1/5</p>
+            </div>
+
+            <!-- Form 1 Start -->
+            <div class="form" id="form-1">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Sebutkan nama resep</h5>
+                    <div class="input">
+                        <input class="input-data text-body font-jakarta font-semibold" type="text"
+                            placeholder="Nama resep">
+                    </div>
+                </div>
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Pilih kategori resep
+                    </h5>
+                    <div class="input-dropdown">
+                        <div class="input">
+                            <span class="material-icons-round">search</span>
+                            <input id="searchKategori" class="input-data text-body font-jakarta font-semibold"
+                                type="text" placeholder="Cari Kategori">
+                            <span class="material-icons-round">expand_circle_down</span>
+                        </div>
+                        <div id="listKategori" class="dropdown-datas">
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Makanan</p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Minuman
+                                </p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Hidangan
+                                    Penutup
+                                </p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Cemilan
+                                    Bubuk</p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Hidangan
+                                    Pembuka
+                                </p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Hidangan
+                                    Utama</p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Tradisional
+                                </p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Modern</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Form 1 End -->
+
+            <!-- Form 2 Start -->
+            <div class="results" id="result-2" style="display: none;">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Bahan yang digunakan
+                    </h5>
+                    <div class="wrapper-result flex flex-row">
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">20 g</p>
+                            <div class="vertical-line"></div>
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">20 g</p>
+                            <div class="vertical-line"></div>
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">20 g</p>
+                            <div class="vertical-line"></div>
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">20 g</p>
+                            <div class="vertical-line"></div>
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form" id="form-2" style="display: none;">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Pilih bahan
+                    </h5>
+                    <div class="input-dropdown">
+                        <div class="input">
+                            <span class="material-icons-round">search</span>
+                            <input class="input-data text-body font-jakarta font-semibold" type="text"
+                                placeholder="Cari bahan">
+                            <span class="material-icons-round">expand_circle_down</span>
+                        </div>
+                        <div class="dropdown-datas">
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Minyak
+                                    Wijen</p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Cabe Rawit
+                                </p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Jahe Segar
+                                    Penutup
+                                </p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Kunyit
+                                    Bubuk
+                                    Bubuk</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="JudulBahan" style="display: none;" class="input">
+                        <span class="material-icons-round">menu_book</span>
+                        <input class="input-data text-body font-jakarta font-semibold" type="text"
+                            placeholder="Cari Bahan" value="Ayam Kampung" readonly>
+                    </div>
+                    <div id="InputBerat" style="display: none;" class="input input-scale">
+                        <div class="input-scale-text flex flex-row gap-4">
+                            <span class="material-icons-round text-secondary-normal">scale</span>
+                            <div class="vertical-line bg-secondary-normal"></div>
+                            <p class="font-jakarta text-body text-secondary-normal">Berat Gram</p>
+                        </div>
+                        <div class="input-scale-input flex flex-row gap-4">
+                            <span class="material-icons-round">add_circle_outline</span>
+                            <input class="input-number text-body font-jakarta font-semibold" type="number" size="4"
+                                placeholder="20">
+                            <span class="material-icons-round">remove_circle_outline</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Form 2 End -->
+
+            <!-- Form 3 Start -->
+            <div class="results" id="result-3" style="display: none;">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Bahan yang digunakan
+                    </h5>
+                    <div class="wrapper-result flex flex-row">
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                            <span class="material-icons-round text-title2">remove_circle_outline</span>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                            <span class="material-icons-round text-title2">remove_circle_outline</span>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                            <span class="material-icons-round text-title2">remove_circle_outline</span>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                            <span class="material-icons-round text-title2">remove_circle_outline</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form" id="form-3" style="display: none;">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Pilih filterisasi resep
+                    </h5>
+                    <div class="input-dropdown">
+                        <div class="input">
+                            <span class="material-icons-round">search</span>
+                            <input class="input-data text-body font-jakarta font-semibold" type="text"
+                                placeholder="Cari filter">
+                            <span class="material-icons-round">expand_circle_down</span>
+                        </div>
+                        <div class="dropdown-datas">
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Manis</p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Asin
+                                </p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Berkuah
+                                </p>
+                            </div>
+                            <div class="dropdown-data">
+                                <p class="font-jakarta font-semibold text-body text-primary-dark-active">Nyemek</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Form 3 End -->
+
+            <!-- Form 4 Start -->
+            <div class="results" id="result-4-1" style="display: none;">
+                <div class="wrapper-result flex flex-col">
+                    <div class="result-bahan flex flex-row">
+                        <p class="font-jakarta font-regular text-body">Masukan roti dan sagu kedalam mangkuk</p>
+                        <div class="vertical-line"></div>
+                        <p class="font-jakarta font-regular text-body">1m 30d</p>
+                    </div>
+                </div>
+            </div>
+            <div class="results" id="result-4-2" style="display: none;">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Bahan yang digunakan
+                    </h5>
+                    <div class="wrapper-result flex flex-row">
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                            <span class="material-icons-round text-title2">remove_circle_outline</span>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                            <span class="material-icons-round text-title2">remove_circle_outline</span>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                            <span class="material-icons-round text-title2">remove_circle_outline</span>
+                        </div>
+                        <div class="result-data flex flex-row">
+                            <p class="font-jakarta font-regular text-body">Ayam Kampung</p>
+                            <span class="material-icons-round text-title2">remove_circle_outline</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form" id="form-4-1" style="display: none;">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Tulis langkah pembuatan
+                    </h5>
+                    <textarea placeholder="Jelaskan langkah" name="langkah-pembuatan" id="input-langkah-pembuatan"
+                        class="long-input text-body font-jakarta font-semibold"></textarea>
+                    <div class="horizontal-line "></div>
+                </div>
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Berapa perkiraan langkah
+                        ini memakan waktu?</h5>
+                    <input placeholder="Pilih durasi" type="time" id="timeInput" value="00:10:00" class="input-time"
+                        step="1">
+                </div>
+            </div>
+            <div class="form" id="form-4-2" style="display: none;">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Pilih bahan
+                    </h5>
+                    <div class="input-dropdown">
+                        <div class="input">
+                            <span class="material-icons-round">search</span>
+                            <input class="input-data text-body font-jakarta font-semibold" type="text"
+                                placeholder="Cari bahan">
+                            <span class="material-icons-round">expand_circle_down</span>
+                        </div>
+                        <div class="dropdown-datas">
+                            <div class="input input-scale">
+                                <div class="input-scale-text flex flex-row gap-4">
+                                    <input class="input-checkbox" type="checkbox" name="checkbox-bahan"
+                                        placeholder="Pilih bahan">
+                                    <p class="font-jakarta text-body text-secondary-normal">Ayam Kampung (20g)</p>
+                                </div>
+                                <div class="input-scale-input flex flex-row gap-4">
+                                    <span class="material-icons-round">add_circle_outline</span>
+                                    <input class="input-number text-body font-jakarta font-semibold" type="number"
+                                        size="4" placeholder="1">
+                                    <span class="material-icons-round">remove_circle_outline</span>
+                                </div>
+                            </div>
+                            <div class="input input-scale">
+                                <div class="input-scale-text flex flex-row gap-4">
+                                    <input class="input-checkbox" type="checkbox" name="checkbox-bahan"
+                                        placeholder="Pilih bahan">
+                                    <p class="font-jakarta text-body text-secondary-normal">Cabe Rawit (10g)</p>
+                                </div>
+                                <div class="input-scale-input flex flex-row gap-4">
+                                    <span class="material-icons-round">add_circle_outline</span>
+                                    <input class="input-number text-body font-jakarta font-semibold" type="number"
+                                        size="4" placeholder="1">
+                                    <span class="material-icons-round">remove_circle_outline</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Form 4 End -->
+
+            <!-- Form 5 Start -->
+            <div class="form" id="form-5" style="display: none;">
+                <div class="input-wrapper flex flex-col">
+                    <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Tambahkan Foto/Video
+                    </h5>
+                    <div class="flex flex-col gap-1">
+                        <div class="upload-container">
+                            <input type="file" id="file-upload" hidden accept="image/*,video/*">
+                            <label for="file-upload" class="upload-box">
+                                <div class="upload-content">
+                                    <span class="material-icons-round add-icon">add_circle_outline</span>
+                                    <p class="font-jakarta text-body">Tambahkan Foto/Video</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="upload-wrapper flex flex-row">
+                            <div class="upload-data"></div>
+                            <div class="upload-default"> <span
+                                    class="material-icons-round add-icon">add_circle_outline</span> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Form 5 End -->
+        </div>
+    </section>
+    <div class="input-submit">
+        <h1 class="font-jakarta">Lanjut</h1>
+    </div>
+</main>
+@endsection
+@push('scripts')
+<script src="{{ asset('js/pages/tambah-resep.js') }}"></script>
+<!-- <script src="{{ asset('gl') }}"></script> -->
+<!-- <script src="../scripts/pages/tambah-resep.js"></script> -->
+<!-- <script src="../scripts/global.js"></script> -->
+@endpush
