@@ -21,7 +21,7 @@
                 <h1 class="font-jakarta text-h4 font-bold">Sign In</h1>
                 <div class="auth-link gap-1 flex flex-row">
                     <p class="font-jakarta text-title2 font-regular">Belum punya akun?</p>
-                    <a href="#" class="font-jakarta text-title2 font-bold" onclick="changeMode('signup')">Daftar
+                    <a href="{{ route('auth.sign-up') }}" class="font-jakarta text-title2 font-bold">Daftar
                         disini</a>
                 </div>
             </div>
@@ -40,9 +40,7 @@
                             placeholder="Password">
                         <span class="material-icons-round" onclick="togglePassword(this)">remove_red_eye</span>
                     </div>
-                    <p class="font-jakarta text-body font-regular text-secondary-normal"
-                        onclick="changeMode('forgot')">
-                        Lupa password?</p>
+                    <a class="font-jakarta text-body font-regular text-secondary-normal" href="{{ route('auth.forgot-pass') }}">Lupa password?</a>
                 </div>
             </div>
             <button type="submit" class="input-submit">
