@@ -24,9 +24,9 @@
                 {{ $langkahs->count() }} langkah
             </p>
         </div>
-        <img src="{{ $resep->thumbnail ? asset($resep->thumbnail) : asset('assets/images/Image_DummyProfile.png') }}"
+        <img src="{{ $resep->thumbnail ? asset($resep->thumbnail) : asset('assets/images/Image_DummyResep.png') }}"
              alt="{{ $resep->title }}" class="tr-resep-thumb"
-             onerror="this.src='{{ asset('assets/images/Image_DummyProfile.png') }}'">
+             onerror="this.src='{{ asset('assets/images/Image_DummyResep.png') }}'">
     </div>
 
     {{-- ── STEPPER ── --}}

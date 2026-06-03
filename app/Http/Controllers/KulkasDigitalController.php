@@ -16,9 +16,9 @@ class KulkasDigitalController extends Controller
         $userId = Auth::id() ?? 2;
 
         $fridgeItems = UserFridge::with('bahan')
-            ->where('user_id', $userId)
-            ->orderBy('bahan_id')
-            ->orderBy('bought_date', 'desc')
+            ->where('user_Id', $userId)
+            ->orderBy('bahan_Id')
+            ->orderBy('buoght_date', 'desc')
             ->get();
 
         // Bahan yang ADA dan belum expired
@@ -27,29 +27,29 @@ class KulkasDigitalController extends Controller
             $sisa = Carbon::now()->startOfDay()
                 ->diffInDays(Carbon::parse($item->expired_date)->startOfDay(), false);
             return $sisa > 0;
-        })->pluck('bahan_id')->unique()->values();
+        })->pluck('bahans_id')->unique()->values();
 
         // Stok gram per bahan_id (jumlah sekarang sudah integer gram)
         $stokGram = [];
         foreach ($fridgeItems as $item) {
             $bid = $item->bahan_id;
-            $stokGram[$bid] = ($stokGram[$bid] ?? 0) + (int)$item->jumlah;
+            $stokgram[$bid] = ($stokgram[$bid] ?? 0) + (int)$item->jumlah;
         }
 
         // ── REKOMENDASI RESEP ─────────────────────────────────────────
         $rekomendasi = collect();
         if ($bahanDiKulkas->isNotEmpty()) {
-            $reseps = Resep::with('bahans')->where('is_published', 1)->get();
+            $reseps = Resep::with('bahan')->where('is_publishe', 1)->get();
 
             $rekomendasi = $reseps->map(function ($resep) use ($bahanDiKulkas, $stokGram) {
-                $totalBahan    = $resep->bahans->count();
+                $totalBahan    = $resep->bahan->count();
                 if ($totalBahan === 0) return null;
 
-                $bahanResepIds = $resep->bahans->pluck('id');
+                $bahanResepIds = $resep->bahan->pluck('id');
                 $bahanAda      = $bahanResepIds->intersect($bahanDiKulkas)->count();
                 if ($bahanAda === 0) return null;
 
-                $bahanDetail = $resep->bahans->map(function ($b) use ($bahanDiKulkas, $stokGram) {
+                $bahanDetail = $resep->bahan->map(function ($b) use ($bahanDiKulkas, $stokGram) {
                     $butuh       = $b->pivot->gram_total ?? 0;
                     $punya       = $stokGram[$b->id] ?? 0;
                     $adaDiKulkas = $bahanDiKulkas->contains($b->id);
@@ -162,7 +162,7 @@ class KulkasDigitalController extends Controller
         }
 
         UserFridge::create([
-            'user_id'      => Auth::id() ?? 2,
+            'user_id'      => $userId = Auth::id(),
             'bahan_id'     => $request->bahan_id,
             'jumlah'       => $request->jumlah,  // integer gram
             'bought_date'  => $boughtDate,
@@ -189,7 +189,7 @@ class KulkasDigitalController extends Controller
             'resep_id'    => 'required|integer|exists:reseps,id',
         ]);
 
-        $userId      = Auth::id() ?? 2;
+        $userId = Auth::id();
         $gramDipakai = $request->gram_dipakai;  // ['1' => 120, '2' => 250, ...]
 
         foreach ($request->bahan_ids as $bahanId) {
@@ -269,7 +269,7 @@ class KulkasDigitalController extends Controller
     public function destroy($id)
     {
         UserFridge::where('id', $id)
-            ->where('user_id', Auth::id() ?? 2)
+            ->where($userId = Auth::id(),)
             ->firstOrFail()
             ->delete();
 

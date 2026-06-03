@@ -12,6 +12,14 @@
     {{-- NAVBAR dengan hamburger di kanan --}}
     <x-navbar backUrl="back" :hamburger="true"></x-navbar>
 
+    {{-- Flash message dari edit profil --}}
+    @if(session('success'))
+        <div class="prof-flash prof-flash-success">
+            <span class="material-icons-round">check_circle</span>
+            {{ session('success') }}
+        </div>
+    @endif
+
     {{-- HERO --}}
     <section class="profile-hero">
         <div class="profile-hero-bg"></div>
@@ -126,7 +134,7 @@
                         <div class="resep-card">
                             <div class="resep-card-thumb">
                                 @if($resep->thumbnail)
-                                    <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
+                                    <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
                                          class="resep-thumb-img"
                                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                     <div class="resep-thumb-placeholder" style="display:none">

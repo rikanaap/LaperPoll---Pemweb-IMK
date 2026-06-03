@@ -879,3 +879,26 @@ button.stat-bubble {
     object-fit: cover;
     border-radius: 50%;
 }
+
+/* ── FLASH MESSAGE ── */
+.prof-flash {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.875rem;
+    font-size: 0.813rem;
+    font-family: var(--font-jakarta);
+    animation: flashIn 0.3s ease;
+}
+@keyframes flashIn {
+    from { opacity:0; transform: translateY(-6px); }
+    to   { opacity:1; transform: translateY(0); }
+}
+.prof-flash .material-icons-round { font-size: 1.1rem; flex-shrink: 0; }
+.prof-flash-success {
+    background: #ECFDF3;
+    border: 1px solid #6CE9A6;
+    color: #027A48;
+}
+.prof-flash-success .material-icons-round { color: #027A48; }
