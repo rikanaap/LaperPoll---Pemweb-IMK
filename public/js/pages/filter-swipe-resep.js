@@ -66,9 +66,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const match    = Number(r.match_count ?? 0);
         const badgeMod = match >= total ? 'perfect' : match >= Math.ceil(total / 2) ? 'good' : 'low';
         const chips    = (r.filters ?? []).map(f => `<span class="resep-rasa-chip">❤️ ${esc(f.title)}</span>`).join('');
+        // ── TAMBAHAN: detail_url dari API, fallback ke /detail-resep/{id} ──
+        const detailUrl = r.detail_url || `/detail-resep/${r.id}`;
 
         return `
-            <article class="resep-card" role="listitem">
+            <article class="resep-card" role="listitem"
+                     data-detail-url="${detailUrl}"
+                     style="cursor:pointer;">
                 <div class="resep-card__thumbnail">
                     <img src="${img}" alt="${esc(r.title)}" loading="lazy" onerror="this.src='/images/default-food.jpg'">
                     <div class="resep-card__badge resep-card__badge--${badgeMod}">🔥 Cocok ${match}/${total} Rasa</div>
@@ -120,6 +124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// ── Navigasi ke detail resep saat card diklik ──────────────────────────────
 document.addEventListener('click', function (e) {
     const card = e.target.closest('[data-detail-url]');
     if (card) {

@@ -106,6 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className       = `swipe-card swipe-card--${rasa.colorClass}`;
             card.style.zIndex    = 100 - index;
             card.dataset.rasaId  = rasa.id;
+            // ── TAMBAHAN: link ke detail resep ──
+            card.dataset.detailUrl = `/detail-resep/${rasa.id}`;
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `Rasa: ${rasa.title}`);
             card.innerHTML = `
@@ -308,4 +310,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     init();
+});
+
+// ── Navigasi ke detail resep saat card diklik ──────────────────────────────
+// Event delegation di luar DOMContentLoaded — tidak menyentuh logic swipe di atas
+document.addEventListener('click', function (e) {
+    // Pastikan tidak sedang swipe (ada drag aktif)
+    const card = e.target.closest('[data-detail-url]');
+    if (card && Math.abs(parseInt(card.style.transform?.match(/-?\d+/)?.[0] || 0)) < 10) {
+        window.location.href = card.dataset.detailUrl;
+    }
 });
