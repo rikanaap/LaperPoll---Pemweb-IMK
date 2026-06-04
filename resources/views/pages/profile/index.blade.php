@@ -26,12 +26,12 @@
         <div class="profile-hero-content">
 
             <div class="avatar-container">
-                <div class="avatar-ring">
+                <a href="{{ route('profile.edit') }}" class="avatar-ring" aria-label="Edit profil">
                     <img
                         src="{{ $user->profile_photo ? Storage::url($user->profile_photo) : asset('assets/images/Image_DummyProfile.png') }}"
                         alt="Foto {{ $user->name }}"
                         class="avatar-img">
-                </div>
+                </a>
                 <a href="{{ route('profile.edit') }}" class="avatar-edit-btn" aria-label="Edit profil">
                     <span class="material-icons-round">edit</span>
                 </a>
@@ -79,16 +79,17 @@
             <span class="material-icons-round quick-action-arrow">chevron_right</span>
         </a>
 
-        <a href="{{ route('profile.edit') }}" class="quick-action-btn">
+        {{-- Placeholder tambah resep — logic oleh teman --}}
+        <button class="quick-action-btn" disabled title="Segera hadir" style="cursor:not-allowed;opacity:0.7;">
             <div class="quick-action-icon edit-icon">
-                <span class="material-icons-round">manage_accounts</span>
+                <span class="material-icons-round">add_circle</span>
             </div>
             <div class="quick-action-text">
-                <span class="quick-action-title">Edit Profil</span>
-                <span class="quick-action-sub">Ubah nama, email, foto</span>
+                <span class="quick-action-title">Tambah Resep</span>
+                <span class="quick-action-sub">Bagikan resep andalanmu</span>
             </div>
             <span class="material-icons-round quick-action-arrow">chevron_right</span>
-        </a>
+        </button>
     </section>
 
     {{-- RESEP SAYA --}}

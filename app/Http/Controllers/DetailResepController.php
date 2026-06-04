@@ -13,10 +13,10 @@ class DetailResepController extends Controller
     {
         $resep = Resep::with([
             'user',
-            'bahan',
-            'langkah',
-            'fIlter',
-            'feedbacks.users',
+            'bahans',
+            'langkahs',
+            'filters',
+            'feedbacks.user',
             'feedbacks.photos',
         ])->findOrFail($id);
 
@@ -53,7 +53,7 @@ class DetailResepController extends Controller
         }
 
         return view('pages.detail_resep.detail_resep', compact(
-            'resep', 'totaLULasan', 'ratingavg',
+            'resep', 'totalUlasan', 'ratingAvg',
             'ratingBreakdown', 'isFavorited', 'sudahUlasan', 'myFeedback', 'isFollowing'
         ));
     }

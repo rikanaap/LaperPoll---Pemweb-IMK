@@ -902,3 +902,13 @@ button.stat-bubble {
     color: #027A48;
 }
 .prof-flash-success .material-icons-round { color: #027A48; }
+
+/* Avatar ring sebagai link */
+a.avatar-ring {
+    display: block;
+    transition: opacity 0.2s, transform 0.2s;
+}
+a.avatar-ring:hover {
+    opacity: 0.85;
+    transform: scale(1.04);
+}

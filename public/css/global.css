@@ -727,3 +727,13 @@ form{
     font-size: 0.8rem; font-family: var(--font-jakarta); font-weight: 600;
     cursor: pointer; transition: background 0.15s;
 }
+
+/* ── GLOBAL FONT INHERITANCE ── */
+/* Pastikan semua form element pakai Plus Jakarta Sans, bukan font default browser */
+button,
+input,
+select,
+textarea,
+a {
+    font-family: var(--font-jakarta);
+}

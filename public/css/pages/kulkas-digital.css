@@ -553,3 +553,29 @@
 .kd-toast.kd-toast-error   { background: #DC2626; color: white; }
 .kd-toast.show             { top: 1rem; }
 .kd-toast .material-icons-round { font-size: 1rem !important; color: white; }
+/* ── CHIP EXPIRED (warna merah, berbeda dari chip biasa) ── */
+.kd-chip.kd-chip-expired { color: #991B1B; border-color: #FECACA; }
+.kd-chip.kd-chip-expired:hover:not(.active) { background: #FEF2F2; }
+.kd-chip.kd-chip-expired.active { background: #991B1B; color: #fff; border-color: #991B1B; }
+
+/* ── BANNER EXPIRED ── */
+.kd-expired-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    padding: 0.75rem 1rem;
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    border-radius: 0.875rem;
+    color: #991B1B;
+}
+.kd-expired-banner .material-icons-round {
+    font-size: 1.1rem !important;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    color: #DC2626;
+}
+.kd-expired-banner-text { display: flex; flex-direction: column; gap: 0.15rem; }
+.kd-expired-banner-text p { margin: 0; }
+.kd-expired-banner-text .font-semibold { font-size: 0.8rem; color: #991B1B; }
+.kd-expired-banner-sub { font-size: 0.75rem; color: #B91C1C; opacity: 0.8; }

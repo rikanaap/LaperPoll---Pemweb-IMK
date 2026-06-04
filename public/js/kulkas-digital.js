@@ -1,7 +1,7 @@
 // kulkas-digital.js
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── TOAST (dari atas, tidak geser layout) ────────────────────────
+    // ── TOAST ────────────────────────────────────────────────────────
     function showToast(msg, type = 'success') {
         let toast = document.getElementById('kdToast');
         if (!toast) {
@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
         toast._timer = setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // ── CHIP COUNTER ─────────────────────────────────────────────────
+    // ── CHIP COUNTER — sekarang termasuk 'expired' ──────────────────
     function updateChipCounts(query = '') {
         const cards  = document.querySelectorAll('.kd-card');
-        const counts = { semua: 0, tersedia: 0, 'hampir-habis': 0 };
+        const counts = { semua: 0, tersedia: 0, 'hampir-habis': 0, expired: 0 };
         cards.forEach(card => {
             const status = card.dataset.status;
             const nama   = card.dataset.nama || '';
@@ -72,6 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateChipCounts(q);
 
+        // Banner expired: sembunyikan saat filter aktif 'expired' (sudah jelas), tampilkan di filter lain
+        const banner = document.getElementById('kdExpiredBanner');
+        if (banner) banner.style.display = activeFilter === 'expired' ? 'none' : '';
+
         let noResult = document.getElementById('kdNoResult');
         const shouldShow = visible === 0 && (q !== '' || activeFilter !== 'semua');
         if (shouldShow) {
@@ -120,21 +124,19 @@ document.addEventListener('DOMContentLoaded', () => {
         card.classList.remove('expanded');
     }
 
-    // ── MODAL KONFIRMASI HAPUS (custom, bukan alert bawaan) ──────────
-    let hapusTarget = null;  // { formEl }
+    // ── MODAL KONFIRMASI HAPUS ───────────────────────────────────────
+    let hapusTarget = null;
 
     const modalHapus        = document.getElementById('modalHapus');
     const modalHapusOverlay = document.getElementById('modalHapusOverlay');
     const modalHapusCancel  = document.getElementById('modalHapusCancel');
     const modalHapusConfirm = document.getElementById('modalHapusConfirm');
 
-    // Tangkap semua tombol hapus di grid
     document.getElementById('kdGrid')?.addEventListener('click', e => {
         const hapusBtn = e.target.closest('.kd-hapus-btn');
         if (!hapusBtn) return;
         e.preventDefault();
         e.stopPropagation();
-
         hapusTarget = hapusBtn.closest('form');
         if (modalHapus) modalHapus.style.display = 'flex';
     });
@@ -196,23 +198,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalMasakOverlay = document.getElementById('modalMasakOverlay');
     const modalMasakLoading = document.getElementById('modalMasakLoading');
 
-    let currentBahanIds  = [];
-    let currentGramMap   = {};  // { bahan_id: gram_dibutuhkan }
-    let currentResepId   = null;
+    let currentBahanIds = [];
+    let currentGramMap  = {};
+    let currentResepId  = null;
 
     function openModalMasak(resepItem, bahanDetail) {
         currentResepId  = resepItem.dataset.resepId;
         currentBahanIds = (resepItem.dataset.bahanIds || '')
             .split(',').map(s => parseInt(s.trim())).filter(Boolean);
 
-        // Bangun gram map dari bahanDetail
         currentGramMap = {};
         bahanDetail.forEach(b => { currentGramMap[b.id] = b.butuh; });
 
         modalMasakTitle.textContent = resepItem.dataset.resepNama;
         renderBahanDetailList(bahanDetail, modalMasakList);
 
-        // Set link ke detail resep
         const detailLink = document.getElementById('modalMasakDetailLink');
         if (detailLink && currentResepId) {
             detailLink.href = `/detail-resep/${currentResepId}`;
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     resep_id    : parseInt(currentResepId),
                     bahan_ids   : currentBahanIds,
-                    gram_dipakai: currentGramMap,   // ← kirim gram per bahan
+                    gram_dipakai: currentGramMap,
                 }),
             });
 
@@ -280,6 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Init
+    // ── INIT ─────────────────────────────────────────────────────────
     updateChipCounts();
 });

@@ -8,6 +8,11 @@
     let bahanList = [];
     try { bahanList = JSON.parse(bahanDataJson); } catch (e) { console.warn(e); }
 
+    // ── Parse stok kulkas untuk notifikasi duplikat ──────────────────────
+    const stokKulkasJson = document.getElementById('stokKulkasData')?.textContent || '{}';
+    let stokKulkas = {};
+    try { stokKulkas = JSON.parse(stokKulkasJson); } catch (e) { console.warn(e); }
+
     // ── Element refs ─────────────────────────────────────────────────────
     const searchInput      = document.getElementById('searchBahan');
     const dropdown         = document.getElementById('bahanDropdown');
@@ -136,6 +141,20 @@
         bahanIdInput.value = bahan.id;
         if (clearBtn) clearBtn.style.display = 'block';
         closeDropdown();
+
+        // ── NOTIFIKASI DUPLIKAT: cek apakah bahan sudah ada di kulkas ──
+        const stokAda = parseInt(stokKulkas[bahan.id] ?? 0);
+        const notifEl = document.getElementById('tbDuplikatNotif');
+        if (stokAda > 0) {
+            if (notifEl) {
+                notifEl.innerHTML = `<span class="material-icons-round">info_outline</span>
+                    Kamu sudah punya <strong>${stokAda} gram</strong> ${bahan.nama} di kulkas.
+                    Ini akan ditambahkan sebagai pembelian baru.`;
+                notifEl.style.display = 'flex';
+            }
+        } else {
+            if (notifEl) notifEl.style.display = 'none';
+        }
 
         if (bahan.has_expiry && bahan.expired_expectancy_day) {
             defaultExpiryDays = bahan.expired_expectancy_day;
@@ -285,6 +304,8 @@
         closeDropdown();
         selectedBahan     = null;
         defaultExpiryDays = null;
+        const notifEl = document.getElementById('tbDuplikatNotif');
+        if (notifEl) notifEl.style.display = 'none';
         if (expiredChips)  { expiredChips.innerHTML = ''; expiredChips.style.display = 'none'; }
         if (expiredHint)   expiredHint.textContent = 'Isi tanggal kedaluwarsa bahan ini';
         searchInput.focus();

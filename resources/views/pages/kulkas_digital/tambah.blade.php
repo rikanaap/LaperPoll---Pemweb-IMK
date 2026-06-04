@@ -41,6 +41,11 @@
                 ])->toJson() !!}
             </script>
 
+            {{-- Stok kulkas user saat ini untuk notifikasi duplikat --}}
+            <script id="stokKulkasData" type="application/json">
+                {!! json_encode($stokKulkas) !!}
+            </script>
+
             {{-- Hidden fields --}}
             <input type="hidden" name="bahan_id"  id="bahanId"  value="{{ old('bahan_id') }}">
             <input type="hidden" name="date_mode" id="dateMode" value="{{ old('date_mode', 'beli') }}">
@@ -63,6 +68,11 @@
                               style="display:none; cursor:pointer;">close</span>
                     </div>
                     <ul class="tb-dropdown" id="bahanDropdown"></ul>
+                </div>
+                {{-- NOTIFIKASI DUPLIKAT: muncul saat bahan sudah ada di kulkas --}}
+                <div class="tb-duplikat-notif" id="tbDuplikatNotif" style="display:none;">
+                    <span class="material-icons-round">info_outline</span>
+                    <span class="font-jakarta"></span>
                 </div>
             </div>
 

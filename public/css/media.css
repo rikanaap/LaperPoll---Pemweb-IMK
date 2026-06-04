@@ -5,6 +5,10 @@
         max-width: 100%;
     }
 
+    body {
+        padding: 0 2rem;
+    }
+
     .navbar {
         margin: 0 0rem;
         padding-left: 2rem;

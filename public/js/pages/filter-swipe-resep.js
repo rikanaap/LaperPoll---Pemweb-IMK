@@ -119,3 +119,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             .replace(/'/g, '&#039;');
     }
 });
+
+document.addEventListener('click', function (e) {
+    const card = e.target.closest('[data-detail-url]');
+    if (card) {
+        window.location.href = card.dataset.detailUrl;
+    }
+});

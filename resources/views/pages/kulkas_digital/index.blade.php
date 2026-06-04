@@ -33,7 +33,23 @@
         <button class="kd-chip active" data-filter="semua">Semua</button>
         <button class="kd-chip" data-filter="tersedia">Tersedia</button>
         <button class="kd-chip" data-filter="hampir-habis">Hampir Habis</button>
+        <button class="kd-chip kd-chip-expired" data-filter="expired">Expired</button>
     </div>
+
+    {{-- BANNER PERINGATAN EXPIRED — hanya muncul jika ada item expired --}}
+    @if($grouped->where('status', 'expired')->count() > 0)
+    <div class="kd-expired-banner" id="kdExpiredBanner">
+        <span class="material-icons-round">warning_amber</span>
+        <div class="kd-expired-banner-text">
+            <p class="font-jakarta font-semibold">
+                {{ $grouped->where('status', 'expired')->count() }} bahan sudah kedaluwarsa
+            </p>
+            <p class="font-jakarta font-regular kd-expired-banner-sub">
+                Bahan ini masih ditampilkan agar kamu bisa hapus secara sadar — bukan hilang begitu saja.
+            </p>
+        </div>
+    </div>
+    @endif
 
     {{-- GRID BAHAN --}}
     <section class="kd-grid" id="kdGrid">

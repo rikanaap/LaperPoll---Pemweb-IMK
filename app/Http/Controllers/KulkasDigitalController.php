@@ -13,47 +13,54 @@ class KulkasDigitalController extends Controller
 {
     public function index()
     {
-        $userId = Auth::id() ?? 2;
+        // BUG FIX: hapus ?? 2 — route sudah middleware('auth'), Auth::id() tidak akan null
+        $userId = Auth::id();
 
         $fridgeItems = UserFridge::with('bahan')
-            ->where('user_Id', $userId)
-            ->orderBy('bahan_Id')
-            ->orderBy('buoght_date', 'desc')
+            ->where('user_id', $userId)
+            ->orderBy('bahan_id')
+            ->orderBy('bought_date', 'desc')
             ->get();
 
-        // Bahan yang ADA dan belum expired
-        $bahanDiKulkas = $fridgeItems->filter(function ($item) {
+        // ── Item valid: belum expired (sisa > 0) ─────────────────────
+        $validItems = $fridgeItems->filter(function ($item) {
             if (!$item->expired_date) return true;
+            // BUG FIX: $casts sudah 'date' → $item->expired_date sudah Carbon, tidak perlu Carbon::parse()
             $sisa = Carbon::now()->startOfDay()
-                ->diffInDays(Carbon::parse($item->expired_date)->startOfDay(), false);
+                ->diffInDays($item->expired_date->startOfDay(), false);
             return $sisa > 0;
-        })->pluck('bahans_id')->unique()->values();
+        });
 
-        // Stok gram per bahan_id (jumlah sekarang sudah integer gram)
+        $bahanDiKulkas = $validItems->pluck('bahan_id')->unique()->values();
+
+        // BUG FIX: stokGram hanya dari item valid (tidak termasuk yang expired)
         $stokGram = [];
-        foreach ($fridgeItems as $item) {
+        foreach ($validItems as $item) {
             $bid = $item->bahan_id;
-            $stokgram[$bid] = ($stokgram[$bid] ?? 0) + (int)$item->jumlah;
+            $stokGram[$bid] = ($stokGram[$bid] ?? 0) + (int)$item->jumlah;
         }
 
         // ── REKOMENDASI RESEP ─────────────────────────────────────────
         $rekomendasi = collect();
         if ($bahanDiKulkas->isNotEmpty()) {
-            $reseps = Resep::with('bahan')->where('is_publishe', 1)->get();
+            $reseps = Resep::with('bahans')->where('is_published', 1)->get();
 
             $rekomendasi = $reseps->map(function ($resep) use ($bahanDiKulkas, $stokGram) {
-                $totalBahan    = $resep->bahan->count();
+                $totalBahan = $resep->bahans->count();
                 if ($totalBahan === 0) return null;
 
-                $bahanResepIds = $resep->bahan->pluck('id');
+                $bahanResepIds = $resep->bahans->pluck('id');
                 $bahanAda      = $bahanResepIds->intersect($bahanDiKulkas)->count();
                 if ($bahanAda === 0) return null;
 
-                $bahanDetail = $resep->bahan->map(function ($b) use ($bahanDiKulkas, $stokGram) {
+                $bahanDetail = $resep->bahans->map(function ($b) use ($bahanDiKulkas, $stokGram) {
                     $butuh       = $b->pivot->gram_total ?? 0;
                     $punya       = $stokGram[$b->id] ?? 0;
                     $adaDiKulkas = $bahanDiKulkas->contains($b->id);
-                    $cukup       = $adaDiKulkas && ($punya === 0 || $punya >= $butuh);
+
+                    // BUG FIX: $punya === 0 bukan berarti cukup — artinya stok kosong.
+                    // Cukup = ada di kulkas DAN punya stok > 0 DAN (tidak ada gram_total ATAU cukup gramnya)
+                    $cukup = $adaDiKulkas && $punya > 0 && ($butuh === 0 || $punya >= $butuh);
 
                     return [
                         'id'    => $b->id,
@@ -90,17 +97,32 @@ class KulkasDigitalController extends Controller
 
         // ── GROUPING KARTU BAHAN ──────────────────────────────────────
         $grouped = $fridgeItems->groupBy('bahan_id')->map(function ($items) use ($stokGram) {
-            $bahan       = $items->first()->bahan;
-            $hasExpiry   = $bahan->expired_expectancy_day !== null;
-            $statusFinal = 'tersedia';
+            $bahan     = $items->first()->bahan;
+            $hasExpiry = $bahan->expired_expectancy_day !== null;
 
+            // BUG FIX: mulai dari 'expired' (terburuk), upgrade ke atas sesuai pembelian terbaik yang ada
+            // Sebelumnya: mulai dari 'tersedia', bisa di-overwrite ke expired tapi tidak bisa balik ke tersedia
+            // Ini penting untuk kasus: 1 pembelian expired + 1 pembelian fresh → harus 'tersedia'
+            $statusFinal = 'expired';
             foreach ($items as $item) {
-                if ($item->expired_date) {
-                    $diff = Carbon::now()->startOfDay()
-                        ->diffInDays(Carbon::parse($item->expired_date)->startOfDay(), false);
-                    if ($diff <= 0)                                    $statusFinal = 'expired';
-                    elseif ($diff <= 3 && $statusFinal === 'tersedia') $statusFinal = 'hampir-habis';
+                if (!$item->expired_date) {
+                    // Tidak ada tanggal expired → pasti tersedia, stop
+                    $statusFinal = 'tersedia';
+                    break;
                 }
+                // BUG FIX: $casts sudah 'date', tidak perlu Carbon::parse()
+                $diff = Carbon::now()->startOfDay()
+                    ->diffInDays($item->expired_date->startOfDay(), false);
+
+                if ($diff > 3) {
+                    // Ada pembelian yang masih jauh dari expired → tersedia, stop
+                    $statusFinal = 'tersedia';
+                    break;
+                } elseif ($diff > 0) {
+                    // Hampir habis — upgrade dari expired, tapi tidak perlu break (mungkin ada yang lebih baik)
+                    $statusFinal = 'hampir-habis';
+                }
+                // diff <= 0 → tetap expired, lanjut cek pembelian berikutnya
             }
 
             return [
@@ -110,17 +132,18 @@ class KulkasDigitalController extends Controller
                 'status'     => $statusFinal,
                 'stok_gram'  => $stokGram[$bahan->id] ?? 0,
                 'pembelian'  => $items->map(function ($item) {
+                    // BUG FIX: tidak perlu Carbon::parse() karena $casts sudah 'date'
                     $diff = $item->expired_date
                         ? Carbon::now()->startOfDay()
-                            ->diffInDays(Carbon::parse($item->expired_date)->startOfDay(), false)
+                            ->diffInDays($item->expired_date->startOfDay(), false)
                         : null;
                     return [
                         'id'           => $item->id,
-                        'jumlah'       => $item->jumlah,  // integer gram
+                        'jumlah'       => $item->jumlah,
                         'bought_date'  => $item->bought_date
-                            ? Carbon::parse($item->bought_date)->format('d M Y') : null,
+                            ? $item->bought_date->format('d M Y') : null,
                         'expired_date' => $item->expired_date
-                            ? Carbon::parse($item->expired_date)->format('d M Y') : null,
+                            ? $item->expired_date->format('d M Y') : null,
                         'sisa_hari'    => $diff,
                     ];
                 })->values(),
@@ -133,14 +156,21 @@ class KulkasDigitalController extends Controller
     public function tambah()
     {
         $bahans = Bahan::orderBy('nama')->get();
-        return view('pages.kulkas_digital.tambah', compact('bahans'));
+
+        // Kirim stok kulkas user untuk notifikasi duplikat di JS
+        $stokKulkas = UserFridge::where('user_id', Auth::id())
+            ->selectRaw('bahan_id, SUM(jumlah) as total_gram')
+            ->groupBy('bahan_id')
+            ->pluck('total_gram', 'bahan_id');
+
+        return view('pages.kulkas_digital.tambah', compact('bahans', 'stokKulkas'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'bahan_id'     => 'required|exists:bahans,id',
-            'jumlah'       => 'required|integer|min:1|max:99999',  // gram
+            'jumlah'       => 'required|integer|min:1|max:99999',
             'date_mode'    => 'required|in:beli,expired',
             'bought_date'  => 'required_if:date_mode,beli|nullable|date',
             'expired_date' => 'required_if:date_mode,expired|nullable|date',
@@ -161,21 +191,22 @@ class KulkasDigitalController extends Controller
             $boughtDate  = Carbon::now()->format('Y-m-d');
         }
 
+        // BUG FIX: hapus ?? 2
         UserFridge::create([
-            'user_id'      => $userId = Auth::id(),
+            'user_id'      => Auth::id(),
             'bahan_id'     => $request->bahan_id,
-            'jumlah'       => $request->jumlah,  // integer gram
+            'jumlah'       => $request->jumlah,
             'bought_date'  => $boughtDate,
             'expired_date' => $expiredDate,
         ]);
 
-        // Redirect ke kulkas dengan flag toast (bukan flash blade)
         return redirect()->route('kulkas.index')->with('toast', 'Bahan berhasil ditambahkan ke kulkas!');
     }
 
     /**
      * AJAX POST — kurangi stok gram bahan setelah konfirmasi masak.
      * Logika FIFO per bahan:
+     *   - Validasi dulu bahwa bahan memang milik user yang login
      *   - Kurangi gram dari pembelian terlama dulu
      *   - Kalau gram habis → hapus row itu, lanjut ke pembelian berikutnya
      *   - Kalau gram resep lebih sedikit dari stok → sisakan, tidak dihapus
@@ -183,20 +214,30 @@ class KulkasDigitalController extends Controller
     public function pakaiResep(Request $request)
     {
         $request->validate([
-            'bahan_ids'   => 'required|array',
-            'bahan_ids.*' => 'integer|exists:bahans,id',
-            'gram_dipakai'=> 'required|array',       // { bahan_id: gram_dibutuhkan }
-            'resep_id'    => 'required|integer|exists:reseps,id',
+            'bahan_ids'    => 'required|array',
+            'bahan_ids.*'  => 'integer|exists:bahans,id',
+            'gram_dipakai' => 'required|array',
+            'resep_id'     => 'required|integer|exists:reseps,id',
         ]);
 
-        $userId = Auth::id();
-        $gramDipakai = $request->gram_dipakai;  // ['1' => 120, '2' => 250, ...]
+        // BUG FIX: hapus ?? 2
+        $userId      = Auth::id();
+        $gramDipakai = $request->gram_dipakai;
+
+        // BUG FIX: validasi kepemilikan — hanya proses bahan yang memang ada di kulkas user ini
+        $bahanMilikUser = UserFridge::where('user_id', $userId)
+            ->whereIn('bahan_id', $request->bahan_ids)
+            ->pluck('bahan_id')
+            ->toArray();
 
         foreach ($request->bahan_ids as $bahanId) {
+            // Skip bahan yang bukan milik user ini
+            if (!in_array($bahanId, $bahanMilikUser)) continue;
+
             $sisaDipakai = (int)($gramDipakai[$bahanId] ?? 0);
 
             if ($sisaDipakai <= 0) {
-                // Gram tidak diketahui (0) → hapus row terlama saja (FIFO lama)
+                // Gram tidak diketahui (0) → hapus row terlama saja (FIFO)
                 $item = UserFridge::where('user_id', $userId)
                     ->where('bahan_id', $bahanId)
                     ->orderBy('bought_date', 'asc')
@@ -217,11 +258,9 @@ class KulkasDigitalController extends Controller
                 $stokItem = (int)$item->jumlah;
 
                 if ($stokItem <= $sisaDipakai) {
-                    // Habis semua dari pembelian ini
                     $sisaDipakai -= $stokItem;
                     $item->delete();
                 } else {
-                    // Masih ada sisa → kurangi gramnya
                     $item->update(['jumlah' => $stokItem - $sisaDipakai]);
                     $sisaDipakai = 0;
                 }
@@ -268,8 +307,9 @@ class KulkasDigitalController extends Controller
 
     public function destroy($id)
     {
+        // BUG FIX: hapus ?? 2
         UserFridge::where('id', $id)
-            ->where($userId = Auth::id(),)
+            ->where('user_id', Auth::id())
             ->firstOrFail()
             ->delete();
 
