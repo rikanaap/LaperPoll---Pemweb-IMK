@@ -62,6 +62,7 @@
                     <th style="width:40px">#</th>
                     <th>Nama Bahan</th>
                     <th>Ekspektasi Expired</th>
+                    <th>Kategori</th>
                     <th>Dipakai di Resep</th>
                     <th>Ditambahkan</th>
                     <th style="width:100px">Aksi</th>
@@ -74,6 +75,14 @@
 
                     <td>
                         <div class="td-name">{{ $bahan->nama }}</div>
+                    </td>
+
+                    <td>
+                        @if($bahan->kategori)
+                            <span class="badge badge--green">{{ $bahan->kategori }}</span>
+                        @else
+                            <span class="td-sub">—</span>
+                        @endif
                     </td>
 
                     <td>
@@ -110,7 +119,8 @@
                                     {{ $bahan->id }},
                                     '{{ addslashes($bahan->nama) }}',
                                     {{ $bahan->expired_expectancy_day ?? 'null' }},
-                                    '{{ route('admin.bahan.update', $bahan) }}'
+                                    '{{ route('admin.bahan.update', $bahan) }}',
+                                    '{{ $bahan->kategori ?? '' }}'
                                 )"
                             >
                                 <span class="material-icons-round">edit</span>
@@ -133,7 +143,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6">
+                    <td colspan="7">
                         <div class="empty-state">
                             <span class="material-icons-round">kitchen</span>
                             <h3>Belum ada bahan</h3>
@@ -216,9 +226,26 @@
 const CSRF_TOKEN  = '{{ csrf_token() }}';
 const ROUTE_STORE = '{{ route("admin.bahan.store") }}';
 
+// ── Error state dari server (untuk auto-buka modal) ──
+const SERVER_ERRORS = @json($errors->toArray());
+const OLD_INPUT     = @json(old());
+
 function setInputValue(id, value) {
     const el = document.getElementById(id);
     if (el) el.value = value ?? '';
+}
+
+function showInlineError(containerId, errors) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    Object.values(errors).flat().forEach(msg => {
+        const div = document.createElement('div');
+        div.className   = 'form-hint';
+        div.style.color = 'var(--red, #ef4444)';
+        div.textContent = msg;
+        container.appendChild(div);
+    });
 }
 
 function submitForm(action, method, fields) {
@@ -227,10 +254,10 @@ function submitForm(action, method, fields) {
     form.action = action;
 
     const addHidden = (name, value) => {
-        const input = document.createElement('input');
-        input.type  = 'hidden';
-        input.name  = name;
-        input.value = value ?? '';
+        const input   = document.createElement('input');
+        input.type    = 'hidden';
+        input.name    = name;
+        input.value   = value ?? '';
         form.appendChild(input);
     };
 
@@ -242,7 +269,17 @@ function submitForm(action, method, fields) {
     form.submit();
 }
 
-// ── Create Modal ──────────────────────────────────────────
+// ── KATEGORI OPTIONS HTML ─────────────────────────────────────────────────
+function kategoriOptions(selected = '') {
+    const list = ['', 'KARBOHIDRAT', 'PROTEIN', 'SAYURAN', 'BUAH', 'BUMBU', 'MINUMAN', 'LAINNYA'];
+    return list.map(k => {
+        const label = k || '— Pilih Kategori —';
+        const sel   = k === selected ? ' selected' : '';
+        return `<option value="${k}"${sel}>${label}</option>`;
+    }).join('');
+}
+
+// ── Create Modal ──────────────────────────────────────────────────────────
 function openCreateModal() {
     openModal(
         'Tambah Bahan Baru',
@@ -251,46 +288,47 @@ function openCreateModal() {
             <input type="text" class="form-control" placeholder="contoh: Bawang Merah" id="newNama">
         </div>
         <div class="form-group">
-            <label class="form-label">
-                Ekspektasi Expired
-                <span class="text-muted">(opsional, dalam hari)</span>
-            </label>
-            <input
-                type="number"
-                class="form-control"
-                placeholder="contoh: 7"
-                id="newExpired"
-                min="1"
-                max="3650"
-            >
-            <span class="form-hint">Kosongkan jika bahan tidak memiliki estimasi kadaluarsa.</span>
-        </div>`,
+            <label class="form-label">Kategori <span class="text-muted">(opsional)</span></label>
+            <select class="form-control" id="newKategori">${kategoriOptions()}</select>
+            <span class="form-hint">Dipakai untuk pengelompokan di Nota Belanja</span>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ekspektasi Expired <span class="text-muted">(opsional, dalam hari)</span></label>
+            <input type="number" class="form-control" placeholder="contoh: 7" id="newExpired" min="1" max="3650">
+            <span class="form-hint">Kosongkan jika tidak memiliki estimasi kadaluarsa.</span>
+        </div>
+        <div id="createErrors"></div>`,
         `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
          <button class="btn btn--primary" onclick="submitCreate()">
              <span class="material-icons-round">add</span> Simpan
          </button>`
     );
-
     setTimeout(() => document.getElementById('newNama')?.focus(), 100);
 }
 
 function submitCreate() {
-    const nama    = document.getElementById('newNama').value.trim();
-    const expired = document.getElementById('newExpired').value.trim();
+    const nama     = document.getElementById('newNama').value.trim();
+    const kategori = document.getElementById('newKategori').value;
+    const expired  = document.getElementById('newExpired').value.trim();
 
+    // Validasi frontend inline — tidak pakai alert()
     if (!nama) {
-        alert('Nama bahan wajib diisi.');
+        document.getElementById('createErrors').innerHTML =
+            '<div class="form-hint" style="color:var(--red,#ef4444)">Nama bahan wajib diisi.</div>';
+        document.getElementById('newNama')?.focus();
         return;
     }
+    document.getElementById('createErrors').innerHTML = '';
 
     submitForm(ROUTE_STORE, 'POST', {
-        nama:                   nama,
+        nama,
+        kategori,
         expired_expectancy_day: expired,
     });
 }
 
-// ── Edit Modal ────────────────────────────────────────────
-function openEditModal(id, nama, expired, route) {
+// ── Edit Modal ────────────────────────────────────────────────────────────
+function openEditModal(id, nama, expired, route, kategori = '') {
     openModal(
         'Edit Bahan',
         `<div class="form-group">
@@ -298,60 +336,82 @@ function openEditModal(id, nama, expired, route) {
             <input type="text" class="form-control" id="editNama">
         </div>
         <div class="form-group">
-            <label class="form-label">
-                Ekspektasi Expired
-                <span class="text-muted">(opsional, dalam hari)</span>
-            </label>
-            <input
-                type="number"
-                class="form-control"
-                placeholder="contoh: 7"
-                id="editExpired"
-                min="1"
-                max="3650"
-            >
-            <span class="form-hint">Kosongkan jika bahan tidak memiliki estimasi kadaluarsa.</span>
-        </div>`,
+            <label class="form-label">Kategori <span class="text-muted">(opsional)</span></label>
+            <select class="form-control" id="editKategori">${kategoriOptions(kategori)}</select>
+            <span class="form-hint">Dipakai untuk pengelompokan di Nota Belanja</span>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ekspektasi Expired <span class="text-muted">(opsional, dalam hari)</span></label>
+            <input type="number" class="form-control" placeholder="contoh: 7" id="editExpired" min="1" max="3650">
+            <span class="form-hint">Kosongkan jika tidak memiliki estimasi kadaluarsa.</span>
+        </div>
+        <div id="editErrors"></div>`,
         `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
          <button class="btn btn--primary" onclick="submitEdit('${route}')">
              <span class="material-icons-round">save</span> Simpan
          </button>`
     );
 
-    // ✅ Set value via property setelah modal render
-    setInputValue('editNama', nama);
+    setInputValue('editNama',    nama);
     setInputValue('editExpired', expired);
+    // kategori sudah di-set via kategoriOptions(kategori) di HTML
     setTimeout(() => document.getElementById('editNama')?.focus(), 100);
 }
 
 function submitEdit(route) {
-    const nama    = document.getElementById('editNama').value.trim();
-    const expired = document.getElementById('editExpired').value.trim();
+    const nama     = document.getElementById('editNama').value.trim();
+    const kategori = document.getElementById('editKategori').value;
+    const expired  = document.getElementById('editExpired').value.trim();
 
+    // Validasi frontend inline — tidak pakai alert()
     if (!nama) {
-        alert('Nama bahan wajib diisi.');
+        document.getElementById('editErrors').innerHTML =
+            '<div class="form-hint" style="color:var(--red,#ef4444)">Nama bahan wajib diisi.</div>';
+        document.getElementById('editNama')?.focus();
         return;
     }
+    document.getElementById('editErrors').innerHTML = '';
 
     submitForm(route, 'PATCH', {
-        nama:                   nama,
+        nama,
+        kategori,
         expired_expectancy_day: expired,
     });
 }
 
-// ── Delete ────────────────────────────────────────────────
+// ── Delete Confirm — pakai openModal bukan alert() ───────────────────────
 function confirmDelete(url, nama, resepCount) {
     if (resepCount > 0) {
-        alert(`Bahan "${nama}" tidak bisa dihapus karena masih digunakan di ${resepCount} resep.`);
+        openModal(
+            'Tidak Bisa Dihapus',
+            `<p style="font-size:.875rem;color:var(--text-secondary)">
+                Bahan <strong>${nama}</strong> tidak bisa dihapus karena masih digunakan
+                di <strong>${resepCount} resep</strong>. Hapus atau edit resep terkait terlebih dahulu.
+            </p>`,
+            `<button class="btn btn--secondary" onclick="closeModal()">Mengerti</button>`
+        );
         return;
     }
 
-    if (!confirm(`Hapus bahan "${nama}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
+    openModal(
+        'Hapus Bahan',
+        `<p style="font-size:.875rem;color:var(--text-secondary)">
+            Yakin ingin menghapus bahan <strong>${nama}</strong>?
+            Tindakan ini <strong>tidak dapat dibatalkan</strong>.
+        </p>`,
+        `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
+         <button class="btn btn--danger" onclick="doDelete('${url}')">
+             <span class="material-icons-round">delete</span> Hapus
+         </button>`
+    );
+}
 
+function doDelete(url) {
+    closeModal();
     submitForm(url, 'DELETE', {});
 }
 
-// ── Search debounce ───────────────────────────────────────
+// ── Search debounce ───────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.querySelector('input[name="search"]');
     if (!input) return;
@@ -360,6 +420,20 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(timer);
         timer = setTimeout(() => filterForm.submit(), 400);
     });
+
+    // ── Auto-buka modal jika ada error validasi dari server ──────────────
+    const hasErrors = Object.keys(SERVER_ERRORS).length > 0;
+    if (hasErrors) {
+        // Tentukan modal mana yang harus dibuka berdasarkan OLD_INPUT
+        // Jika tidak ada id di old input → berarti ini dari create
+        openCreateModal();
+        setTimeout(() => {
+            setInputValue('newNama',    OLD_INPUT.nama    ?? '');
+            setInputValue('newKategori', OLD_INPUT.kategori ?? '');
+            setInputValue('newExpired',  OLD_INPUT.expired_expectancy_day ?? '');
+            showInlineError('createErrors', SERVER_ERRORS);
+        }, 50);
+    }
 });
 </script>
 @endpush

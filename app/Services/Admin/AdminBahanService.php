@@ -31,6 +31,7 @@ class AdminBahanService
         return Bahan::create([
             'nama'                   => $data['nama'],
             'expired_expectancy_day' => $data['expired_expectancy_day'] ?? null,
+            'kategori'               => $data['kategori'] ?? null,
         ]);
     }
 
@@ -39,6 +40,7 @@ class AdminBahanService
         $bahan->update([
             'nama'                   => $data['nama'],
             'expired_expectancy_day' => $data['expired_expectancy_day'] ?? null,
+            'kategori'               => $data['kategori'] ?? null,
         ]);
 
         return $bahan->fresh();

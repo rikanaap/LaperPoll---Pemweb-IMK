@@ -16,6 +16,7 @@ class StoreBahanRequest extends FormRequest
         return [
             'nama'                   => ['required', 'string', 'max:255', 'unique:bahans,nama'],
             'expired_expectancy_day' => ['nullable', 'integer', 'min:1', 'max:3650'],
+            'kategori'               => ['nullable', 'string', 'in:KARBOHIDRAT,PROTEIN,SAYURAN,BUAH,BUMBU,MINUMAN,LAINNYA'],
         ];
     }
 
@@ -27,6 +28,7 @@ class StoreBahanRequest extends FormRequest
             'expired_expectancy_day.integer' => 'Ekspektasi expired harus berupa angka.',
             'expired_expectancy_day.min'     => 'Ekspektasi expired minimal 1 hari.',
             'expired_expectancy_day.max'     => 'Ekspektasi expired maksimal 3650 hari (10 tahun).',
+            'kategori.in'                    => 'Kategori tidak valid.',
         ];
     }
 }
