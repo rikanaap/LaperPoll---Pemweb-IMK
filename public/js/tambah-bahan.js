@@ -36,12 +36,16 @@
 
     // ── COUNTER (step 50 gram) ────────────────────────────────────────────
     document.getElementById('btnPlus')?.addEventListener('click', () => {
-        jumlahAngka.value = (parseInt(jumlahAngka.value) || 0) + 50;
+        const cur  = parseInt(jumlahAngka.value) || 0;
+        const step = cur < 100 ? 10 : 50;
+        jumlahAngka.value = cur + step;
         enforceBounds();
     });
 
     document.getElementById('btnMinus')?.addEventListener('click', () => {
-        jumlahAngka.value = Math.max(1, (parseInt(jumlahAngka.value) || 50) - 50);
+        const cur  = parseInt(jumlahAngka.value) || 50;
+        const step = cur <= 100 ? 10 : 50;
+        jumlahAngka.value = Math.max(1, cur - step);
     });
 
     jumlahAngka?.addEventListener('input', enforceBounds);
@@ -321,19 +325,19 @@
             e.preventDefault();
             searchInput?.focus();
             searchInput?.classList.add('tb-input-error');
-            alert('Pilih nama bahan dari daftar terlebih dahulu.');
+            showToast('Pilih nama bahan dari daftar terlebih dahulu.', true);
             return;
         }
         if (activeDateType === 'bought' && !boughtDateInput?.value) {
             e.preventDefault();
             boughtDateInput?.focus();
-            alert('Isi tanggal beli.');
+            showToast('Isi tanggal beli terlebih dahulu.', true);
             return;
         }
         if (activeDateType === 'expired' && !expiredDateInput?.value) {
             e.preventDefault();
             expiredDateInput?.focus();
-            alert('Isi tanggal expired.');
+            showToast('Isi tanggal expired terlebih dahulu.', true);
             return;
         }
     });
@@ -489,18 +493,7 @@
             trigger.classList.remove('open');
         }
 
-        trigger.addEventListener('click', e => {
-            e.stopPropagation();
-            if (popup.style.display === 'none' || popup.style.display === '') {
-                if (popup.style.display === 'none') {
-                    openPopup();
-                } else {
-                    closePopup();
-                }
-            }
-        });
-
-        // Toggle on click
+        // Satu handler saja — hapus duplikat addEventListener sebelumnya
         let isOpen = false;
         trigger.onclick = (e) => {
             e.stopPropagation();

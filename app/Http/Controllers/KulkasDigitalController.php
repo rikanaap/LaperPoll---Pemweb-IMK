@@ -172,8 +172,8 @@ class KulkasDigitalController extends Controller
             'bahan_id'     => 'required|exists:bahans,id',
             'jumlah'       => 'required|integer|min:1|max:99999',
             'date_mode'    => 'required|in:beli,expired',
-            'bought_date'  => 'required_if:date_mode,beli|nullable|date',
-            'expired_date' => 'required_if:date_mode,expired|nullable|date',
+            'bought_date'  => 'required_if:date_mode,beli|nullable|date|before_or_equal:today',
+            'expired_date' => 'required_if:date_mode,expired|nullable|date|after:yesterday',
         ]);
 
         $boughtDate  = null;

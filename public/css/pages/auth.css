@@ -129,3 +129,35 @@
     color: var(--secondary-normal);
 }
 
+
+/* ── AUTH ERROR MESSAGES ── */
+.auth-errors {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.75rem 1rem;
+    background: #FEF3F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 0.75rem;
+    width: 100%;
+}
+
+.auth-error-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: #B91C1C;
+    font-family: var(--font-jakarta);
+}
+
+.auth-error-item .material-icons-round {
+    font-size: 0.9rem;
+    color: #B91C1C;
+}
+
+/* Input error state */
+.input-error {
+    border-color: #FCA5A5 !important;
+    background: #FEF3F2 !important;
+}
