@@ -140,14 +140,14 @@ class AuthController extends Controller
             // Generate OTP 6 digit
             $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-            // Simpan ke user_tokens
-            UserToken::updateOrCreate([
-                'identifier_id' => \Illuminate\Support\Str::uuid(), // ← fix: pakai uuid beneran
+            // Simpan ke user_tokens (fresh create setelah delete)
+            UserToken::create([
+                'identifier_id' => \Illuminate\Support\Str::uuid(),
                 'token_code'    => 'FP',
                 'payload'       => $otp,
                 'user_id'       => $user->id,
-                'expired_date'  => now()->addMinutes()
-            ], [ 'user_id' => $user->id ]);
+                'expired_date'  => now()->addMinutes(10),
+            ]);
 
             // Kirim email
             Mail::to($user->email)->send(new OtpMail($user, $otp));
@@ -189,13 +189,14 @@ class AuthController extends Controller
             $token = UserToken::where('user_id', $user->id)
                 ->where('token_code', 'FP')
                 ->where('payload', $otp)
+                ->where('expired_date', '>=', now())
                 ->first();
 
 
             if (!$token) {
                 session()->flash('toast', 'Kode OTP salah atau sudah kadaluarsa.');
                 session()->flash('toast_type', 'error');
-                return redirect()->route('auth.forgot-pass');
+                return redirect()->route('auth.forgot-otp');
             }
 
             session(['fp_verified' => true]);
