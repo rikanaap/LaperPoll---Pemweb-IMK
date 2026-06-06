@@ -130,7 +130,7 @@
                         <div class="resep-card">
                             <div class="resep-card-thumb">
                                 @if($resep->thumbnail)
-                                    <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
+                                    <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
                                          class="resep-thumb-img"
                                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                     <div class="resep-thumb-placeholder" style="display:none">
