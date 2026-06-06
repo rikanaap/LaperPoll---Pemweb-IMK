@@ -61,3 +61,54 @@ function showToast(msg, type = 'info') {
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
+
+// ── Toggle show/hide current password (dipanggil dari onclick) ──
+function epTogglePass(inputId, iconId) {
+    const inp  = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (!inp || !icon) return;
+    const isPass = inp.type === 'password';
+    inp.type         = isPass ? 'text' : 'password';
+    icon.textContent = isPass ? 'visibility' : 'visibility_off';
+}
+window.epTogglePass = epTogglePass;
+
+// ── Tampilkan field current_password saat user mulai isi password baru ──
+const passInput        = document.getElementById('password');
+const currentPassGroup = document.getElementById('currentPassGroup');
+const passConfirmInput = document.getElementById('password_confirmation');
+const passConfirmHint  = document.createElement('span');
+
+if (passInput && currentPassGroup) {
+    passInput.addEventListener('input', () => {
+        // Tampilkan field password lama jika password baru mulai diisi
+        currentPassGroup.style.display = passInput.value.length > 0 ? 'flex' : 'none';
+    });
+}
+
+// ── Realtime konfirmasi password ──
+if (passConfirmInput && passInput) {
+    passConfirmInput.addEventListener('input', () => {
+        const match = passInput.value === passConfirmInput.value;
+        passConfirmInput.style.borderColor = passConfirmInput.value
+            ? (match ? '#86EFAC' : '#FCA5A5')
+            : '';
+    });
+}
+
+// ── Loading state saat submit ──
+const epForm    = document.querySelector('.ep-form');
+const epBtnSave = document.getElementById('epBtnSave');
+
+if (epForm && epBtnSave) {
+    epForm.addEventListener('submit', () => {
+        epBtnSave.disabled = true;
+        epBtnSave.innerHTML = '<span class="material-icons-round">hourglass_top</span> Menyimpan...';
+    });
+}
+
+// ── Tampilkan error current_password dari server jika ada ──
+const currPassErr = document.querySelector('[data-field="current_password"]');
+if (currPassErr && currentPassGroup) {
+    currentPassGroup.style.display = 'flex';
+}
