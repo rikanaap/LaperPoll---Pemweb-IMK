@@ -13,7 +13,7 @@
     <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
 
     <!-- SIGNUP FORM -->
-    <form method="POST" action="{{ route('auth.register') }}">
+    <form method="POST" action="{{ route('auth.register') }}" id="signupFormEl" novalidate>
         @csrf
         <div id="signupForm" class="form flex flex-col">
 
@@ -25,9 +25,9 @@
                 </div>
             </div>
 
-            {{-- Error messages --}}
+            {{-- Server-side error messages --}}
             @if($errors->any())
-                <div class="auth-errors">
+                <div class="auth-errors" id="serverErrors">
                     @foreach($errors->all() as $error)
                         <p class="auth-error-item">
                             <span class="material-icons-round">error_outline</span>
@@ -37,46 +37,70 @@
                 </div>
             @endif
 
+            {{-- Client-side realtime error container --}}
+            <div class="auth-errors auth-errors-client" id="clientErrors" style="display:none;"></div>
+
             <div class="form-inputs flex flex-col">
-                <div class="input @error('name') input-error @enderror">
-                    <span class="material-icons-round">person</span>
-                    <div class="vertical-line"></div>
-                    <input class="input-data text-body font-jakarta font-semibold"
-                           type="text" name="name"
-                           value="{{ old('name') }}"
-                           oninvalid="this.setCustomValidity('Maaf, mohon isi dengan nama anda')"
-                           oninput="this.setCustomValidity('')"
-                           required placeholder="Nama Lengkap">
+
+                {{-- Nama --}}
+                <div class="input-wrapper-field">
+                    <div class="input @error('name') input-error @enderror" id="wrapName">
+                        <span class="material-icons-round">person</span>
+                        <div class="vertical-line"></div>
+                        <input class="input-data text-body font-jakarta font-semibold"
+                               type="text" name="name" id="inputName"
+                               value="{{ old('name') }}"
+                               autocomplete="name"
+                               required placeholder="Nama Lengkap">
+                    </div>
+                    <p class="field-hint" id="hintName"></p>
                 </div>
-                <div class="input @error('email') input-error @enderror">
-                    <span class="material-icons-round">mail</span>
-                    <div class="vertical-line"></div>
-                    <input class="input-data text-body font-jakarta font-semibold"
-                           type="email" name="email"
-                           value="{{ old('email') }}"
-                           oninvalid="this.setCustomValidity('Maaf, mohon isi dengan email anda')"
-                           oninput="this.setCustomValidity('')"
-                           required placeholder="mail@gmail.com">
+
+                {{-- Email --}}
+                <div class="input-wrapper-field">
+                    <div class="input @error('email') input-error @enderror" id="wrapEmail">
+                        <span class="material-icons-round">mail</span>
+                        <div class="vertical-line"></div>
+                        <input class="input-data text-body font-jakarta font-semibold"
+                               type="email" name="email" id="inputEmail"
+                               value="{{ old('email') }}"
+                               autocomplete="email"
+                               required placeholder="mail@gmail.com">
+                    </div>
+                    <p class="field-hint" id="hintEmail"></p>
                 </div>
-                <div class="input @error('password') input-error @enderror">
-                    <span class="material-icons-round">lock</span>
-                    <div class="vertical-line"></div>
-                    <input class="input-data text-body font-jakarta font-semibold"
-                           type="password" required name="password"
-                           placeholder="Password">
-                    <span class="material-icons-round" onclick="togglePassword(this)">remove_red_eye</span>
+
+                {{-- Password --}}
+                <div class="input-wrapper-field">
+                    <div class="input @error('password') input-error @enderror" id="wrapPassword">
+                        <span class="material-icons-round">lock</span>
+                        <div class="vertical-line"></div>
+                        <input class="input-data text-body font-jakarta font-semibold"
+                               type="password" name="password" id="inputPassword"
+                               autocomplete="new-password"
+                               required placeholder="Password (min. 6 karakter)">
+                        <span class="material-icons-round eye-toggle" onclick="togglePassword(this)">remove_red_eye</span>
+                    </div>
+                    <p class="field-hint" id="hintPassword"></p>
                 </div>
-                <div class="input">
-                    <span class="material-icons-round">lock</span>
-                    <div class="vertical-line"></div>
-                    <input class="input-data text-body font-jakarta font-semibold"
-                           type="password" required name="password_confirmation"
-                           placeholder="Konfirmasi Password">
-                    <span class="material-icons-round" onclick="togglePassword(this)">remove_red_eye</span>
+
+                {{-- Konfirmasi Password --}}
+                <div class="input-wrapper-field">
+                    <div class="input" id="wrapConfirm">
+                        <span class="material-icons-round">lock</span>
+                        <div class="vertical-line"></div>
+                        <input class="input-data text-body font-jakarta font-semibold"
+                               type="password" name="password_confirmation" id="inputConfirm"
+                               autocomplete="new-password"
+                               required placeholder="Konfirmasi Password">
+                        <span class="material-icons-round eye-toggle" onclick="togglePassword(this)">remove_red_eye</span>
+                    </div>
+                    <p class="field-hint" id="hintConfirm"></p>
                 </div>
+
             </div>
 
-            <button class="input-submit" type="submit">
+            <button class="input-submit" type="submit" id="btnSubmit">
                 <h1 class="font-jakarta">Daftar</h1>
             </button>
 
