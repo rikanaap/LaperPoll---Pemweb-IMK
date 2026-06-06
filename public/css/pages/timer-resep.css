@@ -562,3 +562,68 @@
 
     .tr-step-connector { width: 4rem; }
 }
+/* ── NOTIFICATION PERMISSION BANNER ── */
+.tr-notif-banner {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 1rem;
+    background: var(--secondary-normal);
+    color: white;
+    border-radius: 0.875rem;
+    font-size: 0.75rem;
+    font-family: var(--font-jakarta);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    animation: toastUp 0.3s ease;
+}
+.tr-notif-banner .material-icons-round { font-size: 1.1rem; flex-shrink: 0; }
+
+.tr-notif-allow {
+    margin-left: auto;
+    padding: 0.3rem 0.875rem;
+    background: var(--orange-normal);
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    font-size: 0.7rem;
+    cursor: pointer;
+    font-family: var(--font-jakarta);
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+.tr-notif-allow:hover { background: var(--orange-normal-hover); }
+
+.tr-notif-dismiss {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.15rem;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.tr-notif-dismiss .material-icons-round { font-size: 1rem; color: rgba(255,255,255,0.7); }
+
+/* ── TIMER WARNING (10 detik terakhir) ── */
+.tr-ring-fill.warning { stroke: #DC2626; }
+.tr-timer-display.warning { color: #DC2626; }
+
+/* ── KEYBOARD HINT (desktop) ── */
+@media (min-width: 1024px) {
+    .tr-timer-card::after {
+        content: 'Space = mulai/jeda  ·  ← → = navigasi  ·  R = reset';
+        display: block;
+        text-align: center;
+        font-size: 0.6rem;
+        color: var(--primary-darker);
+        font-family: var(--font-jakarta);
+        opacity: 0.6;
+        margin-top: -0.25rem;
+    }
+}
