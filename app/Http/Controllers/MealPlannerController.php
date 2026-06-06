@@ -96,6 +96,11 @@ class MealPlannerController extends Controller
         $start  = Carbon::parse($request->start)->startOfDay();
         $end    = Carbon::parse($request->end)->endOfDay();
 
+        // FIX: batasi rentang maksimal 31 hari agar tidak OOM/timeout
+        if ($start->diffInDays($end) > 31) {
+            return response()->json(['message' => 'Rentang maksimal 31 hari.'], 422);
+        }
+
         $planners = MealPlanner::with(['details.resep'])
             ->where('user_id', $userId)
             ->whereBetween('tanggal', [$start->toDateString(), $end->toDateString()])
@@ -216,12 +221,24 @@ class MealPlannerController extends Controller
             'mealPlanner', fn($q) => $q->where('user_id', $userId)
         )->findOrFail($id);
 
+        // Ambil planner_id dan tanggal sebelum delete untuk kalkulasi ulang
+        $planner = $detail->mealPlanner;
+
         $detail->delete();
 
         // Sync cart setelah hapus — bahan yang tidak dipakai ikut hilang
         $this->syncCart($userId);
 
-        return response()->json(['success' => true]);
+        // FIX: hitung total_kalori dari server setelah hapus — bukan biarkan JS hitung lokal
+        $totalKalori = MealPlannerDetail::where('meal_planner_id', $planner->id)
+            ->with('resep')
+            ->get()
+            ->sum(fn($d) => $d->resep?->calorie ?? 0);
+
+        return response()->json([
+            'success'      => true,
+            'total_kalori' => $totalKalori,
+        ]);
     }
 
     // ── POST /api/meal-planner/generate-nota ──────────────────────────

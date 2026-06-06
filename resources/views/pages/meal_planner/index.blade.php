@@ -37,8 +37,9 @@
                 </div>
                 <div class="mp-bar-track">
                     <div class="mp-bar-fill" id="mpBarFill"></div>
-                    <div class="mp-bar-label font-jakarta font-bold" id="mpBarLabel"></div>
+                    <div class="mp-bar-overflow" id="mpBarOverflow" style="display:none;"></div>
                 </div>
+                <div class="mp-bar-label font-jakarta font-bold" id="mpBarLabel"></div>
                 <p class="mp-kalori-over font-jakarta font-semibold" id="mpKaloriOver" style="display:none;">
                     <span class="material-icons-round">warning_amber</span>
                     Kalori melebihi target!

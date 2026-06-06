@@ -67,7 +67,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('main-menu.index');
+        return redirect()->route('landing.index');
     }
 
     public function login(Request $request)
