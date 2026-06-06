@@ -172,7 +172,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/follow/{userId}/following', [FollowController::class, 'following'])->name('follow.following');
     Route::post('/follow/{userId}/toggle',   [FollowController::class, 'toggle'])->name('follow.toggle');
 
-    Route::get('/resep/tambah-resep', [TambahResepController::class, 'show'])->name('resep.tambah');
+    // Tampilkan halaman tambah resep
+    Route::get('/resep/tambah', [TambahResepController::class, 'index'])->name('resep.tambah');
+    Route::post('/resep/store', [TambahResepController::class, 'store'])->name('resep.store');
+    Route::post('/resep/clear', [TambahResepController::class, 'clearForm'])->name('resep.clear');
 });
 
 

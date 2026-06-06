@@ -8,12 +8,25 @@ let formCounter = 1;
 let inMainPage = true;
 let tahapForm4 = 1
 let pilihanBahan = [];
+let formData = {
+    "title": "",
+    "description": "",
+    "cook_duration": 0,
+    "calorie": 0,
+    "thumbnail": "",
+    "main_filter_id": null,
+    "attachments": [],
+    "steps": {},
+    "bahans": [],
+    "filters": []
+}
 
 listDropdown.forEach((kategori) => {
   kategori.addEventListener("click", () => {
     kategori.classList.toggle("choosen")
   })
 })
+
 inputSubmit.addEventListener("click", () => {
   if (checkForm()) {
     formCounter++
@@ -84,14 +97,15 @@ function changeIndicator() {
   switch (formCounter) {
     case 1:
       indicators[0].classList.remove("i-enable")
+      indicators[1].classList.add("i-enable")
       break
     case 2:
       indicators[0].classList.add("i-enable")
       indicators[1].classList.remove("i-enable")
       break
-    case 4:
-      indicators[1].classList.remove("i-enable")
-      indicators[2].classList.add("i-enable")
+    case 5:
+      indicators[2].classList.remove("i-enable")
+      indicators[1].classList.add("i-enable")
       break
   }
   document.querySelector(".form-indicator > p").innerText = formCounter + "/5"
@@ -108,29 +122,28 @@ function showForm() {
       break;
     case 2:
       inputSubmit.style.display = "none"
+      showResultForm2()
       document.getElementById('form-2').style.display = 'flex';
       break;
     case 3:
-      if (!inMainPage) {
-        formCounter = 2
-        document.getElementById('form-2').style.display = 'flex';
-        saveBahan()
-        inMainPage = true
-        hideEditBerat()
-      } else {
         inputSubmit.style.display = "none"
+        showResultForm3()
         document.getElementById('form-3').style.display = 'flex';
-      }
       break;
     case 4:
       document.getElementById('form-4-1').style.display = 'flex';
-      inputSubmit.querySelector("h1").innerText = "Pilih Bahan"
-      break;
+      showResultStep4()
+      checkLeftoverBahan() ? buttonTambahStep.style.display = "flex" : ""
+    inputSubmit.style.display = "none"
+    break;
     case 5:
-      document.getElementById('form-5').style.display = 'flex';
-      break;
+        document.getElementById('form-5').style.display = 'flex';
+        inputSubmit.style.display = "none"
+        break;
     default:
-      window.location.href = "profile.html"
+        submitResep()
+        document.getElementById('resep-submit-loading').style.display = 'flex'
+        inputSubmit.style.display = "none"
   }
 }
 
@@ -138,58 +151,207 @@ function checkForm() {
   switch (formCounter) {
     case 1:
       const namaResep = document.querySelector('#form-1 input[placeholder="Nama resep"]').value;
+      const kalorie = +document.querySelector('#form-1 input[placeholder="Kalori (kcal)"]').value;
+      const choosenKategori = document.querySelector('#form-1 #listKategori .dropdown-data.choosen');
+
       if (namaResep.trim() === "") {
         alert("Mohon isi nama resep terlebih dahulu");
         return false;
       }
+      if (!kalorie || kalorie < 0) {
+        alert("Mohon isi kalori");
+        return false;
+      }
+      if (!choosenKategori) {
+        alert("Mohon pilih kategori resep");
+        return false;
+      }
+
+      formData.title = namaResep;
+      formData.calorie = kalorie;
+      formData.main_filter_id = +choosenKategori.getAttribute('data-kategori-id');
+
       return true;
 
     case 2:
+      if (formData.bahans.length < 1) {
+        alert("Mohon tambahkan minimal 1 bahan");
+        return false;
+      }
       return true;
 
     case 3:
+    if (formData.filters.length < 3) {
+        alert("Mohon tambahkan minimal 3 bahan");
+        return false;
+      }
+
       return true;
 
     case 4:
-      const langkah = document.getElementById('input-langkah-pembuatan').value;
-      if (langkah.trim() === "") {
+      if (Object.keys(formData.steps).length < 1) {
         alert("Mohon isi langkah pembuatan");
         return false;
       }
       return true;
 
     case 5:
+      if(formData.attachments.length < 1){
+        alert("Mohon kirimkan attachment")
+        return false
+      }
       return true;
   }
 }
 
+function getTotalCookDuration() {
+    let totalSeconds = 0
+
+    Object.values(formData.steps).forEach(step => {
+        const [h, m, s] = step.step_duration.split(':').map(Number)
+        totalSeconds += h * 3600 + m * 60 + s
+    })
+
+    const h = Math.floor(totalSeconds / 3600)
+    const m = Math.floor((totalSeconds % 3600) / 60)
+    const s = totalSeconds % 60
+
+    // Format HH:MM:SS
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+async function submitResep() {
+    const token = document.querySelector('meta[name="csrf-token"]')?.content
+    if (!token) { alert('CSRF token tidak ditemukan'); return }
+
+    const fd = new FormData()
+
+    // ── Data dasar ──────────────────────────────────────────
+    fd.append('title',          formData.title)
+    fd.append('calorie',        formData.calorie)
+    fd.append('main_filter_id', formData.main_filter_id)
+    fd.append('cook_duration', getTotalCookDuration())
+
+    // ── Bahans → [{ bahan_id, gram_total }] ─────────────────
+    // ResepBahan fillable: resep_id, bahan_id, gram_total
+    formData.bahans.forEach((b, i) => {
+        fd.append(`bahans[${i}][bahan_id]`,   b.id)
+        fd.append(`bahans[${i}][gram_total]`,  b.gram_total)
+    })
+
+    formData.filters.forEach((f, i) => {
+        fd.append(`filters[${i}][filters_id]`, f.id)
+    })
+
+    Object.values(formData.steps).forEach((step, i) => {
+        fd.append(`steps[${i}][step_order]`,    i + 1)
+        fd.append(`steps[${i}][step_duration]`, step.step_duration)
+        fd.append(`steps[${i}][description]`,   step.description)
+
+        step.bahans.forEach((b, j) => {
+            fd.append(`steps[${i}][bahans][${j}][bahan_id]`,  b.bahan_id)
+            fd.append(`steps[${i}][bahans][${j}][gram_total]`, b.gram_total)
+        })
+    })
+
+    formData.attachments.forEach((att, i) => {
+        fd.append(`attachments[${i}]`, att.file, att.file.name)
+    })
+     // Tandai sedang loading
+    sessionStorage.setItem('resep_submit_status', 'loading')
+    sessionStorage.setItem('resep_submit_title', formData.title)
+
+    try {
+        const res = await fetch(
+            document.querySelector('meta[name="form-submit-url"]')?.content || '/resep/store',
+            { method: 'POST', headers: { 'X-CSRF-TOKEN': token }, body: fd }
+        )
+
+        if (res.ok) {
+            sessionStorage.setItem('resep_submit_status', 'success')
+            window.location.href = '/profile'
+        } else {
+            sessionStorage.setItem('resep_submit_status', 'error')
+            sessionStorage.setItem('resep_submit_message', data.message || 'Terjadi kesalahan')
+        }
+    } catch (e) {
+        console.error(e)
+        sessionStorage.setItem('resep_submit_status', 'error')
+        sessionStorage.setItem('resep_submit_message', 'Gagal terhubung ke server')
+    }
+}
+
+// Form 1
+const listKategoriResep = document.querySelectorAll("#form-1 .dropdown-data")
+listKategoriResep.forEach((kategori) => {
+    kategori.addEventListener("click", () => {
+        listKategoriResep.forEach(el => el.classList.remove("choosen"))
+        kategori.classList.add("choosen")
+    })
+})
+
 // Form 2
 const listBahan = document.querySelectorAll("#form-2 .dropdown-data")
+const buttonTambahBahan = document.querySelector("#form-2 .btn-add-bahan")
+const divFormPilihBahan2 =  document.querySelector('#form-2 .input-dropdown')
+const inputBeratForm2 = document.getElementById("InputBerat")
+const inputJudulForm2 = document.getElementById("JudulBahan")
+let currentBahanId = null;
+let bahanSudahAda = false
 
 listBahan.forEach((bahan) => {
   bahan.addEventListener("click", () => {
+    currentBahanId = +bahan.getAttribute('data-bahan-id')
+    bahanSudahAda = formData.bahans.find(b => b.id === currentBahanId)
+    if(bahanSudahAda) bahan.classList.toggle("choosen")
     editBerat(bahan.querySelector('p').innerText)
   })
 })
 
-function saveBahan() {
-  pilihanBahan.push({
-    judul: document.querySelector("#JudulBahan > input").value,
-    berat: document.querySelector("#InputBerat input").value
-  })
+buttonTambahBahan.addEventListener("click", () => {
+    const checkSave = saveBahan();
+    if(!checkSave) return
+    hideEditBerat();
+    buttonTambahBahan.style.display = "none"
+})
 
-  showResultForm2()
+function saveBahan() {
+    const gram_total = +inputBeratForm2.querySelector('input').value
+    if (gram_total == null || gram_total <= 0) {
+        alert("Mohon isi gram terlebih dahulu, perhatikan bahwa gram tidak boleh 0 dan dibawah 0")
+        return false
+    }
+    
+    if(bahanSudahAda) {
+        const indexBahan = formData.bahans.findIndex(b => b.id === currentBahanId)
+        if(formData.bahans[indexBahan].temp_used_gram > gram_total) { 
+            alert("Nilai gram harus lebih tinggi dari: " + formData.bahans[indexBahan].temp_used_gram + " gram")
+            return
+         }
+        if(indexBahan !== -1) formData.bahans[indexBahan].gram_total = gram_total
+    } else {
+        formData.bahans.push({
+            id: currentBahanId,
+            judul: inputJudulForm2.querySelector('input').value,
+            temp_used_gram: 0,
+            gram_total
+        })
+    }
+
+    showResultForm2()
+    return true
 }
 
 function showResultForm2() {
+    if(formData.bahans.length < 1) return
   const resultSection = document.getElementById('result-2');
   const wrapperResult = resultSection.querySelector('.wrapper-result');
   wrapperResult.innerHTML = '';
 
-  pilihanBahan.forEach((item) => {
+  formData.bahans.forEach((item) => {
     const resultDataHTML = `
                 <div class="result-data flex flex-row">
-                    <p class="font-jakarta font-regular text-body">${item.berat} g</p>
+                    <p class="font-jakarta font-regular text-body">${item.gram_total} g</p>
                     <div class="vertical-line"></div>
                     <p class="font-jakarta font-regular text-body">${item.judul}</p>
                 </div>
@@ -201,65 +363,83 @@ function showResultForm2() {
 }
 
 function editBerat(nama) {
-  inMainPage = false
-  document.querySelector('#form-2 .input-dropdown').style.display = "none"
-  const judulBahan = document.getElementById("JudulBahan")
-  judulBahan.style.display = "flex";
-  judulBahan.querySelector('input').value = nama;
+    divFormPilihBahan2.style.display = "none"
+    
+  inputBeratForm2.style.display = "flex";
+  inputBeratForm2.querySelector('input').value = null;
+  inputJudulForm2.style.display = "flex";
+  inputJudulForm2.querySelector('input').value = nama;
 
-  document.getElementById("InputBerat").style.display = "flex";
-  inputSubmit.style.display = "flex"
+    if(bahanSudahAda) {
+        const bahanExist = formData.bahans.find(b => b.id === currentBahanId)
+        
+        if(bahanExist) {
+            inputBeratForm2.querySelector('input').value = bahanExist.gram_total
+            buttonTambahBahan.innerText = "Update Bahan"
+        }
+    } else {
+        inputBeratForm2.querySelector('input').value = null;        
+        buttonTambahBahan.innerText = "Tambah Bahan"
+    }
+  
+  buttonTambahBahan.style.display = "flex"
+  inputSubmit.style.display = "none";
 }
 
 function hideEditBerat() {
-  document.querySelector('#form-2 .input-dropdown').style.display = "flex"
-  document.getElementById("JudulBahan").style.display = "none";
-  document.getElementById("InputBerat").style.display = "none";
+  divFormPilihBahan2.style.display = "flex"
+  inputJudulForm2.style.display = "none";
+  inputBeratForm2.style.display = "none";
+  if(formData.bahans.length > 1) inputSubmit.style.display = "flex"
 
 }
 
 // Form 3
-let listFilters = [];
 const listFilterisasi = document.querySelectorAll("#form-3 .dropdown-data")
 
 listFilterisasi.forEach((filterisasi) => {
   filterisasi.addEventListener("click", () => {
     filterisasi.classList.contains("choosen") ?
-      tambahFilterisasi(filterisasi.querySelector('p').innerText) : hapusFilterisasi(filterisasi.querySelector('p').innerText)
+      tambahFilterisasi(filterisasi.querySelector('p').innerText, filterisasi.getAttribute('data-filter-id')) 
+      : hapusFilterisasi(filterisasi.querySelector('p').innerText)
   })
 })
 
-function tambahFilterisasi(nama) {
-  listFilters.push(nama)
-  if (listFilters.length > 0) {
+function tambahFilterisasi(nama, id) {
+  formData.filters.push({ id, nama })
+  if (formData.filters.length > 2) {
     inputSubmit.style.display = "flex"
   } else { inputSubmit.style.display = "none" }
   showResultForm3()
 }
 function hapusFilterisasi(nama) {
-  listFilters.pop(listFilters.indexOf(nama))
-  if (listFilters.length > 0) {
+  formData.filters = formData.filters.filter(item => item.nama !== nama)
+   listFilterisasi.forEach(el => {
+    if (el.querySelector('p').innerText === nama) {
+      el.classList.remove("choosen")
+    }
+  })
+  if (formData.filters.length > 2) {
     inputSubmit.style.display = "flex"
   } else { inputSubmit.style.display = "none" }
   showResultForm3()
 }
 
 function showResultForm3() {
+if(formData.filters.length < 1) return
   const resultSection = document.getElementById('result-3');
-  if (listFilters.length > 0) {
-    resultSection.style.display = "flex"
-  } else { resultSection.style.display = "none" }
+  resultSection.style.display = (formData.filters.length > 0) ? "flex" : "none"
   const wrapper = resultSection.querySelector('.wrapper-result');
 
   wrapper.innerHTML = "";
 
-  listFilters.forEach((nama, index) => {
+  formData.filters.forEach((filter) => {
     const itemHTML = `
-            <div class="result-data flex flex-row" data-index="${index}">
-                <p class="font-jakarta font-regular text-body">${nama}</p>
+            <div class="result-data flex flex-row">
+                <p class="font-jakarta font-regular text-body">${filter.nama}</p>
                 <span class="material-icons-round text-title2" 
                       style="cursor: pointer;" 
-                      onclick="hapusFilter(${index})">
+                      onclick="hapusFilterisasi('${filter.nama}')">
                       remove_circle_outline
                 </span>
             </div>
@@ -271,18 +451,339 @@ function showResultForm3() {
 // Form 4
 const inputForm4Text = document.getElementById("input-langkah-pembuatan")
 const inputForm4Time = document.getElementById("timeInput")
+const buttonTambahStep = document.querySelector("#form-4-1 .btn-add-step")
+const buttonBahanStep = document.querySelector("#form-4-2 .btn-add-bahan-step")
+const wrapperResultStep = document.querySelector('#result-4-1 .wrapper-result.fix')
+const wrapperResultBahan = document.querySelector('#result-4-2 .wrapper-result')
+const dropdownDatasForm4 = document.querySelector('#form-4-2 .dropdown-datas')
+const wrapperResultTempStep = document.querySelector('#result-4-1 .wrapper-result.temp')
+const inputBeratForm4 = document.getElementById("InputBerat4")
+const wrapperResultStepExtra = document.querySelector('#result-4-1 .wrapper-result.extra-step')
+let currentTotalStep = 0
+    
+buttonTambahStep.addEventListener('click', () => {
+    showDropdownDataBahan()
+    if(dropdownDatasForm4.innerHTML == ''){
+        alert("Tidak ada bahan yang bisa dipakai")
+        return
+    }
+    const lanjut = saveFormStep()
+    if(!lanjut) return 
+    showResultBahan4()
+    showFormBahanStep4()
+    inputSubmit.style.display = "none"
+})
 
-function submitForm4() {
-  const p1 = document.querySelector("#result-4-1 .result-bahan p:first-child")
-  const p2 = document.querySelector("#result-4-1 .result-bahan p:last-child")
-  p1.innerText = inputForm4Text
-  p2.innerText = formatTime(inputForm4Time)
+buttonBahanStep.addEventListener('click', () => {
+    showFormStep4()
+    showResultStep4()
+    resetAllInputBahan();
+    inputSubmit.style.display = (Object.keys(formData.steps).length > 0) ? "flex" : "none" 
+})
 
-  document.querySelector("#result-4-1").style.display = "flex"
-  document.querySelector("#form-4-1").style.display = "none"
-  document.querySelector("#form-4-2").style.display = "flex"
+document.querySelectorAll('.dur-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target)
+        const max   = parseInt(input.max)
+        let val     = parseInt(input.value) || 0
+
+        if (btn.classList.contains('dur-up')) {
+            val = val >= max ? 0 : val + 1
+        } else {
+            val = val <= 0 ? max : val - 1
+        }
+
+        input.value = val
+        syncTimeInput()
+    })
+})
+
+function checkLeftoverBahan(){
+    let total = 0;
+    formData.bahans.forEach((item) => {
+        const sisa = item.gram_total - (item.temp_used_gram || 0)
+        if(sisa == 0) return
+        total++
+    })
+    return total
 }
 
+
+function resetAllInputBahan() {
+    const allInputNumbers = document.querySelectorAll('#form-4-2 .input-number');
+    allInputNumbers.forEach(input => {
+        input.value = 0;
+    });
+}
+
+
+function syncTimeInput() {
+    const h = String(parseInt(document.getElementById('dur-jam').value)   || 0).padStart(2, '0')
+    const m = String(parseInt(document.getElementById('dur-menit').value) || 0).padStart(2, '0')
+    const s = String(parseInt(document.getElementById('dur-detik').value) || 0).padStart(2, '0')
+    
+    document.getElementById('timeInput').value = `${h}:${m}:${s}`
+}
+
+// Sync awal
+syncTimeInput()
+
+function saveFormStep(){
+    if(inputForm4Text.value.trim() === "") {
+        alert("Mohon isi deskripsi langkah terlebih dahulu");
+        return false;
+    }
+    
+    const timeValue = inputForm4Time.value;
+    if(!timeValue || timeValue === "00:00:00") {
+        alert("Mohon isi durasi waktu langkah");
+        return false;
+    }
+
+    currentTotalStep = currentTotalStep + 1
+    if(inputForm4Text.value != "" || inputBeratText)
+    formData.steps[currentTotalStep] = {
+        step_order: currentTotalStep,
+        step_duration: inputForm4Time.value,
+        description: inputForm4Text.value,
+        bahans: []
+    }
+    inputForm4Text.value = "";
+    return true
+}
+
+function saveBahanStep(data){
+    const bahans = formData.steps[currentTotalStep].bahans
+    const index = bahans.findIndex(b => b.bahan_id === data.bahan_id)
+
+    if (index !== -1) {
+        bahans[index].gram_total = data.gram_total
+    } else {
+        bahans.push(data)
+    }
+}
+
+function hapusBahan(bahanId) {
+    const bahans = formData.steps[currentTotalStep].bahans
+    const index = bahans.findIndex(b => b.bahan_id === bahanId)
+    if (index !== -1) bahans.splice(index, 1)
+}
+
+function showFormStep4() {
+  document.querySelector("#form-4-1").style.display = "flex"
+  document.querySelector("#form-4-2").style.display = "none"
+  
+  document.querySelector("#result-4-1").style.display = "flex"
+  document.querySelector("#result-4-2").style.display = "none"
+
+  showDropdownDataBahan()
+  if(dropdownDatasForm4.innerHTML == ''){
+    buttonTambahStep.style.display = 'none'
+}
+}
+
+function showFormBahanStep4(){
+    document.querySelector("#result-4-1").style.display = "flex"
+    document.querySelector("#result-4-2").style.display = "none"
+    wrapperResultStep.style.display = "none"
+    wrapperResultTempStep.style.display = "flex";
+    
+    const p1 = wrapperResultTempStep.querySelector("p:first-child")
+    const p2 = wrapperResultTempStep.querySelector("p:last-child")
+    p1.innerText = formData.steps[currentTotalStep].description
+    p2.innerText = formatTime(formData.steps[currentTotalStep].step_duration)
+
+    document.querySelector("#form-4-1").style.display = "none"
+    document.querySelector("#form-4-2").style.display = "flex"
+}
+
+function showResultStep4(){
+    if(Object.keys(formData.steps).length < 1) return
+    document.querySelector("#result-4-1").style.display = "flex"
+    wrapperResultTempStep.style.display = "none"
+    wrapperResultStep.innerHTML = ''
+    wrapperResultStepExtra.innerHTML = ''
+    wrapperResultStepExtra.classList.remove('open')
+
+    const steps = Object.entries(formData.steps)
+
+    if(steps.length < 1) return
+
+    // Badge jumlah step
+    const badge = document.createElement('div')
+    badge.className = 'step-count-badge'
+    badge.innerHTML = `
+        <p class="font-jakarta font-semibold text-body">${steps.length} langkah pembuatan</p>
+        <span class="material-icons-round">expand_circle_down</span>
+    `
+
+    // Isi semua step ke extra
+    steps.forEach(([key, item]) => {
+        const html = `
+            <div class="result-bahan flex flex-row" style="opacity:0; transform:translateY(4px); transition: opacity 0.25s ease, transform 0.25s ease">
+                <p class="font-jakarta font-regular text-body step-desc">${item.description}</p>
+                <div class="vertical-line"></div>
+                <p class="font-jakarta font-regular text-body step-time">${formatTime(item.step_duration)}</p>
+            </div>
+        `
+        wrapperResultStepExtra.insertAdjacentHTML('beforeend', html)
+    })
+
+    badge.addEventListener('click', () => {
+        const isOpen = wrapperResultStepExtra.classList.contains('open')
+
+        if(isOpen){
+            wrapperResultStepExtra.classList.remove('open')
+            badge.classList.remove('open')
+            document.querySelector("#form-4-1").style.display = "flex"
+            
+            // Reset animasi item
+            wrapperResultStepExtra.querySelectorAll('.result-bahan').forEach(el => {
+                el.style.opacity = '0'
+                el.style.transform = 'translateY(4px)'
+            })
+            wrapperResultStepExtra.style.display = "none"
+        } else {
+            wrapperResultStepExtra.classList.add('open')
+            wrapperResultStepExtra.style.display = "flex"
+            badge.classList.add('open')
+            document.querySelector("#form-4-1").style.display = "none"
+
+            // Animasi staggered
+            wrapperResultStepExtra.querySelectorAll('.result-bahan').forEach((el, i) => {
+                setTimeout(() => {
+                    el.style.opacity = '1'
+                    el.style.transform = 'translateY(0)'
+                }, i * 80)
+            })
+        }
+    })
+
+    wrapperResultStep.appendChild(badge)
+    wrapperResultStep.style.display = "flex"
+}
+
+function showResultBahan4(){
+    if(formData.steps[currentTotalStep].bahans.length < 1) {
+        document.querySelector("#result-4-2").style.display = "none"
+        return
+    }
+    buttonBahanStep.style.display = "flex"
+    document.querySelector("#result-4-2").style.display = "flex"
+    wrapperResultBahan.innerHTML = ''
+    formData.steps[currentTotalStep].bahans.forEach((item) => {
+        const html = `
+             <div class="result-data flex flex-row">
+                <p class="font-jakarta font-regular text-body">${item.judul} (${item.gram_total})</p>
+                <span class="material-icons-round text-title2">remove_circle_outline</span>
+            </div>
+        `
+        wrapperResultBahan.insertAdjacentHTML('beforeend', html)
+    })
+    wrapperResultBahan.style.display = "flex"
+}
+
+function updateTempTotal(bahanId, gram, pastValue) {
+    const bahan = formData.bahans.find(b => b.id === bahanId)
+    if (!bahan) return
+
+    bahan.temp_used_gram = pastValue + gram
+
+    const el = dropdownDatasForm4.querySelector(`[data-bahan-id="${bahanId}"] p`)
+    if (el) el.textContent = `${bahan.judul} (${bahan.gram_total - gram}g tersisa)`
+}
+
+function showDropdownDataBahan(){
+    dropdownDatasForm4.innerHTML = ''
+
+    formData.bahans.forEach((item) => {
+        const sisa = item.gram_total - (item.temp_used_gram || 0)
+        if(sisa == 0) return
+        const html = `
+            <div class="dropdown-data" data-bahan-id="${item.id}">
+                <p class="font-jakarta font-semibold text-body text-primary-dark-active">
+                    ${item.judul} (${sisa}g tersisa)
+                </p>
+                <div class="input-scale-input flex flex-row gap-4">
+                    <span class="material-icons-round">add_circle_outline</span>
+                    <input class="input-number text-body font-jakarta font-semibold" type="number" min="1" max="${sisa}" size="4" placeholder="0">
+                    <span class="material-icons-round">remove_circle_outline</span>
+                </div>
+            </div>
+        `
+        dropdownDatasForm4.insertAdjacentHTML('beforeend', html)
+
+        const el      = dropdownDatasForm4.lastElementChild
+        const bahanId = item.id
+        const maxGram = item.gram_total - (item.temp_used_gram || 0)
+
+        const btnAdd    = el.querySelector('.input-scale-input .material-icons-round:nth-child(1)')
+        const inputNum  = el.querySelector('.input-number')
+        const btnRemove = el.querySelector('.input-scale-input .material-icons-round:nth-child(3)')
+
+        // Tambah gram
+        btnAdd.addEventListener('click', (e) => {
+            e.stopPropagation()
+            let val = parseInt(inputNum.value) || 0
+            if (val < maxGram) {
+                inputNum.value = val + 1
+                updateTempTotal(bahanId, 1, item.temp_used_gram)
+                saveBahanStep({ bahan_id: bahanId, gram_total: val + 1, judul: item.judul })
+            }
+            showResultBahan4()
+        })
+
+        // Kurang gram
+        btnRemove.addEventListener('click', (e) => {
+            e.stopPropagation()
+            let val = parseInt(inputNum.value) || 0
+            if (val > 1) {
+                inputNum.value = val - 1
+                updateTempTotal(bahanId, -1, item.temp_used_gram)
+                saveBahanStep({ bahan_id: bahanId, gram_total: val - 1, judul: item.judul })
+            } else if (val === 1) {
+                inputNum.value = 0
+                updateTempTotal(bahanId, 0)      
+                hapusBahan(bahanId)
+            }
+            showResultBahan4()
+        })
+
+        // Ketik manual
+        inputNum.addEventListener('input', (e) => {
+            e.stopPropagation()
+            if (!inputNum.value) return
+            let val = parseInt(inputNum.value) || 0
+            if (val > maxGram) { inputNum.value = maxGram; val = maxGram }
+            if (val > 0) {
+                updateTempTotal(bahanId, val, item.temp_used_gram)    
+                saveBahanStep({ bahan_id: bahanId, gram_total: val, judul: item.judul })
+            } else {
+                updateTempTotal(bahanId, 0)      
+                hapusBahan(bahanId)
+            }
+            showResultBahan4()
+        })
+    })
+
+    allInputDropdown.forEach(dropdown => {
+        const inputField = dropdown.querySelector('.input-data');
+        const dropdownItems = dropdown.querySelectorAll('.dropdown-data');
+
+        inputField.addEventListener('input', function () {
+            const filterText = inputField.value.toLowerCase();
+            dropdownItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(filterText)) {
+                item.style.display = "flex";
+                hasResults = true;
+            } else {
+                if (!item.classList.contains("choosen")) item.style.display = "none"
+            }
+            });
+        });
+    });
+}
 function formatTime(time) {
   const [hours, minutes, seconds] = time.split(":").map(Number)
 
@@ -292,4 +793,137 @@ function formatTime(time) {
   const d = totalSeconds % 60
 
   return `${m}m${d}d`
+}
+
+
+//Form 5
+const fileInput = document.getElementById('file-upload');
+const uploadDefault = document.querySelector('.upload-default');
+
+fileInput.addEventListener('change', (e) => {
+    handleFileUpload(e.target.files);
+    e.target.value = ''; // reset agar file sama bisa dipilih lagi
+});
+
+uploadDefault.addEventListener('click', () => fileInput.click());
+
+function handleFileUpload(files) {
+    Array.from(files).forEach((file) => {
+        if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+            alert(`File ${file.name} tidak didukung`);
+            return;
+        }
+
+        formData.attachments.push({
+            mimetype: file.type,
+            path: URL.createObjectURL(file), // preview sementara
+            file: file                        // file asli untuk dikirim nanti
+        });
+
+        if(formData.attachments.length > 1) inputSubmit.style.display = "flex"
+
+        displayUploadPreview();
+        console.log('✓ File added:', file.name);
+    });
+}
+
+function openPreview(att, el) {
+    const uploadBox = document.getElementById('upload-box-label');
+    const previewArea = document.getElementById('upload-preview-area');
+    const previewImg = document.getElementById('preview-img');
+    const previewVid = document.getElementById('preview-vid');
+
+    // Tandai thumbnail aktif
+    document.querySelectorAll('.upload-data').forEach(d => d.classList.remove('active'));
+    el.classList.add('active');
+
+    // Sembunyikan upload box, tampilkan preview
+    uploadBox.style.display = 'none';
+    previewArea.style.display = 'block';
+
+    if (att.mimetype.startsWith('image/')) {
+        previewImg.src = att.path;
+        previewImg.style.display = 'block';
+        previewVid.style.display = 'none';
+        previewVid.pause();
+        previewVid.src = '';
+    } else {
+        previewVid.src = att.path;
+        previewVid.style.display = 'block';
+        previewImg.style.display = 'none';
+    }
+
+    // Tombol close
+    document.getElementById('preview-close').onclick = () => {
+        previewArea.style.display = 'none';
+        uploadBox.style.display = 'flex';
+        previewVid.pause();
+        previewVid.src = '';
+        previewImg.src = '';
+        el.classList.remove('active');
+    };
+}
+
+function displayUploadPreview() {
+    const uploadWrapper = document.querySelector('.upload-wrapper');
+    if (!uploadWrapper) return;
+
+    const uploadDefault = uploadWrapper.querySelector('.upload-default');
+    uploadWrapper.querySelectorAll('.upload-data').forEach(el => el.remove());
+
+    formData.attachments.forEach((att, idx) => {
+        const div = document.createElement('div');
+        div.className = 'upload-data';
+        div.style.cursor = 'pointer';
+
+        const media = document.createElement(att.mimetype.startsWith('image/') ? 'img' : 'video');
+        media.src = att.path;
+
+        // Ikon play untuk video
+        if (att.mimetype.startsWith('video/')) {
+            const playIcon = document.createElement('span');
+            playIcon.className = 'material-icons-round';
+            playIcon.textContent = 'play_circle';
+            playIcon.style.cssText = 'position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; font-size:1.5rem; pointer-events:none;';
+            div.appendChild(playIcon);
+        }
+
+        const removeBtn = document.createElement('span');
+        removeBtn.className = 'material-icons-round remove-upload';
+        removeBtn.textContent = 'cancel';
+        removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // cegah trigger openPreview
+            URL.revokeObjectURL(att.path);
+            formData.attachments.splice(idx, 1);
+
+            // Reset preview kalau yang dihapus sedang aktif
+            if (div.classList.contains('active')) {
+                document.getElementById('upload-preview-area').style.display = 'none';
+                document.getElementById('upload-box-label').style.display = 'flex';
+                document.getElementById('preview-vid').pause();
+            }
+
+            displayUploadPreview();
+        });
+
+        // Klik thumbnail → buka preview
+        div.addEventListener('click', () => openPreview(att, div));
+
+        div.appendChild(media);
+        div.appendChild(removeBtn);
+        uploadWrapper.insertBefore(div, uploadDefault);
+    });
+}
+
+function previousForm() {
+    if(formCounter > 1) {
+        formCounter--;
+        changeIndicator();
+        showForm();
+        inputSubmit.style.display = "flex"
+    } else {
+        if(confirm('Apakah Anda yakin ingin membatalkan?\nData yang belum disimpan akan hilang.')) {
+            window.location.href = '/profile';
+        }
+    }
 }

@@ -80,7 +80,7 @@
         </a>
 
         {{-- Placeholder tambah resep — logic oleh teman --}}
-        <button class="quick-action-btn" disabled title="Segera hadir" style="cursor:not-allowed;opacity:0.7;">
+        <a href="{{ route('resep.tambah') }}" class="quick-action-btn">
             <div class="quick-action-icon edit-icon">
                 <span class="material-icons-round">add_circle</span>
             </div>
@@ -89,7 +89,7 @@
                 <span class="quick-action-sub">Bagikan resep andalanmu</span>
             </div>
             <span class="material-icons-round quick-action-arrow">chevron_right</span>
-        </button>
+        </a>
     </section>
 
     {{-- RESEP SAYA --}}
