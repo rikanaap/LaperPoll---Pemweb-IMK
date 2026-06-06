@@ -8,29 +8,32 @@ use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
-    // Menambah atau menghapus favorit (Toggle)
+    // Toggle favorit
     public function toggle($id)
     {
         $user = Auth::user();
-        
-        // Cek apakah resep ada
-        $resep = Resep::findOrFail($id);
-        
-        // Logika toggle otomatis (jika ada dihapus, jika tidak ada ditambah)
-        $user->favorites()->toggle($id);
+        Resep::findOrFail($id); // pastikan resep exist
 
-        $isFavorite = $user->favorites()->where('resep_id', $id)->exists();
+        // toggle() return array ['attached'=>[], 'detached'=>[]]
+        $result     = $user->favorites()->toggle($id);
+        $isFavorite = count($result['attached']) > 0;
 
         return response()->json([
-            'status' => 'success',
-            'isFavorite' => $isFavorite
+            'status'     => 'success',
+            'isFavorite' => $isFavorite,
         ]);
     }
 
-    // Menampilkan halaman favorit
+    // Halaman favorit — urut berdasarkan pivot created_at (kapan difavoritkan)
     public function index()
     {
-        $favorites = Auth::user()->favorites()->latest()->get();
+        $favorites = Auth::user()
+            ->favorites()
+            ->with('user') // eager load author
+            ->withPivot('created_at')
+            ->orderBy('favorites.created_at', 'desc')
+            ->get();
+
         return view('pages.favorit.index', compact('favorites'));
     }
 }

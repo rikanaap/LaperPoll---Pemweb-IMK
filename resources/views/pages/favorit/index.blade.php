@@ -72,22 +72,13 @@
                    data-title="{{ strtolower($resep->title) }}"
                    data-author="{{ strtolower($resep->user->name ?? '') }}"
                    data-rating="{{ $resep->current_star }}"
-                   data-date="{{ $resep->pivot->created_at ?? $resep->created_at }}">
+                   data-date="{{ $resep->pivot->created_at ?? $resep->created_at }}" data-favorited="{{ $resep->pivot->created_at ?? $resep->created_at }}">
                     <div class="fav-card">
                         {{-- Thumbnail --}}
                         <div class="fav-card-thumb">
-                            @if($resep->thumbnail)
-                                <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
+                            <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
                                      class="fav-thumb-img"
-                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                <div class="fav-thumb-placeholder" style="display:none">
-                                    <span class="material-icons-round">restaurant</span>
-                                </div>
-                            @else
-                                <div class="fav-thumb-placeholder">
-                                    <span class="material-icons-round">restaurant</span>
-                                </div>
-                            @endif
+                                     onerror="this.src='{{ asset('assets/images/Image_DummyResep.png') }}'">"
 
                             {{-- Tombol hapus favorit --}}
                             <button class="fav-remove-btn"

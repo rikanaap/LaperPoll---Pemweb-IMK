@@ -44,7 +44,7 @@ class Resep extends Model
 {
     return $this->thumbnail
         ? Storage::url($this->thumbnail)
-        : asset('assets/images/default-food.jpg');
+        : asset('assets/images/Image_DummyResep.png');
 }
 
     public function user()
