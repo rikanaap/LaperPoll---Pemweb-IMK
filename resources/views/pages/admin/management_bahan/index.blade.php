@@ -44,7 +44,7 @@
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request()->hasAny(['search', 'expired']))
+            @if(request('expired'))
                 <a href="{{ route('admin.bahan.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset

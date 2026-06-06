@@ -24,7 +24,7 @@ class ResepFilterRequest extends FormRequest
     {
         return [
             'search'    => $this->string('search')->trim()->value() ?: null,
-            'status'    => $this->has('status') ? (bool) $this->input('status') : null,
+            'status' => $this->filled('status') ? (bool) $this->input('status') : null,
             'filter_id' => $this->integer('filter_id') ?: null,
         ];
     }

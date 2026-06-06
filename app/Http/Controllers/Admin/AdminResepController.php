@@ -21,6 +21,8 @@ class AdminResepController extends Controller
             'reseps'   => $this->resepService->getPaginatedReseps($request->filters()),
             'kategoris' => $this->resepService->getAllFilters(), // ✅ key match dengan view
         ]);
+
+        
     }
 
     public function show(Resep $resep): View
