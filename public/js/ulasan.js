@@ -141,7 +141,7 @@ function lpToast(msg, type = 'info') {
     const existing = document.querySelector('.ul-toast');
     if (existing) existing.remove();
 
-    const colors = { info: '#172D23', warn: '#B45309', error: '#B91C1C' };
+    const colors = { info: '#172D23', warn: '#B45309', error: '#B91C1C', success: '#027A48' };
     const toast  = document.createElement('div');
     toast.className = 'ul-toast';
     toast.style.cssText = `
@@ -156,3 +156,18 @@ function lpToast(msg, type = 'info') {
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
+
+// ─── SUBMIT LOADING STATE ─────────────────────────────────────────────────────
+function ulSubmitLoading(btn) {
+    const rating = parseInt(document.getElementById('ulRatingInput')?.value || 0);
+    if (rating < 1) return; // biarkan validasi form yang handle
+    setTimeout(() => {
+        btn.disabled = true;
+        const icon = btn.querySelector('.material-icons-round');
+        const isEdit = btn.closest('form')?.querySelector('[name="_method"]')?.value === 'PATCH';
+        if (icon) icon.textContent = 'hourglass_top';
+        btn.querySelector('.material-icons-round').nextSibling.textContent =
+            isEdit ? ' Menyimpan...' : ' Mengirim...';
+    }, 10);
+}
+window.ulSubmitLoading = ulSubmitLoading;
