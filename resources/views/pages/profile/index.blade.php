@@ -118,11 +118,6 @@
                 <span class="material-icons-round empty-icon">restaurant_menu</span>
                 <p class="empty-title font-semibold">Belum ada resep</p>
                 <p class="empty-sub">Mulai bagikan resep andalanmu!</p>
-                {{-- Placeholder tombol tambah resep — logic oleh teman --}}
-                <button class="profile-add-resep-btn font-semibold" disabled title="Segera hadir">
-                    <span class="material-icons-round">add_circle</span>
-                    Tambah Resep
-                </button>
             </div>
         @else
             <div class="resep-grid" id="profResepGrid">
@@ -135,7 +130,7 @@
                         <div class="resep-card">
                             <div class="resep-card-thumb">
                                 @if($resep->thumbnail)
-                                    <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
+                                    <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
                                          class="resep-thumb-img"
                                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                     <div class="resep-thumb-placeholder" style="display:none">

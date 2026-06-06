@@ -35,7 +35,7 @@
     </div>
 
     {{-- ── MODAL HAPUS SELESAI ── --}}
-<div id="modalHapusSelesai" style="display:none; position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:1.5rem;">
+<div id="modalHapusSelesai" style="display:none; position:fixed; inset:0; z-index:200; align-items:center; justify-content:center; padding:1.5rem;">
     <div class="nb-modal-overlay" id="modalHapusSelesaiOverlay"></div>
     <div class="nb-modal-box">
         <div class="nb-modal-icon-wrap">
@@ -129,6 +129,12 @@
             <div class="nb-progress-fill" id="progressFill"
                  style="width: {{ $totalItem > 0 ? round(($doneItem / $totalItem) * 100) : 0 }}%"></div>
         </div>
+        {{-- Banner selamat 100% --}}
+        <div class="nb-done-banner" id="nbDoneBanner"
+             style="{{ $doneItem === $totalItem && $totalItem > 0 ? '' : 'display:none;' }}">
+            <span class="material-icons-round">celebration</span>
+            <span class="font-jakarta font-semibold">Semua bahan sudah dibeli!</span>
+        </div>
     </div>
 
     {{-- Tombol hapus muncul hanya jika ada yang sudah dibeli --}}
@@ -144,18 +150,23 @@
     <div id="bahanList">
         @forelse($groupedOrdered as $kategori => $items)
             @php
+                // FIX: tambah BUAH dan MINUMAN
                 $iconKat = match($kategori) {
                     'KARBOHIDRAT' => 'grain',
                     'PROTEIN'     => 'egg_alt',
                     'SAYURAN'     => 'eco',
+                    'BUAH'        => 'nutrition',
                     'BUMBU'       => 'spa',
+                    'MINUMAN'     => 'local_drink',
                     default       => 'category',
                 };
                 $colorKat = match($kategori) {
                     'KARBOHIDRAT' => 'kat-amber',
                     'PROTEIN'     => 'kat-red',
                     'SAYURAN'     => 'kat-green',
+                    'BUAH'        => 'kat-orange',
                     'BUMBU'       => 'kat-orange',
+                    'MINUMAN'     => 'kat-blue',
                     default       => 'kat-gray',
                 };
             @endphp

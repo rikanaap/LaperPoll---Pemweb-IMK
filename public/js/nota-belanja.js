@@ -66,8 +66,19 @@ function updateProgress() {
         `;
     }
 
-    // Semua selesai
-    if (total > 0 && done === total) toast('🎉 Semua bahan sudah dibeli!');
+    // FIX: tampilkan banner selamat + progress bar hijau saat 100%
+    const progressCard = document.getElementById('nbProgressCard');
+    const doneBanner   = document.getElementById('nbDoneBanner');
+
+    if (total > 0 && done === total) {
+        if (fillEl) fillEl.classList.add('nb-progress-fill-done');
+        if (doneBanner) doneBanner.style.display = 'flex';
+        if (progressCard) progressCard.classList.remove('hidden'); // pastikan tidak ter-hide
+        toast('🎉 Semua bahan sudah dibeli!');
+    } else {
+        if (fillEl) fillEl.classList.remove('nb-progress-fill-done');
+        if (doneBanner) doneBanner.style.display = 'none';
+    }
 }
 
 // ── Update counter per kategori ───────────────────────────────
@@ -165,7 +176,7 @@ document.getElementById('hapusSelesaiBtn')?.addEventListener('click', async () =
                 </div>
             `;
             document.getElementById('hapusSelesaiWrap')?.classList.add('hidden');
-            document.getElementById('nbProgressCard')?.classList.add('hidden');
+            // progress card tidak di-hide — halaman akan redirect saat filter ulang
         }
     } catch (err) {
         toast('Gagal menghapus: ' + err.message, true);
@@ -266,7 +277,7 @@ updateProgress();
         return `${parseInt(d)} ${BULAN[parseInt(m)-1]} ${y}`;
     }
 
-    function createNbCalendar(hiddenId, triggerId, textId, popupId) {
+    function createNbCalendar(hiddenId, triggerId, textId, popupId, minDate = null) {
         const hidden  = document.getElementById(hiddenId);
         const trigger = document.getElementById(triggerId);
         const textEl  = document.getElementById(textId);
@@ -311,7 +322,10 @@ updateProgress();
                 let cls = 'nb-cal-cell font-jakarta';
                 if (iso === todayISO)  cls += ' nb-cal-today';
                 if (iso === selected)  cls += ' nb-cal-selected';
-                html += `<span class="${cls}" data-date="${iso}">${day}</span>`;
+                // FIX: grey-out tanggal sebelum minDate (untuk filterEnd)
+                const isDisabled = minDate && iso < minDate;
+                if (isDisabled) cls += ' nb-cal-disabled';
+                html += `<span class="${cls}" data-date="${iso}" ${isDisabled ? 'data-disabled="1"' : ''}>${day}</span>`;
             }
             html += '</div>';
             popup.innerHTML = html;
@@ -330,6 +344,7 @@ updateProgress();
             popup.querySelectorAll('.nb-cal-cell').forEach(cell => {
                 cell.addEventListener('click', e => {
                     e.stopPropagation();
+                    if (cell.dataset.disabled) return; // FIX: skip klik pada tanggal disabled
                     selected = cell.dataset.date;
                     hidden.value = selected;
                     textEl.textContent = formatDisplay(selected);
@@ -368,7 +383,7 @@ updateProgress();
 
     document.addEventListener('DOMContentLoaded', () => {
         createNbCalendar('filterStart', 'filterStartTrigger', 'filterStartText', 'filterStartPopup');
-        createNbCalendar('filterEnd',   'filterEndTrigger',   'filterEndText',   'filterEndPopup');
+        createNbCalendar('filterEnd',   'filterEndTrigger',   'filterEndText',   'filterEndPopup', document.getElementById('filterStart')?.value || null);
 
         // Update display from preset buttons (already sets hidden input value)
         // We need to watch for preset changes and sync display

@@ -156,7 +156,6 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('api/nota-belanja')->group(function () {
         Route::patch('/toggle/{id}',    [NotaBelanjaController::class, 'toggle'])->name('api.nota.toggle');
         Route::delete('/hapus-selesai', [NotaBelanjaController::class, 'hapusSelesai'])->name('api.nota.hapus-selesai');
-        Route::delete('/{id}',          [NotaBelanjaController::class, 'destroy'])->name('api.nota.destroy');
     });
 
     // ── PROFILE ───────────────────────────────────────────────────────────────
@@ -177,17 +176,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────
-
-Route::prefix('admin/bahans')->name('admin.bahans.')->group(function () {
-    Route::get('/',             [BahansController::class, 'index'])->name('index');
-    Route::get('/tambah',       [BahansController::class, 'create'])->name('create');
-    Route::post('/',            [BahansController::class, 'store'])->name('store');
-    Route::get('/{bahan}/edit', [BahansController::class, 'edit'])->name('edit');
-    Route::put('/{bahan}',      [BahansController::class, 'update'])->name('update');
-    Route::delete('/{bahan}',   [BahansController::class, 'destroy'])->name('destroy');
-});
-
-
 Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function () {
 
     Route::get('/',        [AdminDashboardController::class, 'index'])->name('dashboard');

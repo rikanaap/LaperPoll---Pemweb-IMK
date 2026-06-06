@@ -32,6 +32,10 @@ class MealPlannerController extends Controller
     // ─────────────────────────────────────────────────────────────────
     private function syncCart(int $userId, ?string $start = null, ?string $end = null): void
     {
+        // FIX: reset is_done semua item user ke 0 sebelum sync
+        // agar nota selalu fresh saat generate ulang — tidak ada sisa centang dari sesi belanja sebelumnya
+        UserCart::where('user_id', $userId)->update(['is_done' => 0]);
+
         // Ambil semua resep_id dari meal planner (TANPA unique — satu resep bisa muncul berkali-kali)
         $resepIdList = MealPlannerDetail::whereHas('mealPlanner', function ($q) use ($userId, $start, $end) {
             $q->where('user_id', $userId);

@@ -281,35 +281,62 @@ function updateKaloriUI() {
         if (cur) cur.textContent = current;
         if (tgt) tgt.textContent = `${target} kal`;
 
-        const melebihi    = current > target;
-        const barFill     = document.getElementById('mpBarFill');
-        const barOverflow = document.getElementById('mpBarOverflow');
-        const label       = document.getElementById('mpBarLabel');
+        const barFill = document.getElementById('mpBarFill');
+        const label   = document.getElementById('mpBarLabel');
+        const melebihi = current > target;
 
-        if (melebihi) {
-            // Bar oranye selalu penuh (opacity 1 = 100%)
-            if (barFill) { barFill.style.opacity = '1'; }
+        // ── Layer warna berdasarkan kelipatan target ──────────────────
+        // Layer 1: 0–1× target       → oranye       #FF6D00
+        // Layer 2: 1×–2× target      → merah muda   #E53935
+        // Layer 3: 2×–3× target      → merah        #B71C1C
+        // Layer 4: 3×+ target        → merah gelap  #7F0000
+        //
+        // Cara kerja: bar SELALU lebar 100% saat over.
+        // Warna ditentukan oleh layer sekarang (berapa kali lipat target).
+        // Sisa progress dalam layer itu dipakai sebagai opacity layer berikutnya
+        // yang di-blend dengan CSS background dua warna (gradient dari layer ke layer+1).
 
-            // Overlay gelap dari kanan:
-            // current = 1× target → overlay 0% (tidak ada)
-            // current = 2× target → overlay 100% (full gelap)
-            // Lebih dari 2× target → tetap 100%
-            const overflowRatio = Math.min((current - target) / target, 1); // 0.0 – 1.0
-            const overflowPct   = overflowRatio * 100;
-            if (barOverflow) {
-                barOverflow.style.display = '';
-                barOverflow.style.width   = overflowPct + '%';
+        const LAYERS = [
+            { from: '#FF6D00', to: '#E53935' }, // layer 1 → 2
+            { from: '#E53935', to: '#B71C1C' }, // layer 2 → 3
+            { from: '#B71C1C', to: '#7F0000' }, // layer 3 → 4
+            { from: '#7F0000', to: '#4A0000' }, // layer 4+
+        ];
+
+        if (!melebihi) {
+            // Belum mencapai target — fill sesuai persentase, warna oranye normal
+            const pct = (current / target) * 100;
+            if (barFill) {
+                barFill.style.width      = pct + '%';
+                barFill.style.background = 'linear-gradient(90deg, #FF8A50, #FF6D00)';
+            }
+            if (label) { label.textContent = Math.round(pct) + '%'; label.style.color = '#E65100'; }
+        } else {
+            // Melebihi target — hitung layer dan progress dalam layer
+            const ratio      = current / target;       // misal 1990/500 = 3.98
+            const layerIndex = Math.min(Math.floor(ratio) - 1, LAYERS.length - 1); // 0-based, max index 3
+            const progress   = ratio - Math.floor(ratio);  // 0.0–1.0 progress dalam layer ini
+            // misal 3.98 → layerIndex=2 (layer 3), progress=0.98
+
+            const layer = LAYERS[Math.min(layerIndex, LAYERS.length - 1)];
+
+            // Bar selalu penuh (100%), warna gradient dari warna layer ke warna layer berikutnya
+            // sesuai progress dalam layer ini
+            if (barFill) {
+                barFill.style.width = '100%';
+                if (progress > 0 && layerIndex < LAYERS.length - 1) {
+                    // Blend: kiri = warna layer sekarang, kanan = blend ke warna layer berikut
+                    const splitPct = Math.round(progress * 100);
+                    barFill.style.background =
+                        `linear-gradient(90deg, ${layer.from} 0%, ${layer.from} ${splitPct}%, ${layer.to} 100%)`;
+                } else {
+                    // Sudah di layer max atau progress = 0
+                    barFill.style.background = layer.from;
+                }
             }
 
-            // Label kelebihan kalori di bawah bar
             const lebih = current - target;
-            if (label) { label.textContent = '+' + lebih + ' kal melebihi target'; label.style.color = '#DC2626'; }
-        } else {
-            // Bar oranye ngisi sesuai persen terisi
-            const pct = (current / target) * 100;
-            if (barFill)     { barFill.style.opacity = pct / 100; }
-            if (barOverflow) { barOverflow.style.display = 'none'; barOverflow.style.width = '0%'; }
-            if (label)       { label.textContent = Math.round(pct) + '%'; label.style.color = '#E65100'; }
+            if (label) { label.textContent = '+' + lebih + ' kal melebihi target'; label.style.color = '#B71C1C'; }
         }
 
         if (overEl) overEl.style.display = melebihi ? 'flex' : 'none';

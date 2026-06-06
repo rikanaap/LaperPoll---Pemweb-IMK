@@ -111,35 +111,21 @@
 
 .mp-bar-track {
     position: relative;
-    height: 0.65rem;
+    height: 0.75rem;
     background: #F4E8E0;
     border-radius: 2rem;
     overflow: hidden;
 }
-/* Base fill — oranye, lebar selalu 100% track, ini "lantai" bar */
-/* Warna gelap overlay ditumpuk di atasnya via mp-bar-overflow */
+/* Satu div fill — warna dan lebar dikendalikan sepenuhnya dari JS */
 .mp-bar-fill {
     position: absolute;
-    left: 0; top: 0; height: 100%; width: 100%;
+    left: 0; top: 0; height: 100%;
     border-radius: 2rem;
-    background: linear-gradient(90deg, #E65100, #FF8A50);
-    transition: opacity 0.4s ease;
-    opacity: 0; /* dimulai transparan, akan di-set sesuai persen terisi */
-    z-index: 1;
-}
-/* Overlay gelap — ditumpuk DARI KANAN, makin lebar makin gelap */
-/* Saat current = target → lebar 0 (tidak ada overlay)           */
-/* Saat current = 2×target → lebar 100% (full gelap)             */
-.mp-bar-overflow {
-    position: absolute;
-    right: 0; top: 0; height: 100%;
-    border-radius: 2rem;
-    background: #7F1D1D;
-    transition: width 0.4s ease;
+    transition: width 0.5s ease, background 0.5s ease;
     width: 0%;
-    display: none;
-    z-index: 2;
 }
+/* div overflow tidak dipakai lagi — semua dikendalikan .mp-bar-fill */
+.mp-bar-overflow { display: none !important; }
 
 .mp-kalori-over {
     display: flex;

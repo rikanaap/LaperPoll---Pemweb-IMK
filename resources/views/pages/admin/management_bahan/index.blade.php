@@ -44,7 +44,7 @@
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request()->hasAny(['search', 'expired']))
+            @if(request('expired'))
                 <a href="{{ route('admin.bahan.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset
@@ -61,8 +61,8 @@
                 <tr>
                     <th style="width:40px">#</th>
                     <th>Nama Bahan</th>
-                    <th>Ekspektasi Expired</th>
                     <th>Kategori</th>
+                    <th>Ekspektasi Expired</th>
                     <th>Dipakai di Resep</th>
                     <th>Ditambahkan</th>
                     <th style="width:100px">Aksi</th>

@@ -554,3 +554,29 @@
     transition: all 0.15s;
 }
 .nb-modal-confirm:hover { background: #A33320; }
+/* ── KATEGORI BIRU (MINUMAN) ── */
+.kat-blue { background: #EFF6FF; }
+.kat-blue .material-icons-round { color: #2563EB; }
+
+/* ── DONE BANNER ── */
+.nb-done-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.875rem;
+    background: #F0FDF4;
+    border: 1px solid #86EFAC;
+    border-radius: 0.75rem;
+    color: #166534;
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
+}
+.nb-done-banner .material-icons-round { font-size: 1rem !important; color: #16A34A; }
+
+/* ── CALENDAR DISABLED DATE ── */
+.nb-cal-cell.nb-cal-disabled {
+    color: #D1D5DB;
+    cursor: not-allowed;
+    pointer-events: none;
+    text-decoration: line-through;
+}
