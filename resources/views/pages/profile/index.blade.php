@@ -79,8 +79,8 @@
             <span class="material-icons-round quick-action-arrow">chevron_right</span>
         </a>
 
-        {{-- Placeholder tambah resep — logic oleh teman --}}
-        <button class="quick-action-btn" disabled title="Segera hadir" style="cursor:not-allowed;opacity:0.7;">
+        {{-- Tambah Resep — route oleh teman --}}
+        <a href="#" class="quick-action-btn" id="btnTambahResep">
             <div class="quick-action-icon edit-icon">
                 <span class="material-icons-round">add_circle</span>
             </div>
@@ -89,7 +89,7 @@
                 <span class="quick-action-sub">Bagikan resep andalanmu</span>
             </div>
             <span class="material-icons-round quick-action-arrow">chevron_right</span>
-        </button>
+        </a>
     </section>
 
     {{-- RESEP SAYA --}}
@@ -170,12 +170,6 @@
                     </a>
                 @endforeach
             </div>
-
-            {{-- Tombol tambah resep di bawah grid — placeholder, logic oleh teman --}}
-            <button class="profile-add-resep-btn font-semibold" disabled title="Segera hadir">
-                <span class="material-icons-round">add_circle</span>
-                Tambah Resep Baru
-            </button>
         @endif
     </section>
 
