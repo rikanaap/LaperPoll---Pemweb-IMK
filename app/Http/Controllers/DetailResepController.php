@@ -20,7 +20,12 @@ class DetailResepController extends Controller
             'feedbacks.photos',
         ])->findOrFail($id);
 
-        $resep->increment('views_count');
+        // Views count throttle: hanya increment 1x per session per resep
+        $sessionKey = 'viewed_resep_' . $id;
+        if (!session($sessionKey)) {
+            $resep->increment('views_count');
+            session([$sessionKey => true]);
+        }
 
         $totalUlasan = $resep->feedbacks->count();
         $ratingAvg   = $totalUlasan > 0 ? round($resep->feedbacks->avg('rating'), 1) : 0;

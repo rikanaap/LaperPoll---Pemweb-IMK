@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '{{ $resep->title }} - LaperPoll')
+@section('title', $resep->title . ' - LaperPoll')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/detail-resep.css') }}">
@@ -127,7 +127,7 @@
     </section>
 
     {{-- ── BAHAN-BAHAN ── --}}
-    <section class="dr-card">
+    <section class="dr-card dr-card-bahan">
         <div class="dr-card-header">
             <h2 class="dr-card-title font-semibold">Bahan-bahan</h2>
             <div class="dr-unit-toggle" id="unitToggle">
@@ -156,7 +156,7 @@
     </section>
 
     {{-- ── LANGKAH MEMASAK ── --}}
-    <section class="dr-card">
+    <section class="dr-card dr-card-langkah">
         <h2 class="dr-card-title font-semibold" style="margin-bottom:1rem">Cara Membuat</h2>
 
         @forelse($resep->langkahs->sortBy('step_order') as $langkah)
@@ -238,7 +238,7 @@
                                    accept="image/*" multiple class="hidden-input">
                         </div>
                         <div class="dr-photo-previews" id="photoPreviews"></div>
-                        <button type="submit" class="dr-ulasan-submit font-semibold">
+                        <button type="submit" class="dr-ulasan-submit font-semibold" id="btnKirimUlasan">
                             <span class="material-icons-round">send</span>
                             Kirim Ulasan
                         </button>
@@ -283,7 +283,7 @@
                     @if($myFeedback->photos && $myFeedback->photos->isNotEmpty())
                         <div class="dr-ulasan-photos">
                             @foreach($myFeedback->photos as $photo)
-                                <img src="{{ asset($photo->path) }}" alt="Foto ulasan"
+                                <img src="{{ Storage::url($photo->path) }}" alt="Foto ulasan"
                                      class="dr-ulasan-photo" onclick="openPhotoModal(this.src)">
                             @endforeach
                         </div>
@@ -332,7 +332,7 @@
                         @if($fb->photos->isNotEmpty())
                             <div class="dr-ulasan-photos">
                                 @foreach($fb->photos as $photo)
-                                    <img src="{{ asset($photo->path) }}" alt="Foto ulasan"
+                                    <img src="{{ Storage::url($photo->path) }}" alt="Foto ulasan"
                                          class="dr-ulasan-photo" onclick="openPhotoModal(this.src)">
                                 @endforeach
                             </div>
@@ -343,7 +343,7 @@
         @endif
     </section>
 
-    <div style="height:5rem"></div>
+    <div style="height:7rem"></div>
 
 </main>
 
@@ -385,6 +385,7 @@
         </div>
     </div>
 </div>
+
 <div class="dr-photo-modal" id="photoModal" onclick="closePhotoModal()">
     <button class="dr-photo-modal-close" onclick="closePhotoModal()">
         <span class="material-icons-round">close</span>
@@ -394,10 +395,10 @@
 
 @push('scripts')
 <script>
-    const CSRF_TOKEN     = "{{ csrf_token() }}";
-    const FAVORIT_URL    = "{{ route('favorit.toggle', $resep->id) }}";
-    const IS_AUTH        = {{ Auth::check() ? 'true' : 'false' }};
-    const SIGN_IN_URL    = "{{ route('auth.sign-in') }}";
+    const CSRF_TOKEN  = "{{ csrf_token() }}";
+    const FAVORIT_URL = "{{ route('favorit.toggle', $resep->id) }}";
+    const IS_AUTH     = {{ Auth::check() ? 'true' : 'false' }};
+    const SIGN_IN_URL = "{{ route('auth.sign-in') }}";
 </script>
 <script src="{{ asset('js/detail-resep.js') }}"></script>
 @endpush
