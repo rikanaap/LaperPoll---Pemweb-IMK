@@ -58,11 +58,11 @@
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request('status') !== null && request('status') !== '')
+            <!-- @if(request('status') !== null && request('status') !== '')
                 <a href="{{ route('admin.resep.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span> Reset
                 </a>
-            @endif
+            @endif -->
 
         </form>
     </div>
@@ -103,8 +103,8 @@
                             @endif
                             <div>
                                 <div class="td-name">{{ Str::limit($resep->title, 30) }}</div>
-                                <div class="td-sub">
-                                    {{ $resep->cook_duration }}
+                               <div class="td-sub">
+                                    {{ $resep->cook_duration_formatted }}
                                     {{ $resep->calorie ? '· ' . number_format($resep->calorie) . ' kkal' : '' }}
                                 </div>
                             </div>

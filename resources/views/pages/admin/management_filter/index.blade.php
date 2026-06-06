@@ -36,24 +36,41 @@
                 >
             </div>
 
-            {{-- ✅ Label pakai levelLabel() bukan "Level 1/2/3" --}}
-            <select name="level" onchange="filterForm.submit()">
-                <option value="">Semua Level</option>
-                @foreach($availableLevels as $lvl)
-                    <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>
-                        {{ \App\Models\Filter::levelLabel($lvl) }}
-                    </option>
-                @endforeach
-            </select>
+            @php
+                $level = request('level') ?? '';
+                $levelLabels = [
+                    '' => 'Semua Level',
+                ];
+                foreach($availableLevels as $lvl) {
+                    $levelLabels[$lvl] = \App\Models\Filter::levelLabel($lvl);
+                }
+            @endphp
+            <div class="custom-select">
+                <input type="hidden" name="level" value="{{ $level }}">
+                <div class="custom-select__trigger">
+                    <span class="custom-select__label">
+                        {{ $levelLabels[$level] ?? 'Semua Level' }}
+                    </span>
+                    <span class="material-icons-round custom-select__arrow">expand_more</span>
+                </div>
+                <div class="custom-select__dropdown">
+                    <div class="custom-select__option {{ $level === '' ? 'is-selected' : '' }}" data-value="">Semua Level</div>
+                    @foreach($availableLevels as $lvl)
+                        <div class="custom-select__option {{ $level == $lvl ? 'is-selected' : '' }}" data-value="{{ $lvl }}">
+                            {{ \App\Models\Filter::levelLabel($lvl) }}
+                        </div>
+                    @endforeach
+                </div>
+            </div>
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request('level'))
+            <!-- @if(request('level'))
                 <a href="{{ route('admin.filter.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset
                 </a>
-            @endif
+            @endif -->
 
         </form>
     </div>

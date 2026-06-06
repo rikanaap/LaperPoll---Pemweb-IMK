@@ -54,12 +54,12 @@
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request('expired'))
+            <!-- @if(request('expired'))
                 <a href="{{ route('admin.bahan.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset
                 </a>
-            @endif
+            @endif -->
 
         </form>
     </div>

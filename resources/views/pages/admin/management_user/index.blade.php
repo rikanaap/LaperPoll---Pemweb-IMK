@@ -31,26 +31,51 @@
                 >
             </div>
 
-            <select name="verif" onchange="filterForm.submit()">
-                <option value="">Semua Status</option>
-                <option value="verified"   {{ request('verif') === 'verified'   ? 'selected' : '' }}>Verified</option>
-                <option value="unverified" {{ request('verif') === 'unverified' ? 'selected' : '' }}>Unverified</option>
-            </select>
+                        @php
+                $verif = request('verif') ?? '';
+                $role  = request('role')  ?? '';
+            @endphp
 
-            <select name="role" onchange="filterForm.submit()">
-                <option value="">Semua Role</option>
-                <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="user"  {{ request('role') === 'user'  ? 'selected' : '' }}>User</option>
-            </select>
+            {{-- Ganti select verif --}}
+            <div class="custom-select">
+                <input type="hidden" name="verif" value="{{ $verif }}">
+                <div class="custom-select__trigger">
+                    <span class="custom-select__label">
+                        {{ $verif === 'verified' ? 'Verified' : ($verif === 'unverified' ? 'Unverified' : 'Semua Status') }}
+                    </span>
+                    <span class="material-icons-round custom-select__arrow">expand_more</span>
+                </div>
+                <div class="custom-select__dropdown">
+                    <div class="custom-select__option {{ $verif === '' ? 'is-selected' : '' }}" data-value="">Semua Status</div>
+                    <div class="custom-select__option {{ $verif === 'verified' ? 'is-selected' : '' }}" data-value="verified">Verified</div>
+                    <div class="custom-select__option {{ $verif === 'unverified' ? 'is-selected' : '' }}" data-value="unverified">Unverified</div>
+                </div>
+            </div>
+
+            {{-- Ganti select role --}}
+            <div class="custom-select">
+                <input type="hidden" name="role" value="{{ $role }}">
+                <div class="custom-select__trigger">
+                    <span class="custom-select__label">
+                        {{ $role === 'admin' ? 'Admin' : ($role === 'user' ? 'User' : 'Semua Role') }}
+                    </span>
+                    <span class="material-icons-round custom-select__arrow">expand_more</span>
+                </div>
+                <div class="custom-select__dropdown">
+                    <div class="custom-select__option {{ $role === '' ? 'is-selected' : '' }}" data-value="">Semua Role</div>
+                    <div class="custom-select__option {{ $role === 'admin' ? 'is-selected' : '' }}" data-value="admin">Admin</div>
+                    <div class="custom-select__option {{ $role === 'user' ? 'is-selected' : '' }}" data-value="user">User</div>
+                </div>
+            </div>
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request('verif') || request('role'))
+            <!-- @if(request('verif') || request('role'))
                 <a href="{{ route('admin.user.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset
                 </a>
-            @endif
+            @endif -->
 
         </form>
     </div>
