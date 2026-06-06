@@ -134,7 +134,9 @@ Route::middleware(['auth'])->group(function () {
     // ⚠️ pakai-resep HARUS di atas /{id}
     Route::post('/kulkas-digital/pakai-resep', [KulkasDigitalController::class, 'pakaiResep'])->name('kulkas.pakai-resep');
     Route::delete('/kulkas-digital/{id}',      [KulkasDigitalController::class, 'destroy'])->name('kulkas.destroy');
-    Route::post('/api/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])->name('kulkas.bahan.baru');
+    Route::post('/api/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])
+        ->name('kulkas.bahan.baru')
+        ->middleware('throttle:20,1');
 
     // ── MEAL PLANNER ──────────────────────────────────────────────────────────
     Route::get('/meal-planner', [MealPlannerController::class, 'index'])->name('meal-planner.index');
@@ -192,15 +194,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function
         Route::patch('/{user}',        [AdminUserController::class, 'update'])->name('update');
         Route::patch('/{user}/verify', [AdminUserController::class, 'verify'])->name('verify');
         Route::delete('/{user}',       [AdminUserController::class, 'destroy'])->name('destroy');
-
-        if (app()->isLocal()) {
-        Route::patch('/{user}/force-verify', [AdminUserController::class, 'forceVerify'])
-            ->name('forceVerify');
-    }
     });
-
-     
-    
 
     Route::prefix('bahan')->name('bahan.')->group(function () {
         Route::get('/',          [AdminBahanController::class, 'index'])->name('index');

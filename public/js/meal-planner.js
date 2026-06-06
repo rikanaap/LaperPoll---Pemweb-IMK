@@ -168,7 +168,9 @@ function renderContent() {
                 </div>
             `;
         } else {
-            const href = `${window.MP.pilihResepUrl}?tanggal=${iso}&meal_time=${w}`;
+            const maxKal     = dayData.max_calorie  || 0;
+            const totalKal   = dayData.total_kalori || 0;
+            const href = `${window.MP.pilihResepUrl}?tanggal=${iso}&meal_time=${w}&max_kal=${maxKal}&used_kal=${totalKal}`;
             body = `
                 <a href="${href}" class="mp-slot-kosong">
                     <div class="mp-slot-plus">

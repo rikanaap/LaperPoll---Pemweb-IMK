@@ -1,6 +1,6 @@
 // pilih-resep.js
 // Kompatibel dengan meal-planner.js baru
-// Format slot: ?tanggal=2026-05-27&meal_time=SA
+// Format slot: ?tanggal=2026-05-27&meal_time=SA&max_kal=2000&used_kal=550
 
 (function () {
 'use strict';
@@ -10,10 +10,13 @@ const HARI        = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 const BULAN       = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
 
 // ── Parse slot dari query string ──────────────────────────────
-// Format: ?tanggal=2026-05-27&meal_time=SA
-const params   = new URLSearchParams(window.location.search);
-const slotDate = params.get('tanggal')   || null;
-const slotWaktu= params.get('meal_time') || null;
+// Format: ?tanggal=2026-05-27&meal_time=SA&max_kal=2000&used_kal=550
+const params    = new URLSearchParams(window.location.search);
+const slotDate  = params.get('tanggal')   || null;
+const slotWaktu = params.get('meal_time') || null;
+const maxKal    = parseInt(params.get('max_kal'))  || 0;
+const usedKal   = parseInt(params.get('used_kal')) || 0;
+const sisaKal   = maxKal > 0 ? Math.max(0, maxKal - usedKal) : 0;
 
 // ── Header info slot ──────────────────────────────────────────
 const slotLabel   = document.getElementById('slotLabel');
@@ -35,6 +38,35 @@ if (slotDate && slotWaktu) {
                 ${wLabel}
             </span>
         `;
+    }
+
+    // ── Banner kalori (hanya tampil kalau ada target) ──────────
+    if (maxKal > 0) {
+        const kalBanner = document.createElement('div');
+        kalBanner.id = 'prKaloriBanner';
+        kalBanner.className = 'pr-kalori-banner font-jakarta';
+        const pct = Math.min(100, Math.round((usedKal / maxKal) * 100));
+        const overTarget = usedKal >= maxKal;
+        kalBanner.innerHTML = `
+            <div class="pr-kalori-banner-row">
+                <span class="material-icons-round pr-kal-icon">${overTarget ? 'warning_amber' : 'local_fire_department'}</span>
+                <div class="pr-kalori-banner-text">
+                    <span class="pr-kal-label font-semibold">
+                        ${overTarget
+                            ? 'Target kalori hari ini sudah penuh!'
+                            : `Sisa kalori hari ini: <strong>${sisaKal} kal</strong>`
+                        }
+                    </span>
+                    <span class="pr-kal-sub font-regular">${usedKal} / ${maxKal} kal terpakai</span>
+                </div>
+            </div>
+            <div class="pr-kal-track">
+                <div class="pr-kal-fill ${overTarget ? 'pr-kal-over' : ''}" style="width:${pct}%"></div>
+            </div>
+        `;
+        // Sisipkan setelah pr-header
+        const header = document.querySelector('.pr-header');
+        if (header) header.insertAdjacentElement('afterend', kalBanner);
     }
 } else {
     if (slotLabel)   slotLabel.textContent = 'Pilih slot di Meal Planner terlebih dahulu.';
@@ -140,6 +172,57 @@ function renderResep(data) {
 let isSaving = false;
 
 
+// ── Kalori warning modal ──────────────────────────────────────
+function showKaloriWarning(namaResep, kalResep, proyeksi, lebih, target) {
+    return new Promise(resolve => {
+        let modal = document.getElementById('prKaloriModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'prKaloriModal';
+            modal.style.cssText = 'position:fixed;inset:0;z-index:700;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:rgba(0,0,0,0.5);';
+            modal.innerHTML = `
+                <div class="pr-kal-modal-box">
+                    <div class="pr-kal-modal-icon">
+                        <span class="material-icons-round">warning_amber</span>
+                    </div>
+                    <h3 class="pr-kal-modal-title font-jakarta font-bold" id="prKalModalTitle"></h3>
+                    <p class="pr-kal-modal-desc font-jakarta font-regular" id="prKalModalDesc"></p>
+                    <div class="pr-kal-modal-actions">
+                        <button class="pr-kal-btn-cancel font-jakarta font-semibold" id="prKalBtnBatal">Batalkan</button>
+                        <button class="pr-kal-btn-confirm font-jakarta font-bold" id="prKalBtnLanjut">
+                            <span class="material-icons-round">check</span>
+                            Tetap Pilih
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        document.getElementById('prKalModalTitle').textContent = `Kalori melebihi target!`;
+        document.getElementById('prKalModalDesc').innerHTML =
+            `<strong>${namaResep}</strong> memiliki <strong>${kalResep} kal</strong>.<br>` +
+            `Total akan menjadi <strong>${proyeksi} kal</strong> dari target <strong>${target} kal</strong> ` +
+            `(+${lebih} kal).<br><br>Tetap pilih resep ini?`;
+        modal.style.display = 'flex';
+
+        const cleanup = (result) => {
+            modal.style.display = 'none';
+            document.getElementById('prKalBtnLanjut').removeEventListener('click', onLanjut);
+            document.getElementById('prKalBtnBatal').removeEventListener('click', onBatal);
+            modal.removeEventListener('click', onOverlay);
+            resolve(result);
+        };
+        const onLanjut  = () => cleanup(true);
+        const onBatal   = () => cleanup(false);
+        const onOverlay = (e) => { if (e.target === modal) cleanup(false); };
+
+        document.getElementById('prKalBtnLanjut').addEventListener('click', onLanjut);
+        document.getElementById('prKalBtnBatal').addEventListener('click', onBatal);
+        modal.addEventListener('click', onOverlay);
+    });
+}
+
 // ── Toast helper ──────────────────────────────────────────────
 function showToast(msg) {
     let t = document.getElementById('prToast');
@@ -163,6 +246,17 @@ function showToast(msg) {
 
 async function pilihResep(resep) {
     if (isSaving) return;
+
+    // ── Warning kalori: tampilkan konfirmasi jika melewati target ──
+    if (maxKal > 0 && resep.kalori > 0) {
+        const proyeksi = usedKal + resep.kalori;
+        if (proyeksi > maxKal) {
+            const lebih = proyeksi - maxKal;
+            const lanjut = await showKaloriWarning(resep.nama, resep.kalori, proyeksi, lebih, maxKal);
+            if (!lanjut) return; // user batalkan
+        }
+    }
+
     isSaving = true;
 
     const overlay = document.getElementById('loadingOverlay');

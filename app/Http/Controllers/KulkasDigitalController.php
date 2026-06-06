@@ -78,7 +78,7 @@ class KulkasDigitalController extends Controller
                 return [
                     'id'            => $resep->id,
                     'title'         => $resep->title,
-                    'thumbnail'     => $resep->thumbnail,
+                    'thumbnail'     => $resep->thumbnail_url,
                     'calorie'       => $resep->calorie,
                     'cook_duration' => $resep->cook_duration,
                     'total_bahan'   => $totalBahan,

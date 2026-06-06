@@ -227,6 +227,15 @@
                      data-bahan-detail='{{ $bahanDetailJson }}'
                      data-lengkap="{{ $resep['lengkap'] ? '1' : '0' }}">
 
+                    {{-- Thumbnail --}}
+                    <div class="kd-resep-thumb">
+                        @if($resep['thumbnail'])
+                            <img src="{{ $resep['thumbnail'] }}" alt="{{ $resep['title'] }}" loading="lazy">
+                        @else
+                            <span class="material-icons-round">restaurant</span>
+                        @endif
+                    </div>
+
                     <div class="kd-resep-info">
                         <p class="kd-resep-nama font-jakarta font-medium">{{ $resep['title'] }}</p>
 

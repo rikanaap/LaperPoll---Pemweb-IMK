@@ -208,7 +208,7 @@ document.querySelectorAll('.nb-preset-btn').forEach(btn => {
 
         switch (btn.dataset.preset) {
             case 'today':    s = end = new Date(t); break;
-            case 'tomorrow': s = end = new Date(t); s.setDate(t.getDate()+1); end = new Date(s); break;
+            case 'tomorrow': s = new Date(t); s.setDate(t.getDate()+1); end = new Date(s); break;
             case 'thisweek': {
                 const dow = t.getDay()===0 ? 6 : t.getDay()-1;
                 s = new Date(t); s.setDate(t.getDate()-dow);
