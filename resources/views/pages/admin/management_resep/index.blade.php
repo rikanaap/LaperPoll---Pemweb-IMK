@@ -37,18 +37,18 @@
                 <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Draft</option>
             </select>
 
-            <select name="filter_id" onchange="resepForm.submit()">
+            <!-- <select name="filter_id" onchange="resepForm.submit()">
                 <option value="">Semua Kategori</option>
                 @foreach($kategoris as $kat)
                     <option value="{{ $kat->id }}" {{ request('filter_id') == $kat->id ? 'selected' : '' }}>
                         {{ $kat->title }}
                     </option>
                 @endforeach
-            </select>
+            </select> -->
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request()->hasAny(['search', 'status', 'filter_id']))
+            @if(request('status') !== null && request('status') !== '')
                 <a href="{{ route('admin.resep.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span> Reset
                 </a>

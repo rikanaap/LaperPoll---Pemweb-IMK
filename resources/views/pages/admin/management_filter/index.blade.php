@@ -48,7 +48,7 @@
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request()->hasAny(['search', 'level']))
+            @if(request('level'))
                 <a href="{{ route('admin.filter.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset
@@ -148,9 +148,9 @@
                             <span class="material-icons-round">filter_list</span>
                             <h3>Belum ada filter</h3>
                             <p>
-                                {{ request()->hasAny(['search', 'level'])
-                                    ? 'Tidak ada filter yang cocok dengan pencarian.'
-                                    : 'Tambahkan filter pertama untuk digunakan pada resep.' }}
+                               {{ request('level')
+                                ? 'Tidak ada filter yang cocok dengan pencarian.'
+                                : 'Tambahkan filter pertama untuk digunakan pada resep.' }}
                             </p>
                         </div>
                     </td>

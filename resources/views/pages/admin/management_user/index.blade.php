@@ -45,7 +45,7 @@
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request()->hasAny(['search', 'verif', 'role']))
+            @if(request('verif') || request('role'))
                 <a href="{{ route('admin.user.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset
@@ -169,7 +169,7 @@
                             <span class="material-icons-round">group</span>
                             <h3>Belum ada user</h3>
                             <p>
-                                {{ request()->hasAny(['search', 'verif', 'role'])
+                                {{ (request('verif') || request('role'))
                                     ? 'Tidak ada user yang cocok dengan filter yang dipilih.'
                                     : 'User yang mendaftar akan muncul di sini.' }}
                             </p>
