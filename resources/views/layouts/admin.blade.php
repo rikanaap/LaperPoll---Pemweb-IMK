@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/Logo_Laperpoll.png') }}">
+<link rel="apple-touch-icon" href="{{ asset('assets/images/Logo_Laperpoll.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin/admin.css') }}">
@@ -19,16 +21,15 @@
 
     {{-- Sidebar --}}
     <aside class="sidebar" id="sidebar">
-
-        <div class="sidebar__brand">
-            <div class="sidebar__brand-icon">
-                <span class="material-icons-round">restaurant</span>
+            <div class="sidebar__brand">
+                <div class="sidebar__brand-icon">
+                    <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="LaperPoll" style="width:22px;height:22px;object-fit:contain;">
+                </div>
+                <div class="sidebar__brand-text">
+                    <span class="sidebar__brand-name">LaperPoll</span>
+                    <span class="sidebar__brand-sub">Admin Panel</span>
+                </div>
             </div>
-            <div class="sidebar__brand-text">
-                <span class="sidebar__brand-name">LaperPoll</span>
-                <span class="sidebar__brand-sub">Admin Panel</span>
-            </div>
-        </div>
 
         <nav class="sidebar__nav">
 
@@ -147,5 +148,6 @@
 
 <script src="{{ asset('js/admin/admin.js') }}"></script>
 @stack('scripts')
+
 </body>
 </html>

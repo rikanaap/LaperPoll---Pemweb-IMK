@@ -36,11 +36,21 @@
                 >
             </div>
 
-            <select name="expired" onchange="filterForm.submit()">
-                <option value="">Semua Bahan</option>
-                <option value="yes" {{ request('expired') === 'yes' ? 'selected' : '' }}>Ada Expired</option>
-                <option value="no"  {{ request('expired') === 'no'  ? 'selected' : '' }}>Tanpa Expired</option>
-            </select>
+            @php $expired = request('expired') ?? ''; @endphp
+                <div class="custom-select">
+                    <input type="hidden" name="expired" value="{{ $expired }}">
+                    <div class="custom-select__trigger">
+                        <span class="custom-select__label">
+                            {{ $expired === 'yes' ? 'Ada Expired' : ($expired === 'no' ? 'Tanpa Expired' : 'Semua Bahan') }}
+                        </span>
+                        <span class="material-icons-round custom-select__arrow">expand_more</span>
+                    </div>
+                    <div class="custom-select__dropdown">
+                        <div class="custom-select__option {{ $expired === '' ? 'is-selected' : '' }}" data-value="">Semua Bahan</div>
+                        <div class="custom-select__option {{ $expired === 'yes' ? 'is-selected' : '' }}" data-value="yes">Ada Expired</div>
+                        <div class="custom-select__option {{ $expired === 'no' ? 'is-selected' : '' }}" data-value="no">Tanpa Expired</div>
+                    </div>
+                </div>
 
             <button type="submit" hidden>Cari</button>
 

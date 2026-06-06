@@ -31,11 +31,21 @@
                 >
             </div>
 
-            <select name="status" onchange="resepForm.submit()">
-                <option value="">Semua Status</option>
-                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Published</option>
-                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Draft</option>
-            </select>
+            @php $status = request('status') ?? ''; @endphp
+                <div class="custom-select">
+                    <input type="hidden" name="status" value="{{ $status }}">
+                    <div class="custom-select__trigger">
+                        <span class="custom-select__label">
+                            {{ $status === '1' ? 'Published' : ($status === '0' ? 'Draft' : 'Semua Status') }}
+                        </span>
+                        <span class="material-icons-round custom-select__arrow">expand_more</span>
+                    </div>
+                    <div class="custom-select__dropdown">
+                        <div class="custom-select__option {{ $status === '' ? 'is-selected' : '' }}" data-value="">Semua Status</div>
+                        <div class="custom-select__option {{ $status === '1' ? 'is-selected' : '' }}" data-value="1">Published</div>
+                        <div class="custom-select__option {{ $status === '0' ? 'is-selected' : '' }}" data-value="0">Draft</div>
+                    </div>
+                </div>
 
             <!-- <select name="filter_id" onchange="resepForm.submit()">
                 <option value="">Semua Kategori</option>
