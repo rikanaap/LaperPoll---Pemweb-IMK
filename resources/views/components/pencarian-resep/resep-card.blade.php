@@ -51,7 +51,7 @@
     {{-- THUMBNAIL --}}
     <div class="resep-banner">
         @if ($thumbnail)
-            <img src="{{ $thumbnail }}" alt="{{ $title }}">
+            <img src="{{ $resep->thumbnail_url }}" alt="{{ $title }}">
         @else
             <div class="resep-banner-placeholder">
                 <span class="material-icons-round">restaurant</span>
