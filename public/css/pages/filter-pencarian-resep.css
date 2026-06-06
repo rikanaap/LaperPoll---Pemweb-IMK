@@ -68,7 +68,7 @@
     border-radius: 999px;
     background: #fff5eb;
     border: 1px solid #ffd7b0;
-    color: #ff7a00;
+    color: #000000;
     font-size: .82rem;
     font-weight: 700;
     transition: transform .2s ease;
@@ -274,7 +274,7 @@
 
 .meta-item span.material-icons-round {
     font-size: 15px;
-    color: #ff7a00;
+    color: #64748b;
 }
 
 .meta-item p {
@@ -285,7 +285,7 @@
 }
 
 .meta-item.views span.material-icons-round {
-    color: #94a3b8;
+    color: #ea580c;
 }
 
 .resep-preview-info {
@@ -732,4 +732,15 @@
     .result-placeholder p {
         font-size: .78rem;
     }
+}
+
+
+html:has(.search-page) body {
+    padding: 0 !important;
+}
+
+html:has(.search-page) .navbar {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    margin: 0 !important;
 }

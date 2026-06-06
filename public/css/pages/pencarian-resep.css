@@ -634,3 +634,13 @@ body {
     from { left: -150px; }
     to   { left: 120%; }
 }
+
+html:has(.search-page) body {
+    padding: 0 !important;
+}
+
+html:has(.search-page) .navbar {
+    padding-left: 1.7rem !important;
+    padding-right: 1.7rem !important;
+    margin: 0 !important;
+}

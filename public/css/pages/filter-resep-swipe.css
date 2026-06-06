@@ -364,3 +364,4 @@ body:has(.filter-page) {
     .resep-grid { grid-template-columns: 1fr; }
     .resep-card__thumbnail { height: 180px; }
 }
+

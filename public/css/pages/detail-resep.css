@@ -255,11 +255,14 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    background: var(--orange-light-active);
-    border-radius: 2rem;
-    padding: 0.3rem 0.75rem;
+    border: 1px solid #fed7aa;
+    color: #c2410c;
+    padding: 0.45rem 0.8rem;
     font-size: 0.75rem;
     font-weight: 500;
+    background: white;
+    border-radius: 999px;
+    font-weight: 600;
 }
 .dr-chip-amt {
     font-weight: 700;
@@ -942,3 +945,4 @@
     color: #B91C1C;
 }
 .dr-flash-error .material-icons-round { color: #B91C1C; }
+
