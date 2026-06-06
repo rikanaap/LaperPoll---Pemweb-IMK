@@ -3,7 +3,7 @@
         <!-- Banner Image Tetap di Atas -->
         <div class="resep-banner">
             @if(isset($resep->thumbnail) && $resep->thumbnail)
-            <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}">
+            <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}">
             @else
             <div class="resep-banner-placeholder">
                 <span class="material-icons-round">restaurant</span>

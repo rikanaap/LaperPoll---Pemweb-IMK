@@ -28,7 +28,7 @@
     {{-- ── HERO IMAGE ── --}}
     <section class="dr-hero">
         @if($resep->thumbnail)
-            <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}" class="dr-hero-img"
+            <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}" class="dr-hero-img"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="dr-hero-placeholder" style="display:none">
                 <span class="material-icons-round">restaurant</span>

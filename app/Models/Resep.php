@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
 
 class Resep extends Model
 {
@@ -38,15 +40,11 @@ class Resep extends Model
 
     // app/Models/Resep.php — tambahkan method ini
 
-    public function getThumbnailUrlAttribute(): ?string
+    public function getThumbnailUrlAttribute(): string
 {
-    if (! $this->thumbnail) return null;
-
-    if (str_starts_with($this->thumbnail, 'images/')) {
-        return asset('assets/' . $this->thumbnail);
-    }
-
-    return \Illuminate\Support\Facades\Storage::url($this->thumbnail);
+    return $this->thumbnail
+        ? Storage::url($this->thumbnail)
+        : asset('assets/images/default-food.jpg');
 }
 
     public function user()
