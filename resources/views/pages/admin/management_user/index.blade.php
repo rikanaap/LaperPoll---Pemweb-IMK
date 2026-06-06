@@ -395,7 +395,21 @@ function submitEdit(route) {
 
 // ── Delete ────────────────────────────────────────────────
 function confirmDelete(url, name) {
-    if (!confirm(`Hapus user "${name}"?\nSemua data terkait akan ikut terhapus.`)) return;
+    openModal(
+        'Hapus User',
+        `<p style="font-size:.875rem;color:var(--text-secondary)">
+            Yakin ingin menghapus user <strong>${name}</strong>?
+            Semua data terkait akan <strong>ikut terhapus</strong> dan tidak dapat dibatalkan.
+        </p>`,
+        `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
+         <button class="btn btn--danger" onclick="doDelete('${url}')">
+             <span class="material-icons-round">delete</span> Hapus
+         </button>`
+    );
+}
+
+function doDelete(url) {
+    closeModal();
     submitForm(url, 'DELETE', {});
 }
 

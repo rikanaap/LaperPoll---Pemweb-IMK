@@ -192,7 +192,15 @@ Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function
         Route::patch('/{user}',        [AdminUserController::class, 'update'])->name('update');
         Route::patch('/{user}/verify', [AdminUserController::class, 'verify'])->name('verify');
         Route::delete('/{user}',       [AdminUserController::class, 'destroy'])->name('destroy');
+
+        if (app()->isLocal()) {
+        Route::patch('/{user}/force-verify', [AdminUserController::class, 'forceVerify'])
+            ->name('forceVerify');
+    }
     });
+
+     
+    
 
     Route::prefix('bahan')->name('bahan.')->group(function () {
         Route::get('/',          [AdminBahanController::class, 'index'])->name('index');

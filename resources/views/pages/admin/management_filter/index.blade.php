@@ -335,10 +335,31 @@ function submitEdit(route) {
 // ── Delete ────────────────────────────────────────────────
 function confirmDelete(url, title, resepCount) {
     if (resepCount > 0) {
-        alert(`Filter "${title}" tidak bisa dihapus karena masih digunakan di ${resepCount} resep.`);
+        openModal(
+            'Tidak Bisa Dihapus',
+            `<p style="font-size:.875rem;color:var(--text-secondary)">
+                Filter <strong>${title}</strong> tidak bisa dihapus karena masih digunakan
+                di <strong>${resepCount} resep</strong>. Hapus atau edit resep terkait terlebih dahulu.
+            </p>`,
+            `<button class="btn btn--secondary" onclick="closeModal()">Mengerti</button>`
+        );
         return;
     }
-    if (!confirm(`Hapus filter "${title}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
+    openModal(
+        'Hapus Filter',
+        `<p style="font-size:.875rem;color:var(--text-secondary)">
+            Yakin ingin menghapus filter <strong>${title}</strong>?
+            Tindakan ini <strong>tidak dapat dibatalkan</strong>.
+        </p>`,
+        `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
+         <button class="btn btn--danger" onclick="doDelete('${url}')">
+             <span class="material-icons-round">delete</span> Hapus
+         </button>`
+    );
+}
+
+function doDelete(url) {
+    closeModal();
     submitForm(url, 'DELETE', {});
 }
 

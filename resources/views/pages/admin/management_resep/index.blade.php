@@ -251,7 +251,21 @@
 @push('scripts')
 <script>
 function resepDelete(url, name) {
-    if (!confirm(`Hapus resep "${name}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
+    openModal(
+        'Hapus Resep',
+        `<p style="font-size:.875rem;color:var(--text-secondary)">
+            Yakin ingin menghapus resep <strong>${name}</strong>?
+            Tindakan ini <strong>tidak dapat dibatalkan</strong>.
+        </p>`,
+        `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
+         <button class="btn btn--danger" onclick="doResepDelete('${url}')">
+             <span class="material-icons-round">delete</span> Hapus
+         </button>`
+    );
+}
+
+function doResepDelete(url) {
+    closeModal();
     const f = document.createElement('form');
     f.method = 'POST';
     f.action = url;
