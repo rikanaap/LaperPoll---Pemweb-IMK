@@ -8,6 +8,7 @@
     background: #f8fafc;
     display: flex;
     flex-direction: column;
+    
 }
 
 .main-layout {
@@ -781,3 +782,4 @@ html:has(.search-page) .navbar {
     padding-right: 1.5rem !important;
     margin: 0 !important;
 }
+

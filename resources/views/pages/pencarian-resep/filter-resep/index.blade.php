@@ -9,6 +9,8 @@
 @endpush
 
 @section('content')
+    <x-navbar :back-url="route('pencarian.resep')" />
+
 <main
     class="filter-page font-jakarta"
     data-page="filter"
@@ -18,7 +20,6 @@
     data-search-page-url="{{ route('pencarian.resep') }}"
     data-render-url="{{ route('api.resep.render-cards') }}"
 >
-    <x-navbar :back-url="route('pencarian.resep')" />
 
     <div class="main-layout">
 
