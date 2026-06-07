@@ -320,7 +320,7 @@ body:has(.swipe-page) {
     margin-bottom: 1rem;
 }
 
-.history-panel-card__header .material-icons-round { color: #ff7a00; font-size: 22px !important; }
+.history-panel-card__header .material-icons-round { color: #0f172a; font-size: 22px !important; }
 .history-panel-card__header h3 { font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0; }
 
 .history-section { margin-bottom: 1.1rem; }
