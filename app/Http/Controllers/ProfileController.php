@@ -46,6 +46,7 @@ class ProfileController extends Controller
             'email'            => 'required|email|unique:users,email,' . $user->id,
             'profile_photo'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'password'         => 'nullable|min:6|confirmed',
+            'bio'              => 'nullable|string|max:500',
         ];
 
         $messages = [

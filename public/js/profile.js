@@ -156,27 +156,28 @@ function renderUserItem(user) {
         ? user.profile_photo
         : '/assets/images/Image_DummyProfile.png';
 
-    const isSelf = AUTH_USER_ID && user.id === AUTH_USER_ID;
-    const btnClass = isSelf ? 'self' : (user.is_following ? 'unfollow' : 'follow');
-    const btnText  = isSelf ? '' : (user.is_following ? 'Mengikuti' : 'Ikuti');
-    const profileUrl = isSelf ? '/profile' : `/profile/${user.id}`;
+    const isSelf     = AUTH_USER_ID && user.id === AUTH_USER_ID;
+    const isFollowing = user.is_following;
+    const profileUrl = isSelf ? '/profile' : `/profile/public/${user.id}`;
 
     return `
-        <div class="follow-user-item">
-            <a href="${profileUrl}" style="display:flex;align-items:center;gap:0.75rem;flex:1;text-decoration:none;">
-                <img src="${avatar}" alt="${user.name}" class="follow-user-avatar"
-                     onerror="this.src='/assets/images/Image_DummyProfile.png'">
-                <div class="follow-user-info">
-                    <p class="follow-user-name">${user.name}</p>
-                </div>
-            </a>
-            <button class="follow-btn ${btnClass}"
+        <a href="${profileUrl}" class="follow-user-item" title="${user.name}">
+            <img src="${avatar}" alt="${user.name.replace(/</g,'&lt;')}"
+                 class="follow-user-avatar"
+                 onerror="this.src='/assets/images/Image_DummyProfile.png'">
+            <div class="follow-user-info">
+                <span class="follow-user-name">${user.name.replace(/</g,'&lt;')}</span>
+            </div>
+            ${(!isSelf) ? `<button class="follow-btn ${isFollowing ? 'unfollow' : 'follow'}"
                     data-user-id="${user.id}"
-                    data-following="${user.is_following ? '1' : '0'}">
-                ${btnText}
-            </button>
-        </div>`;
+                    data-following="${isFollowing ? '1' : '0'}"
+                    onclick="event.preventDefault();event.stopPropagation();">
+                ${isFollowing ? 'Mengikuti' : 'Ikuti'}
+            </button>` : ''}
+            <span class="material-icons-round follow-user-arrow">chevron_right</span>
+        </a>`;
 }
+
 
 function bindFollowButtons() {
     document.querySelectorAll('.follow-btn:not(.self)').forEach(btn => {

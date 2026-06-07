@@ -17,6 +17,13 @@
     <form method="post" action="{{ route('auth.login') }}">
         @csrf
         <div class="form flex flex-col">
+            @if ($errors->any())
+                <div class="auth-error-box">
+                    @foreach ($errors->all() as $error)
+                        <p class="auth-error-msg font-jakarta text-body">{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
             <div class="auth-text flex flex-col">
                 <h1 class="font-jakarta text-h4 font-bold">Sign In</h1>
                 <div class="auth-link gap-1 flex flex-row">
@@ -30,7 +37,7 @@
                     <span class="material-icons-round">mail</span>
                     <div class="vertical-line"></div>
                     <input class="input-data text-body font-jakarta font-semibold" type="email" name="email"
-                        placeholder="mail@gmail.com">
+                        placeholder="mail@gmail.com" value="{{ old('email') }}" autocomplete="email">
                 </div>
                 <div class="wrap-forgot-pass flex flex-col">
                     <div class="input">

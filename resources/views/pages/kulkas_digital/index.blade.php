@@ -9,7 +9,7 @@
 @section('content')
 <main class="kd-main">
 
-    <x-navbar :backUrl="route('profile.index')"></x-navbar>
+    <x-navbar backUrl="back"></x-navbar>
 
     {{-- HEADER --}}
     <div class="kd-header">

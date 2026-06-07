@@ -77,8 +77,8 @@
                         {{-- Thumbnail --}}
                         <div class="fav-card-thumb">
                             <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
-                                     class="fav-thumb-img"
-                                     onerror="this.src='{{ asset('assets/images/Image_DummyResep.png') }}'">"
+                                class="fav-thumb-img"
+                                onerror="this.src='{{ asset('assets/images/Image_DummyResep.png') }}'">
 
                             {{-- Tombol hapus favorit --}}
                             <button class="fav-remove-btn"
@@ -126,6 +126,7 @@
 <script>
     const CSRF_TOKEN = "{{ csrf_token() }}";
     const TOGGLE_BASE_URL = "{{ url('/favorit/toggle') }}";
+    const EXPLORE_URL     = "{{ route('pencarian.resep') }}";
 </script>
 <script src="{{ asset('js/favorit.js') }}"></script>
 @endpush

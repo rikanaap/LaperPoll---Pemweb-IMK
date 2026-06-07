@@ -97,24 +97,7 @@ async function doToggleFollow() {
     }
 }
 
-// ─── TOAST ────────────────────────────────────────────────────────────────────
-function lpToast(msg, type = 'info') {
-    const existing = document.querySelector('.pub-toast');
-    if (existing) existing.remove();
-    const colors = { info: '#172D23', warn: '#B45309', error: '#B91C1C', success: '#027A48' };
-    const toast  = document.createElement('div');
-    toast.className = 'pub-toast';
-    toast.style.cssText = `
-        position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);
-        background:${colors[type]||colors.info};color:white;
-        padding:0.6rem 1.25rem;border-radius:2rem;
-        font-size:0.8rem;font-family:var(--font-jakarta);
-        z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);
-        white-space:nowrap;pointer-events:none;`;
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
+// ─── TOAST — dihandle oleh window.lpToast dari toast.js ──────────────────────
 
 // ─── FOLLOW MODAL (public profile) ────────────────────────────────────────────
 function openPubFollowModal(type) {
@@ -150,12 +133,20 @@ function openPubFollowModal(type) {
                 return;
             }
             list.innerHTML = data.users.map(u => `
-                <a href="${PUB_PROFILE_BASE_URL}/${u.id}" class="follow-user-item">
+                <a href="${PUB_PROFILE_BASE_URL}/${u.id}"
+                   class="follow-user-item"
+                   title="Lihat profil ${escHtml(u.name)}">
                     <img src="${u.profile_photo || PUB_DUMMY_AVATAR}"
-                         alt="${u.name}" class="follow-user-avatar"
+                         alt="${escHtml(u.name)}"
+                         class="follow-user-avatar"
                          onerror="this.src='${PUB_DUMMY_AVATAR}'">
-                    <span class="follow-user-name font-semibold">${u.name}</span>
-                    ${u.is_following ? '<span class="follow-user-badge">Mengikuti</span>' : ''}
+                    <div class="follow-user-info">
+                        <span class="follow-user-name">${escHtml(u.name)}</span>
+                    </div>
+                    ${u.is_following
+                        ? '<span class="follow-user-badge">Mengikuti</span>'
+                        : ''}
+                    <span class="material-icons-round follow-user-arrow">chevron_right</span>
                 </a>
             `).join('');
         })
@@ -173,4 +164,8 @@ function closePubFollowModal() {
 
 window.openPubFollowModal  = openPubFollowModal;
 window.closePubFollowModal = closePubFollowModal;
-window.lpToast             = lpToast;
+function escHtml(str) {
+    return String(str || '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}

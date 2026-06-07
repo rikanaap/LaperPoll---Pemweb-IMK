@@ -133,7 +133,7 @@ class UlasanController extends Controller
 
         // Tambah foto baru
         if ($request->hasFile('photos')) {
-            $existingCount = $feedback->photos()->count();
+            $existingCount = $feedback->fresh()->photos()->count();
             $slots         = max(0, 3 - $existingCount);
             foreach (array_slice($request->file('photos'), 0, $slots) as $photo) {
                 $path = $photo->store('feedback_photos', 'public');

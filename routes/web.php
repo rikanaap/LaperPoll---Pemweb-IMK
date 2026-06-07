@@ -52,83 +52,77 @@ Route::get('/auth/google/redirect', [GoogleController::class, 'redirect'])->name
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
 Route::prefix('auth')->name('auth.')->group(function () {
-    Route::get('/sign-in', [AuthController::class, 'signIn'])
-        ->name('sign-in');
+    Route::get('/sign-in', [AuthController::class, 'signIn'])->name('sign-in');
+    Route::get('/sign-up', [AuthController::class, 'signUp'])->name('sign-up');
 
-    Route::get('/sign-up', [AuthController::class, 'signUp'])
-        ->name('sign-up');
+    Route::get('/forgot-password',             [AuthController::class, 'forgotPass'])->name('forgot-pass');
+    Route::get('/forgot-otp',                  [AuthController::class, 'showOtp'])->name('forgot-otp');
+    Route::get('/reset-password',              [AuthController::class, 'showReset'])->name('reset-pass');
+    Route::post('/forgot-password/send-otp',   [AuthController::class, 'sendOtp'])->name('forgot.send-otp');
+    Route::post('/forgot-password/verify-otp', [AuthController::class, 'verifyOtp'])->name('forgot.verify-otp');
+    Route::post('/reset-password',             [AuthController::class, 'resetPassword'])->name('reset-pass.post');
 
-    Route::get('/forgot-password',              [AuthController::class, 'forgotPass'])->name('forgot-pass');
-    Route::get('/forgot-otp',              [AuthController::class, 'showOtp'])->name('forgot-otp');
-    Route::get('/reset-password',               [AuthController::class, 'showReset'])->name('reset-pass');
-    Route::post('/forgot-password/send-otp',    [AuthController::class, 'sendOtp'])->name('forgot.send-otp');
-    Route::post('/forgot-password/verify-otp',  [AuthController::class, 'verifyOtp'])->name('forgot.verify-otp');
-    Route::post('/reset-password',              [AuthController::class, 'resetPassword'])->name('reset-pass.post');
-
-    //API
     Route::post('/register', [AuthController::class, 'register'])->name('register');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/login',    [AuthController::class, 'login'])->name('login');
+    Route::post('/logout',   [AuthController::class, 'logout'])->name('logout');
 });
 
-// Harmoni -> Link Main Menu
-Route::get('/main-menu', [MainMenu::class, 'index'])
-    ->name('main-menu.index');
+// ── MAIN MENU ─────────────────────────────────────────────────────────────────
+Route::get('/main-menu', [MainMenu::class, 'index'])->name('main-menu.index');
 
-Route::get('/detail-resep/{id}', [DetailResepController::class, 'showDetail'])
-    ->name('detail.resep');
+// ── DETAIL RESEP (public) ─────────────────────────────────────────────────────
+Route::get('/detail-resep/{id}', [DetailResepController::class, 'showDetail'])->name('detail.resep');
 
-// ── TIMER RESEP ───────────────────────────────────────────────────────────────
+// ── TIMER RESEP (public) ──────────────────────────────────────────────────────
 Route::get('/timer-resep/{id}', [TimerResepController::class, 'show'])->name('timer.resep');
 
-// ── ULASAN ────────────────────────────────────────────────────────────────────
-Route::get('/ulasan/{id}',   [UlasanController::class, 'show'])->name('ulasan.show');
-Route::post('/ulasan/{id}',  [UlasanController::class, 'store'])->name('ulasan.store');
-Route::get('/ulasan/{resepId}/edit/{feedbackId}',    [UlasanController::class, 'edit'])->name('ulasan.edit');
-Route::patch('/ulasan/{resepId}/update/{feedbackId}', [UlasanController::class, 'update'])->name('ulasan.update');
-Route::delete('/ulasan/{resepId}/delete/{feedbackId}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
+// ── ULASAN — show public, write butuh login ───────────────────────────────────
+Route::get('/ulasan/{id}', [UlasanController::class, 'show'])->name('ulasan.show');
 
-// ── PENCARIAN RESEP ───────────────────────────────────────────────────────────
-Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])
-    ->name('pencarian.resep');
+// ── PENCARIAN RESEP (public) ──────────────────────────────────────────────────
+Route::get('/pencarian-resep', [PencarianResepController::class, 'index'])->name('pencarian.resep');
 
-// ── SWIPE RASA ────────────────────────────────────────────────────────────────
-Route::get('/swipe-rasa', [SwipeResepController::class, 'index'])
-    ->name('swipe.rasa');
+// ── SWIPE RASA (public) ───────────────────────────────────────────────────────
+Route::get('/swipe-rasa',         [SwipeResepController::class, 'index'])->name('swipe.rasa');
+Route::get('/filter-resep-swipe', [SwipeResepController::class, 'showFilter'])->name('swipe.filter');
 
-Route::get('/filter-resep-swipe', [SwipeResepController::class, 'showFilter'])
-    ->name('swipe.filter');
+// ── PROFIL PUBLIK (public — bisa diakses tanpa login) ────────────────────────
+Route::get('/profile/public/{id}', [PublicProfileController::class, 'show'])->name('profile.public');
 
+// ── FOLLOW — GET followers/following public, toggle butuh login ───────────────
+Route::get('/follow/{userId}/followers', [FollowController::class, 'followers'])->name('follow.followers');
+Route::get('/follow/{userId}/following', [FollowController::class, 'following'])->name('follow.following');
 
 // ─── API PUBLIK ───────────────────────────────────────────────────────────────
-
 Route::prefix('api')->name('api.')->group(function () {
 
-    // Resep
     Route::prefix('resep')->name('resep.')->group(function () {
         Route::get('search',        [ResepApiController::class, 'search'])->name('search');
         Route::post('render-cards', [ResepApiController::class, 'renderCards'])->name('render-cards');
     });
 
-    // Bahan
     Route::prefix('bahan')->name('bahan.')->group(function () {
         Route::get('by-ids', [ResepApiController::class, 'getBahansByIds'])->name('by-ids');
     });
 
     Route::get('/bahans', [BahansController::class, 'apiList'])->name('bahans');
 
-    // Swipe
     Route::prefix('swipe')->name('swipe.')->group(function () {
-        Route::get('/rasa',              [SwipeResepApiController::class, 'getRasa'])->name('rasa');
+        Route::get('/rasa',               [SwipeResepApiController::class, 'getRasa'])->name('rasa');
         Route::get('/filter-resep-swipe', [SwipeResepApiController::class, 'filterSwipe'])->name('filter.resep.swipe');
     });
 });
 
-
 // ─── AUTH REQUIRED ────────────────────────────────────────────────────────────
-
 Route::middleware(['auth'])->group(function () {
 
+    // ── ULASAN (write actions) ────────────────────────────────────────────────
+    Route::post('/ulasan/{id}',                            [UlasanController::class, 'store'])->name('ulasan.store');
+    Route::get('/ulasan/{resepId}/edit/{feedbackId}',      [UlasanController::class, 'edit'])->name('ulasan.edit');
+    Route::patch('/ulasan/{resepId}/update/{feedbackId}',  [UlasanController::class, 'update'])->name('ulasan.update');
+    Route::delete('/ulasan/{resepId}/delete/{feedbackId}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
+
+    // ── FAVORIT ───────────────────────────────────────────────────────────────
     Route::post('/favorit/toggle/{id}', [FavoriteController::class, 'toggle'])->name('favorit.toggle');
     Route::get('/favorit',              [FavoriteController::class, 'index'])->name('favorit.index');
 
@@ -136,7 +130,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kulkas-digital',        [KulkasDigitalController::class, 'index'])->name('kulkas.index');
     Route::get('/kulkas-digital/tambah', [KulkasDigitalController::class, 'tambah'])->name('kulkas.tambah');
     Route::post('/kulkas-digital',       [KulkasDigitalController::class, 'store'])->name('kulkas.store');
-    // ⚠️ pakai-resep HARUS di atas /{id}
     Route::post('/kulkas-digital/pakai-resep', [KulkasDigitalController::class, 'pakaiResep'])->name('kulkas.pakai-resep');
     Route::delete('/kulkas-digital/{id}',      [KulkasDigitalController::class, 'destroy'])->name('kulkas.destroy');
     Route::post('/api/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])
@@ -170,8 +163,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit',     [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    // ── PROFIL PUBLIK (bisa diakses guest) ───────────────────────────────────────
-    Route::get('/profile/{id}', [PublicProfileController::class, 'show'])->name('profile.public');
+    // ── FOLLOW toggle (auth required) ─────────────────────────────────────────
+    Route::post('/follow/{userId}/toggle', [FollowController::class, 'toggle'])->name('follow.toggle');
 
     // ── FOLLOW (auth required) ────────────────────────────────────────────────────
     Route::get('/follow/{userId}/followers', [FollowController::class, 'followers'])->name('follow.followers');
@@ -184,17 +177,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/resep/clear', [TambahResepController::class, 'clearForm'])->name('resep.clear');
 });
 
-
 // ─── ADMIN ────────────────────────────────────────────────────────────────────
 Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function () {
 
-    Route::get('/',        [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('resep')->name('resep.')->group(function () {
-        Route::get('/',                    [AdminResepController::class, 'index'])->name('index');
-        Route::get('/{resep}',             [AdminResepController::class, 'show'])->name('show');
-        Route::patch('/{resep}/publish',   [AdminResepController::class, 'togglePublish'])->name('togglePublish');
-        Route::delete('/{resep}',          [AdminResepController::class, 'destroy'])->name('destroy');
+        Route::get('/',                  [AdminResepController::class, 'index'])->name('index');
+        Route::get('/{resep}',           [AdminResepController::class, 'show'])->name('show');
+        Route::patch('/{resep}/publish', [AdminResepController::class, 'togglePublish'])->name('togglePublish');
+        Route::delete('/{resep}',        [AdminResepController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('user')->name('user.')->group(function () {
@@ -205,12 +197,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function
     });
 
     Route::prefix('bahan')->name('bahan.')->group(function () {
-        Route::get('/',          [AdminBahanController::class, 'index'])->name('index');
-        Route::post('/',         [AdminBahanController::class, 'store'])->name('store');
-        Route::patch('/{bahan}', [AdminBahanController::class, 'update'])->name('update');
+        Route::get('/',           [AdminBahanController::class, 'index'])->name('index');
+        Route::post('/',          [AdminBahanController::class, 'store'])->name('store');
+        Route::patch('/{bahan}',  [AdminBahanController::class, 'update'])->name('update');
         Route::delete('/{bahan}', [AdminBahanController::class, 'destroy'])->name('destroy');
     });
-
 
     Route::prefix('filter')->name('filter.')->group(function () {
         Route::get('/',            [AdminFilterController::class, 'index'])->name('index');

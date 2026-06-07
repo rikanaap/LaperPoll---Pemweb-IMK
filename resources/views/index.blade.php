@@ -173,7 +173,7 @@
                 </div>
             </div>
         </div>
-        <div class="vertical-line !bg-orange-300"></div>
+        <div class="vertical-line !bg-orange-300 sm:hidden md:flex"></div>
         <!-- Pertanyaan Pengguna Lain -->
         <div id="faq-section" class="relative w-full h-fit">
             <x-svg-comp name="cheese-grater" class="absolute top-0 right-0 w-[41px] h-[66px]"></x-svg-comp>

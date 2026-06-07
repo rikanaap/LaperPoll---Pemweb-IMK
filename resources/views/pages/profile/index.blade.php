@@ -108,8 +108,9 @@
                     <button class="prof-sort-option" data-sort="name">A - Z</button>
                 </div>
             </div>
-            @elseif($resepCount > 12)
-                <a href="#" class="see-all-link">Lihat semua</a>
+            @if($resepCount > 12)
+                <a href="{{ route('profile.resep.all') ?? '#' }}" class="see-all-link">Lihat semua</a>
+            @endif
             @endif
         </div>
 

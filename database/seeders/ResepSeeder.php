@@ -352,7 +352,7 @@ class ResepSeeder extends Seeder
                 'calorie'        => 580,
                 'current_star'   => 4.8,
                 'views_count'    => 160,
-                'thumbnail'      => 'images/reseps/semur_daging.jpg',
+                'thumbnail'      => 'images/reseps/semur_daging.webp',
                 'main_filter_id' => 1,
                 'is_published'   => true,
             ],

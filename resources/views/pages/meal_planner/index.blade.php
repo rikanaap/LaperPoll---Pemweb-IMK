@@ -11,7 +11,7 @@
 
     {{-- ── STICKY TOP BAR ── --}}
     <div class="mp-topbar">
-        <x-navbar :backUrl="route('profile.index')"></x-navbar>
+        <x-navbar backUrl="back"></x-navbar>
 
         <div class="mp-topbar-inner">
             <div class="mp-heading">
