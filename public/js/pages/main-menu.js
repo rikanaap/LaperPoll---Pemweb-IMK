@@ -8,7 +8,6 @@ const searchIcon = document.getElementById("searchButton");
 const filters = document.querySelectorAll(".bottom-filter");
 const searchInput = document.getElementById("search-filter")
 
-searchIcon.addEventListener("click", () => changePage('search'));
 searchInput.addEventListener("input", (data) => { searchFilter(searchInput.value.toLowerCase()) })
 filters.forEach((filter) => { filter.addEventListener("click", () => chooseFilter(filter)) })
 
@@ -33,7 +32,6 @@ function changeResult() {
 
 function changeChoosenFilter() {
     const container = document.querySelector(".bottom-filters-used");
-
     const title = container.querySelector('p:first-child').outerHTML;
     const filterHTML = choosedFilter.map((filterName, index) => {
         const isLast = index === choosedFilter.length - 1;
@@ -61,17 +59,19 @@ function chooseFilter(data) {
     filterMode++
     choosedFilter.push(data.querySelector('p').innerText)
     changeFilterData(filterMode)
-    changeChoosenFilter()
     if (filterMode == 4) document.querySelector('.bottom-filters').style.display = 'none'
 }
 
 function searchFilter(data) {
+    let totalFilter = 0
     filters.forEach(filter => {
         const text = filter.querySelector('p').innerText.toLowerCase()
         if (text.includes(data)) {
+            totalFilter++
             filter.style.display = "flex"; 
         } else {
             filter.style.display = "none";
         }
     })
+    document.querySelector('.bottom-filters').style.gap= (totalFilter < 2) ? 0 : '0.4rem'
 }

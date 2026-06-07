@@ -1,0 +1,83 @@
+/* ── FEATURE CARDS ── */
+    #features-section a {
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        display: block;
+    }
+    #features-section a:hover {
+        transform: translateY(-3px);
+        opacity: 0.85;
+    }
+    #features-section a:active {
+        transform: translateY(0px);
+    }
+
+    /* ── LIHAT SEMUA BUTTONS ── */
+    #favorit-section a[href],
+    #hari-ini-section a[href],
+    #rekomendasi-section a[href] {
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.15s ease;
+    }
+    #favorit-section a[href]:hover,
+    #hari-ini-section a[href]:hover,
+    #rekomendasi-section a[href]:hover {
+        transform: translateY(-1px);
+        filter: brightness(0.95);
+    }
+
+    /* ── CARD BAHAN ── */
+    .card-bahan-pointer {
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-bahan-pointer:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(230, 81, 0, 0.12);
+    }
+    .card-bahan-pointer:active {
+        transform: translateY(0);
+    }
+
+    /* ── FAQ CARDS ── */
+    #faq-card {
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+    #faq-card:hover {
+        background: #fdd9a0 !important;
+    }
+
+    /* ── FAQ BUTTON ── */
+    #faq-card button {
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.15s ease;
+        flex-shrink: 0;
+    }
+    #faq-card button:hover {
+        background: #8a3100 !important;
+        transform: scale(1.1);
+    }
+
+    /* ── FOOTER LINKS ── */
+    #footer-section .flex.gap-\[0\.3rem\] {
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+    }
+    #footer-section .flex.gap-\[0\.3rem\]:hover {
+        opacity: 0.7;
+    }
+
+#pendapat-section .rotate-\[-3deg\],
+#pendapat-section .rotate-\[3deg\] {
+    cursor: pointer;
+    transition: box-shadow 0.25s ease;
+}
+
+#pendapat-section .rotate-\[-3deg\]:hover {
+    box-shadow: 0 8px 20px rgba(230, 81, 0, 0.1);
+}
+
+#pendapat-section .rotate-\[3deg\]:hover {
+    box-shadow: 0 8px 20px rgba(230, 81, 0, 0.1);
+}

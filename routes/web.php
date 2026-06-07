@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\AdminResepController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminBahanController;
 use App\Http\Controllers\Admin\AdminFilterController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\TambahResepController;
 
 // ─── PUBLIC ──────────────────────────────────────────────────────────────────
@@ -45,6 +46,10 @@ Route::get('/public/view/{filename}', function ($filename) {
     }
     return Response::file($path);
 })->name('public');
+
+
+Route::get('/auth/google/redirect', [GoogleController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/sign-in', [AuthController::class, 'signIn'])->name('sign-in');
@@ -161,8 +166,15 @@ Route::middleware(['auth'])->group(function () {
     // ── FOLLOW toggle (auth required) ─────────────────────────────────────────
     Route::post('/follow/{userId}/toggle', [FollowController::class, 'toggle'])->name('follow.toggle');
 
-    // ── TAMBAH RESEP ──────────────────────────────────────────────────────────
-    Route::get('/resep/tambah-resep', [TambahResepController::class, 'show'])->name('resep.tambah');
+    // ── FOLLOW (auth required) ────────────────────────────────────────────────────
+    Route::get('/follow/{userId}/followers', [FollowController::class, 'followers'])->name('follow.followers');
+    Route::get('/follow/{userId}/following', [FollowController::class, 'following'])->name('follow.following');
+    Route::post('/follow/{userId}/toggle',   [FollowController::class, 'toggle'])->name('follow.toggle');
+
+    // Tampilkan halaman tambah resep
+    Route::get('/resep/tambah', [TambahResepController::class, 'index'])->name('resep.tambah');
+    Route::post('/resep/store', [TambahResepController::class, 'store'])->name('resep.store');
+    Route::post('/resep/clear', [TambahResepController::class, 'clearForm'])->name('resep.clear');
 });
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────

@@ -3,20 +3,30 @@
 @section('title', 'LaperPoll')
 
 @push('styles')
+<style>
+    @media (min-width: 768px) {
+        body {
+            padding: 0 !important;
+        }
+    }
+</style>
 
 @endpush
 
 @push('links')
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{{ asset('css/pages/landing-page.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 @endpush
 
 @section('content')
 <div class="flex flex-col gap-5 md:gap-[2rem] bg-[#FFF8F5]">
     <x-navbar></x-navbar>
-    <div class="relative w-full">
-        <x-svg-comp name="cup" class="absolute opacity-[0.55] rorate-[3deg]"></x-svg-comp>
-        <x-svg-comp name="pan" class="absolute top-10 right-0 opacity-[0.55] rorate-[-3deg]"></x-svg-comp>
+    <div id="features-section" class="relative w-full">
+        <x-svg-comp name="cup" class="absolute opacity-[0.55] rorate-[3deg] md:left-10 w-[65px] h-[58px] md:w-[150px] md:h-[116px]"></x-svg-comp>
+        <x-svg-comp name="pan" class="absolute top-20 right-0 opacity-[0.55] w-[79px] h-[49px] md:w-[253px] md:h-[82px]"></x-svg-comp>
         <div class="flex flex-col gap-2 items-center md:gap-[1.2rem]">
             <div class="flex flex-col gap-1 items-center md:gap-[0.5rem]">
                 <h1 class="font-poppins text-orange-normal-active font-medium text-[0.8rem]/[120%] md:text-[2rem] md:font-light">Akses Fitur Lainnya</h1>
@@ -28,7 +38,7 @@
                 <a href="{{ route('auth.sign-in') }}">
                     <div class="flex flex-col gap-[0.5rem] justify-center items-center">
                         <div class="resep-logo-locked w-[2.8rem] h-[2.8rem] rounded-[0.5rem]] md:w-[6rem] md:h-[6rem]">
-                            <span class="material-icons-round text-2 md:text-[3rem] text-accent-dark">lock</span>
+                            <span class="material-icons-round !text-2 !md:text-[3rem] text-accent-dark">lock</span>
                         </div>
                         <p class="font-jakarta text-[0.4rem]/[120%] font-semibold text-accent-dark-active md:text-[0.8rem]">{{ $feature['name'] }}</p>
                     </div>
@@ -38,7 +48,7 @@
                     <div class="flex flex-col gap-[0.5rem] justify-center items-center">
                         <div class="resep-logo w-[2.8rem] h-[2.8rem] rounded-[0.5rem]] md:w-[6rem] md:h-[6rem]">
                             <!-- TODO: UBAH BIAR DINAMIS -->
-                            <span class="material-icons-round text-2 md:text-[6rem] text-accent-dark" style="@media(width >= 500px){ font-size: 3rem; }">{{ $feature['icon'] }}</span>
+                            <span class="material-icons-round !text-2 md:!text-[3rem] text-accent-dark">{{ $feature['icon'] }}</span>
                         </div>
                         <p class="font-jakarta text-[0.4rem]/[120%] font-semibold text-accent-dark-active md:text-[0.8rem]">{{ $feature['name'] }}</p>
                     </div>
@@ -50,7 +60,7 @@
     </div>
 
     <!-- Resep Favorit Pengguna -->
-    <div class="flex flex-col items-start self-stretch pl-[1.5rem] pr-[0.75rem] gap-[0.4rem]">
+    <div id="favorit-section" class="flex flex-col items-start self-stretch pl-[1.5rem] pr-[0.75rem] gap-[0.4rem]">
         <div class="flex justify-between items-center self-stretch">
             <h1 class="font-poppins text-[0.7rem]/120% text-orange-normal-active font-medium md:text-[2rem] md:font-light">Resep Favorit Pengguna</h1>
             <!-- TODO: Ganti Routing  -->
@@ -64,7 +74,7 @@
     </div>
 
     <!-- Resep Hari Ini -->
-    <div class="flex flex-col items-start self-stretch pl-[1.5rem] pr-[0.75rem] gap-[0.4rem]">
+    <div id="hari-ini-section" class="flex flex-col items-start self-stretch pl-[1.5rem] pr-[0.75rem] gap-[0.4rem]">
         <div class="flex justify-between items-center self-stretch">
             <h1 class="font-poppins text-[0.7rem]/120% text-orange-normal-active font-medium md:text-[2rem] md:font-light">Resep Hari Ini</h1>
             <a href="{{ route('main-menu.index', ['m' => 'hari_ini']) }}" class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium md:text-[1rem] md:font-normal md:px-[1rem] md:py-[0.4rem]">Lihat Semua</a>
@@ -77,9 +87,9 @@
     </div>
 
     <!-- Rekomendasi Bahan -->
-    <div class="relative w-full h-fit">
-        <x-svg-comp name="wisk" class="absolute top-3 left-5 opacity-[0.7] rorate-[3deg]"></x-svg-comp>
-        <x-svg-comp name="cup-2" class="absolute bottom-0 right-2 opacity-[0.7] rorate-[-3deg]"></x-svg-comp>
+    <div id="rekomendasi-section" class="relative w-full h-fit">
+        <x-svg-comp name="wisk" class="absolute top-3 left-5 opacity-[0.7] w-[37px] h-[64px] md:w-[62px] md:h-[129px]"></x-svg-comp>
+        <x-svg-comp name="cup-2" class="absolute bottom-0 right-2 opacity-[0.7] w-[43px] h-[67px] md:w-[89px] md:h-[101px]"></x-svg-comp>
         <div class="py-[0.5rem] px-[4rem]">
             <div class="flex py-[0.75rem] flex-col justify-center items-center gap-[0.6rem] md:gap-[1rem] self-stretch rounded-[0.5rem] bg-[#FFF2ED]">
                 <div class="flex flex-col justify-center items-center gap-[0.25rem] md:gap-[0.3rem]">
@@ -98,18 +108,18 @@
     </div>
 
     <!-- Pendapat Pengguna Lain -->
-    <div class="flex self-stretch flex-col md:flex-row">
-        <div class="relative w-full h-fit">
-            <x-svg-comp name="spatula" class="absolute top-24 left-12 rorate-[3deg]"></x-svg-comp>
-            <x-svg-comp name="leaf" class="absolute bottom-0 right-12 z-10 rorate-[-3deg]"></x-svg-comp>
+    <div class="flex self-stretch flex-col md:flex-row md:gap-4">
+        <div id="pendapat-section" class="relative w-full h-fit">
+            <x-svg-comp name="spatula" class="absolute top-24 left-12 w-[22px] h-[53px]"></x-svg-comp>
+            <x-svg-comp name="leaf" class="absolute bottom-0 right-12 z-10 w-[54px] h-[40px]"></x-svg-comp>
             <div class="flex py-[0.5rem] px-[1.25rem] flex-col items-center gap-[0.6rem] self-stretch">
                 <div class="flex flex-col justify-center items-center gap-[0.25rem] md:gap-[0.3rem]">
                     <h1 class="font-poppins text-[0.8rem]/[120%] text-orange-normal-active font-medium md:text-[2rem]">Pendapat Pengguna Lain</h1>
                     <p class="font-poppins w-[12rem] text-[0.5rem]/[120%] text-center text-orange-dark-active font-medium md:text-[1rem] md:w-[24rem]">Lihat apa yang pengguna lain katakan terhadap aplikasi kami</p>
                 </div>
                 <div class="relative w-fit">
-                    <x-svg-comp name="fork" class="absolute top-10 right-0 z-10 rorate-[3deg]"></x-svg-comp>
-                    <x-svg-comp name="spoon" class="absolute bottom-10 left-0 z-10 rorate-[3deg]"></x-svg-comp>
+                    <x-svg-comp name="fork" class="absolute top-10 right-0 z-10 w-[16px] h-[34px]"></x-svg-comp>
+                    <x-svg-comp name="spoon" class="absolute bottom-10 left-0 z-10 w-[16px] h-[31px]"></x-svg-comp>
                     <div class="flex flex-col gap-[0.3rem] w-full h-fit">
                         <div class="rotate-[-3deg] flex w-[15rem] md:w-[25rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
                             <img src="{{ asset('assets/images/Image_DummyProfile.png') }}" alt="Profil Foto" class="w-[2.25rem] h-[2.25rem] aspect-square content-center items-center rounded-[3rem] border-[1px] border-solid border-[#EC4448]">
@@ -163,11 +173,11 @@
                 </div>
             </div>
         </div>
-
+        <div class="vertical-line !bg-orange-300 sm:hidden md:flex"></div>
         <!-- Pertanyaan Pengguna Lain -->
-        <div class="relative w-full h-fit">
-            <x-svg-comp name="cheese-grater" class="absolute top-0 right-0 rorate-[3deg]"></x-svg-comp>
-            <x-svg-comp name="chili" class="absolute bottom-0 left-1.5 rorate-[-3deg]"></x-svg-comp>
+        <div id="faq-section" class="relative w-full h-fit">
+            <x-svg-comp name="cheese-grater" class="absolute top-0 right-0 w-[41px] h-[66px]"></x-svg-comp>
+            <x-svg-comp name="chili" class="absolute bottom-0 left-1.5 w-[34px] h-[64px]"></x-svg-comp>
             <div class="flex py-[0.5rem] px-[1.25rem] flex-col items-center gap-[0.8rem] self-stretch">
                 <div class="flex flex-col justify-center items-center gap-[0.25rem]">
                     <h1 class="font-poppins text-[0.8rem]/[120%] text-orange-normal-active font-medium md:text-[2rem]">Pertanyaan Pengguna Lain</h1>
@@ -193,7 +203,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="flex py-[0.75rem] gap-[1.25rem] flex-col items-center self-stretch bg-[#F4F5F7]">
+    <div id="footer-section" class="flex py-[0.75rem] gap-[1.25rem] flex-col items-center self-stretch bg-[#F4F5F7]">
         <div class="flex flex-col items-center gap-[0.2rem]">
             <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="w-[4rem] md:w-[5rem]">
             <h1 class="italic text-[0.5rem]/[120%] text-secondary-normal font-jakarta font-medium md:text-[1rem]">"Laper Banget?" Nyari Resep ya Laperpoll aja</h1>
@@ -217,5 +227,34 @@
 
 @endsection
 @push('scripts')
+<script>
+    function updateBahanVisibility() {
+        const cards = document.querySelectorAll('.card-bahan-pointer');
+        const width = window.innerWidth;
+
+        // Sesuaikan batas index per breakpoint
+        let maxVisible;
+        if (width < 768) {
+            maxVisible = 8; // mobile: tampilkan 8
+        } else if (width < 1280) {
+            maxVisible = 12; // tablet: tampilkan 12
+        } else {
+            maxVisible = 22; // desktop: tampilkan semua
+        }
+
+        cards.forEach(card => {
+            const index = parseInt(card.dataset.index);
+            if (index >= maxVisible) {
+                card.classList.add('hidden');
+            } else {
+                card.classList.remove('hidden');
+            }
+        });
+    }
+
+    // Jalankan saat load dan saat resize
+    updateBahanVisibility();
+    window.addEventListener('resize', updateBahanVisibility);
+</script>
 <script src="{{ asset('js/pages/landing-page.js') }}"></script>
 @endpush
