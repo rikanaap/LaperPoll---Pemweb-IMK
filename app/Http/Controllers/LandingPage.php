@@ -12,8 +12,8 @@ class LandingPage extends Controller
     public function index()
     {
         $user = Auth::user();
-        $reseps_hari = Resep::with('user.verify', 'attachments')->whereDate('created_at', today())->orderBy('created_at', 'desc')->take(8)->get();
-        $reseps_favorit = Resep::with('user.verify', 'attachments')->withCount('favoritedBy')->orderBy('favorited_by_count', 'desc')->take(8)->get();
+        $reseps_hari = Resep::with('user.verify', 'attachments')->where('is_published', true)->whereDate('created_at', today())->orderBy('created_at', 'desc')->take(8)->get();
+        $reseps_favorit = Resep::with('user.verify', 'attachments')->where('is_published', true)->withCount('favoritedBy')->orderBy('favorited_by_count', 'desc')->take(8)->get();
         $bahans = Bahan::get();
         $features = [
             ['name' => 'Kulkas Digital', 'icon' => 'inventory_2', 'link' => route('kulkas.index'), "locked" => true],

@@ -21,6 +21,7 @@ class ProfileController extends Controller
 
         $resepUser = $user->reseps()
             ->with(['feedbacks', 'langkahs'])
+            ->where('is_published', true)
             ->latest()
             ->take(12)
             ->get();

@@ -12,6 +12,7 @@ class SwipeResepService
         $filterIds = array_map('intval', $filterIds);
 
         return Resep::query()
+        ->where('is_published', true)
             ->whereHas('filters', fn($q) => $q->whereIn('filters.id', $filterIds))
             ->with(['user:id,name', 'filters:id,title'])
             ->get()
