@@ -59,7 +59,7 @@ function updateCount() {
                     <span class="material-icons-round fav-empty-icon">favorite_border</span>
                     <p class="fav-empty-title font-semibold">Belum ada resep favorit</p>
                     <p class="fav-empty-sub">Ketuk ikon hati di detail resep untuk menyimpannya.</p>
-                    <a href="/" class="fav-empty-btn font-semibold">
+                    <a href="${typeof EXPLORE_URL !== 'undefined' ? EXPLORE_URL : '/'}" class="fav-empty-btn font-semibold">
                         <span class="material-icons-round">explore</span>
                         Jelajahi Resep
                     </a>

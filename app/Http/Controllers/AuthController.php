@@ -216,7 +216,7 @@ class AuthController extends Controller
     public function resetPassword(Request $request)
     {
         if (!session('fp_email') || !session('fp_verified')) {
-            return redirect()->route('forgot.email');
+            return redirect()->route('auth.forgot-pass');
         }
 
         try {

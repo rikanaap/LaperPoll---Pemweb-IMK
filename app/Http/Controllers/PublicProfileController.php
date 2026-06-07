@@ -17,7 +17,7 @@ class PublicProfileController extends Controller
 
         $user = User::findOrFail($userId);
 
-        $resepCount     = $user->reseps()->count();
+        $resepCount     = $user->reseps()->where('is_published', true)->count();
         $followerCount  = $user->followers()->count();
         $followingCount = $user->following()->count();
 

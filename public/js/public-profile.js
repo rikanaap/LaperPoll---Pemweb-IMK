@@ -97,24 +97,7 @@ async function doToggleFollow() {
     }
 }
 
-// ─── TOAST ────────────────────────────────────────────────────────────────────
-function lpToast(msg, type = 'info') {
-    const existing = document.querySelector('.pub-toast');
-    if (existing) existing.remove();
-    const colors = { info: '#172D23', warn: '#B45309', error: '#B91C1C', success: '#027A48' };
-    const toast  = document.createElement('div');
-    toast.className = 'pub-toast';
-    toast.style.cssText = `
-        position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);
-        background:${colors[type]||colors.info};color:white;
-        padding:0.6rem 1.25rem;border-radius:2rem;
-        font-size:0.8rem;font-family:var(--font-jakarta);
-        z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);
-        white-space:nowrap;pointer-events:none;`;
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
+// ─── TOAST — dihandle oleh window.lpToast dari toast.js ──────────────────────
 
 // ─── FOLLOW MODAL (public profile) ────────────────────────────────────────────
 function openPubFollowModal(type) {
@@ -181,7 +164,6 @@ function closePubFollowModal() {
 
 window.openPubFollowModal  = openPubFollowModal;
 window.closePubFollowModal = closePubFollowModal;
-window.lpToast             = lpToast;
 function escHtml(str) {
     return String(str || '')
         .replace(/&/g,'&amp;').replace(/</g,'&lt;')

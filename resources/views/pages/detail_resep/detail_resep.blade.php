@@ -166,7 +166,17 @@
                     @if($langkah->step_duration && $langkah->step_duration !== '00:00:00')
                         <span class="dr-step-duration">
                             <span class="material-icons-round">timer</span>
-                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $langkah->step_duration)->format('i') }} menit
+                            @php
+                                $parts = explode(':', $langkah->step_duration);
+                                $jam   = (int)($parts[0] ?? 0);
+                                $menit = (int)($parts[1] ?? 0);
+                                $durStr = '';
+                                if ($jam > 0 && $menit > 0) $durStr = "{$jam} jam {$menit} menit";
+                                elseif ($jam > 0)            $durStr = "{$jam} jam";
+                                elseif ($menit > 0)          $durStr = "{$menit} menit";
+                                else                          $durStr = '< 1 menit';
+                            @endphp
+                            {{ $durStr }}
                         </span>
                     @endif
                     <p class="dr-step-text">{{ $langkah->description }}</p>

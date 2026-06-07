@@ -126,6 +126,7 @@
 <script>
     const CSRF_TOKEN = "{{ csrf_token() }}";
     const TOGGLE_BASE_URL = "{{ url('/favorit/toggle') }}";
+    const EXPLORE_URL     = "{{ route('pencarian.resep') }}";
 </script>
 <script src="{{ asset('js/favorit.js') }}"></script>
 @endpush

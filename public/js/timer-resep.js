@@ -186,8 +186,8 @@
             el.timerActions.style.display = 'none';
         }
 
-        // Bahan
-        renderBahans();
+        // Bahan (per langkah)
+        renderBahans(step.bahans && step.bahans.length ? step.bahans : BAHANS);
 
         // Stepper
         updateStepper(index);
@@ -205,13 +205,14 @@
     }
 
     // ─── BAHAN CHIPS ─────────────────────────────────────────────────────────
-    function renderBahans() {
-        if (!BAHANS.length) {
+    function renderBahans(bahans) {
+        const list = bahans || BAHANS;
+        if (!list.length) {
             el.bahanSection.style.display = 'none';
             return;
         }
         el.bahanSection.style.display = 'flex';
-        el.bahanChips.innerHTML = BAHANS.map(b => `
+        el.bahanChips.innerHTML = list.map(b => `
             <div class="tr-bahan-chip">
                 <span class="tr-bahan-chip-amt">${b.gram}g</span>
                 ${escHtml(b.nama)}

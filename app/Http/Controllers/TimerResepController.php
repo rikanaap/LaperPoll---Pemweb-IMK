@@ -9,17 +9,25 @@ class TimerResepController extends Controller
 {
     public function show($id)
     {
-        $resep = Resep::with(['langkahs', 'bahans', 'user'])->findOrFail($id);
+        $resep = Resep::with(['langkahs.langkahBahans.resepBahan.bahan', 'bahans', 'user'])->findOrFail($id);
 
         $langkahs = $resep->langkahs->sortBy('step_order')->values();
 
         // Siapkan data plain array — hindari closure di dalam @json blade
         $stepsData = $langkahs->map(function ($l, $i) {
+            $bahansLangkah = $l->langkahBahans->map(function ($lb) {
+                return [
+                    'nama' => optional(optional($lb->resepBahan)->bahan)->nama ?? '-',
+                    'gram' => $lb->gram_total,
+                ];
+            })->values()->toArray();
+
             return [
                 'index'         => $i,
                 'label'         => 'Langkah ' . $l->step_order,
                 'description'   => $l->description,
                 'step_duration' => $l->step_duration,
+                'bahans'        => $bahansLangkah,
             ];
         })->values()->toArray();
 
