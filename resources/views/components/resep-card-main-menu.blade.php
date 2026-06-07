@@ -2,7 +2,16 @@
     <div class="resep">
         <div class="resep-content">
             <div class="resep-logo">
-                <span class="material-icons-round text-h3 text-accent-dark">lunch_dining</span>
+                <span class="material-icons-round !text-100 text-accent-dark">
+                    @switch($resep->main_filter_id)
+                    @case(1) restaurant @break
+                    @case(2) lunch_dining @break
+                    @case(3) breakfast_dining @break
+                    @case(4) ramen_dining @break
+                    @case(5) cake @break
+                    @default food_bank
+                    @endswitch
+                </span>
             </div>
             <div class="resep-detail">
                 <!-- Judul Resep -->

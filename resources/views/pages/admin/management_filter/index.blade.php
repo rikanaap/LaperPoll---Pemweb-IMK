@@ -36,24 +36,41 @@
                 >
             </div>
 
-            {{-- ✅ Label pakai levelLabel() bukan "Level 1/2/3" --}}
-            <select name="level" onchange="filterForm.submit()">
-                <option value="">Semua Level</option>
-                @foreach($availableLevels as $lvl)
-                    <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>
-                        {{ \App\Models\Filter::levelLabel($lvl) }}
-                    </option>
-                @endforeach
-            </select>
+            @php
+                $level = request('level') ?? '';
+                $levelLabels = [
+                    '' => 'Semua Level',
+                ];
+                foreach($availableLevels as $lvl) {
+                    $levelLabels[$lvl] = \App\Models\Filter::levelLabel($lvl);
+                }
+            @endphp
+            <div class="custom-select">
+                <input type="hidden" name="level" value="{{ $level }}">
+                <div class="custom-select__trigger">
+                    <span class="custom-select__label">
+                        {{ $levelLabels[$level] ?? 'Semua Level' }}
+                    </span>
+                    <span class="material-icons-round custom-select__arrow">expand_more</span>
+                </div>
+                <div class="custom-select__dropdown">
+                    <div class="custom-select__option {{ $level === '' ? 'is-selected' : '' }}" data-value="">Semua Level</div>
+                    @foreach($availableLevels as $lvl)
+                        <div class="custom-select__option {{ $level == $lvl ? 'is-selected' : '' }}" data-value="{{ $lvl }}">
+                            {{ \App\Models\Filter::levelLabel($lvl) }}
+                        </div>
+                    @endforeach
+                </div>
+            </div>
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request()->hasAny(['search', 'level']))
+            <!-- @if(request('level'))
                 <a href="{{ route('admin.filter.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset
                 </a>
-            @endif
+            @endif -->
 
         </form>
     </div>
@@ -148,9 +165,9 @@
                             <span class="material-icons-round">filter_list</span>
                             <h3>Belum ada filter</h3>
                             <p>
-                                {{ request()->hasAny(['search', 'level'])
-                                    ? 'Tidak ada filter yang cocok dengan pencarian.'
-                                    : 'Tambahkan filter pertama untuk digunakan pada resep.' }}
+                               {{ request('level')
+                                ? 'Tidak ada filter yang cocok dengan pencarian.'
+                                : 'Tambahkan filter pertama untuk digunakan pada resep.' }}
                             </p>
                         </div>
                     </td>
@@ -335,10 +352,31 @@ function submitEdit(route) {
 // ── Delete ────────────────────────────────────────────────
 function confirmDelete(url, title, resepCount) {
     if (resepCount > 0) {
-        alert(`Filter "${title}" tidak bisa dihapus karena masih digunakan di ${resepCount} resep.`);
+        openModal(
+            'Tidak Bisa Dihapus',
+            `<p style="font-size:.875rem;color:var(--text-secondary)">
+                Filter <strong>${title}</strong> tidak bisa dihapus karena masih digunakan
+                di <strong>${resepCount} resep</strong>. Hapus atau edit resep terkait terlebih dahulu.
+            </p>`,
+            `<button class="btn btn--secondary" onclick="closeModal()">Mengerti</button>`
+        );
         return;
     }
-    if (!confirm(`Hapus filter "${title}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
+    openModal(
+        'Hapus Filter',
+        `<p style="font-size:.875rem;color:var(--text-secondary)">
+            Yakin ingin menghapus filter <strong>${title}</strong>?
+            Tindakan ini <strong>tidak dapat dibatalkan</strong>.
+        </p>`,
+        `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
+         <button class="btn btn--danger" onclick="doDelete('${url}')">
+             <span class="material-icons-round">delete</span> Hapus
+         </button>`
+    );
+}
+
+function doDelete(url) {
+    closeModal();
     submitForm(url, 'DELETE', {});
 }
 

@@ -294,6 +294,25 @@
 .kd-resep-item:last-child { border-bottom: none; }
 .kd-resep-item:hover { background: #FFF8F5; }
 
+.kd-resep-thumb {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #F4F5F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #B0B7C3;
+}
+.kd-resep-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.kd-resep-thumb .material-icons-round { font-size: 1.4rem; }
+
 .kd-resep-info { display: flex; flex-direction: column; gap: 0.2rem; flex: 1; }
 .kd-resep-nama { font-size: 0.875rem; color: #172D23; }
 .kd-resep-kurang {

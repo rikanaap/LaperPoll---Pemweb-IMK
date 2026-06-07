@@ -480,7 +480,7 @@ body:has(.swipe-page) {
     color: #334155;
 }
 
-.history-drawer__info .material-icons-round { color: #ff7a00; font-size: 20px !important; }
+.history-drawer__info .material-icons-round { color: #334155; font-size: 20px !important; }
 
 .history-drawer__arrow {
     margin-left: auto;

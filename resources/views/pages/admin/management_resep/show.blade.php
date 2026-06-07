@@ -61,7 +61,7 @@
                     $metas = [
                         ['label' => 'Author',      'value' => $resep->user?->name ?? '—'],
                         ['label' => 'Kategori',     'value' => $resep->mainFilter?->title ?? '—'],
-                        ['label' => 'Durasi Masak', 'value' => $resep->cook_duration],
+                        ['label' => 'Durasi Masak', 'value' => $resep->cook_duration_formatted],
                         ['label' => 'Kalori',       'value' => $resep->calorie ? number_format($resep->calorie) . ' kkal' : '—'],
                         ['label' => 'Rating',       'value' => number_format($resep->current_star, 1) . ' / 5'],
                         ['label' => 'Total Views',  'value' => number_format($resep->views_count)],

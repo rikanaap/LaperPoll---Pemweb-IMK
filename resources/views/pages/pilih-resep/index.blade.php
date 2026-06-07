@@ -30,6 +30,14 @@
         </div>
     </div>
 
+    {{-- SORT CHIPS --}}
+    <div class="pr-sort-wrap" id="prSortChips">
+        <button class="pr-sort-chip active font-jakarta" data-sort="az">A–Z</button>
+        <button class="pr-sort-chip font-jakarta" data-sort="kal-asc">Kalori Rendah</button>
+        <button class="pr-sort-chip font-jakarta" data-sort="kal-desc">Kalori Tinggi</button>
+        <button class="pr-sort-chip font-jakarta" data-sort="dur-asc">Tercepat</button>
+    </div>
+
     {{-- COUNT --}}
     <div class="pr-count-bar" id="prCountBar" style="display:none;">
         <p class="pr-count-text font-jakarta" id="prCountText"></p>
@@ -59,8 +67,12 @@
         'nama'          => $r->title,
         'kalori'        => (int)($r->calorie ?? 0),
         'cook_duration' => $r->cook_duration,
-        'thumbnail'     => $r->thumbnail ? asset('storage/'.$r->thumbnail) : null,
+        // FIX: pakai accessor getThumbnailUrlAttribute() agar handle dua path (assets/ dan storage/)
+        'thumbnail'     => $r->thumbnail_url,
+        'detail_url'    => route('detail.resep', ['id' => $r->id]),
     ])->toJson() !!};
+    // FIX: inject resep aktif di slot ini untuk badge "Terpilih saat ini"
+    window.resepAktifId = {{ $resepAktifId ?? 'null' }};
 </script>
 <script src="{{ asset('js/pilih-resep.js') }}"></script>
 @endpush

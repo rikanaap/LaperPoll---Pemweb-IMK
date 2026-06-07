@@ -79,8 +79,8 @@
             <span class="material-icons-round quick-action-arrow">chevron_right</span>
         </a>
 
-        {{-- Placeholder tambah resep — logic oleh teman --}}
-        <a href="{{ route('resep.tambah') }}" class="quick-action-btn">
+        {{-- Tambah Resep — route oleh teman --}}
+        <a href="{{ route('resep.tambah') }}" class="quick-action-btn" id="btnTambahResep">
             <div class="quick-action-icon edit-icon">
                 <span class="material-icons-round">add_circle</span>
             </div>
@@ -118,11 +118,6 @@
                 <span class="material-icons-round empty-icon">restaurant_menu</span>
                 <p class="empty-title font-semibold">Belum ada resep</p>
                 <p class="empty-sub">Mulai bagikan resep andalanmu!</p>
-                {{-- Placeholder tombol tambah resep — logic oleh teman --}}
-                <button class="profile-add-resep-btn font-semibold" disabled title="Segera hadir">
-                    <span class="material-icons-round">add_circle</span>
-                    Tambah Resep
-                </button>
             </div>
         @else
             <div class="resep-grid" id="profResepGrid">
@@ -135,7 +130,7 @@
                         <div class="resep-card">
                             <div class="resep-card-thumb">
                                 @if($resep->thumbnail)
-                                    <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
+                                    <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
                                          class="resep-thumb-img"
                                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                     <div class="resep-thumb-placeholder" style="display:none">
@@ -170,12 +165,6 @@
                     </a>
                 @endforeach
             </div>
-
-            {{-- Tombol tambah resep di bawah grid — placeholder, logic oleh teman --}}
-            <button class="profile-add-resep-btn font-semibold" disabled title="Segera hadir">
-                <span class="material-icons-round">add_circle</span>
-                Tambah Resep Baru
-            </button>
         @endif
     </section>
 
@@ -228,12 +217,13 @@
     <div class="sidebar-divider"></div>
 
     {{-- Logout --}}
-    <form action="{{ route('auth.logout') }}" method="POST" class="sidebar-logout-form">
+    <button type="button" class="sidebar-logout font-semibold" onclick="openLogoutConfirm()">
+        <span class="material-icons-round">logout</span>
+        Keluar
+    </button>
+    {{-- Form hidden, submit via JS setelah konfirmasi --}}
+    <form action="{{ route('auth.logout') }}" method="POST" id="logoutForm" style="display:none">
         @csrf
-        <button type="submit" class="sidebar-logout font-semibold">
-            <span class="material-icons-round">logout</span>
-            Keluar
-        </button>
     </form>
 
 </aside>
@@ -271,7 +261,7 @@
                     <p>Timer Resep untuk panduan memasak step-by-step</p>
                 </div>
             </div>
-            <p class="sidebar-about-version">Versi 1.0.0 · © 2025 LaperPoll</p>
+            <p class="sidebar-about-version">Versi {{ config('app.version', '1.0.0') }} · © {{ date('Y') }} LaperPoll</p>
         </div>
     </div>
 </div>
@@ -383,16 +373,16 @@
         <div class="sidebar-panel-body">
             <p class="sidebar-contact-sub">Ada pertanyaan atau masukan? Hubungi kami melalui:</p>
             <div class="sidebar-contact-list">
-                <a href="tel:628990042" class="sidebar-contact-item">
+                <a href="mailto:laperpoll@gmail.com" class="sidebar-contact-item">
                     <div class="sidebar-contact-icon">
-                        <span class="material-icons-round">phone</span>
+                        <span class="material-icons-round">email</span>
                     </div>
                     <div>
-                        <p class="font-semibold sidebar-contact-label">Telepon</p>
-                        <p class="sidebar-contact-value">62-899-0042</p>
+                        <p class="font-semibold sidebar-contact-label">Email</p>
+                        <p class="sidebar-contact-value">laperpoll@gmail.com</p>
                     </div>
                 </a>
-                <a href="https://instagram.com" target="_blank" class="sidebar-contact-item">
+                <a href="https://instagram.com/laperpoll" target="_blank" class="sidebar-contact-item">
                     <div class="sidebar-contact-icon sidebar-contact-ig">
                         <span class="material-icons-round">photo_camera</span>
                     </div>
@@ -443,6 +433,24 @@
         <div class="follow-empty" id="followEmpty" style="display:none">
             <span class="material-icons-round">person_off</span>
             <p id="followEmptyText">Belum ada pengikut</p>
+        </div>
+    </div>
+</div>
+
+{{-- ── LOGOUT CONFIRM MODAL ── --}}
+<div class="lp-confirm-overlay" id="logoutOverlay" onclick="closeLogoutConfirm()"></div>
+<div class="lp-confirm-modal" id="logoutModal">
+    <div class="lp-confirm-box">
+        <div class="lp-confirm-icon">👋</div>
+        <h3 class="lp-confirm-title font-bold">Keluar dari LaperPoll?</h3>
+        <p class="lp-confirm-sub">Kamu perlu login lagi untuk mengakses akunmu.</p>
+        <div class="lp-confirm-actions">
+            <button class="lp-confirm-cancel font-semibold" onclick="closeLogoutConfirm()">Batal</button>
+            <button class="lp-confirm-ok font-semibold"
+                    style="background:var(--accent-normal);box-shadow:0 4px 12px rgba(236,68,72,0.3)"
+                    onclick="document.getElementById('logoutForm').submit()">
+                Ya, Keluar
+            </button>
         </div>
     </div>
 </div>

@@ -352,6 +352,7 @@
         <h1 class="font-jakarta">Lanjut</h1>
     </div>
 </main>
+
 @endsection
 @push('scripts')
 <script src="{{ asset('js/pages/tambah-resep.js') }}"></script>

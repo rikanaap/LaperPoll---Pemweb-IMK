@@ -31,6 +31,8 @@ class MainMenu extends Controller
             }
         }
 
+        $usedFilters = Filter::whereIn('id', $filters)->get();
+
         $reseps = $query->get();
         switch (count($filters)) {
             case 0:
@@ -52,6 +54,7 @@ class MainMenu extends Controller
         return view('pages.main-menu.main-menu', compact(
             'reseps',
             'master_filters',
+            'usedFilters'
         ));
     }
 }

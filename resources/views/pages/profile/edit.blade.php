@@ -111,6 +111,28 @@
                     <span>Ganti Password (opsional)</span>
                 </div>
 
+                <div class="ep-field-group" id="currentPassGroup" style="display:none">
+                    <label for="current_password" class="ep-label">
+                        <span class="material-icons-round">lock_open</span>
+                        Password Lama
+                    </label>
+                    <div class="ep-input-wrapper">
+                        <input
+                            type="password"
+                            id="current_password"
+                            name="current_password"
+                            placeholder="Masukkan password lama"
+                            class="ep-input @error('current_password') ep-input-error @enderror"
+                            autocomplete="current-password">
+                        <button type="button" class="ep-toggle-pass" onclick="epTogglePass('current_password','iconCurrPass')" aria-label="Tampilkan password">
+                            <span class="material-icons-round" id="iconCurrPass">visibility_off</span>
+                        </button>
+                    </div>
+                    @error('current_password')
+                        <span class="ep-field-error">{{ $message }}</span>
+                    @enderror
+                </div>
+
                 <div class="ep-field-group">
                     <label for="password" class="ep-label">
                         <span class="material-icons-round">lock</span>
@@ -156,7 +178,7 @@
 
             {{-- Submit --}}
             <div class="ep-actions">
-                <button type="submit" class="ep-btn-save font-semibold">
+                <button type="submit" class="ep-btn-save font-semibold" id="epBtnSave">
                     <span class="material-icons-round">save</span>
                     Simpan Perubahan
                 </button>

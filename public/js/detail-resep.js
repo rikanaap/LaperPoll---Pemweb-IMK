@@ -185,7 +185,7 @@ function lpToast(msg, type = 'info') {
     const existing = document.querySelector('.dr-toast');
     if (existing) existing.remove();
 
-    const colors = { info: '#172D23', warn: '#B45309', error: '#B91C1C' };
+    const colors = { info: '#172D23', warn: '#B45309', error: '#B91C1C', success: '#027A48' };
     const toast  = document.createElement('div');
     toast.className = 'dr-toast';
     toast.style.cssText = `
@@ -304,3 +304,23 @@ document.querySelectorAll('.dr-flash').forEach(flash => {
         setTimeout(() => flash.remove(), 400);
     }, 4000);
 });
+
+// ─── ULASAN FORM SUBMIT GUARD ────────────────────────────────────────────────
+const drUlasanForm  = document.getElementById('drUlasanForm');
+const btnKirimUlasan = document.getElementById('btnKirimUlasan');
+
+if (drUlasanForm) {
+    drUlasanForm.addEventListener('submit', (e) => {
+        const rating = parseInt(document.getElementById('ratingInput')?.value || 0);
+        if (rating === 0) {
+            e.preventDefault();
+            lpToast('Pilih rating bintang terlebih dahulu.', 'warn');
+            document.getElementById('starInput')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        if (btnKirimUlasan) {
+            btnKirimUlasan.disabled = true;
+            btnKirimUlasan.innerHTML = '<span class="material-icons-round">hourglass_top</span> Mengirim...';
+        }
+    });
+}

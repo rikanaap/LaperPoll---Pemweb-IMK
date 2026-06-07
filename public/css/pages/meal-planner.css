@@ -111,22 +111,21 @@
 
 .mp-bar-track {
     position: relative;
-    height: 0.65rem;
+    height: 0.75rem;
     background: #F4E8E0;
     border-radius: 2rem;
     overflow: hidden;
 }
+/* Satu div fill — warna dan lebar dikendalikan sepenuhnya dari JS */
 .mp-bar-fill {
     position: absolute;
     left: 0; top: 0; height: 100%;
     border-radius: 2rem;
-    background: linear-gradient(90deg, #E65100, #FF8A50);
-    transition: width 0.4s ease, background 0.3s ease;
+    transition: width 0.5s ease, background 0.5s ease;
     width: 0%;
 }
-.mp-bar-fill.over {
-    background: linear-gradient(90deg, #7F1D1D, #DC2626) !important;
-}
+/* div overflow tidak dipakai lagi — semua dikendalikan .mp-bar-fill */
+.mp-bar-overflow { display: none !important; }
 
 .mp-kalori-over {
     display: flex;
@@ -137,6 +136,18 @@
     margin-top: -0.1rem;
 }
 .mp-kalori-over .material-icons-round { font-size: 0.85rem !important; color: #DC2626; }
+
+/* Label persentase / kelebihan kalori — di bawah bar, rata kanan */
+.mp-bar-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #E65100;
+    text-align: right;
+    display: block;
+    margin-top: 0.25rem;
+    transition: color 0.3s;
+    min-height: 1rem;
+}
 
 /* ── SET KALORI BTN ── */
 .mp-set-kalori-btn {
@@ -220,7 +231,19 @@
 .mp-tab.active .mp-tab-month { color: rgba(255,255,255,0.9); }
 .mp-tab.today .mp-tab-date   { color: #E65100; }
 .mp-tab.active.today .mp-tab-date { color: white; }
-.mp-tab.today { border-color: #E65100; background: #FFF4EE; }
+.mp-tab.today {
+    border-color: #E65100;
+    background: #FFF4EE;
+    box-shadow: 0 2px 8px rgba(230,81,0,0.15);
+}
+.mp-tab.today::before {
+    content: '';
+    display: block;
+    width: 6px; height: 6px;
+    background: #E65100;
+    border-radius: 50%;
+    margin: 0 auto 2px;
+}
 .mp-tab.active.today { background: #8C2A1A; border-color: #8C2A1A; }
 
 /* ── BODY ── */

@@ -1,12 +1,14 @@
-// timer-resep.js — LaperPoll (data dari server, no dummy, no alert/confirm)
+// timer-resep.js — LaperPoll
+// Features: timer countdown, ding bell (Web Audio), vibration, Web Notification
 
 (function () {
     'use strict';
 
     // ─── DATA DARI BLADE ─────────────────────────────────────────────────────
-    const STEPS   = window.TR_STEPS  || [];
-    const BAHANS  = window.TR_BAHANS || [];
-    const CIRC    = 427.256; // 2π × 68, harus sama dengan stroke-dasharray di CSS
+    const STEPS       = window.TR_STEPS       || [];
+    const BAHANS      = window.TR_BAHANS      || [];
+    const RESEP_TITLE = window.TR_RESEP_TITLE || 'Timer Masak';
+    const CIRC        = 427.256; // 2π × 68
 
     // ─── STATE ───────────────────────────────────────────────────────────────
     let currentIndex  = 0;
@@ -15,7 +17,7 @@
     let timerInterval = null;
     let isPlaying     = false;
 
-    // ─── DOM REFS ─────────────────────────────────────────────────────────────
+    // ─── DOM REFS ────────────────────────────────────────────────────────────
     const el = {
         stepBadge    : document.getElementById('trStepBadge'),
         stepLabel    : document.getElementById('trStepLabel'),
@@ -41,6 +43,9 @@
         doneClose    : document.getElementById('trDoneClose'),
         finishModal  : document.getElementById('trFinishModal'),
         finishOverlay: document.getElementById('trFinishOverlay'),
+        notifBanner  : document.getElementById('trNotifBanner'),
+        notifAllow   : document.getElementById('trNotifAllow'),
+        notifDismiss : document.getElementById('trNotifDismiss'),
     };
 
     // ─── INIT ────────────────────────────────────────────────────────────────
@@ -49,8 +54,94 @@
         return;
     }
 
+    initNotification();
     renderStep(0);
     bindEvents();
+
+    // ─── WEB NOTIFICATION ────────────────────────────────────────────────────
+    function initNotification() {
+        if (!('Notification' in window)) return;
+        // Tampilkan banner minta izin hanya jika belum ditentukan
+        if (Notification.permission === 'default') {
+            el.notifBanner.style.display = 'flex';
+        }
+        el.notifAllow?.addEventListener('click', () => {
+            Notification.requestPermission().then(() => {
+                el.notifBanner.style.display = 'none';
+            });
+        });
+        el.notifDismiss?.addEventListener('click', () => {
+            el.notifBanner.style.display = 'none';
+        });
+    }
+
+    function sendNotification(stepLabel) {
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+        try {
+            new Notification('⏰ Timer Selesai!', {
+                body: `${RESEP_TITLE} — ${stepLabel} sudah selesai. Lanjut ke langkah berikutnya!`,
+                icon: '/assets/images/Logo_Laperpoll.png',
+                badge: '/assets/images/Logo_Laperpoll.png',
+                tag: 'laperpoll-timer',
+                renotify: true,
+            });
+        } catch (e) {
+            // Silent fail - notifikasi tidak kritis
+        }
+    }
+
+    // ─── DING BELL (Web Audio API synthesized) ───────────────────────────────
+    function playDingBell() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+
+            // Ding 1: nada dasar lonceng
+            function ding(startTime, freq, duration, gain) {
+                const osc  = ctx.createOscillator();
+                const env  = ctx.createGain();
+                const comp = ctx.createDynamicsCompressor();
+
+                osc.connect(env);
+                env.connect(comp);
+                comp.connect(ctx.destination);
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, startTime);
+                // Slight pitch drop — karakter lonceng
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.85, startTime + duration * 0.8);
+
+                env.gain.setValueAtTime(0, startTime);
+                env.gain.linearRampToValueAtTime(gain, startTime + 0.005); // attack cepat
+                env.gain.exponentialRampToValueAtTime(0.001, startTime + duration); // decay panjang
+
+                osc.start(startTime);
+                osc.stop(startTime + duration);
+            }
+
+            // Tambah harmonik (2nd + 3rd partial) biar terdengar seperti lonceng sungguhan
+            const t = ctx.currentTime;
+            ding(t,        880,  2.5, 0.5);   // fundamental A5
+            ding(t,        1760, 2.0, 0.25);  // 2nd harmonic
+            ding(t,        2640, 1.5, 0.12);  // 3rd harmonic
+            ding(t + 0.35, 1047, 2.0, 0.4);   // C6 — ding kedua
+            ding(t + 0.35, 2093, 1.5, 0.15);
+
+            // Tutup context setelah selesai
+            setTimeout(() => ctx.close().catch(() => {}), 3500);
+        } catch (e) {
+            // Silent fail
+        }
+    }
+
+    // ─── VIBRATION ───────────────────────────────────────────────────────────
+    function vibrate() {
+        if ('vibrate' in navigator) {
+            // Pola: getar-jeda-getar-jeda-getar (ms)
+            navigator.vibrate([200, 100, 200, 100, 400]);
+        }
+    }
 
     // ─── RENDER LANGKAH ──────────────────────────────────────────────────────
     function renderStep(index) {
@@ -61,18 +152,25 @@
         if (!step) return;
 
         // Badge & label
-        el.stepLabel.textContent = step.label;
+        el.stepLabel.textContent   = step.label;
         el.stepCounter.textContent = `Langkah ${index + 1} dari ${STEPS.length}`;
 
-        // Deskripsi
+        // Deskripsi — animasi fade
+        el.stepDesc.style.opacity = '0';
+        el.stepDesc.style.transform = 'translateY(4px)';
         el.stepDesc.textContent = step.description || 'Tidak ada deskripsi.';
+        requestAnimationFrame(() => {
+            el.stepDesc.style.transition = 'opacity 0.25s, transform 0.25s';
+            el.stepDesc.style.opacity    = '1';
+            el.stepDesc.style.transform  = 'translateY(0)';
+        });
 
         // Durasi
         const secs = parseDuration(step.step_duration);
         if (secs > 0) {
             totalTime = secs;
             timeLeft  = secs;
-            el.durationLabel.textContent = formatTime(secs);
+            el.durationLabel.textContent  = formatTime(secs);
             el.stepDuration.style.display = 'inline-flex';
             el.ringWrap.style.display     = 'flex';
             el.noTimer.style.display      = 'none';
@@ -88,22 +186,21 @@
             el.timerActions.style.display = 'none';
         }
 
-        // Bahan — tampilkan semua bahan resep (langkah tidak punya relasi bahan spesifik)
+        // Bahan
         renderBahans();
 
         // Stepper
         updateStepper(index);
 
         // Nav buttons
-        el.btnPrev.disabled = index === 0;
-        el.nextLabel.textContent = index === STEPS.length - 1 ? 'Selesai' : 'Lanjut';
+        el.btnPrev.disabled           = index === 0;
+        el.nextLabel.textContent      = index === STEPS.length - 1 ? 'Selesai' : 'Lanjut';
+        el.btnNext.disabled           = false;
 
         // Reset warna
         el.timerDisplay.classList.remove('done-color');
         el.ringFill.classList.remove('done-color');
         resetStartBtn();
-
-        // Sembunyikan toast
         hideDoneToast();
     }
 
@@ -127,17 +224,15 @@
         const nodes = el.stepper.querySelectorAll('.tr-step-node');
         nodes.forEach((node, i) => {
             node.classList.remove('active', 'done');
-            if (i < active)  node.classList.add('done');
+            if (i < active)   node.classList.add('done');
             if (i === active) node.classList.add('active');
         });
 
-        // Update connector warna
         const connectors = el.stepper.querySelectorAll('.tr-step-connector');
         connectors.forEach((c, i) => {
             c.classList.toggle('done', i < active);
         });
 
-        // Scroll stepper ke posisi aktif
         const activeNode = el.stepper.querySelector('.tr-step-node.active');
         if (activeNode) {
             activeNode.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -152,15 +247,15 @@
             // JEDA
             clearInterval(timerInterval);
             isPlaying = false;
-            el.btnStart.innerHTML = '<span class="material-icons-round">play_arrow</span> Lanjut';
+            el.btnStart.innerHTML   = '<span class="material-icons-round">play_arrow</span> Lanjut';
             el.btnStart.classList.remove('paused');
             el.timerStatus.textContent = 'Dijeda';
             return;
         }
 
-        // MULAI
+        // MULAI / RESUME
         isPlaying = true;
-        el.btnStart.innerHTML = '<span class="material-icons-round">pause</span> Jeda';
+        el.btnStart.innerHTML   = '<span class="material-icons-round">pause</span> Jeda';
         el.btnStart.classList.add('paused');
         el.timerStatus.textContent = 'Berjalan';
 
@@ -169,6 +264,15 @@
                 timeLeft--;
                 updateTimerDisplay(timeLeft, 'Berjalan');
                 setRing(timeLeft / totalTime);
+
+                // Warning merah saat 10 detik terakhir
+                if (timeLeft <= 10) {
+                    el.ringFill.style.stroke  = '#DC2626';
+                    el.timerDisplay.style.color = '#DC2626';
+                } else {
+                    el.ringFill.style.stroke  = '';
+                    el.timerDisplay.style.color = '';
+                }
             } else {
                 onTimerDone();
             }
@@ -181,8 +285,10 @@
 
         el.timerDisplay.textContent = '00:00';
         el.timerDisplay.classList.add('done-color');
+        el.timerDisplay.style.color  = ''; // reset inline dari warning
+        el.ringFill.style.stroke     = ''; // reset inline
         el.ringFill.classList.add('done-color');
-        el.timerStatus.textContent = 'Selesai!';
+        el.timerStatus.textContent   = 'Selesai!';
 
         el.btnStart.innerHTML = '<span class="material-icons-round">check</span> Selesai';
         el.btnStart.classList.remove('paused');
@@ -190,7 +296,17 @@
         el.btnStart.disabled = true;
 
         setRing(0);
+
+        // ── NOTIFIKASI SELESAI ──
+        playDingBell();
+        vibrate();
+        sendNotification(STEPS[currentIndex]?.label || 'Langkah ini');
         showDoneToast();
+
+        // Auto-scroll ke tombol Lanjut supaya user tahu ada aksi
+        setTimeout(() => {
+            el.btnNext?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 600);
     }
 
     function resetTimer() {
@@ -199,7 +315,9 @@
         updateTimerDisplay(timeLeft, 'Belum mulai');
         setRing(1);
         el.timerDisplay.classList.remove('done-color');
+        el.timerDisplay.style.color  = '';
         el.ringFill.classList.remove('done-color');
+        el.ringFill.style.stroke     = '';
         resetStartBtn();
         hideDoneToast();
     }
@@ -236,9 +354,11 @@
 
     // ─── MODAL selesai masak ──────────────────────────────────────────────────
     function showFinishModal() {
-        el.finishModal.style.display  = 'flex';
+        el.finishModal.style.display   = 'flex';
         el.finishOverlay.style.display = 'block';
-        document.body.style.overflow  = 'hidden';
+        document.body.style.overflow   = 'hidden';
+        playDingBell();
+        vibrate();
     }
 
     // ─── EVENTS ──────────────────────────────────────────────────────────────
@@ -265,12 +385,20 @@
             el.finishOverlay.style.display = 'none';
             document.body.style.overflow   = '';
         });
+
+        // Keyboard shortcut: Space = mulai/jeda, ArrowRight = lanjut, ArrowLeft = sebelumnya
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.code === 'Space')       { e.preventDefault(); startPauseTimer(); }
+            if (e.code === 'ArrowRight')  { el.btnNext.click(); }
+            if (e.code === 'ArrowLeft')   { el.btnPrev.click(); }
+            if (e.code === 'KeyR')        { resetTimer(); }
+        });
     }
 
     // ─── FORMAT HELPERS ──────────────────────────────────────────────────────
     function parseDuration(val) {
         if (!val || val === '00:00:00') return 0;
-        // Format HH:MM:SS
         const parts = String(val).split(':').map(Number);
         if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
         if (parts.length === 2) return parts[0] * 60 + parts[1];

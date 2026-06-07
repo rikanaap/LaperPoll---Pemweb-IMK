@@ -14,10 +14,10 @@ class UlasanController extends Controller
     // ── SHOW halaman ulasan ───────────────────────────────────────────────────
     public function show($id)
     {
-        $resep = Resep::with(['feedbacks.user', 'feedbacks.photos'])->findOrFail($id);
+        $resep = Resep::with(['feedbacks.user', 'feedbacks.photos', 'user'])->findOrFail($id);
 
-        $sudahUlasan  = false;
-        $myFeedback   = null;
+        $sudahUlasan = false;
+        $myFeedback  = null;
 
         if (Auth::check()) {
             $myFeedback  = $resep->feedbacks()->where('user_id', Auth::id())->with('photos')->first();
@@ -46,6 +46,7 @@ class UlasanController extends Controller
             'photos.*.max'    => 'Ukuran foto maksimal 2 MB.',
         ]);
 
+        // Cegah duplikat ulasan
         if ($resep->feedbacks()->where('user_id', Auth::id())->exists()) {
             return back()->with('error', 'Kamu sudah memberikan ulasan untuk resep ini.');
         }
@@ -57,12 +58,14 @@ class UlasanController extends Controller
             'description' => $request->description,
         ]);
 
+        // Fix: simpan path BERSIH tanpa prefix 'storage/'
+        // Render pakai Storage::url($photo->path) di blade
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
                 $path = $photo->store('feedback_photos', 'public');
                 FeedbackPhoto::create([
                     'feedback_id' => $feedback->id,
-                    'path'        => 'storage/' . $path,
+                    'path'        => $path, // contoh: 'feedback_photos/abc123.jpg'
                 ]);
             }
         }
@@ -76,8 +79,9 @@ class UlasanController extends Controller
     // ── EDIT form ulasan ──────────────────────────────────────────────────────
     public function edit($resepId, $feedbackId)
     {
-        $resep    = Resep::with(['feedbacks.user', 'feedbacks.photos'])->findOrFail($resepId);
-        $feedback = Feedback::with('photos')->where('id', $feedbackId)
+        $resep    = Resep::with(['feedbacks.user', 'feedbacks.photos', 'user'])->findOrFail($resepId);
+        $feedback = Feedback::with('photos')
+                        ->where('id', $feedbackId)
                         ->where('user_id', Auth::id())
                         ->firstOrFail();
 
@@ -100,12 +104,12 @@ class UlasanController extends Controller
                         ->firstOrFail();
 
         $request->validate([
-            'rating'           => 'required|numeric|min:1|max:5',
-            'description'      => 'nullable|string|max:1000',
-            'photos'           => 'nullable|array|max:3',
-            'photos.*'         => 'image|mimes:jpg,jpeg,png,webp|max:2048',
-            'delete_photos'    => 'nullable|array',
-            'delete_photos.*'  => 'integer',
+            'rating'          => 'required|numeric|min:1|max:5',
+            'description'     => 'nullable|string|max:1000',
+            'photos'          => 'nullable|array|max:3',
+            'photos.*'        => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'delete_photos'   => 'nullable|array',
+            'delete_photos.*' => 'integer',
         ], [
             'rating.required' => 'Pilih bintang rating terlebih dahulu.',
         ]);
@@ -115,15 +119,14 @@ class UlasanController extends Controller
             'description' => $request->description,
         ]);
 
-        // Hapus foto yang dipilih user untuk dihapus
+        // Hapus foto yang dipilih user
         if ($request->filled('delete_photos')) {
             $toDelete = FeedbackPhoto::whereIn('id', $request->delete_photos)
                             ->where('feedback_id', $feedback->id)
                             ->get();
             foreach ($toDelete as $photo) {
-                // Hapus file dari storage
-                $storagePath = str_replace('storage/', '', $photo->path);
-                Storage::disk('public')->delete($storagePath);
+                // path bersih langsung delete dari disk public
+                Storage::disk('public')->delete($photo->path);
                 $photo->delete();
             }
         }
@@ -131,12 +134,12 @@ class UlasanController extends Controller
         // Tambah foto baru
         if ($request->hasFile('photos')) {
             $existingCount = $feedback->photos()->count();
-            $slots         = 3 - $existingCount;
+            $slots         = max(0, 3 - $existingCount);
             foreach (array_slice($request->file('photos'), 0, $slots) as $photo) {
                 $path = $photo->store('feedback_photos', 'public');
                 FeedbackPhoto::create([
                     'feedback_id' => $feedback->id,
-                    'path'        => 'storage/' . $path,
+                    'path'        => $path, // path bersih
                 ]);
             }
         }
@@ -156,14 +159,12 @@ class UlasanController extends Controller
                         ->where('user_id', Auth::id())
                         ->firstOrFail();
 
-        // Hapus semua foto dari storage
+        // Hapus semua foto dari storage (path bersih)
         foreach ($feedback->photos as $photo) {
-            $storagePath = str_replace('storage/', '', $photo->path);
-            Storage::disk('public')->delete($storagePath);
+            Storage::disk('public')->delete($photo->path);
         }
 
         $feedback->delete();
-
         $this->updateAvgRating($resep);
 
         return redirect()->route('detail.resep', $resep->id)

@@ -1122,3 +1122,141 @@ select {
 * {
     pointer-events: auto;
 }
+
+.lp-alert-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    display: none;
+    animation: fadeIn 0.2s ease;
+}
+
+.lp-alert-overlay.open {
+    display: block;
+}
+
+/* ── ALERT BOX ── */
+.lp-alert-box {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.lp-alert-box.open {
+    display: flex;
+}
+
+.lp-alert-content {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    max-width: 320px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ── ALERT HEADER ── */
+.lp-alert-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.lp-alert-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    color: var(--accent-normal);
+}
+
+.lp-alert-icon.success {
+    color: #22c55e;
+}
+
+.lp-alert-icon.warning {
+    color: var(--orange-normal);
+}
+
+.lp-alert-icon.info {
+    color: #3b82f6;
+}
+
+.lp-alert-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--secondary-normal);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── ALERT MESSAGE ── */
+.lp-alert-message {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--primary-dark-active);
+    line-height: 1.5;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── ALERT BUTTON ── */
+.lp-alert-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.lp-alert-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background-color: var(--orange-normal);
+    color: white;
+    border: none;
+    border-radius: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.lp-alert-btn:hover {
+    background-color: var(--orange-normal-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+}
+
+.lp-alert-btn:active {
+    transform: translateY(0);
+}
+
+.lp-alert-btn.secondary {
+    background-color: var(--primary-normal);
+    color: var(--secondary-normal);
+}
+
+.lp-alert-btn.secondary:hover {
+    background-color: var(--primary-normal-hover);
+}

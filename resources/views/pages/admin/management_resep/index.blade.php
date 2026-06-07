@@ -31,28 +31,38 @@
                 >
             </div>
 
-            <select name="status" onchange="resepForm.submit()">
-                <option value="">Semua Status</option>
-                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Published</option>
-                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Draft</option>
-            </select>
+            @php $status = request('status') ?? ''; @endphp
+                <div class="custom-select">
+                    <input type="hidden" name="status" value="{{ $status }}">
+                    <div class="custom-select__trigger">
+                        <span class="custom-select__label">
+                            {{ $status === '1' ? 'Published' : ($status === '0' ? 'Draft' : 'Semua Status') }}
+                        </span>
+                        <span class="material-icons-round custom-select__arrow">expand_more</span>
+                    </div>
+                    <div class="custom-select__dropdown">
+                        <div class="custom-select__option {{ $status === '' ? 'is-selected' : '' }}" data-value="">Semua Status</div>
+                        <div class="custom-select__option {{ $status === '1' ? 'is-selected' : '' }}" data-value="1">Published</div>
+                        <div class="custom-select__option {{ $status === '0' ? 'is-selected' : '' }}" data-value="0">Draft</div>
+                    </div>
+                </div>
 
-            <select name="filter_id" onchange="resepForm.submit()">
+            <!-- <select name="filter_id" onchange="resepForm.submit()">
                 <option value="">Semua Kategori</option>
                 @foreach($kategoris as $kat)
                     <option value="{{ $kat->id }}" {{ request('filter_id') == $kat->id ? 'selected' : '' }}>
                         {{ $kat->title }}
                     </option>
                 @endforeach
-            </select>
+            </select> -->
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request()->hasAny(['search', 'status', 'filter_id']))
+            <!-- @if(request('status') !== null && request('status') !== '')
                 <a href="{{ route('admin.resep.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span> Reset
                 </a>
-            @endif
+            @endif -->
 
         </form>
     </div>
@@ -93,8 +103,8 @@
                             @endif
                             <div>
                                 <div class="td-name">{{ Str::limit($resep->title, 30) }}</div>
-                                <div class="td-sub">
-                                    {{ $resep->cook_duration }}
+                               <div class="td-sub">
+                                    {{ $resep->cook_duration_formatted }}
                                     {{ $resep->calorie ? '· ' . number_format($resep->calorie) . ' kkal' : '' }}
                                 </div>
                             </div>
@@ -251,7 +261,21 @@
 @push('scripts')
 <script>
 function resepDelete(url, name) {
-    if (!confirm(`Hapus resep "${name}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
+    openModal(
+        'Hapus Resep',
+        `<p style="font-size:.875rem;color:var(--text-secondary)">
+            Yakin ingin menghapus resep <strong>${name}</strong>?
+            Tindakan ini <strong>tidak dapat dibatalkan</strong>.
+        </p>`,
+        `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
+         <button class="btn btn--danger" onclick="doResepDelete('${url}')">
+             <span class="material-icons-round">delete</span> Hapus
+         </button>`
+    );
+}
+
+function doResepDelete(url) {
+    closeModal();
     const f = document.createElement('form');
     f.method = 'POST';
     f.action = url;

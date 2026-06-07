@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Timer Masak - {{ $resep->title }}')
+@section('title', 'Timer Masak - ' . $resep->title)
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/timer-resep.css') }}">
@@ -24,7 +24,8 @@
                 {{ $langkahs->count() }} langkah
             </p>
         </div>
-        <img src="{{ $resep->thumbnail ? asset($resep->thumbnail) : asset('assets/images/Image_DummyResep.png') }}"
+        {{-- Fix: pakai thumbnail_url bukan asset() langsung --}}
+        <img src="{{ $resep->thumbnail_url }}"
              alt="{{ $resep->title }}" class="tr-resep-thumb"
              onerror="this.src='{{ asset('assets/images/Image_DummyResep.png') }}'">
     </div>
@@ -124,7 +125,7 @@
         </div>
     </div>
 
-    {{-- ── TOAST selesai ── --}}
+    {{-- ── TOAST selesai timer ── --}}
     <div class="tr-done-toast" id="trDoneToast" style="display:none">
         <div class="tr-done-toast-inner">
             <span class="material-icons-round tr-done-icon">check_circle</span>
@@ -157,16 +158,26 @@
     </div>
     <div class="tr-finish-overlay" id="trFinishOverlay" style="display:none"></div>
 
+    {{-- ── NOTIF PERMISSION BANNER ── --}}
+    <div class="tr-notif-banner" id="trNotifBanner" style="display:none">
+        <span class="material-icons-round">notifications</span>
+        <span>Izinkan notifikasi agar timer tetap berjalan saat ganti tab</span>
+        <button class="tr-notif-allow font-semibold" id="trNotifAllow">Izinkan</button>
+        <button class="tr-notif-dismiss" id="trNotifDismiss">
+            <span class="material-icons-round">close</span>
+        </button>
+    </div>
+
 </main>
 
 @push('scripts')
 <script>
     // Data langkah dari server — tidak ada dummy
-    window.TR_STEPS  = @json($stepsData);
-    window.TR_BAHANS = @json($bahansData);
-
-    window.TR_RESEP_ID  = {{ $resep->id }};
+    window.TR_STEPS      = @json($stepsData);
+    window.TR_BAHANS     = @json($bahansData);
+    window.TR_RESEP_ID   = {{ $resep->id }};
     window.TR_ULASAN_URL = "{{ route('ulasan.show', $resep->id) }}";
+    window.TR_RESEP_TITLE = @json($resep->title);
 </script>
 <script src="{{ asset('js/timer-resep.js') }}"></script>
 @endpush

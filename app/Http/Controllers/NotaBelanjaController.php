@@ -51,11 +51,15 @@ class NotaBelanjaController extends Controller
         }
 
         // Grouping per kategori — fallback ke LAINNYA kalau kolom kategori belum ada
+        // FIX: lengkapi katMap dengan BUAH dan MINUMAN
         $katMap = [
             'karbohidrat' => 'KARBOHIDRAT',
             'protein'     => 'PROTEIN',
             'sayuran'     => 'SAYURAN',
+            'buah'        => 'BUAH',
             'bumbu'       => 'BUMBU',
+            'minuman'     => 'MINUMAN',
+            'lainnya'     => 'LAINNYA',
         ];
 
         $grouped = $cartItems->groupBy(function ($item) use ($katMap) {
@@ -63,7 +67,8 @@ class NotaBelanjaController extends Controller
             return $katMap[$kat] ?? 'LAINNYA';
         });
 
-        $katOrder       = ['KARBOHIDRAT', 'PROTEIN', 'SAYURAN', 'BUMBU', 'LAINNYA'];
+        // FIX: tambah BUAH dan MINUMAN ke urutan tampil
+        $katOrder = ['KARBOHIDRAT', 'PROTEIN', 'SAYURAN', 'BUAH', 'BUMBU', 'MINUMAN', 'LAINNYA'];
         $groupedOrdered = collect($katOrder)
             ->mapWithKeys(fn($k) => [$k => $grouped->get($k, collect())])
             ->filter(fn($items) => $items->isNotEmpty());
@@ -113,17 +118,4 @@ class NotaBelanjaController extends Controller
         ]);
     }
 
-    /**
-     * DELETE /api/nota-belanja/{id}
-     * Hapus satu item dari nota.
-     */
-    public function destroy($id)
-    {
-        UserCart::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail()
-            ->delete();
-
-        return response()->json(['success' => true]);
-    }
 }

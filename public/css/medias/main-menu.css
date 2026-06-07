@@ -18,8 +18,13 @@
         flex-direction: row;
     }
     .bottom-menus{
-        top: 0;
+        top:80px;
+        margin-top: 3rem ;
         position: sticky;
+        align-self: flex-start;
+        height: fit-content;
+        max-height: 100vh;
+        overflow-y: auto;
         justify-content: start;
         width: 25rem;
     }

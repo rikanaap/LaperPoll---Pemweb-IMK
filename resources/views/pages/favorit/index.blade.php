@@ -60,7 +60,7 @@
             <span class="material-icons-round fav-empty-icon">favorite_border</span>
             <p class="fav-empty-title font-semibold">Belum ada resep favorit</p>
             <p class="fav-empty-sub">Ketuk ikon hati di detail resep untuk menyimpannya di sini.</p>
-            <a href="{{ route('main-menu.index') }}" class="fav-empty-btn font-semibold">
+            <a href="{{ route('pencarian.resep') }}" class="fav-empty-btn font-semibold">
                 <span class="material-icons-round">explore</span>
                 Jelajahi Resep
             </a>
@@ -72,22 +72,13 @@
                    data-title="{{ strtolower($resep->title) }}"
                    data-author="{{ strtolower($resep->user->name ?? '') }}"
                    data-rating="{{ $resep->current_star }}"
-                   data-date="{{ $resep->pivot->created_at ?? $resep->created_at }}">
+                   data-date="{{ $resep->pivot->created_at ?? $resep->created_at }}" data-favorited="{{ $resep->pivot->created_at ?? $resep->created_at }}">
                     <div class="fav-card">
                         {{-- Thumbnail --}}
                         <div class="fav-card-thumb">
-                            @if($resep->thumbnail)
-                                <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
+                            <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
                                      class="fav-thumb-img"
-                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                <div class="fav-thumb-placeholder" style="display:none">
-                                    <span class="material-icons-round">restaurant</span>
-                                </div>
-                            @else
-                                <div class="fav-thumb-placeholder">
-                                    <span class="material-icons-round">restaurant</span>
-                                </div>
-                            @endif
+                                     onerror="this.src='{{ asset('assets/images/Image_DummyResep.png') }}'">"
 
                             {{-- Tombol hapus favorit --}}
                             <button class="fav-remove-btn"

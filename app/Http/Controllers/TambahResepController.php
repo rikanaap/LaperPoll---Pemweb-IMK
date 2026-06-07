@@ -19,8 +19,10 @@ class TambahResepController extends Controller
     public function index()
     {
         $bahans = Bahan::all();
-        $filters = Filter::all();
-        $kategories = Filter::where('level', 1)->get(); // Anggap level 1 adalah kategori
+        $filters = Filter::where('level', 2)
+            ->orWhere('level', 3)
+            ->get();
+        $kategories = Filter::where('level', 1)->get();
 
         return view('pages.resep.tambah', [
             'bahans' => $bahans,
@@ -106,12 +108,13 @@ class TambahResepController extends Controller
 
             // Attachments
             foreach ($request->file('attachments') ?? [] as $file) {
+                $mimetype = $file->getMimeType(); // simpan dulu sebelum move
                 $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('assets/images/reseps'), $filename);
                 $path = 'assets/images/reseps/' . $filename;
                 ResepAttachment::create([
                     'resep_id' => $resep->id,
-                    'mimetype' => $file->getMimeType(),
+                    'mimetype' => $mimetype,
                     'path'     => $path,
                 ]);
             }

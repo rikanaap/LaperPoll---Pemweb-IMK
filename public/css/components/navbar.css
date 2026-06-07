@@ -81,7 +81,7 @@
 
 @media (min-width: 1024px) {
     .navbar {
-        padding: 1rem calc((100% - 1280px) / 2 + 2rem);
+        padding: 1rem 2rem;
         min-height: 64px;
     }
 
@@ -89,7 +89,7 @@
         height: 3rem;
     }
 
-    .back-btn{
+    .back-btn {
         font-size: 46px;
     }
 
@@ -101,7 +101,7 @@
 
 @media (min-width: 1400px) {
     .navbar {
-        padding: 0.75rem calc((100% - 1280px) / 2 + 1rem);
+        padding: 0.75rem 2rem;
     }
 }
 /* ── HAMBURGER BUTTON (profile page) ── */

@@ -307,3 +307,152 @@
 @media (min-width: 1024px) {
     .resep-menus { grid-template-columns: repeat(3, 1fr); }
 }
+/* ── SORT CHIPS ── */
+.pr-sort-wrap {
+    display: flex;
+    gap: 0.4rem;
+    padding: 0.6rem 1.25rem 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.pr-sort-wrap::-webkit-scrollbar { display: none; }
+.pr-sort-chip {
+    display: inline-flex; align-items: center;
+    padding: 0.35rem 0.875rem;
+    border-radius: 2rem;
+    border: 1.5px solid #EFE5DF;
+    background: white;
+    font-size: 0.75rem; font-weight: 600;
+    color: #6B5B54; cursor: pointer;
+    white-space: nowrap; flex-shrink: 0;
+    transition: all 0.15s;
+}
+.pr-sort-chip:hover  { border-color: #E65100; color: #E65100; }
+.pr-sort-chip.active { background: #E65100; border-color: #E65100; color: white; }
+
+/* ── BADGE TERPILIH ── */
+.pr-badge-aktif {
+    display: inline-flex; align-items: center;
+    padding: 1px 7px;
+    border-radius: 2rem;
+    background: #DCFCE7;
+    border: 1px solid #86EFAC;
+    font-size: 0.65rem; font-weight: 700;
+    color: #166534; white-space: nowrap; flex-shrink: 0;
+}
+
+/* Kartu yang terpilih — border hijau */
+.resep-card.is-aktif {
+    border-color: #86EFAC;
+    background: #F0FDF4;
+}
+.resep-card.is-aktif::before { background: #16A34A; }
+
+/* ── RESEP ACTIONS — wrap tombol info + arrow ── */
+.resep-actions {
+    display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0;
+}
+
+/* Info button */
+.resep-info-btn {
+    width: 2rem; height: 2rem;
+    border-radius: 50%;
+    background: #F9F5F3;
+    border: 1.5px solid #EFE5DF;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    transition: all 0.15s; flex-shrink: 0;
+}
+.resep-info-btn:hover { background: #EFF6FF; border-color: #BFDBFE; }
+.resep-info-btn .material-icons-round { font-size: 0.95rem !important; color: #6B7280; }
+.resep-info-btn:hover .material-icons-round { color: #2563EB; }
+
+@media (min-width: 768px) {
+    .pr-sort-wrap { padding: 0.6rem 2.25rem 0; }
+}
+/* ── Kalori Banner ─────────────────────────────────────────── */
+#prKaloriBanner {
+    margin: 0 1rem 0.75rem;
+    background: #FFF8F5;
+    border: 1.5px solid #EFE5DF;
+    border-radius: 0.75rem;
+    padding: 0.65rem 0.85rem;
+}
+.pr-kalori-banner-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+.pr-kal-icon { font-size: 1.1rem !important; color: #E65100; flex-shrink: 0; }
+.pr-kalori-banner-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.pr-kal-label { font-size: 0.8rem; color: #172D23; }
+.pr-kal-sub   { font-size: 0.7rem; color: #6B5B54; }
+.pr-kal-track {
+    width: 100%;
+    height: 5px;
+    background: #EFE5DF;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+.pr-kal-fill {
+    height: 100%;
+    background: #E65100;
+    border-radius: 9999px;
+    transition: width 0.3s ease;
+}
+.pr-kal-fill.pr-kal-over { background: #DC2626; }
+
+/* ── Kalori Warning Modal ──────────────────────────────────── */
+.pr-kal-modal-box {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    max-width: 22rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+}
+.pr-kal-modal-icon {
+    width: 3rem; height: 3rem;
+    border-radius: 50%;
+    background: #FEF3C7;
+    display: flex; align-items: center; justify-content: center;
+}
+.pr-kal-modal-icon .material-icons-round { color: #D97706; font-size: 1.6rem; }
+.pr-kal-modal-title { font-size: 1rem; color: #172D23; text-align: center; }
+.pr-kal-modal-desc  {
+    font-size: 0.82rem; color: #6B5B54;
+    text-align: center; line-height: 1.5;
+}
+.pr-kal-modal-actions {
+    display: flex; gap: 0.5rem; width: 100%; margin-top: 0.25rem;
+}
+.pr-kal-btn-cancel {
+    flex: 1;
+    padding: 0.65rem;
+    border: 1.5px solid #EFE5DF;
+    background: white;
+    border-radius: 0.6rem;
+    font-size: 0.85rem;
+    color: #6B5B54;
+    cursor: pointer;
+}
+.pr-kal-btn-confirm {
+    flex: 1;
+    padding: 0.65rem;
+    background: #E65100;
+    color: white;
+    border: none;
+    border-radius: 0.6rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+}
+.pr-kal-btn-confirm .material-icons-round { font-size: 1rem; }

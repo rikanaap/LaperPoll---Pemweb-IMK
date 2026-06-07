@@ -98,14 +98,17 @@ function changeIndicator() {
     case 1:
       indicators[0].classList.remove("i-enable")
       indicators[1].classList.add("i-enable")
+      indicators[2].classList.add("i-enable")
       break
-    case 2:
-      indicators[0].classList.add("i-enable")
-      indicators[1].classList.remove("i-enable")
-      break
-    case 5:
-      indicators[2].classList.remove("i-enable")
-      indicators[1].classList.add("i-enable")
+      case 2:
+          indicators[0].classList.add("i-enable")
+          indicators[2].classList.add("i-enable")
+          indicators[1].classList.remove("i-enable")
+          break
+      case 5:
+        indicators[2].classList.remove("i-enable")
+        indicators[1].classList.add("i-enable")
+        indicators[0].classList.remove("i-enable")
       break
   }
   document.querySelector(".form-indicator > p").innerText = formCounter + "/5"
@@ -121,20 +124,26 @@ function showForm() {
       document.getElementById('form-1').style.display = 'flex';
       break;
     case 2:
-      inputSubmit.style.display = "none"
+        inputSubmit.style.display = (formData.bahans.length > 1) ? "flex" : "none" 
       showResultForm2()
       document.getElementById('form-2').style.display = 'flex';
       break;
     case 3:
-        inputSubmit.style.display = "none"
+        inputSubmit.style.display = (formData.filters.length > 2) ? "flex" : "none" 
         showResultForm3()
         document.getElementById('form-3').style.display = 'flex';
-      break;
+        break;
     case 4:
-      document.getElementById('form-4-1').style.display = 'flex';
-      showResultStep4()
-      checkLeftoverBahan() ? buttonTambahStep.style.display = "flex" : ""
-    inputSubmit.style.display = "none"
+        inputSubmit.style.display = (Object.keys(formData.steps).length > 1) ? "flex" : "none" 
+        document.getElementById('form-4-1').style.display = 'flex';
+        showResultStep4()
+        if(checkLeftoverBahan()) {
+            buttonTambahStep.style.display = "flex"
+            inputSubmit.style.display = "none"
+        }else{
+            buttonTambahStep.style.display = "none"
+            inputSubmit.style.display = "flex"
+        }
     break;
     case 5:
         document.getElementById('form-5').style.display = 'flex';
@@ -155,15 +164,15 @@ function checkForm() {
       const choosenKategori = document.querySelector('#form-1 #listKategori .dropdown-data.choosen');
 
       if (namaResep.trim() === "") {
-        alert("Mohon isi nama resep terlebih dahulu");
+        showAlert("Validasi", "Mohon isi nama resep terlebih dahulu");
         return false;
       }
       if (!kalorie || kalorie < 0) {
-        alert("Mohon isi kalori");
+        showAlert("Validasi", "Mohon isi kalori");
         return false;
       }
       if (!choosenKategori) {
-        alert("Mohon pilih kategori resep");
+        showAlert("Validasi", "Mohon pilih kategori resep");
         return false;
       }
 
@@ -175,14 +184,14 @@ function checkForm() {
 
     case 2:
       if (formData.bahans.length < 1) {
-        alert("Mohon tambahkan minimal 1 bahan");
+        showAlert("Validasi", "Mohon tambahkan minimal 1 bahan");
         return false;
       }
       return true;
 
     case 3:
     if (formData.filters.length < 3) {
-        alert("Mohon tambahkan minimal 3 bahan");
+        showAlert("Validasi", "Mohon tambahkan minimal 3 bahan");
         return false;
       }
 
@@ -190,14 +199,14 @@ function checkForm() {
 
     case 4:
       if (Object.keys(formData.steps).length < 1) {
-        alert("Mohon isi langkah pembuatan");
+        showAlert("Validasi", "Mohon isi langkah pembuatan");
         return false;
       }
       return true;
 
     case 5:
       if(formData.attachments.length < 1){
-        alert("Mohon kirimkan attachment")
+        showAlert("Validasi", "Mohon kirimkan attachment")
         return false
       }
       return true;
@@ -222,7 +231,7 @@ function getTotalCookDuration() {
 
 async function submitResep() {
     const token = document.querySelector('meta[name="csrf-token"]')?.content
-    if (!token) { alert('CSRF token tidak ditemukan'); return }
+    if (!token) { showAlert("Validasi", 'CSRF token tidak ditemukan'); return }
 
     const fd = new FormData()
 
@@ -318,14 +327,14 @@ buttonTambahBahan.addEventListener("click", () => {
 function saveBahan() {
     const gram_total = +inputBeratForm2.querySelector('input').value
     if (gram_total == null || gram_total <= 0) {
-        alert("Mohon isi gram terlebih dahulu, perhatikan bahwa gram tidak boleh 0 dan dibawah 0")
+        showAlert("Validasi", "Mohon isi gram terlebih dahulu, perhatikan bahwa gram tidak boleh 0 dan dibawah 0")
         return false
     }
     
     if(bahanSudahAda) {
         const indexBahan = formData.bahans.findIndex(b => b.id === currentBahanId)
         if(formData.bahans[indexBahan].temp_used_gram > gram_total) { 
-            alert("Nilai gram harus lebih tinggi dari: " + formData.bahans[indexBahan].temp_used_gram + " gram")
+            showAlert("Validasi", "Nilai gram harus lebih tinggi dari: " + formData.bahans[indexBahan].temp_used_gram + " gram")
             return
          }
         if(indexBahan !== -1) formData.bahans[indexBahan].gram_total = gram_total
@@ -460,11 +469,12 @@ const wrapperResultTempStep = document.querySelector('#result-4-1 .wrapper-resul
 const inputBeratForm4 = document.getElementById("InputBerat4")
 const wrapperResultStepExtra = document.querySelector('#result-4-1 .wrapper-result.extra-step')
 let currentTotalStep = 0
+let addingFirstStep = true
     
 buttonTambahStep.addEventListener('click', () => {
     showDropdownDataBahan()
     if(dropdownDatasForm4.innerHTML == ''){
-        alert("Tidak ada bahan yang bisa dipakai")
+        showAlert("Validasi", "Tidak ada bahan yang bisa dipakai")
         return
     }
     const lanjut = saveFormStep()
@@ -475,6 +485,7 @@ buttonTambahStep.addEventListener('click', () => {
 })
 
 buttonBahanStep.addEventListener('click', () => {
+    addingFirstStep = false
     showFormStep4()
     showResultStep4()
     resetAllInputBahan();
@@ -498,15 +509,10 @@ document.querySelectorAll('.dur-btn').forEach(btn => {
     })
 })
 
-function checkLeftoverBahan(){
-    let total = 0;
-    formData.bahans.forEach((item) => {
-        const sisa = item.gram_total - (item.temp_used_gram || 0)
-        if(sisa == 0) return
-        total++
-    })
-    return total
+function checkLeftoverBahan() {
+    return formData.bahans.filter(b => (b.gram_total - (b.temp_used_gram || 0)) > 0).length
 }
+
 
 
 function resetAllInputBahan() {
@@ -530,13 +536,13 @@ syncTimeInput()
 
 function saveFormStep(){
     if(inputForm4Text.value.trim() === "") {
-        alert("Mohon isi deskripsi langkah terlebih dahulu");
+        showAlert("Validasi", "Mohon isi deskripsi langkah terlebih dahulu");
         return false;
     }
     
     const timeValue = inputForm4Time.value;
     if(!timeValue || timeValue === "00:00:00") {
-        alert("Mohon isi durasi waktu langkah");
+        showAlert("Validasi", "Mohon isi durasi waktu langkah");
         return false;
     }
 
@@ -552,22 +558,20 @@ function saveFormStep(){
     return true
 }
 
-function saveBahanStep(data){
+function saveBahanStep(data) {
+    console.log(data)
     const bahans = formData.steps[currentTotalStep].bahans
     const index = bahans.findIndex(b => b.bahan_id === data.bahan_id)
-
-    if (index !== -1) {
-        bahans[index].gram_total = data.gram_total
-    } else {
-        bahans.push(data)
-    }
+    index !== -1 ? bahans[index].gram_total = data.gram_total : bahans.push(data)
 }
+
 
 function hapusBahan(bahanId) {
     const bahans = formData.steps[currentTotalStep].bahans
     const index = bahans.findIndex(b => b.bahan_id === bahanId)
     if (index !== -1) bahans.splice(index, 1)
 }
+
 
 function showFormStep4() {
   document.querySelector("#form-4-1").style.display = "flex"
@@ -683,15 +687,21 @@ function showResultBahan4(){
     wrapperResultBahan.style.display = "flex"
 }
 
-function updateTempTotal(bahanId, gram, pastValue) {
+// Recalculate temp_used_gram dari semua step
+function updateTempTotal(bahanId) {
     const bahan = formData.bahans.find(b => b.id === bahanId)
     if (!bahan) return
 
-    bahan.temp_used_gram = pastValue + gram
+    let total = 0
+    Object.values(formData.steps).forEach(step => {
+        const found = step.bahans.find(b => b.bahan_id === bahanId)
+        if (found) total += found.gram_total
+    })
 
-    const el = dropdownDatasForm4.querySelector(`[data-bahan-id="${bahanId}"] p`)
-    if (el) el.textContent = `${bahan.judul} (${bahan.gram_total - gram}g tersisa)`
+    bahan.temp_used_gram = total
+    console.log(formData.bahans)
 }
+
 
 function showDropdownDataBahan(){
     dropdownDatasForm4.innerHTML = ''
@@ -727,8 +737,8 @@ function showDropdownDataBahan(){
             let val = parseInt(inputNum.value) || 0
             if (val < maxGram) {
                 inputNum.value = val + 1
-                updateTempTotal(bahanId, 1, item.temp_used_gram)
                 saveBahanStep({ bahan_id: bahanId, gram_total: val + 1, judul: item.judul })
+                updateTempTotal(bahanId)
             }
             showResultBahan4()
         })
@@ -739,11 +749,11 @@ function showDropdownDataBahan(){
             let val = parseInt(inputNum.value) || 0
             if (val > 1) {
                 inputNum.value = val - 1
-                updateTempTotal(bahanId, -1, item.temp_used_gram)
                 saveBahanStep({ bahan_id: bahanId, gram_total: val - 1, judul: item.judul })
+                updateTempTotal(bahanId)
             } else if (val === 1) {
                 inputNum.value = 0
-                updateTempTotal(bahanId, 0)      
+                updateTempTotal(bahanId)      
                 hapusBahan(bahanId)
             }
             showResultBahan4()
@@ -756,11 +766,11 @@ function showDropdownDataBahan(){
             let val = parseInt(inputNum.value) || 0
             if (val > maxGram) { inputNum.value = maxGram; val = maxGram }
             if (val > 0) {
-                updateTempTotal(bahanId, val, item.temp_used_gram)    
                 saveBahanStep({ bahan_id: bahanId, gram_total: val, judul: item.judul })
+                updateTempTotal(bahanId)    
             } else {
-                updateTempTotal(bahanId, 0)      
                 hapusBahan(bahanId)
+                updateTempTotal(bahanId)  
             }
             showResultBahan4()
         })
@@ -810,7 +820,7 @@ uploadDefault.addEventListener('click', () => fileInput.click());
 function handleFileUpload(files) {
     Array.from(files).forEach((file) => {
         if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
-            alert(`File ${file.name} tidak didukung`);
+            showAlert("Validasi", `File ${file.name} tidak didukung`);
             return;
         }
 
@@ -927,3 +937,57 @@ function previousForm() {
         }
     }
 }
+
+
+function showAlert(title, message, type = 'error') {
+    const overlay = document.getElementById('lp-alert-overlay');
+    const box = document.getElementById('lp-alert-box');
+    const icon = document.getElementById('lp-alert-icon');
+    const titleEl = document.getElementById('lp-alert-title');
+    const msgEl = document.getElementById('lp-alert-message');
+    
+    /* ── Set icon berdasarkan type ── */
+    icon.className = 'lp-alert-icon material-icons-round';
+    switch(type) {
+        case 'success':
+            icon.textContent = 'check_circle';
+            icon.classList.add('success');
+            break;
+        case 'warning':
+            icon.textContent = 'warning';
+            icon.classList.add('warning');
+            break;
+        case 'error':
+            icon.textContent = 'error';
+            icon.classList.add('error');
+            break;
+        default:
+            icon.textContent = 'info';
+            icon.classList.add('info');
+    }
+    
+    /* ── Set title & message ── */
+    titleEl.textContent = title;
+    msgEl.textContent = message;
+    
+    /* ── Show overlay & box ── */
+    overlay.classList.add('open');
+    box.classList.add('open');
+}
+
+// ── FUNCTION: Close Alert ──
+function closeAlert() {
+    const overlay = document.getElementById('lp-alert-overlay');
+    const box = document.getElementById('lp-alert-box');
+    
+    overlay.classList.remove('open');
+    box.classList.remove('open');
+}
+
+// ── CLOSE ALERT SAAT OVERLAY DIKLIK ── 
+document.getElementById('lp-alert-overlay').addEventListener('click', closeAlert);
+
+// ── CLOSE ALERT DENGAN ESCAPE KEY ──
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') closeShowAlert("Validasi", );
+});

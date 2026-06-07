@@ -295,3 +295,24 @@ function sortProfResep() {
 
     cards.forEach(card => profResepGrid.appendChild(card));
 }
+
+// ─── LOGOUT CONFIRM MODAL ─────────────────────────────────────────────────────
+function openLogoutConfirm() {
+    closeSidebar();
+    const overlay = document.getElementById('logoutOverlay');
+    const modal   = document.getElementById('logoutModal');
+    if (overlay) overlay.classList.add('open');
+    if (modal)   modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLogoutConfirm() {
+    const overlay = document.getElementById('logoutOverlay');
+    const modal   = document.getElementById('logoutModal');
+    if (overlay) overlay.classList.remove('open');
+    if (modal)   modal.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+window.openLogoutConfirm  = openLogoutConfirm;
+window.closeLogoutConfirm = closeLogoutConfirm;

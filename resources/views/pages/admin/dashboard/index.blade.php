@@ -99,7 +99,7 @@
                                 @endif
                                 <div>
                                     <div class="td-name">{{ Str::limit($resep->title, 28) }}</div>
-                                    <div class="td-sub">{{ $resep->cook_duration }}</div>
+                                    <div class="td-sub">{{ $resep->cook_duration_formatted }}</div>
                                 </div>
                             </div>
                         </td>

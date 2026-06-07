@@ -140,7 +140,7 @@ function renderContent() {
             <div class="mp-meal-header">
                 <span class="material-icons-round mp-meal-icon">${ICON[w]}</span>
                 <span class="mp-meal-label font-jakarta font-bold">${LABEL[w]}</span>
-                ${meal ? `<button class="mp-meal-hapus font-jakarta font-bold" data-detail-id="${meal.detail_id}" data-iso="${iso}" data-w="${w}">HAPUS</button>` : ''}
+                ${meal ? `<button class="mp-meal-hapus font-jakarta font-bold" data-detail-id="${meal.detail_id}" data-iso="${iso}" data-w="${w}" data-nama="${meal.nama || 'resep ini'}">HAPUS</button>` : ''}
             </div>
         `;
 
@@ -168,7 +168,9 @@ function renderContent() {
                 </div>
             `;
         } else {
-            const href = `${window.MP.pilihResepUrl}?tanggal=${iso}&meal_time=${w}`;
+            const maxKal     = dayData.max_calorie  || 0;
+            const totalKal   = dayData.total_kalori || 0;
+            const href = `${window.MP.pilihResepUrl}?tanggal=${iso}&meal_time=${w}&max_kal=${maxKal}&used_kal=${totalKal}`;
             body = `
                 <a href="${href}" class="mp-slot-kosong">
                     <div class="mp-slot-plus">
@@ -183,29 +185,79 @@ function renderContent() {
         content.appendChild(section);
     });
 
-    // Bind hapus
+    // Bind hapus — tampilkan modal konfirmasi dulu sebelum DELETE
     content.querySelectorAll('.mp-meal-hapus').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const detailId = btn.dataset.detailId;
-            const iso2     = btn.dataset.iso;
-            const w2       = btn.dataset.w;
-            btn.disabled = true; btn.textContent = '...';
-            try {
-                await api(`${window.MP.apiBase}/detail/${detailId}`, 'DELETE');
-                if (serverData[iso2]?.meals) {
-                    serverData[iso2].meals[w2] = null;
-                    serverData[iso2].total_kalori = WAKTU.reduce((s,x)=>s+(serverData[iso2].meals[x]?.kalori||0),0);
-                }
-                renderContent();
-                updateKaloriUI();
-                updateGenerateBtn();
-                toast('Resep dihapus dari jadwal');
-            } catch(e) {
-                toast('Gagal menghapus: ' + e.message, true);
-                btn.disabled = false; btn.textContent = 'HAPUS';
-            }
+        btn.addEventListener('click', () => {
+            const detailId  = btn.dataset.detailId;
+            const iso2      = btn.dataset.iso;
+            const w2        = btn.dataset.w;
+            const namaResep = btn.dataset.nama  || 'resep ini';
+            const namaSlot  = LABEL[w2] || w2;
+
+            openHapusModal(detailId, iso2, w2, namaResep, namaSlot);
         });
     });
+}
+
+
+// ─── Modal Konfirmasi Hapus Meal ─────────────────────────────
+function openHapusModal(detailId, iso, w, namaResep, namaSlot) {
+    // Buat modal konfirmasi inline
+    let overlay = document.getElementById('mpHapusOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'mpHapusOverlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;padding:1rem;';
+        document.body.appendChild(overlay);
+    }
+    overlay.innerHTML = `
+        <div style="background:white;border-radius:1.25rem;padding:1.5rem;max-width:340px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+            <p style="font-size:.875rem;font-weight:700;color:#2D1A11;margin-bottom:.5rem;" class="font-jakarta">Hapus dari jadwal?</p>
+            <p style="font-size:.8rem;color:#6B5B54;line-height:1.5;margin-bottom:1.25rem;" class="font-jakarta">
+                <strong>${namaResep}</strong> akan dihapus dari <strong>${namaSlot}</strong>.
+                Tindakan ini tidak dapat dibatalkan.
+            </p>
+            <div style="display:flex;gap:.6rem;justify-content:flex-end;">
+                <button id="mpHapusBatal"
+                    style="padding:.55rem 1rem;border-radius:.75rem;border:1.5px solid #E0D3CA;background:white;font-size:.82rem;font-weight:600;cursor:pointer;color:#6B5B54;"
+                    class="font-jakarta">Batal</button>
+                <button id="mpHapusOke"
+                    style="padding:.55rem 1rem;border-radius:.75rem;border:none;background:#DC2626;color:white;font-size:.82rem;font-weight:600;cursor:pointer;"
+                    class="font-jakarta">Hapus</button>
+            </div>
+        </div>`;
+    overlay.style.display = 'flex';
+
+    document.getElementById('mpHapusBatal').onclick = () => { overlay.style.display = 'none'; };
+    overlay.onclick = (e) => { if (e.target === overlay) overlay.style.display = 'none'; };
+    document.getElementById('mpHapusOke').onclick   = () => doHapus(detailId, iso, w, overlay);
+}
+
+async function doHapus(detailId, iso, w, overlay) {
+    const okeBtn = document.getElementById('mpHapusOke');
+    if (okeBtn) { okeBtn.disabled = true; okeBtn.textContent = '...'; }
+    try {
+        const res = await api(`${window.MP.apiBase}/detail/${detailId}`, 'DELETE');
+        overlay.style.display = 'none';
+        if (serverData[iso]?.meals) {
+            serverData[iso].meals[w] = null;
+            // FIX: gunakan total_kalori dari server jika tersedia, bukan hitung lokal
+            if (res?.total_kalori !== undefined) {
+                serverData[iso].total_kalori = res.total_kalori;
+            } else {
+                serverData[iso].total_kalori = WAKTU.reduce(
+                    (s,x) => s + (serverData[iso].meals[x]?.kalori || 0), 0
+                );
+            }
+        }
+        renderContent();
+        updateKaloriUI();
+        updateGenerateBtn();
+        toast('Resep dihapus dari jadwal');
+    } catch(e) {
+        overlay.style.display = 'none';
+        toast('Gagal menghapus: ' + e.message, true);
+    }
 }
 
 // ─── Kalori UI ────────────────────────────────────────────────
@@ -231,12 +283,64 @@ function updateKaloriUI() {
         if (cur) cur.textContent = current;
         if (tgt) tgt.textContent = `${target} kal`;
 
-        const pct      = Math.min((current/target)*100, 100);
+        const barFill = document.getElementById('mpBarFill');
+        const label   = document.getElementById('mpBarLabel');
         const melebihi = current > target;
-        if (bar) {
-            bar.style.width = pct + '%';
-            bar.classList.toggle('over', melebihi);
+
+        // ── Layer warna berdasarkan kelipatan target ──────────────────
+        // Layer 1: 0–1× target       → oranye       #FF6D00
+        // Layer 2: 1×–2× target      → merah muda   #E53935
+        // Layer 3: 2×–3× target      → merah        #B71C1C
+        // Layer 4: 3×+ target        → merah gelap  #7F0000
+        //
+        // Cara kerja: bar SELALU lebar 100% saat over.
+        // Warna ditentukan oleh layer sekarang (berapa kali lipat target).
+        // Sisa progress dalam layer itu dipakai sebagai opacity layer berikutnya
+        // yang di-blend dengan CSS background dua warna (gradient dari layer ke layer+1).
+
+        const LAYERS = [
+            { from: '#FF6D00', to: '#E53935' }, // layer 1 → 2
+            { from: '#E53935', to: '#B71C1C' }, // layer 2 → 3
+            { from: '#B71C1C', to: '#7F0000' }, // layer 3 → 4
+            { from: '#7F0000', to: '#4A0000' }, // layer 4+
+        ];
+
+        if (!melebihi) {
+            // Belum mencapai target — fill sesuai persentase, warna oranye normal
+            const pct = (current / target) * 100;
+            if (barFill) {
+                barFill.style.width      = pct + '%';
+                barFill.style.background = 'linear-gradient(90deg, #FF8A50, #FF6D00)';
+            }
+            if (label) { label.textContent = Math.round(pct) + '%'; label.style.color = '#E65100'; }
+        } else {
+            // Melebihi target — hitung layer dan progress dalam layer
+            const ratio      = current / target;       // misal 1990/500 = 3.98
+            const layerIndex = Math.min(Math.floor(ratio) - 1, LAYERS.length - 1); // 0-based, max index 3
+            const progress   = ratio - Math.floor(ratio);  // 0.0–1.0 progress dalam layer ini
+            // misal 3.98 → layerIndex=2 (layer 3), progress=0.98
+
+            const layer = LAYERS[Math.min(layerIndex, LAYERS.length - 1)];
+
+            // Bar selalu penuh (100%), warna gradient dari warna layer ke warna layer berikutnya
+            // sesuai progress dalam layer ini
+            if (barFill) {
+                barFill.style.width = '100%';
+                if (progress > 0 && layerIndex < LAYERS.length - 1) {
+                    // Blend: kiri = warna layer sekarang, kanan = blend ke warna layer berikut
+                    const splitPct = Math.round(progress * 100);
+                    barFill.style.background =
+                        `linear-gradient(90deg, ${layer.from} 0%, ${layer.from} ${splitPct}%, ${layer.to} 100%)`;
+                } else {
+                    // Sudah di layer max atau progress = 0
+                    barFill.style.background = layer.from;
+                }
+            }
+
+            const lebih = current - target;
+            if (label) { label.textContent = '+' + lebih + ' kal melebihi target'; label.style.color = '#B71C1C'; }
         }
+
         if (overEl) overEl.style.display = melebihi ? 'flex' : 'none';
     } else {
         wrap.style.display   = 'none';
@@ -583,7 +687,8 @@ document.getElementById('mpEmptyCta')?.addEventListener('click', openDropdown);
                 // Hanya restore kalau rangenya masih valid (tidak semua di masa lalu)
                 if (e >= today()) {
                     defaultStart = s < today() ? today() : s;
-                    defaultEnd   = e;
+                    // FIX: pastikan end tidak lebih kecil dari start setelah geser
+                    defaultEnd   = e < defaultStart ? new Date(defaultStart) : e;
                 }
             }
         } catch(_) {}

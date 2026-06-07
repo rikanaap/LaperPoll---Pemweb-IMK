@@ -33,6 +33,9 @@ a {
     border-radius: 1rem;
     background-color: #FEE7C3;
 }
+.resep-logo > span {
+    font-size: 2.5rem;
+}
 
 .resep-content-detail {
     display: flex;

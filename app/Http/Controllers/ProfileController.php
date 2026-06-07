@@ -10,9 +10,6 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
-    /**
-     * Tampilkan halaman profil user yang sedang login.
-     */
     public function index()
     {
         $user = Auth::user();
@@ -22,7 +19,6 @@ class ProfileController extends Controller
         $followingCount = $user->following()->count();
         $favoritCount   = $user->favorites()->count();
 
-        // Ambil resep milik user (maksimal 12 untuk grid)
         $resepUser = $user->reseps()
             ->with(['feedbacks', 'langkahs'])
             ->latest()
@@ -30,45 +26,54 @@ class ProfileController extends Controller
             ->get();
 
         return view('pages.profile.index', compact(
-            'user',
-            'resepCount',
-            'followerCount',
-            'followingCount',
-            'favoritCount',
-            'resepUser'
+            'user', 'resepCount', 'followerCount',
+            'followingCount', 'favoritCount', 'resepUser'
         ));
     }
 
-    /**
-     * Tampilkan form edit profil.
-     */
     public function edit()
     {
         $user = Auth::user();
         return view('pages.profile.edit', compact('user'));
     }
 
-    /**
-     * Simpan perubahan profil.
-     */
     public function update(Request $request)
     {
         $user = Auth::user();
 
-        $request->validate([
-            'name'              => 'required|string|max:255',
-            'email'             => 'required|email|unique:users,email,' . $user->id,
-            'password'          => 'nullable|min:6|confirmed',
-            'profile_photo'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ], [
-            'name.required'         => 'Nama wajib diisi.',
-            'email.required'        => 'Email wajib diisi.',
-            'email.unique'          => 'Email sudah dipakai akun lain.',
-            'password.min'          => 'Password minimal 6 karakter.',
-            'password.confirmed'    => 'Konfirmasi password tidak cocok.',
-            'profile_photo.image'   => 'File harus berupa gambar.',
-            'profile_photo.max'     => 'Ukuran foto maksimal 2 MB.',
-        ]);
+        $rules = [
+            'name'             => 'required|string|max:255',
+            'email'            => 'required|email|unique:users,email,' . $user->id,
+            'profile_photo'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'password'         => 'nullable|min:6|confirmed',
+        ];
+
+        $messages = [
+            'name.required'          => 'Nama wajib diisi.',
+            'email.required'         => 'Email wajib diisi.',
+            'email.unique'           => 'Email sudah dipakai akun lain.',
+            'password.min'           => 'Password minimal 6 karakter.',
+            'password.confirmed'     => 'Konfirmasi password tidak cocok.',
+            'profile_photo.image'    => 'File harus berupa gambar.',
+            'profile_photo.max'      => 'Ukuran foto maksimal 2 MB.',
+        ];
+
+        // Jika user ingin ganti password, wajib isi current_password
+        if ($request->filled('password')) {
+            $rules['current_password'] = 'required';
+            $messages['current_password.required'] = 'Password lama wajib diisi untuk mengganti password.';
+        }
+
+        $request->validate($rules, $messages);
+
+        // Verifikasi password lama
+        if ($request->filled('password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()
+                    ->withErrors(['current_password' => 'Password lama tidak sesuai.'])
+                    ->withInput($request->except(['password', 'password_confirmation', 'current_password']));
+            }
+        }
 
         $data = [
             'name'  => $request->name,
@@ -80,15 +85,19 @@ class ProfileController extends Controller
         }
 
         if ($request->hasFile('profile_photo')) {
-            // Hapus foto lama jika ada
+            // Hapus foto lama
             if ($user->profile_photo) {
                 Storage::disk('public')->delete($user->profile_photo);
             }
-            $path = $request->file('profile_photo')->store('profile_photos', 'public');
-            $data['profile_photo'] = $path;
+            $data['profile_photo'] = $request->file('profile_photo')
+                ->store('profile_photos', 'public');
         }
 
-        User::where('id', $user->id)->update($data);
+        // Fix: pakai $user->update() supaya Auth instance ter-refresh
+        $user->update($data);
+
+        // Refresh Auth session supaya navbar langsung update tanpa login ulang
+        Auth::setUser($user->fresh());
 
         return redirect()->route('profile.index')
             ->with('success', 'Profil berhasil diperbarui!');

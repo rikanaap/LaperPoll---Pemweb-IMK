@@ -55,3 +55,37 @@ function closeModal() {
     document.getElementById('modalOverlay').classList.remove('is-open');
     document.body.style.overflow = '';
 }
+
+
+// ── Custom Select ─────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.custom-select').forEach(sel => {
+        const trigger  = sel.querySelector('.custom-select__trigger');
+        const dropdown = sel.querySelector('.custom-select__dropdown');
+        const options  = sel.querySelectorAll('.custom-select__option');
+        const input    = sel.querySelector('input[type="hidden"]');
+        const label    = trigger.querySelector('.custom-select__label');
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.custom-select.is-open').forEach(s => {
+                if (s !== sel) s.classList.remove('is-open');
+            });
+            sel.classList.toggle('is-open');
+        });
+
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                options.forEach(o => o.classList.remove('is-selected'));
+                opt.classList.add('is-selected');
+                label.textContent = opt.textContent.trim();
+                input.value = opt.dataset.value;
+                sel.classList.remove('is-open');
+                // auto submit form
+                input.closest('form')?.submit();
+            });
+        });
+
+        document.addEventListener('click', () => sel.classList.remove('is-open'));
+    });
+});

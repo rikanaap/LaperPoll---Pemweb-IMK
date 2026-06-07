@@ -31,26 +31,51 @@
                 >
             </div>
 
-            <select name="verif" onchange="filterForm.submit()">
-                <option value="">Semua Status</option>
-                <option value="verified"   {{ request('verif') === 'verified'   ? 'selected' : '' }}>Verified</option>
-                <option value="unverified" {{ request('verif') === 'unverified' ? 'selected' : '' }}>Unverified</option>
-            </select>
+                        @php
+                $verif = request('verif') ?? '';
+                $role  = request('role')  ?? '';
+            @endphp
 
-            <select name="role" onchange="filterForm.submit()">
-                <option value="">Semua Role</option>
-                <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="user"  {{ request('role') === 'user'  ? 'selected' : '' }}>User</option>
-            </select>
+            {{-- Ganti select verif --}}
+            <div class="custom-select">
+                <input type="hidden" name="verif" value="{{ $verif }}">
+                <div class="custom-select__trigger">
+                    <span class="custom-select__label">
+                        {{ $verif === 'verified' ? 'Verified' : ($verif === 'unverified' ? 'Unverified' : 'Semua Status') }}
+                    </span>
+                    <span class="material-icons-round custom-select__arrow">expand_more</span>
+                </div>
+                <div class="custom-select__dropdown">
+                    <div class="custom-select__option {{ $verif === '' ? 'is-selected' : '' }}" data-value="">Semua Status</div>
+                    <div class="custom-select__option {{ $verif === 'verified' ? 'is-selected' : '' }}" data-value="verified">Verified</div>
+                    <div class="custom-select__option {{ $verif === 'unverified' ? 'is-selected' : '' }}" data-value="unverified">Unverified</div>
+                </div>
+            </div>
+
+            {{-- Ganti select role --}}
+            <div class="custom-select">
+                <input type="hidden" name="role" value="{{ $role }}">
+                <div class="custom-select__trigger">
+                    <span class="custom-select__label">
+                        {{ $role === 'admin' ? 'Admin' : ($role === 'user' ? 'User' : 'Semua Role') }}
+                    </span>
+                    <span class="material-icons-round custom-select__arrow">expand_more</span>
+                </div>
+                <div class="custom-select__dropdown">
+                    <div class="custom-select__option {{ $role === '' ? 'is-selected' : '' }}" data-value="">Semua Role</div>
+                    <div class="custom-select__option {{ $role === 'admin' ? 'is-selected' : '' }}" data-value="admin">Admin</div>
+                    <div class="custom-select__option {{ $role === 'user' ? 'is-selected' : '' }}" data-value="user">User</div>
+                </div>
+            </div>
 
             <button type="submit" hidden>Cari</button>
 
-            @if(request()->hasAny(['search', 'verif', 'role']))
+            <!-- @if(request('verif') || request('role'))
                 <a href="{{ route('admin.user.index') }}" class="btn btn--secondary btn--sm">
                     <span class="material-icons-round">close</span>
                     Reset
                 </a>
-            @endif
+            @endif -->
 
         </form>
     </div>
@@ -169,7 +194,7 @@
                             <span class="material-icons-round">group</span>
                             <h3>Belum ada user</h3>
                             <p>
-                                {{ request()->hasAny(['search', 'verif', 'role'])
+                                {{ (request('verif') || request('role'))
                                     ? 'Tidak ada user yang cocok dengan filter yang dipilih.'
                                     : 'User yang mendaftar akan muncul di sini.' }}
                             </p>
@@ -395,7 +420,21 @@ function submitEdit(route) {
 
 // ── Delete ────────────────────────────────────────────────
 function confirmDelete(url, name) {
-    if (!confirm(`Hapus user "${name}"?\nSemua data terkait akan ikut terhapus.`)) return;
+    openModal(
+        'Hapus User',
+        `<p style="font-size:.875rem;color:var(--text-secondary)">
+            Yakin ingin menghapus user <strong>${name}</strong>?
+            Semua data terkait akan <strong>ikut terhapus</strong> dan tidak dapat dibatalkan.
+        </p>`,
+        `<button class="btn btn--secondary" onclick="closeModal()">Batal</button>
+         <button class="btn btn--danger" onclick="doDelete('${url}')">
+             <span class="material-icons-round">delete</span> Hapus
+         </button>`
+    );
+}
+
+function doDelete(url) {
+    closeModal();
     submitForm(url, 'DELETE', {});
 }
 

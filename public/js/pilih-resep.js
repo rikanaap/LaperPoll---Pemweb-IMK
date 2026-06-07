@@ -1,6 +1,6 @@
 // pilih-resep.js
 // Kompatibel dengan meal-planner.js baru
-// Format slot: ?tanggal=2026-05-27&meal_time=SA
+// Format slot: ?tanggal=2026-05-27&meal_time=SA&max_kal=2000&used_kal=550
 
 (function () {
 'use strict';
@@ -10,10 +10,13 @@ const HARI        = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 const BULAN       = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
 
 // ── Parse slot dari query string ──────────────────────────────
-// Format: ?tanggal=2026-05-27&meal_time=SA
-const params   = new URLSearchParams(window.location.search);
-const slotDate = params.get('tanggal')   || null;
-const slotWaktu= params.get('meal_time') || null;
+// Format: ?tanggal=2026-05-27&meal_time=SA&max_kal=2000&used_kal=550
+const params    = new URLSearchParams(window.location.search);
+const slotDate  = params.get('tanggal')   || null;
+const slotWaktu = params.get('meal_time') || null;
+const maxKal    = parseInt(params.get('max_kal'))  || 0;
+const usedKal   = parseInt(params.get('used_kal')) || 0;
+const sisaKal   = maxKal > 0 ? Math.max(0, maxKal - usedKal) : 0;
 
 // ── Header info slot ──────────────────────────────────────────
 const slotLabel   = document.getElementById('slotLabel');
@@ -35,6 +38,35 @@ if (slotDate && slotWaktu) {
                 ${wLabel}
             </span>
         `;
+    }
+
+    // ── Banner kalori (hanya tampil kalau ada target) ──────────
+    if (maxKal > 0) {
+        const kalBanner = document.createElement('div');
+        kalBanner.id = 'prKaloriBanner';
+        kalBanner.className = 'pr-kalori-banner font-jakarta';
+        const pct = Math.min(100, Math.round((usedKal / maxKal) * 100));
+        const overTarget = usedKal >= maxKal;
+        kalBanner.innerHTML = `
+            <div class="pr-kalori-banner-row">
+                <span class="material-icons-round pr-kal-icon">${overTarget ? 'warning_amber' : 'local_fire_department'}</span>
+                <div class="pr-kalori-banner-text">
+                    <span class="pr-kal-label font-semibold">
+                        ${overTarget
+                            ? 'Target kalori hari ini sudah penuh!'
+                            : `Sisa kalori hari ini: <strong>${sisaKal} kal</strong>`
+                        }
+                    </span>
+                    <span class="pr-kal-sub font-regular">${usedKal} / ${maxKal} kal terpakai</span>
+                </div>
+            </div>
+            <div class="pr-kal-track">
+                <div class="pr-kal-fill ${overTarget ? 'pr-kal-over' : ''}" style="width:${pct}%"></div>
+            </div>
+        `;
+        // Sisipkan setelah pr-header
+        const header = document.querySelector('.pr-header');
+        if (header) header.insertAdjacentElement('afterend', kalBanner);
     }
 } else {
     if (slotLabel)   slotLabel.textContent = 'Pilih slot di Meal Planner terlebih dahulu.';
@@ -89,6 +121,9 @@ function renderResep(data) {
         card.className = 'resep-card' + (noSlot ? ' no-slot' : '');
         const dur  = formatDurasi(resep.cook_duration);
 
+        const isAktif = !noSlot && window.resepAktifId && resep.id === window.resepAktifId;
+        if (isAktif) card.classList.add('is-aktif');
+
         card.innerHTML = `
             <div class="resep-thumb">
                 ${resep.thumbnail
@@ -98,7 +133,10 @@ function renderResep(data) {
                 ${resep.kalori ? `<span class="resep-thumb-kal">${resep.kalori} kal</span>` : ''}
             </div>
             <div class="resep-detail">
-                <p class="resep-nama font-jakarta font-bold">${esc(resep.nama)}</p>
+                <div style="display:flex;align-items:center;gap:.4rem;">
+                    <p class="resep-nama font-jakarta font-bold">${esc(resep.nama)}</p>
+                    ${isAktif ? `<span class="pr-badge-aktif font-jakarta">Terpilih</span>` : ''}
+                </div>
                 <div class="resep-meta">
                     ${resep.kalori ? `
                     <span class="resep-kal-badge font-jakarta">
@@ -112,8 +150,16 @@ function renderResep(data) {
                     </span>` : ''}
                 </div>
             </div>
-            <div class="resep-arrow-wrap">
-                <span class="material-icons-round resep-arrow">arrow_forward_ios</span>
+            <div class="resep-actions">
+                ${resep.detail_url ? `
+                <a href="${esc(resep.detail_url)}" target="_blank"
+                   class="resep-info-btn" title="Lihat detail resep"
+                   onclick="event.stopPropagation()">
+                    <span class="material-icons-round">info_outline</span>
+                </a>` : ''}
+                <div class="resep-arrow-wrap">
+                    <span class="material-icons-round resep-arrow">arrow_forward_ios</span>
+                </div>
             </div>
         `;
 
@@ -125,8 +171,92 @@ function renderResep(data) {
 // ── Pilih resep → POST ke API → redirect ke meal planner ─────
 let isSaving = false;
 
+
+// ── Kalori warning modal ──────────────────────────────────────
+function showKaloriWarning(namaResep, kalResep, proyeksi, lebih, target) {
+    return new Promise(resolve => {
+        let modal = document.getElementById('prKaloriModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'prKaloriModal';
+            modal.style.cssText = 'position:fixed;inset:0;z-index:700;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:rgba(0,0,0,0.5);';
+            modal.innerHTML = `
+                <div class="pr-kal-modal-box">
+                    <div class="pr-kal-modal-icon">
+                        <span class="material-icons-round">warning_amber</span>
+                    </div>
+                    <h3 class="pr-kal-modal-title font-jakarta font-bold" id="prKalModalTitle"></h3>
+                    <p class="pr-kal-modal-desc font-jakarta font-regular" id="prKalModalDesc"></p>
+                    <div class="pr-kal-modal-actions">
+                        <button class="pr-kal-btn-cancel font-jakarta font-semibold" id="prKalBtnBatal">Batalkan</button>
+                        <button class="pr-kal-btn-confirm font-jakarta font-bold" id="prKalBtnLanjut">
+                            <span class="material-icons-round">check</span>
+                            Tetap Pilih
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        document.getElementById('prKalModalTitle').textContent = `Kalori melebihi target!`;
+        document.getElementById('prKalModalDesc').innerHTML =
+            `<strong>${namaResep}</strong> memiliki <strong>${kalResep} kal</strong>.<br>` +
+            `Total akan menjadi <strong>${proyeksi} kal</strong> dari target <strong>${target} kal</strong> ` +
+            `(+${lebih} kal).<br><br>Tetap pilih resep ini?`;
+        modal.style.display = 'flex';
+
+        const cleanup = (result) => {
+            modal.style.display = 'none';
+            document.getElementById('prKalBtnLanjut').removeEventListener('click', onLanjut);
+            document.getElementById('prKalBtnBatal').removeEventListener('click', onBatal);
+            modal.removeEventListener('click', onOverlay);
+            resolve(result);
+        };
+        const onLanjut  = () => cleanup(true);
+        const onBatal   = () => cleanup(false);
+        const onOverlay = (e) => { if (e.target === modal) cleanup(false); };
+
+        document.getElementById('prKalBtnLanjut').addEventListener('click', onLanjut);
+        document.getElementById('prKalBtnBatal').addEventListener('click', onBatal);
+        modal.addEventListener('click', onOverlay);
+    });
+}
+
+// ── Toast helper ──────────────────────────────────────────────
+function showToast(msg) {
+    let t = document.getElementById('prToast');
+    if (!t) {
+        t = document.createElement('div');
+        t.id = 'prToast';
+        t.style.cssText = 'position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(2rem);' +
+            'background:#DC2626;color:white;padding:.65rem 1.25rem;border-radius:2rem;font-size:.82rem;' +
+            'font-family:var(--font-jakarta);font-weight:600;opacity:0;transition:all .3s;z-index:600;white-space:nowrap;';
+        document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateX(-50%) translateY(2rem)';
+    }, 3000);
+}
+
 async function pilihResep(resep) {
     if (isSaving) return;
+
+    // ── Warning kalori: tampilkan konfirmasi jika melewati target ──
+    if (maxKal > 0 && resep.kalori > 0) {
+        const proyeksi = usedKal + resep.kalori;
+        if (proyeksi > maxKal) {
+            const lebih = proyeksi - maxKal;
+            const lanjut = await showKaloriWarning(resep.nama, resep.kalori, proyeksi, lebih, maxKal);
+            if (!lanjut) return; // user batalkan
+        }
+    }
+
     isSaving = true;
 
     const overlay = document.getElementById('loadingOverlay');
@@ -158,24 +288,52 @@ async function pilihResep(resep) {
             });
             window.location.href = `${window.MP.mealPlannerUrl}?${p.toString()}`;
         } else {
-            alert('Gagal menyimpan resep, coba lagi.');
+            showToast('Gagal menyimpan resep, coba lagi.');
             isSaving = false;
             if (overlay) overlay.style.display = 'none';
         }
     } catch (err) {
         console.error(err);
-        alert('Gagal menghubungi server.');
+        showToast('Gagal menghubungi server.');
         isSaving = false;
         if (overlay) overlay.style.display = 'none';
     }
 }
 
-// ── Search ────────────────────────────────────────────────────
-document.getElementById('searchResep')?.addEventListener('input', e => {
-    const q        = e.target.value.toLowerCase().trim();
-    const filtered = q ? allResep.filter(r => r.nama.toLowerCase().includes(q)) : allResep;
+// ── Sort & Filter state ──────────────────────────────────────
+let sortMode    = 'az';    // 'az' | 'kal-asc' | 'kal-desc' | 'dur-asc'
+let searchQuery = '';
+
+function getFiltered() {
+    let data = [...allResep];
+    if (searchQuery) data = data.filter(r => r.nama.toLowerCase().includes(searchQuery));
+    if (sortMode === 'az')       data.sort((a,b) => a.nama.localeCompare(b.nama));
+    if (sortMode === 'kal-asc')  data.sort((a,b) => (a.kalori||0) - (b.kalori||0));
+    if (sortMode === 'kal-desc') data.sort((a,b) => (b.kalori||0) - (a.kalori||0));
+    if (sortMode === 'dur-asc')  data.sort((a,b) => (a.cook_duration||'') < (b.cook_duration||'') ? -1 : 1);
+    return data;
+}
+
+function applyFilter() {
+    const filtered = getFiltered();
     renderResep(filtered);
     updateCount(allResep.length, filtered.length);
+}
+
+// ── Search ────────────────────────────────────────────────────
+document.getElementById('searchResep')?.addEventListener('input', e => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    applyFilter();
+});
+
+// ── Sort chips ────────────────────────────────────────────────
+document.getElementById('prSortChips')?.addEventListener('click', e => {
+    const chip = e.target.closest('[data-sort]');
+    if (!chip) return;
+    sortMode = chip.dataset.sort;
+    document.querySelectorAll('#prSortChips [data-sort]').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    applyFilter();
 });
 
 // ── Count helper ──────────────────────────────────────────────
@@ -190,7 +348,6 @@ function updateCount(total, filtered) {
 }
 
 // ── Init ──────────────────────────────────────────────────────
-renderResep(allResep);
-updateCount(allResep.length, allResep.length);
+applyFilter();
 
 })();

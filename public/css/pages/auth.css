@@ -161,3 +161,304 @@
     border-color: #FCA5A5 !important;
     background: #FEF3F2 !important;
 }
+/* ── REALTIME VALIDATION ADDITIONS ── */
+.input-wrapper-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-self: stretch;
+}
+
+.input-success {
+    border: 1.5px solid #86EFAC !important;
+    background: #F0FDF4 !important;
+}
+
+.field-hint {
+    font-size: 0.7rem;
+    font-family: var(--font-jakarta);
+    min-height: 0.9rem;
+    padding-left: 0.25rem;
+    transition: color 0.2s;
+    color: transparent;
+}
+
+.hint-error {
+    color: #B91C1C;
+}
+
+.hint-success {
+    color: #15803D;
+}
+
+.eye-toggle {
+    cursor: pointer;
+    color: var(--primary-dark-hover);
+    font-size: 1.1rem !important;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.eye-toggle:hover {
+    color: var(--secondary-normal);
+}
+
+.input-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.google-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    align-self: stretch;
+    padding: 0.75rem 1.25rem;
+    background-color: #ffffff;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.google-login:hover {
+    background-color: #F8FAFF;
+    border-color: #4285F4;
+    box-shadow: 0 3px 10px rgba(66, 133, 244, 0.15);
+    transform: translateY(-1px);
+}
+
+.google-login:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 3px rgba(66,133,244,0.1);
+}
+
+.google-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+.google-login-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #3C4043;
+    letter-spacing: 0.01em;
+}
+
+/* ── INPUT FOCUS STATE ── */
+.input {
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.input:focus-within {
+    border-color: var(--secondary-normal);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(23, 45, 35, 0.08);
+}
+
+.input:focus-within .material-icons-round {
+    color: var(--secondary-normal);
+}
+
+/* ── SUBMIT BUTTON HOVER & ACTIVE ── */
+.input-submit {
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.input-submit:hover {
+    background: var(--secondary-normal-hover);
+    box-shadow: 0 4px 12px rgba(23, 45, 35, 0.18);
+}
+
+.input-submit:active {
+    transform: scale(0.98);
+    box-shadow: none;
+}
+
+/* ── GOOGLE BUTTON HOVER & ACTIVE ── */
+.google-login {
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.google-login:hover {
+    border-color: var(--secondary-normal);
+    background: #F8FBF9;
+    box-shadow: 0 2px 8px rgba(23, 45, 35, 0.1);
+    transform: translateY(-1px);
+}
+
+.google-login:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ── LINK HOVER ── */
+.auth-link a {
+    transition: color 0.2s;
+}
+
+.auth-link a:hover {
+    color: var(--accent-normal);
+}
+
+.forgot-link, a.font-jakarta.text-body {
+    transition: color 0.2s;
+}
+
+a[href*="forgot"]:hover {
+    color: var(--secondary-normal);
+}
+
+@keyframes logoSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    animation: logoSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── ANIMASI MASUK FORM ── */
+@keyframes formSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form {
+    animation: formSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
+}
+
+/* ── ANIMASI MASUK INPUT ── */
+@keyframes inputSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.input {
+    animation: inputSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
+}
+
+.input:nth-of-type(2) {
+    animation-delay: 0.4s;
+}
+
+/* ── ANIMASI MASUK BUTTON ── */
+@keyframes buttonSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.input-submit {
+    animation: buttonSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s backwards;
+}
+
+/* ── LOADING DOTS ANIMATION ── */
+@keyframes loaderPulse {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.loader-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: white;
+    animation: loaderPulse 1.2s ease-in-out infinite;
+}
+
+.loader-dot:nth-child(1) { animation-delay: 0s; }
+.loader-dot:nth-child(2) { animation-delay: 0.2s; }
+.loader-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ── ERROR BOX STYLING ── */
+.auth-error-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background-color: #FEF3F2;
+    border: 1.5px solid #FCA5A5;
+    border-radius: 0.75rem;
+    animation: slideInDown 0.3s ease;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-error-box .material-icons-round {
+    font-size: 1.25rem;
+    color: #B91C1C;
+    flex-shrink: 0;
+}
+
+.auth-error-box p {
+    color: #B91C1C;
+    margin: 0;
+}
+
+/* ── RESEND BUTTON STYLING ── */
+.auth-resend-btn {
+    background-color: var(--primary-normal-hover) !important;
+}
+
+.auth-resend-btn:disabled {
+    background-color: var(--primary-normal-hover) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-resend-btn:not(:disabled):hover {
+    background-color: var(--primary-normal-active) !important;
+}
+
+/* ── BUTTON LOADING STATE ── */
+.input-submit:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+body {
+    padding: 0 0 !important
+}

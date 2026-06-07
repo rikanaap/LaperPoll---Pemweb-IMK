@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Ulasan - {{ $resep->title }}')
+@section('title', 'Ulasan - ' . $resep->title)
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/pages/ulasan.css') }}">
@@ -15,7 +15,7 @@
     <div class="ul-resep-header">
         <div class="ul-resep-thumb-wrap">
             @if($resep->thumbnail)
-                <img src="{{ asset($resep->thumbnail) }}" alt="{{ $resep->title }}"
+                <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
                      class="ul-resep-thumb"
                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                 <div class="ul-resep-thumb-placeholder" style="display:none">
@@ -137,7 +137,7 @@
                         <div class="ul-existing-photos">
                             @foreach($feedback->photos as $photo)
                                 <div class="ul-existing-wrap" id="existing-{{ $photo->id }}">
-                                    <img src="{{ asset($photo->path) }}" alt="Foto ulasan" class="ul-existing-img">
+                                    <img src="{{ Storage::url($photo->path) }}" alt="Foto ulasan" class="ul-existing-img">
                                     <label class="ul-existing-delete">
                                         <input type="checkbox" name="delete_photos[]"
                                                value="{{ $photo->id }}" class="ul-delete-check"
@@ -168,7 +168,7 @@
                 </div>
 
                 {{-- Submit --}}
-                <button type="submit" class="ul-btn-submit font-semibold" id="ulBtnSubmit">
+                <button type="submit" class="ul-btn-submit font-semibold" id="ulBtnSubmit" onclick="ulSubmitLoading(this)">
                     <span class="material-icons-round">{{ isset($editMode) ? 'save' : 'send' }}</span>
                     {{ isset($editMode) ? 'Simpan Perubahan' : 'Kirim Ulasan' }}
                 </button>
@@ -225,7 +225,7 @@
             @if($myFeedback->photos->isNotEmpty())
                 <div class="ul-item-photos">
                     @foreach($myFeedback->photos as $photo)
-                        <img src="{{ asset($photo->path) }}" alt="Foto ulasan"
+                        <img src="{{ Storage::url($photo->path) }}" alt="Foto ulasan"
                              class="ul-item-photo" onclick="openModal(this.src)">
                     @endforeach
                 </div>
@@ -286,7 +286,7 @@
                         @if($fb->photos->isNotEmpty())
                             <div class="ul-item-photos">
                                 @foreach($fb->photos as $photo)
-                                    <img src="{{ asset($photo->path) }}" alt="Foto ulasan"
+                                    <img src="{{ Storage::url($photo->path) }}" alt="Foto ulasan"
                                          class="ul-item-photo" onclick="openModal(this.src)">
                                 @endforeach
                             </div>

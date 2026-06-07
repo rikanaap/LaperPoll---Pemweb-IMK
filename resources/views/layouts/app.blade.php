@@ -13,6 +13,9 @@
     {{-- Material Icons --}}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
+      <link rel="icon" type="image/png" href="{{ asset('assets/images/Logo_Laperpoll.png') }}">
+<link rel="apple-touch-icon" href="{{ asset('assets/images/Logo_Laperpoll.png') }}">
+
     {{-- Global CSS --}}
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <link rel="stylesheet" href="{{ asset('css/atomic.css') }}">

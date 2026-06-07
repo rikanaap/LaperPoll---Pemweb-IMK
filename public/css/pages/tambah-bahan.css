@@ -548,7 +548,7 @@ input[type="date"] { font-family: 'Plus Jakarta Sans', monospace; color-scheme: 
 /* ── NOTIFIKASI DUPLIKAT ── */
 .tb-duplikat-notif {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.5rem;
     padding: 0.65rem 0.875rem;
     background-color: #EFF6FF;
@@ -557,12 +557,12 @@ input[type="date"] { font-family: 'Plus Jakarta Sans', monospace; color-scheme: 
     color: #1D4ED8;
     font-size: 0.8rem;
     margin-top: 0.5rem;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 .tb-duplikat-notif .material-icons-round {
-    font-size: 1rem !important;
+    font-size: 1.1rem !important;
     flex-shrink: 0;
-    margin-top: 0.05rem;
     color: #2563EB;
 }
-.tb-duplikat-notif strong { font-weight: 700; color: #1D4ED8; }
+.tb-duplikat-notif span:last-child { flex: 1; }
+.tb-duplikat-notif strong { font-weight: 700; color: #1E40AF; }

@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\AdminResepController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminBahanController;
 use App\Http\Controllers\Admin\AdminFilterController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\TambahResepController;
 
 // ─── PUBLIC ──────────────────────────────────────────────────────────────────
@@ -45,6 +46,10 @@ Route::get('/public/view/{filename}', function ($filename) {
     }
     return Response::file($path);
 })->name('public');
+
+
+Route::get('/auth/google/redirect', [GoogleController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/sign-in', [AuthController::class, 'signIn'])
@@ -134,7 +139,9 @@ Route::middleware(['auth'])->group(function () {
     // ⚠️ pakai-resep HARUS di atas /{id}
     Route::post('/kulkas-digital/pakai-resep', [KulkasDigitalController::class, 'pakaiResep'])->name('kulkas.pakai-resep');
     Route::delete('/kulkas-digital/{id}',      [KulkasDigitalController::class, 'destroy'])->name('kulkas.destroy');
-    Route::post('/api/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])->name('kulkas.bahan.baru');
+    Route::post('/api/bahans/baru', [KulkasDigitalController::class, 'storeBahanBaru'])
+        ->name('kulkas.bahan.baru')
+        ->middleware('throttle:20,1');
 
     // ── MEAL PLANNER ──────────────────────────────────────────────────────────
     Route::get('/meal-planner', [MealPlannerController::class, 'index'])->name('meal-planner.index');
@@ -156,7 +163,6 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('api/nota-belanja')->group(function () {
         Route::patch('/toggle/{id}',    [NotaBelanjaController::class, 'toggle'])->name('api.nota.toggle');
         Route::delete('/hapus-selesai', [NotaBelanjaController::class, 'hapusSelesai'])->name('api.nota.hapus-selesai');
-        Route::delete('/{id}',          [NotaBelanjaController::class, 'destroy'])->name('api.nota.destroy');
     });
 
     // ── PROFILE ───────────────────────────────────────────────────────────────
@@ -180,17 +186,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────
-
-Route::prefix('admin/bahans')->name('admin.bahans.')->group(function () {
-    Route::get('/',             [BahansController::class, 'index'])->name('index');
-    Route::get('/tambah',       [BahansController::class, 'create'])->name('create');
-    Route::post('/',            [BahansController::class, 'store'])->name('store');
-    Route::get('/{bahan}/edit', [BahansController::class, 'edit'])->name('edit');
-    Route::put('/{bahan}',      [BahansController::class, 'update'])->name('update');
-    Route::delete('/{bahan}',   [BahansController::class, 'destroy'])->name('destroy');
-});
-
-
 Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function () {
 
     Route::get('/',        [AdminDashboardController::class, 'index'])->name('dashboard');

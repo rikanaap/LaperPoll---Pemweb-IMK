@@ -151,9 +151,10 @@
         const notifEl = document.getElementById('tbDuplikatNotif');
         if (stokAda > 0) {
             if (notifEl) {
-                notifEl.innerHTML = `<span class="material-icons-round">info_outline</span>
-                    Kamu sudah punya <strong>${stokAda} gram</strong> ${bahan.nama} di kulkas.
-                    Ini akan ditambahkan sebagai pembelian baru.`;
+                notifEl.innerHTML = `
+                    <span class="material-icons-round">info_outline</span>
+                    <span>Kamu sudah punya <strong>${stokAda} gram ${bahan.nama}</strong> di kulkas — ini akan ditambahkan sebagai pembelian baru.</span>
+                `;
                 notifEl.style.display = 'flex';
             }
         } else {
