@@ -32,13 +32,6 @@
     @if($hamburger)
     <button class="navbar-hamburger-btn" id="profileHamburger" aria-label="Buka menu">
         <div class="navbar-hamburger-inner">
-            @if($user)
-            <img src="{{ $user->profile_photo
-                ? Storage::url($user->profile_photo)
-                : asset('assets/images/Image_DummyProfile.png') }}"
-                alt="Foto profil"
-                class="navbar-hamburger-avatar">
-            @endif
             <div class="navbar-hamburger-lines">
                 <span></span>
                 <span></span>

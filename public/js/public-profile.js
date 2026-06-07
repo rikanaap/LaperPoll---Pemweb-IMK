@@ -150,12 +150,20 @@ function openPubFollowModal(type) {
                 return;
             }
             list.innerHTML = data.users.map(u => `
-                <a href="${PUB_PROFILE_BASE_URL}/${u.id}" class="follow-user-item">
+                <a href="${PUB_PROFILE_BASE_URL}/${u.id}"
+                   class="follow-user-item"
+                   title="Lihat profil ${escHtml(u.name)}">
                     <img src="${u.profile_photo || PUB_DUMMY_AVATAR}"
-                         alt="${u.name}" class="follow-user-avatar"
+                         alt="${escHtml(u.name)}"
+                         class="follow-user-avatar"
                          onerror="this.src='${PUB_DUMMY_AVATAR}'">
-                    <span class="follow-user-name font-semibold">${u.name}</span>
-                    ${u.is_following ? '<span class="follow-user-badge">Mengikuti</span>' : ''}
+                    <div class="follow-user-info">
+                        <span class="follow-user-name">${escHtml(u.name)}</span>
+                    </div>
+                    ${u.is_following
+                        ? '<span class="follow-user-badge">Mengikuti</span>'
+                        : ''}
+                    <span class="material-icons-round follow-user-arrow">chevron_right</span>
                 </a>
             `).join('');
         })
@@ -174,3 +182,8 @@ function closePubFollowModal() {
 window.openPubFollowModal  = openPubFollowModal;
 window.closePubFollowModal = closePubFollowModal;
 window.lpToast             = lpToast;
+function escHtml(str) {
+    return String(str || '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}

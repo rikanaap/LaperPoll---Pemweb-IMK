@@ -686,7 +686,7 @@ button.stat-bubble {
     border-bottom: 1px solid var(--primary-normal);
     flex-shrink: 0;
 }
-.follow-modal-title { font-size: 1rem; color: var(--secondary-normal); }
+.follow-modal-title { font-size: 1rem; color: var(--secondary-normal); font-family: var(--font-jakarta); font-weight: 700; }
 .follow-modal-close {
     width: 2rem; height: 2rem; border-radius: 50%;
     background: var(--primary-normal); border: none;
@@ -701,7 +701,7 @@ button.stat-bubble {
 }
 
 /* Loading */
-.follow-loading {
+.follow-loading { font-family: var(--font-jakarta);
     display: flex; flex-direction: column; align-items: center;
     gap: 0.5rem; padding: 2rem; color: var(--primary-darker); font-size: 0.8rem;
 }
@@ -1082,4 +1082,124 @@ a.avatar-ring:hover {
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+}
+
+/* ══════════════════════════════════════════════
+   FOLLOW MODAL REDESIGN — final override
+   ══════════════════════════════════════════════ */
+
+.follow-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.follow-user-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: 0.875rem;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s, border-color 0.15s;
+    border: 1px solid var(--primary-normal);
+    background: white;
+    font-family: var(--font-jakarta);
+    cursor: pointer;
+}
+.follow-user-item:hover {
+    background: var(--orange-light);
+    border-color: var(--orange-light-active);
+    transform: translateX(3px);
+}
+.follow-user-item:active { transform: scale(0.98); }
+
+.follow-user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2.5px solid var(--orange-normal);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(230,81,0,0.18);
+}
+
+.follow-user-info { flex: 1; min-width: 0; }
+
+.follow-user-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--secondary-normal);
+    font-family: var(--font-jakarta);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+.follow-user-sub {
+    font-size: 0.65rem;
+    color: var(--primary-darker);
+    font-family: var(--font-jakarta);
+}
+
+/* Badge "Mengikuti" */
+.follow-user-badge {
+    font-size: 0.65rem !important;
+    font-weight: 600 !important;
+    font-family: var(--font-jakarta) !important;
+    color: var(--orange-dark) !important;
+    background: var(--orange-light) !important;
+    border: 1px solid var(--orange-light-active) !important;
+    padding: 0.2rem 0.6rem !important;
+    border-radius: 2rem !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* Arrow icon di tiap item */
+.follow-user-arrow {
+    font-size: 1rem !important;
+    color: var(--primary-dark);
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+}
+.follow-user-item:hover .follow-user-arrow { opacity: 1; color: var(--orange-normal); }
+
+/* Loading state */
+.follow-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    font-family: var(--font-jakarta);
+    font-size: 0.8rem;
+    color: var(--primary-darker);
+}
+
+/* Empty state */
+.follow-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    font-family: var(--font-jakarta);
+    font-size: 0.8rem;
+    color: var(--primary-darker);
+    text-align: center;
+}
+.follow-empty .material-icons-round { font-size: 2.5rem; color: var(--primary-dark); opacity: 0.3; }
+
+/* Modal header font */
+.follow-modal-title {
+    font-family: var(--font-jakarta) !important;
+    font-weight: 700 !important;
+    font-size: 1rem;
+    color: var(--secondary-normal);
 }

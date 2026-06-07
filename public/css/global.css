@@ -59,11 +59,10 @@ form{
 :root {
   /* BASIS */
   --spacing-unit: 0.25rem;
-
   /*! Font */
-  --font-poppins: "Poppins", sans-serif;
+  --font-poppins: "Plus Jakarta Sans", sans-serif; /* aliased ke Jakarta — hanya 1 font */
   --font-jakarta: "Plus Jakarta Sans", sans-serif;
-
+  
   --text-caption: 0.625rem;
   --text-body: 0.813rem;
   --text-title2: 1rem;
@@ -125,6 +124,15 @@ form{
 
   /*! Device Max-Width */
   --mobile-width: 412px
+}
+
+*, *::before, *::after {
+    font-family: var(--font-jakarta);
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: var(--font-jakarta);
 }
 
 /* font family utilities */
@@ -613,29 +621,37 @@ form{
     padding: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
+/* Lingkaran oranye brand LaperPoll */
 .navbar-hamburger-inner {
-    position: relative;
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    border: 2px solid white;
+    background: var(--orange-normal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-shadow: 0 2px 10px rgba(230,81,0,0.35);
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.navbar-hamburger-btn:hover .navbar-hamburger-inner {
+    background: var(--orange-normal-hover);
+    transform: scale(1.07);
+    box-shadow: 0 4px 16px rgba(230,81,0,0.45);
+}
+.navbar-hamburger-btn.open .navbar-hamburger-inner {
+    background: var(--accent-normal);
+    box-shadow: 0 4px 16px rgba(236,68,72,0.35);
 }
 
-.navbar-hamburger-avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    filter: brightness(0.55);
-}
+/* Tidak ada avatar lagi — hanya 3 garis putih */
+.navbar-hamburger-avatar { display: none; }
 
 .navbar-hamburger-lines {
-    position: absolute;
-    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -649,10 +665,10 @@ form{
     height: 2px;
     background: white;
     border-radius: 2px;
-    transition: transform 0.25s, opacity 0.2s;
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
 }
 
-/* Animasi open state */
+/* Animasi → X saat open */
 .navbar-hamburger-btn.open .navbar-hamburger-lines span:nth-child(1) {
     transform: translateY(6px) rotate(45deg);
 }
@@ -736,4 +752,46 @@ select,
 textarea,
 a {
     font-family: var(--font-jakarta);
+}
+
+
+
+.navbar-hamburger-lines {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    position: static !important;
+    inset: unset !important;
+}
+
+.navbar-hamburger-lines span {
+    display: block !important;
+    width: 14px !important;
+    height: 2px !important;
+    background: white !important;
+    border-radius: 2px !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s !important;
+}
+
+/* Animasi X saat open */
+.navbar-hamburger-btn.open .navbar-hamburger-lines span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg) !important;
+}
+.navbar-hamburger-btn.open .navbar-hamburger-lines span:nth-child(2) {
+    opacity: 0 !important;
+    transform: scaleX(0) !important;
+}
+.navbar-hamburger-btn.open .navbar-hamburger-lines span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg) !important;
 }
