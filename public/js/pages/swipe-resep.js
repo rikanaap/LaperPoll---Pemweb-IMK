@@ -106,10 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className       = `swipe-card swipe-card--${rasa.colorClass}`;
             card.style.zIndex    = 100 - index;
             card.dataset.rasaId  = rasa.id;
-            // ── TAMBAHAN: link ke detail resep ──
-            card.dataset.detailUrl = `/detail-resep/${rasa.id}`;
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `Rasa: ${rasa.title}`);
+            // Nonaktifkan klik default agar card tidak bisa di-navigate
+            card.style.cursor = 'grab';
             card.innerHTML = `
                 <div class="swipe-card__icon-wrapper" aria-hidden="true">
                     <span class="material-icons-round">restaurant</span>
@@ -162,6 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const { card } = state.drag;
             state.drag = { active: false, startX: 0, currentX: 0, card: null, rasa: null };
             if (card) { card.style.transition = '.3s ease'; card.style.transform = ''; }
+        });
+
+        // Blokir click event di area swipe agar tidak ada navigasi tidak sengaja
+        el.swipeCards.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
     }
 
@@ -310,14 +315,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     init();
-});
-
-// ── Navigasi ke detail resep saat card diklik ──────────────────────────────
-// Event delegation di luar DOMContentLoaded — tidak menyentuh logic swipe di atas
-document.addEventListener('click', function (e) {
-    // Pastikan tidak sedang swipe (ada drag aktif)
-    const card = e.target.closest('[data-detail-url]');
-    if (card && Math.abs(parseInt(card.style.transform?.match(/-?\d+/)?.[0] || 0)) < 10) {
-        window.location.href = card.dataset.detailUrl;
-    }
 });

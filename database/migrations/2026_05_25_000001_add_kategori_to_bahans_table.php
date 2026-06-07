@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -13,20 +15,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Cek dulu apakah kolom sudah ada (idempotent — aman dijalankan ulang)
-        $columns = DB::select("SHOW COLUMNS FROM bahans LIKE 'kategori'");
-        if (empty($columns)) {
-            DB::statement("SET SESSION sql_mode = ''");
-            DB::statement("ALTER TABLE bahans ADD COLUMN kategori VARCHAR(50) NULL DEFAULT NULL AFTER nama");
-            DB::statement("SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'");
-        }
+        Schema::table('bahans', function (Blueprint $table) {
+            // Cek dulu apakah kolom sudah ada (idempotent)
+            if (!Schema::hasColumn('bahans', 'kategori')) {
+                $table->string('kategori', 50)->nullable()->after('nama');
+            }
+        });
     }
 
     public function down(): void
     {
-        $columns = DB::select("SHOW COLUMNS FROM bahans LIKE 'kategori'");
-        if (!empty($columns)) {
-            DB::statement("ALTER TABLE bahans DROP COLUMN kategori");
-        }
+        Schema::table('bahans', function (Blueprint $table) {
+            // Cek dulu apakah kolom ada sebelum drop
+            if (Schema::hasColumn('bahans', 'kategori')) {
+                $table->dropColumn('kategori');
+            }
+        });
     }
 };

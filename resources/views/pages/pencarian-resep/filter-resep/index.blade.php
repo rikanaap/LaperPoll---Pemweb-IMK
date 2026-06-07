@@ -24,19 +24,19 @@
 
         {{-- SIDEBAR --}}
         <aside class="sidebar-filter">
-            <div class="sidebar-header">
-                <h2>Riwayat Pilihan</h2>
-                <p class="text-muted">Bahan yang digunakan untuk mencari resep</p>
-            </div>
+    <div class="sidebar-header">
+        <span class="badge-pill">LaperPoll</span>
+        <h2>Riwayat Pilihan</h2>
+        <p class="text-muted">Bahan yang digunakan untuk mencari resep</p>
+    </div>
 
-            {{-- CHIPS (diisi oleh JS) --}}
-            <div id="chipsContainer" class="selected-chips-wrapper" role="list"></div>
+    <div id="chipsContainer" class="selected-chips-wrapper" role="list"></div>
 
-            <div class="filter-info-box">
-                <span class="material-icons-round">info</span>
-                <p>Kamu bisa menghapus bahan untuk memperbarui hasil resep.</p>
-            </div>
-        </aside>
+    <div class="filter-info-box">
+        <span class="material-icons-round">info</span>
+        <p>Kamu bisa menghapus bahan untuk memperbarui hasil resep.</p>
+    </div>
+</aside>
 
         {{-- CONTENT --}}
         <section class="content-section" aria-label="Daftar resep">

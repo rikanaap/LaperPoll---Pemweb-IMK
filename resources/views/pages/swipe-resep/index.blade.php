@@ -9,7 +9,20 @@
 @section('content')
 <main class="swipe-page font-jakarta">
 
-    <x-navbar :backUrl="route('pencarian.resep')" />
+    @php
+        $allowedBackRoutes = [
+            route('pencarian.resep'),
+            route('landing.index'),
+        ];
+
+        $previousUrl = url()->previous();
+
+        $backUrl = in_array($previousUrl, $allowedBackRoutes)
+            ? $previousUrl
+            : route('landing.index');
+    @endphp
+
+    <x-navbar :backUrl="$backUrl" />
 
     <div class="swipe-wrapper">
         <div class="swipe-split-layout">

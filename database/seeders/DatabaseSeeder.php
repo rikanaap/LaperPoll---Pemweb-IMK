@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             LangkahResepSeeder::class,
             ResepAttachmentSeeder::class,
             ResepBahanSeeder::class,
+            ResepFilterSeeder::class,
             FeedbackSeeder::class,
             FavoriteSeeder::class,
             UserCartSeeder::class,
