@@ -34,7 +34,7 @@
     </div> -->
 
     {{-- Tips --}}
-    <div class="sidebar-tips">
+    <!-- <div class="sidebar-tips">
         <h4 class="sidebar-tips__title">
             <span class="material-icons-round">lightbulb</span>
             Tips
@@ -44,7 +44,7 @@
             <li>Klik "Kembali" untuk ubah pilihan</li>
             <li>Cek % kecocokan di setiap card</li>
         </ul>
-    </div>
+    </div> -->
 </div>
         </aside>
 
