@@ -129,7 +129,7 @@
     transition: background 0.18s;
 }
 .resep-card:hover {
-    border-color: #E65100;
+    /* border-color: #E65100; */
     box-shadow: 0 4px 16px rgba(230, 81, 0, 0.12);
     transform: translateY(-1px);
 }
@@ -159,15 +159,16 @@
 .resep-thumb .material-icons-round { font-size: 1.6rem !important; color: #FECDA3; }
 .resep-thumb-kal {
     position: absolute;
-    bottom: 0; left: 0; right: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background: rgba(140, 42, 26, 0.75);
     color: white;
     font-size: 0.58rem;
     font-family: var(--font-jakarta);
     font-weight: 700;
     text-align: center;
-    padding: 2px 0 3px;
-    border-radius: 0 0 0.75rem 0.75rem;
+    padding: 0 ;
     backdrop-filter: blur(2px);
 }
 
@@ -456,3 +457,119 @@
     display: flex; align-items: center; justify-content: center; gap: 0.3rem;
 }
 .pr-kal-btn-confirm .material-icons-round { font-size: 1rem; }
+/* ================================================================
+   PILIH RESEP — RESPONSIVE LAYOUT BERBEDA PER DEVICE
+   Mobile  : Swipe card / Tinder-style exploration
+   Tablet  : Grid resep + filter di top atau samping
+   Desktop : Grid besar + persistent filter sidebar + preview detail
+   ================================================================ */
+
+/* ── MOBILE (default): Swipe card feel + list ── */
+/* ── DESKTOP: Perbaikan Grid & Resep Card agar Lebih Lega & Cantik ── */
+@media (min-width: 1024px) {
+    .resep-menus {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 1.5rem !important; /* Diperlebar dari 1rem ke 1.5rem agar jarak antar card lebih lega */
+        padding: 1.5rem 2rem 4rem !important;
+        max-width: unset;
+    }
+
+    .resep-card {
+        flex-direction: column !important;
+        padding: 0 !important;
+        overflow: hidden;
+        background: white;
+        border-radius: 1.25rem !important; /* Membuat sudut card melengkung lebih halus & modern */
+        border: 1px solid #F0E8E4 !important;
+        box-shadow: 0 4px 12px rgba(45, 26, 17, 0.03) !important; /* Shadow halus agar card terlihat pop-out */
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease !important;
+    }
+
+    .resep-card:hover {
+        transform: translateY(-6px) !important; /* Efek hover naik sedikit lebih tinggi agar dinamis */
+        box-shadow: 0 12px 24px rgba(140, 42, 26, 0.08) !important; /* Shadow warna hangat saat hover */
+        border-color: #E65100 !important;
+    }
+
+    /* Thumbnail Gambar */
+    .resep-thumb {
+        width: 100% !important;
+        height: 160px !important; /* Dinaikkan dari 130px ke 160px agar gambar resep terlihat proporsional & luas */
+        border-radius: 0 !important;
+        object-fit: cover;
+        border-bottom: 1px solid #F4E8E0;
+    }
+
+    /* Area Informasi Teks */
+    .resep-detail {
+        padding: 1.25rem !important; /* Ditambah dari 0.875rem agar teks tidak mepet ke pinggiran card */
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem; /* Memberikan ruang bernapas otomatis antar elemen di dalamnya */
+        flex: 1;
+    }
+
+    /* Judul Nama Resep */
+    .resep-nama {
+        font-size: 1rem !important; /* Ukuran font sedikit diperbesar agar lebih jelas terbaca */
+        font-weight: 700 !important;
+        color: #2D1A11;
+        line-height: 1.4 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        white-space: normal !important;
+        margin-bottom: 0.25rem;
+    }
+
+    /* Meta Info (Kalori & Waktu) */
+    .resep-card .card-meta {
+        font-size: 0.78rem !important;
+        color: #B87C5A;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem !important; /* Jarak antar badge kalori dan waktu dibuat lebih longgar */
+        align-items: center;
+    }
+
+    /* Area Tombol Aksi */
+    .resep-actions {
+        padding: 0 1.25rem 1.25rem !important; /* Padding disamakan dengan resep-detail agar sejajar sempurna */
+        background: transparent;
+    }
+
+    /* Tombol Pilih Resep */
+    .resep-arrow-wrap {
+        width: 100%;
+        padding: 0.75rem 1rem !important; /* Tebal padding tombol dinaikkan agar klik-able dan terlihat premium */
+        background: #FFF4EE;
+        border-radius: 0.875rem !important; /* Sudut tombol disesuaikan dengan kelembutan card */
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem !important;
+        border: 1px solid #F0E8E4;
+        transition: all 0.2s ease !important;
+    }
+
+    .resep-arrow-wrap::before {
+        content: "Pilih Resep";
+        font-family: var(--font-jakarta);
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        color: #8C2A1A;
+        letter-spacing: 0.02em;
+    }
+
+    /* Hover State pada Tombol Pilih Resep */
+    .resep-card:hover .resep-arrow-wrap {
+        background: #E65100 !important;
+        border-color: #E65100 !important;
+    }
+    
+    .resep-card:hover .resep-arrow-wrap::before { 
+        color: white !important; 
+    }
+}
