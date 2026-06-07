@@ -372,11 +372,11 @@
 }
 /* ── Kalori Banner ─────────────────────────────────────────── */
 #prKaloriBanner {
-    margin: 0 1rem 0.75rem;
+    margin: 2rem 2rem 0.75rem;
     background: #FFF8F5;
     border: 1.5px solid #EFE5DF;
     border-radius: 0.75rem;
-    padding: 0.65rem 0.85rem;
+    padding: 1rem 0.75rem;
 }
 .pr-kalori-banner-row {
     display: flex;
