@@ -76,7 +76,9 @@
                     <div class="fav-card">
                         {{-- Thumbnail --}}
                         <div class="fav-card-thumb">
-                            <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
+                            @if($resep->thumbnail)
+                                <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
+
                                      class="fav-thumb-img"
                                      onerror="this.src='{{ asset('assets/images/Image_DummyResep.png') }}'">"
 
