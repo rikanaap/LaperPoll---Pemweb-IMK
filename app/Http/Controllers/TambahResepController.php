@@ -61,6 +61,7 @@ class TambahResepController extends Controller
                 'calorie'        => $request->calorie,
                 'cook_duration' => $request->cook_duration,
                 'main_filter_id' => $request->main_filter_id,
+                'thumbnail' => $request->thumbnail,
                 'is_published'   => true,
             ]);
 
@@ -107,16 +108,22 @@ class TambahResepController extends Controller
             }
 
             // Attachments
-            foreach ($request->file('attachments') ?? [] as $file) {
-                $mimetype = $file->getMimeType(); // simpan dulu sebelum move
+            foreach ($request->file('attachments') ?? [] as $index => $file) {
+                $mimetype = $file->getMimeType();
                 $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('assets/images/reseps'), $filename);
                 $path = 'assets/images/reseps/' . $filename;
+
                 ResepAttachment::create([
                     'resep_id' => $resep->id,
                     'mimetype' => $mimetype,
                     'path'     => $path,
                 ]);
+
+                // Kalau index ini sama dengan thumbnail_index, set thumbnail
+                if ($index == $request->thumbnail_index) {
+                    $resep->update(['thumbnail' => $path]);
+                }
             }
             return response()->json([
                 'redirect' => route('profile.index')

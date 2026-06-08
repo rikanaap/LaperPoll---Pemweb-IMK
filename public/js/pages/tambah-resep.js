@@ -244,8 +244,6 @@ async function submitResep() {
 
     const fd = new FormData()
 
-    console.log(formData)
-
     // ── Data dasar ──────────────────────────────────────────
     fd.append('title',          formData.title)
     fd.append('calorie',        formData.calorie)
