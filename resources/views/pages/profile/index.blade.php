@@ -123,47 +123,56 @@
         @else
             <div class="resep-grid" id="profResepGrid">
                 @foreach($resepUser as $resep)
-                    <a href="{{ route('detail.resep', $resep->id) }}" class="resep-card-link"
-                       data-title="{{ strtolower($resep->title) }}"
-                       data-rating="{{ $resep->current_star }}"
-                       data-views="{{ $resep->views_count }}"
-                       data-date="{{ $resep->created_at }}">
-                        <div class="resep-card">
-                            <div class="resep-card-thumb">
-                                @if($resep->thumbnail)
-                                    <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
-                                         class="resep-thumb-img"
-                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                    <div class="resep-thumb-placeholder" style="display:none">
-                                        <span class="material-icons-round">restaurant</span>
+                    <div class="resep-card-wrapper"
+                         data-title="{{ strtolower($resep->title) }}"
+                         data-rating="{{ $resep->current_star }}"
+                         data-views="{{ $resep->views_count }}"
+                         data-date="{{ $resep->created_at }}">
+                        <a href="{{ route('detail.resep', $resep->id) }}" class="resep-card-link">
+                            <div class="resep-card">
+                                <div class="resep-card-thumb">
+                                    @if($resep->thumbnail)
+                                        <img src="{{ $resep->thumbnail_url }}" alt="{{ $resep->title }}"
+                                             class="resep-thumb-img"
+                                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                        <div class="resep-thumb-placeholder" style="display:none">
+                                            <span class="material-icons-round">restaurant</span>
+                                        </div>
+                                    @else
+                                        <div class="resep-thumb-placeholder">
+                                            <span class="material-icons-round">restaurant</span>
+                                        </div>
+                                    @endif
+                                    @if($resep->current_star > 0)
+                                        <div class="resep-rating-badge">
+                                            <span class="material-icons-round">star</span>
+                                            {{ number_format($resep->current_star, 1) }}
+                                        </div>
+                                    @endif
+                                    {{-- Tombol Edit Resep --}}
+                                    <a href="{{ route('resep.edit', $resep->id) }}"
+                                       class="resep-edit-btn"
+                                       title="Edit resep"
+                                       onclick="event.stopPropagation()">
+                                        <span class="material-icons-round">edit</span>
+                                    </a>
+                                </div>
+                                <div class="resep-card-info">
+                                    <p class="resep-card-title font-semibold">{{ $resep->title }}</p>
+                                    <div class="resep-card-meta">
+                                        <span class="resep-meta-item">
+                                            <span class="material-icons-round">schedule</span>
+                                            {{ $resep->cook_duration_formatted }}
+                                        </span>
+                                        <span class="resep-meta-item">
+                                            <span class="material-icons-round">visibility</span>
+                                            {{ $resep->views_count }}
+                                        </span>
                                     </div>
-                                @else
-                                    <div class="resep-thumb-placeholder">
-                                        <span class="material-icons-round">restaurant</span>
-                                    </div>
-                                @endif
-                                @if($resep->current_star > 0)
-                                    <div class="resep-rating-badge">
-                                        <span class="material-icons-round">star</span>
-                                        {{ number_format($resep->current_star, 1) }}
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="resep-card-info">
-                                <p class="resep-card-title font-semibold">{{ $resep->title }}</p>
-                                <div class="resep-card-meta">
-                                    <span class="resep-meta-item">
-                                        <span class="material-icons-round">schedule</span>
-                                        {{ $resep->cook_duration_formatted }}
-                                    </span>
-                                    <span class="resep-meta-item">
-                                        <span class="material-icons-round">visibility</span>
-                                        {{ $resep->views_count }}
-                                    </span>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 @endforeach
             </div>
         @endif
