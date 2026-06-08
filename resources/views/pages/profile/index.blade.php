@@ -277,7 +277,7 @@
             <h2 class="sidebar-panel-title font-bold">Tim Kami</h2>
         </div>
         <div class="sidebar-panel-body">
-            <p class="sidebar-team-sub">Kelompok 12 — Pemrograman Web & IMK</p>
+            <p class="sidebar-team-sub">Tim Pengembangan Laperpoll - Pemrograman Web & IMK</p>
             <div class="sidebar-team-grid">
                 <div class="sidebar-member-card">
                     <div class="sidebar-member-avatar">
@@ -374,22 +374,22 @@
         <div class="sidebar-panel-body">
             <p class="sidebar-contact-sub">Ada pertanyaan atau masukan? Hubungi kami melalui:</p>
             <div class="sidebar-contact-list">
-                <a href="mailto:laperpoll@gmail.com" class="sidebar-contact-item">
+                <a href="mailto:laperpoll.company@gmail.com" class="sidebar-contact-item">
                     <div class="sidebar-contact-icon">
                         <span class="material-icons-round">email</span>
                     </div>
                     <div>
                         <p class="font-semibold sidebar-contact-label">Email</p>
-                        <p class="sidebar-contact-value">laperpoll@gmail.com</p>
+                        <p class="sidebar-contact-value">laperpoll.company@gmail.com</p>
                     </div>
                 </a>
-                <a href="https://instagram.com/laperpoll" target="_blank" class="sidebar-contact-item">
+                <a href="https://www.instagram.com/laperpollcompany?utm_source=qr&igsh=MTY0cDAycjJiajZqNw==" target="_blank" class="sidebar-contact-item">
                     <div class="sidebar-contact-icon sidebar-contact-ig">
                         <span class="material-icons-round">photo_camera</span>
                     </div>
                     <div>
                         <p class="font-semibold sidebar-contact-label">Instagram</p>
-                        <p class="sidebar-contact-value">@laperpoll</p>
+                        <p class="sidebar-contact-value">@laperpoll.company</p>
                     </div>
                 </a>
             </div>

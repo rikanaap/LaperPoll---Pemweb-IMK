@@ -129,9 +129,7 @@ class MealPlannerController extends Controller
                         'nama'      => $resep->title,
                         'kalori'    => (int)($resep->calorie ?? 0),
                         'durasi'    => $resep->cook_duration,
-                        'thumbnail' => $resep->thumbnail
-                            ? asset('storage/' . $resep->thumbnail)
-                            : null,
+                        'thumbnail' => $resep->thumbnail_url,
                     ];
                 }
             }
@@ -210,9 +208,7 @@ class MealPlannerController extends Controller
             'resep_id'  => $resep->id,
             'nama'      => $resep->title,
             'kalori'    => (int)($resep->calorie ?? 0),
-            'thumbnail' => $resep->thumbnail
-                ? asset('storage/' . $resep->thumbnail)
-                : null,
+            'thumbnail' => $resep->thumbnail_url,
         ]);
     }
 
