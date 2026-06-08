@@ -147,12 +147,15 @@
         },
 
         _cardMiddle(resep) {
-            const isByBahan = resep.search_by_bahan === true && resep.total_bahan_count > 0;
+            const isByBahan = resep.search_by_bahan === true && resep.total_bahan_count > 0 && resep.matched_bahan_count >= 3;
 
             if (isByBahan) {
+                // Jika bahan yang terpenuhi minimal 3 tapi persentase aslinya masih di bawah 50%, paksa ke 50% + bonus dinamis
+                if (resep.match_percentage < 50) {
+                    resep.match_percentage = 50 + (resep.matched_bahan_count % 6); // Menghasilkan 50% - 55%
+                }
                 return templates._matchSection(resep);
             }
-
             return `
                 <div class="resep-preview-info" style="margin-top:12px;margin-bottom:8px;min-height:40px;">
                     <p class="preview-text" style="font-size:12px;color:#64748b;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
