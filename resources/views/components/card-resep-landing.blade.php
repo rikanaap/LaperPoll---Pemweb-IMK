@@ -1,19 +1,29 @@
 <a href="{{ route('detail.resep', $resep->id) }}" style="text-decoration:none;color:inherit;">
     <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] max-h-[10rem] md:max-h-[18.5rem] md:min-w-[15rem] md:max-w-[15rem] md:p-[1rem] items-start flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
         @php
-        $thumbnailUrl = 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop';
+        $defaultThumbnail = 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop';
+        $isDefaultThumbnail = false;
 
-        if (!blank($resep->thumbnail) && Storage::exists($resep->thumbnail)) {
+        if (!blank($resep->thumbnail)) {
         $thumbnailUrl = asset($resep->thumbnail);
-        } elseif (!$resep->attachments->isEmpty()) {
-        $firstAttachment = $resep->attachments->first();
-        if (!blank($firstAttachment->path) && Storage::exists($firstAttachment->path)) {
-        $thumbnailUrl = asset($firstAttachment->path);
-        }
+        } elseif (!$resep->attachments->isEmpty() && !blank($resep->attachments->first()->path)) {
+        $thumbnailUrl = asset($resep->attachments->first()->path);
+        } else {
+        $thumbnailUrl = $defaultThumbnail;
+        $isDefaultThumbnail = true;
         }
         @endphp
 
-        <img src="{{ $thumbnailUrl }}" alt="" class="w-full aspect-square rounded-[0.5rem] object-cover">
+        @if($isDefaultThumbnail)
+        {{-- Default design ketika tidak ada thumbnail --}}
+        <div class="w-full aspect-square rounded-[0.5rem] bg-primary-normal flex flex-col items-center justify-center gap-2 border border-dashed border-orange-normal">
+            <span class="material-icons-round text-orange-normal text-[1.5rem]">restaurant</span>
+            <p class="font-jakarta text-[0.5rem] text-secondary-normal font-semibold">Foto tidak tersedia</p>
+        </div>
+        @else
+        {{-- Tampilkan thumbnail --}}
+        <img src="{{ $thumbnailUrl }}" alt="{{ $resep->title }}" class="w-full aspect-square rounded-[0.5rem] object-cover">
+        @endif
         <div class="flex flex-col gap-[0.1rem] items-start md:self-stretch">
             <h2 class="text-black truncate font-jakarta text-[0.5rem]/[120%] font-semibold md:text-[1rem] w-full">
                 {{ $resep->title }}
