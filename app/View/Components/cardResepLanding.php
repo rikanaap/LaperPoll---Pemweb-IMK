@@ -16,38 +16,6 @@ class cardResepLanding extends Component
     public function __construct($resep, $index)
     {
         $this->resep = $resep;
-        $this->resep->cook_duration = $this->formatDuration($resep->cook_duration);
-    }
-
-    public function formatDuration($duration)
-    {
-        // Jika durasi kosong atau null, kembalikan teks default
-        if (empty($duration)) {
-            return '-';
-        }
-
-        // Parse format 'H:i:s' dari MySQL (contoh: 01:30:00)
-        $parsedTime = Carbon::createFromFormat('H:i:s', $duration);
-
-        $hours = $parsedTime->hour;
-        $minutes = $parsedTime->minute;
-
-        $result = [];
-
-        if ($hours > 0) {
-            $result[] = $hours . 'h';
-        }
-
-        if ($minutes > 0) {
-            $result[] = $minutes . 'm';
-        }
-
-        if (empty($result)) {
-            return '<1m';
-        }
-
-        // Menggabungkan jam dan menit dengan spasi (contoh: "1 jam 30 menit")
-        return implode(' ', $result);
     }
 
     /**

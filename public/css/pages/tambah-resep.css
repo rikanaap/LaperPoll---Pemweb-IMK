@@ -189,6 +189,7 @@ body:has(.input-number:focus) .input-submit {
     justify-content: center;
     width: 100%;
     min-height: 10rem;
+    aspect-ratio: 17/10;
 
     border: 1px dashed var(--accent-normal);
     border-radius: 0.4rem;
@@ -222,12 +223,9 @@ body:has(.input-number:focus) .input-submit {
 }
 
 .upload-wrapper {
-    gap: 0.3rem;
-    align-self: stretch;
-    align-items: center;
 }
 .upload-data {
-    width: 5rem;
+    width: 6rem;
     border-radius: 0.25rem;
     aspect-ratio: 17/10;
     position: relative;
@@ -256,7 +254,7 @@ body:has(.input-number:focus) .input-submit {
 }
 
 .upload-default {
-    width: 5rem;
+    width: 6rem;
     aspect-ratio: 17/10;
     display: flex;
     align-items: center;
@@ -1259,4 +1257,170 @@ select {
 
 .lp-alert-btn.secondary:hover {
     background-color: var(--primary-normal-hover);
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 0.5px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #6b7280;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 12px;
+    border: 0.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    border-top: 0.5px solid #e5e7eb;
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    flex: 1;
+}
+
+.btn-cancel {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-submit {
+    background: #f97316;
+    color: white;
+}
+
+/* Tombol tambah di dropdown */
+.btn-tambah-baru {
+    width: 100%;
+    padding: 12px;
+    background: #f97316;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* ── THUMBNAIL SELECTOR STYLING ── */
+.thumbnail-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.3rem;
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.thumbnail-badge input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.thumbnail-badge input[type="radio"]:hover {
+    border-color: var(--orange-normal);
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.4);
+}
+
+.thumbnail-badge input[type="radio"]:checked {
+    background: var(--orange-normal);
+    border-color: var(--orange-normal);
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
+}
+
+.thumbnail-badge label {
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin: 0;
+    user-select: none;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
 }

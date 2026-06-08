@@ -130,16 +130,15 @@
         },
     };
 
-    // ─────────────────────────────────────────────
-    // Templates
-    // ─────────────────────────────────────────────
+
     const templates = {
         /**
          * Render card thumbnail — gambar atau placeholder icon.
          */
         _thumbnail(resep) {
             if (resep.thumbnail) {
-                return `<img src="${resep.thumbnail}" alt="${resep.title}">`;
+                console.log(resep.thumbnail)
+               return `<img src="${resep.thumbnail}" alt="${resep.title}">`;
             }
             return `
                 <div class="resep-banner-placeholder">

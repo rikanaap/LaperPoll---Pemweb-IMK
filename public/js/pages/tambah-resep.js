@@ -28,6 +28,7 @@ listDropdown.forEach((kategori) => {
 })
 
 inputSubmit.addEventListener("click", () => {
+console.log('dbasjdabsd')
   if (checkForm()) {
     formCounter++
     changeIndicator()
@@ -50,6 +51,8 @@ allInputDropdown.forEach(dropdown => {
         if (!item.classList.contains("choosen")) item.style.display = "none"
       }
     });
+    checkAndShowAddButton()
+
   });
 });
 
@@ -106,7 +109,7 @@ function changeIndicator() {
           indicators[1].classList.remove("i-enable")
           break
       case 5:
-        indicators[2].classList.remove("i-enable")
+        indicators[2].classList.add("i-enable")
         indicators[1].classList.add("i-enable")
         indicators[0].classList.remove("i-enable")
       break
@@ -128,9 +131,10 @@ function showForm() {
       showResultForm2()
       document.getElementById('form-2').style.display = 'flex';
       break;
-    case 3:
-        inputSubmit.style.display = (formData.filters.length > 2) ? "flex" : "none" 
-        showResultForm3()
+      case 3:
+          inputSubmit.style.display = (formData.filters.length > 2) ? "flex" : "none" 
+          showResultForm3()
+          checkAndShowAddButton()
         document.getElementById('form-3').style.display = 'flex';
         break;
     case 4:
@@ -209,6 +213,11 @@ function checkForm() {
         showAlert("Validasi", "Mohon kirimkan attachment")
         return false
       }
+      console.log(formData)
+      if(formData.thumbnail === '') {
+            showAlert("Validasi", "Mohon pilih satu image sebagai thumbnail")
+            return false
+        }
       return true;
   }
 }
@@ -240,6 +249,7 @@ async function submitResep() {
     fd.append('calorie',        formData.calorie)
     fd.append('main_filter_id', formData.main_filter_id)
     fd.append('cook_duration', getTotalCookDuration())
+    fd.append('thumbnail_index', formData.thumbnail)
 
     // ── Bahans → [{ bahan_id, gram_total }] ─────────────────
     // ResepBahan fillable: resep_id, bahan_id, gram_total
@@ -579,11 +589,12 @@ function showFormStep4() {
   
   document.querySelector("#result-4-1").style.display = "flex"
   document.querySelector("#result-4-2").style.display = "none"
-
+  
   showDropdownDataBahan()
   if(dropdownDatasForm4.innerHTML == ''){
+    document.querySelector("#form-4-1").style.display = "none"
     buttonTambahStep.style.display = 'none'
-}
+    }
 }
 
 function showFormBahanStep4(){
@@ -639,7 +650,10 @@ function showResultStep4(){
         if(isOpen){
             wrapperResultStepExtra.classList.remove('open')
             badge.classList.remove('open')
-            document.querySelector("#form-4-1").style.display = "flex"
+             if(dropdownDatasForm4.innerHTML == ''){
+    document.querySelector("#form-4-1").style.display = "none"
+    buttonTambahStep.style.display = 'none'
+}
             
             // Reset animasi item
             wrapperResultStepExtra.querySelectorAll('.result-bahan').forEach(el => {
@@ -889,7 +903,35 @@ function displayUploadPreview() {
         const media = document.createElement(att.mimetype.startsWith('image/') ? 'img' : 'video');
         media.src = att.path;
 
-        // Ikon play untuk video
+        // ← TAMBAHKAN TOGGLE UNTUK IMAGE SAJA
+       if (att.mimetype.startsWith('image/')) {
+            const badgeWrapper = document.createElement('div');
+            badgeWrapper.className = 'thumbnail-badge';
+            badgeWrapper.style.cssText = 'position:absolute; top:0rem; left:0rem;';
+            
+            const radioInput = document.createElement('input');
+            radioInput.type = 'radio';
+            radioInput.name = 'thumbnail-select';
+            radioInput.value = idx;
+            radioInput.id = `thumbnail-${idx}`;
+            
+            // Check jika sudah dipilih sebelumnya
+            if (formData.thumbnail == idx) {
+                radioInput.checked = true;
+            }
+            
+            radioInput.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    formData.thumbnail = idx;
+                    console.log('✓ Thumbnail:', att.file.name);
+                }
+            });
+            
+            badgeWrapper.appendChild(radioInput);
+            div.appendChild(badgeWrapper);
+        }
+
+        // ← IKON PLAY TETAP UNTUK VIDEO
         if (att.mimetype.startsWith('video/')) {
             const playIcon = document.createElement('span');
             playIcon.className = 'material-icons-round';
@@ -898,24 +940,32 @@ function displayUploadPreview() {
             div.appendChild(playIcon);
         }
 
+        // ← TOMBOL REMOVE TETAP
         const removeBtn = document.createElement('span');
         removeBtn.className = 'material-icons-round remove-upload';
         removeBtn.textContent = 'cancel';
         removeBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // cegah trigger openPreview
+            e.stopPropagation();
             URL.revokeObjectURL(att.path);
             formData.attachments.splice(idx, 1);
+            
+            // Reset thumbnail jika yang dihapus adalah thumbnail terpilih
+            if (formData.thumbnail == idx) {
+                formData.thumbnail = ''; // ← RESET THUMBNAIL
+            }
 
-            // Reset preview kalau yang dihapus sedang aktif
             if (div.classList.contains('active')) {
                 document.getElementById('upload-preview-area').style.display = 'none';
                 document.getElementById('upload-box-label').style.display = 'flex';
                 document.getElementById('preview-vid').pause();
             }
 
-            displayUploadPreview();
+            displayUploadPreview(); // ← Re-render untuk update index
         });
 
+        // div.appendChild(media);
+        // div.appendChild(removeBtn);
+        // uploadWrapper.insertBefore(div, uploadDefault);
         // Klik thumbnail → buka preview
         div.addEventListener('click', () => openPreview(att, div));
 
@@ -923,6 +973,22 @@ function displayUploadPreview() {
         div.appendChild(removeBtn);
         uploadWrapper.insertBefore(div, uploadDefault);
     });
+
+    // ← TAMBAHKAN INI: Set default thumbnail ke image pertama jika kosong
+    if (formData.thumbnail === '') {
+        // Cari index pertama dari image
+        const firstImageIdx = formData.attachments.findIndex(att => att.mimetype.startsWith('image/'));
+        
+        if (firstImageIdx !== -1) {
+            formData.thumbnail = firstImageIdx;
+            // Auto-check radio button pertama
+            const firstRadio = document.querySelector(`#thumbnail-${firstImageIdx}`);
+            if (firstRadio) {
+                firstRadio.checked = true;
+            }
+            console.log('✓ Default thumbnail set to:', formData.attachments[firstImageIdx].file.name);
+        }
+    }
 }
 
 function previousForm() {
@@ -975,7 +1041,7 @@ function showAlert(title, message, type = 'error') {
     box.classList.add('open');
 }
 
-// ── FUNCTION: Close Alert ──
+// // ── FUNCTION: Close Alert ──
 function closeAlert() {
     const overlay = document.getElementById('lp-alert-overlay');
     const box = document.getElementById('lp-alert-box');
@@ -991,3 +1057,201 @@ document.getElementById('lp-alert-overlay').addEventListener('click', closeAlert
 document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape') closeShowAlert("Validasi", );
 });
+
+// Modal functions
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// Check if dropdown empty dan show "Tambah Baru" button
+function checkAndShowAddButton() {
+    const form2Dropdown = document.querySelector('#form-2 .dropdown-datas');
+    const form3Dropdown = document.querySelector('#form-3 .dropdown-datas');
+
+    // Remove button yang sudah ada
+    form2Dropdown?.querySelector('.btn-tambah-baru')?.remove();
+    form3Dropdown?.querySelector('.btn-tambah-baru')?.remove();
+
+    if (form2Dropdown) {
+    const visibleItems = Array.from(form2Dropdown.children).filter(
+        child => child.style.display !== 'none' && !child.classList.contains('choosen')
+    );
+    if (visibleItems.length === 0) {
+        showAddButtonInDropdown(form2Dropdown, 'Tambah Bahan Baru', 'modal-bahan');
+        document.getElementById('form-tambah-bahan-input').value =  document.querySelector('#form-2 .input-data').value;
+    }
+}
+
+if (form3Dropdown) {
+    const visibleItems = Array.from(form3Dropdown.children).filter(
+        child => child.style.display !== 'none' && !child.classList.contains('choosen')
+    );
+    if (visibleItems.length === 0) {
+        showAddButtonInDropdown(form3Dropdown, 'Tambah Filter Baru', 'modal-filter');
+        document.getElementById('form-tambah-filter-input').value =  document.querySelector('#form-3 .input-data').value;
+    }
+}
+}
+function showAddButtonInDropdown(dropdownEl, labelText, modalId) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn-tambah-baru';
+    btn.innerHTML = `<span class="material-icons-round">add_circle_outline</span> ${labelText}`;
+
+    btn.onclick = (e) => {
+        e.preventDefault();
+        openModal(modalId);
+    };
+    dropdownEl.appendChild(btn);
+}
+
+// Handle Form Tambah Bahan
+document.getElementById('form-tambah-bahan')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    try {
+        const response = await fetch(ROUTE_BAHAN_STORE, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const bahan = await response.json();
+            addBahanToDropdown(bahan);
+            closeModal('modal-bahan');
+            e.target.reset();
+            showAlert('Sukses', 'Bahan berhasil ditambahkan', 'success');
+        } else {
+            showAlert('Error', 'Gagal menambahkan bahan', 'error');
+        }
+    } catch (error) {
+        showAlert('Error', 'Terjadi kesalahan: ' + error.message, 'error');
+    }
+});
+
+
+// Handle Form Tambah Filter
+document.getElementById('form-tambah-filter')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    try {
+        const response = await fetch(ROUTE_FILTER_STORE, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const filter = await response.json();
+            addFilterToDropdown(filter);
+            closeModal('modal-filter');
+            e.target.reset();
+            showAlert('Sukses', 'Filter berhasil ditambahkan', 'success');
+        } else {
+            showAlert('Error', 'Gagal menambahkan filter', 'error');
+        }
+    } catch (error) {
+        showAlert('Error', 'Terjadi kesalahan: ' + error.message, 'error');
+    }
+});
+
+// Tambah bahan ke dropdown setelah submit
+function addBahanToDropdown(bahan) {
+    const dropdown = document.querySelector('#form-2 .dropdown-datas');
+    const div = document.createElement('div');
+    div.attri
+    div.className = 'dropdown-data';
+    div.setAttribute('data-bahan-id', bahan.id);
+    div.innerHTML = `<p class="font-jakarta font-semibold text-body text-primary-dark-active">${bahan.nama}</p>`;
+    
+    const addBtn = dropdown.querySelector('.btn-tambah-baru');
+    if (addBtn) {
+        dropdown.insertBefore(div, addBtn);
+    } else {
+        dropdown.appendChild(div);
+    }
+
+    div.addEventListener("click", () => {
+        currentBahanId = +div.getAttribute('data-bahan-id')
+        bahanSudahAda = formData.bahans.find(b => b.id === currentBahanId)
+        if(bahanSudahAda) div.classList.toggle("choosen")
+        editBerat(div.querySelector('p').innerText)
+    })
+
+    const dropdownFilter = document.querySelector('#form-2 .input-data');
+    const filterText = dropdownFilter.value.toLowerCase();
+    document.querySelector('#form-2 .dropdown-datas').querySelectorAll('.dropdown-data').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(filterText)) {
+            item.style.display = "flex";
+        } else {
+            if (!item.classList.contains("choosen")) item.style.display = "none";
+        }
+    });
+
+    dropdownFilter.addEventListener('input', function () {
+        const filter2 = document.querySelector('#form-2 .input-data').value.toLowerCase();
+        document.querySelectorAll('#form-2 .dropdown-data').forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(filter2)) {
+                item.style.display = "flex";
+                hasResults = true;
+            } else {
+                if (!item.classList.contains("choosen")) item.style.display = "none"
+            }
+        });
+        checkAndShowAddButton()
+    });
+}
+
+// Tambah filter ke dropdown setelah submit
+function addFilterToDropdown(filter) {
+    const dropdown = document.querySelector('#form-3 .dropdown-datas');
+    const div = document.createElement('div');
+    div.className = 'dropdown-data';
+    div.setAttribute('data-filter-id', filter.id);
+    div.innerHTML = `<p class="font-jakarta font-semibold text-body text-primary-dark-active">${filter.title}</p>`;
+    
+    const addBtn = dropdown.querySelector('.btn-tambah-baru');
+    if (addBtn) {
+        dropdown.insertBefore(div, addBtn);
+    } else {
+        dropdown.appendChild(div);
+    }
+
+    div.addEventListener("click", () => {
+        div.classList.toggle("choosen")
+        div.classList.contains("choosen") ? tambahFilterisasi(div.querySelector('p').innerText, div.getAttribute('data-filter-id')) : hapusFilterisasi(div.querySelector('p').innerText)
+    })
+
+    console.log('dasndasjdbjkhaskjhsd')
+    const dropdownFilter = document.querySelector('#form-3 .input-data');
+    const filterText = dropdownFilter.value.toLowerCase();
+    document.querySelector('#form-3 .dropdown-datas').querySelectorAll('.dropdown-data').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(filterText)) {
+            item.style.display = "flex";
+        } else {
+            if (!item.classList.contains("choosen")) item.style.display = "none";
+        }
+    });
+
+    dropdownFilter.addEventListener('input', function () {
+        const filter2 = document.querySelector('#form-3 .input-data').value.toLowerCase();
+        document.querySelectorAll('#form-3 .dropdown-data').forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(filter2)) {
+                item.style.display = "flex";
+                hasResults = true;
+            } else {
+                if (!item.classList.contains("choosen")) item.style.display = "none"
+            }
+        });
+        checkAndShowAddButton()
+    });
+}

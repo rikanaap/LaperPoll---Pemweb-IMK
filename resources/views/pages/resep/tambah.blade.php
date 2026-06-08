@@ -266,7 +266,7 @@
             <div class="form" id="form-5" style="display: none;">
                 <div class="input-wrapper flex flex-col">
                     <h5 class="font-jakarta text-title2 font-regular text-secondary-normal">Tambahkan Foto/Video</h5>
-                    <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1 md:flex-row">
                         <div class="upload-container">
                             <input type="file" id="file-upload" hidden accept="image/*,video/*" multiple>
 
@@ -286,10 +286,11 @@
                                     <span class="material-icons-round" style="color:white; font-size:1.1rem;">close</span>
                                 </button>
                             </div>
-                            <p class="font-jakarta text-[0.8rem] text-orange-normal">Hasil Preview sesuai dengan apa yang akan diterima oleh pengguna</p>
+                            <p class="font-jakarta text-[0.5rem] md:text-[0.8rem] text-orange-normal">ℹ️ Hasil Preview sesuai dengan apa yang akan diterima oleh pengguna</p>
+                            <p class="font-jakarta text-[0.5rem] md:text-[0.8rem] text-orange-normal">ℹ️ Pilih Thumbnaild melalui radio button</p>
                         </div>
 
-                        <div class="upload-wrapper flex flex-row">
+                        <div class="upload-wrapper flex flex-row flex-wrap gap-[0.5rem] justify-center md:items-start md:justify-start md:w-[20rem] md:p-[1rem] md:gap-0.5 md:h-fit">
                             <div class="upload-default">
                                 <span class="material-icons-round add-icon">add_circle_outline</span>
                             </div>
@@ -348,6 +349,90 @@
             </div>
         </div>
     </section>
+    <div id="modal-bahan" class="modal-backdrop" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Tambah Bahan Baru</h2>
+                <button type="button" class="modal-close" onclick="closeModal('modal-bahan')">×</button>
+            </div>
+            <form id="form-tambah-bahan">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nama Bahan</label>
+                        <input id="form-tambah-bahan-input" type="text" readonly name="nama" placeholder="Contoh: Beras Putih" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select name="kategori" required>
+                            <option value="">Pilih Kategori</option>
+                            <option>KARBOHIDRAT</option>
+                            <option>PROTEIN</option>
+                            <option>SAYURAN</option>
+                            <option>BUAH</option>
+                            <option>BUMBU</option>
+                            <option>MINUMAN</option>
+                            <option>LAINNYA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estimasi Kadaluarsa (hari)</label>
+                        <input type="number" name="expired_expectancy_day" placeholder="Contoh: 365" min="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal('modal-bahan')">Batal</button>
+                    <button type="submit" class="btn btn-submit">Tambah Bahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-filter" class="modal-backdrop" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Tambah Filter Baru</h2>
+                <button type="button" class="modal-close" onclick="closeModal('modal-filter')">×</button>
+            </div>
+            <form id="form-tambah-filter">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nama Filter</label>
+                        <input id="form-tambah-filter-input" type="text" readonly name="title" placeholder="Contoh: Bebas Gluten" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Level Kesulitan</label>
+                        <select name="level" required>
+                            <option value="">Pilih Level</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <input type="text" name="description" placeholder="Jelaskan apa itu filter ini" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal('modal-filter')">Batal</button>
+                    <button type="submit" class="btn btn-submit">Tambah Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="lp-alert-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
+        <div id="lp-alert-box" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span id="lp-alert-icon" class="material-icons-round" style="font-size: 2rem;"></span>
+                <h3 id="lp-alert-title" style="margin: 0; font-size: 18px; font-weight: 600;"></h3>
+            </div>
+            <p id="lp-alert-message" style="margin: 0 0 1.5rem; color: #6b7280; line-height: 1.5;"></p>
+            <button onclick="closeAlert()" style="width: 100%; padding: 10px; background: #f97316; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                OK
+            </button>
+        </div>
+    </div>
     <div class="input-submit">
         <h1 class="font-jakarta">Lanjut</h1>
     </div>
@@ -355,5 +440,9 @@
 
 @endsection
 @push('scripts')
+<script>
+    const ROUTE_BAHAN_STORE = '{{ route("resep.bahan.store") }}';
+    const ROUTE_FILTER_STORE = '{{ route("resep.filter.store") }}';
+</script>
 <script src="{{ asset('js/pages/tambah-resep.js') }}"></script>
 @endpush

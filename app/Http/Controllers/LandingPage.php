@@ -12,7 +12,25 @@ class LandingPage extends Controller
     public function index()
     {
         $user = Auth::user();
-        $reseps_hari = Resep::with('user.verify', 'attachments')->where('is_published', true)->whereDate('created_at', today())->orderBy('created_at', 'desc')->take(8)->get();
+        $reseps_hari = Resep::with('user.verify', 'attachments')
+            ->where('is_published', true)
+            ->whereDate('created_at', today())
+            ->orderBy('created_at', 'desc')
+            ->take(8)
+            ->get();
+        $resep_hari_caption = "Hari Ini";
+
+        // Jika kurang dari 8, ambil semua yang published
+        if ($reseps_hari->count() < 8) {
+            $resep_hari_caption = "Terbaru";
+            $reseps_hari = Resep::with('user.verify', 'attachments')
+                ->where('is_published', true)
+                ->orderBy('created_at', 'desc')
+                ->take(8)
+                ->get();
+        }
+
+
         $reseps_favorit = Resep::with('user.verify', 'attachments')->where('is_published', true)->withCount('favoritedBy')->orderBy('favorited_by_count', 'desc')->take(8)->get();
         $bahans = Bahan::get();
         $features = [
@@ -23,20 +41,23 @@ class LandingPage extends Controller
         ];
         $comments = [
             [
-                'name' => 'Bambang Tri Hartanto',
-                'username' => '@bang_tri',
+                'id' => 6,
+                'name' => 'Betty Towne',
+                'username' => '@gayle.grimes',
                 'rating' => '4.8/5',
                 'comment' => 'Sangat membantu dalam mencari resep masakan. Tampilan menarik dan mudah digunakan.',
             ],
             [
-                'name' => 'Siti Nurhaliza',
-                'username' => '@ct_nur',
+                'id' => 7,
+                'name' => 'Lindsay McKenzie',
+                'username' => '@malinda.hahn',
                 'rating' => '4.5/5',
                 'comment' => 'Fiturnya lengkap banget! Sekarang gak perlu bingung lagi mau masak apa setiap hari di rumah.',
             ],
             [
-                'name' => 'Ahmad Fauzi',
-                'username' => '@ahmad_fauzi',
+                'id' => 9,
+                'name' => 'Kellie Beier',
+                'username' => '@jhintz',
                 'rating' => '5.0/5',
                 'comment' => 'Desain aplikasinya bersih, responsif, dan resep-resepnya sangat akurat. Sukses terus!',
             ],
@@ -63,6 +84,6 @@ class LandingPage extends Controller
                 'a' => 'Fitur Nota Belanja otomatis mencatat seluruh bahan makanan yang kamu butuhkan berdasarkan resep-resep yang sudah kamu jadwalkan di Meal Planner. Fitur ini bikin belanja mingguanmu jadi lebih terstruktur dan bebas dari lupa!'
             ]
         ];
-        return view('index', compact('user', 'features', 'reseps_hari', 'faqs', 'reseps_favorit', 'bahans', 'comments'));
+        return view('index', compact('user', 'features', 'reseps_hari', 'faqs', 'reseps_favorit', 'bahans', 'comments', 'resep_hari_caption'));
     }
 }

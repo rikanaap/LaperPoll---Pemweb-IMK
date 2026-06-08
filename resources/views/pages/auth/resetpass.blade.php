@@ -12,7 +12,9 @@ $remaining = max(0, session('otp_expired_at', 0) - now()->timestamp);
 
 @section('content')
 <div class="auth-section flex flex-col">
-    <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
+    <a href="{{ route('landing.index') }}">
+        <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
+    </a>
 
     <form method="POST" action="{{ route('auth.reset-pass.post') }}">
         @csrf
