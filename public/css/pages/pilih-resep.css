@@ -504,14 +504,15 @@
     /* Area Informasi Teks (DIPERBAIKI AGAR RATA KIRI) */
     .resep-detail {
         padding: 1.25rem !important; 
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem; 
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.75rem !important; 
         flex: 1;
-        align-items: flex-start !important; /* 🔥 MEMAKSA JUDUL & METABAR KEMBALI KE KIRI */
-        text-align: left !important;        /* 🔥 MEMAKSA TEKS TIDAK CENTER */
+        align-items: flex-start !important;
+        text-align: left !important;
+        width: 100% !important;
     }
-
+ 
     /* Judul Nama Resep (DIPERBAIKI AGAR RATA KIRI) */
     .resep-nama {
         font-size: 1rem !important; 
@@ -523,10 +524,11 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         white-space: normal !important;
+        text-align: left !important;
         margin-bottom: 0.25rem;
-        text-align: left !important;        /* 🔥 MEMAKSA TEXT JUDUL KE KIRI */
+        width: 100% !important;
     }
-
+ 
     /* Meta Info Kalori & Waktu (DIPERBAIKI AGAR COCOK DENGAN CLASS ASLI & RATA KIRI) */
     .resep-meta, .resep-card .card-meta {
         font-size: 0.78rem !important;
@@ -537,13 +539,16 @@
         align-items: center;
         justify-content: flex-start !important; /* 🔥 MEMAKSA BADGE INFO DI KIRI */
     }
-
+ 
     /* Area Tombol Aksi (DIPERBAIKI AGAR RATA KIRI) */
     .resep-actions {
         padding: 0 1.25rem 1.25rem !important; 
         background: transparent;
         display: flex !important;
-        justify-content: flex-start !important; /* 🔥 MEMAKSA PEMBUNGKUS TOMBOL DI KIRI */
+        justify-content: flex-start !important;
+        align-items: center !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     /* Tombol Pilih Resep (DIPERBAIKI AGAR UKURAN PAS & RATA KIRI) */
