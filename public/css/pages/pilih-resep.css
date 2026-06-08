@@ -470,7 +470,7 @@
     .resep-menus {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 1.5rem !important; /* Diperlebar dari 1rem ke 1.5rem agar jarak antar card lebih lega */
+        gap: 1.5rem !important; 
         padding: 1.5rem 2rem 4rem !important;
         max-width: unset;
     }
@@ -480,39 +480,41 @@
         padding: 0 !important;
         overflow: hidden;
         background: white;
-        border-radius: 1.25rem !important; /* Membuat sudut card melengkung lebih halus & modern */
+        border-radius: 1.25rem !important; 
         border: 1px solid #F0E8E4 !important;
-        box-shadow: 0 4px 12px rgba(45, 26, 17, 0.03) !important; /* Shadow halus agar card terlihat pop-out */
+        box-shadow: 0 4px 12px rgba(45, 26, 17, 0.03) !important; 
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease !important;
     }
 
     .resep-card:hover {
-        transform: translateY(-6px) !important; /* Efek hover naik sedikit lebih tinggi agar dinamis */
-        box-shadow: 0 12px 24px rgba(140, 42, 26, 0.08) !important; /* Shadow warna hangat saat hover */
+        transform: translateY(-6px) !important; 
+        box-shadow: 0 12px 24px rgba(140, 42, 26, 0.08) !important; 
         border-color: #E65100 !important;
     }
 
     /* Thumbnail Gambar */
     .resep-thumb {
         width: 100% !important;
-        height: 160px !important; /* Dinaikkan dari 130px ke 160px agar gambar resep terlihat proporsional & luas */
+        height: 160px !important; 
         border-radius: 0 !important;
         object-fit: cover;
         border-bottom: 1px solid #F4E8E0;
     }
 
-    /* Area Informasi Teks */
+    /* Area Informasi Teks (DIPERBAIKI AGAR RATA KIRI) */
     .resep-detail {
-        padding: 1.25rem !important; /* Ditambah dari 0.875rem agar teks tidak mepet ke pinggiran card */
+        padding: 1.25rem !important; 
         display: flex;
         flex-direction: column;
-        gap: 0.75rem; /* Memberikan ruang bernapas otomatis antar elemen di dalamnya */
+        gap: 0.75rem; 
         flex: 1;
+        align-items: flex-start !important; /* 🔥 MEMAKSA JUDUL & METABAR KEMBALI KE KIRI */
+        text-align: left !important;        /* 🔥 MEMAKSA TEKS TIDAK CENTER */
     }
 
-    /* Judul Nama Resep */
+    /* Judul Nama Resep (DIPERBAIKI AGAR RATA KIRI) */
     .resep-nama {
-        font-size: 1rem !important; /* Ukuran font sedikit diperbesar agar lebih jelas terbaca */
+        font-size: 1rem !important; 
         font-weight: 700 !important;
         color: #2D1A11;
         line-height: 1.4 !important;
@@ -522,33 +524,37 @@
         overflow: hidden;
         white-space: normal !important;
         margin-bottom: 0.25rem;
+        text-align: left !important;        /* 🔥 MEMAKSA TEXT JUDUL KE KIRI */
     }
 
-    /* Meta Info (Kalori & Waktu) */
-    .resep-card .card-meta {
+    /* Meta Info Kalori & Waktu (DIPERBAIKI AGAR COCOK DENGAN CLASS ASLI & RATA KIRI) */
+    .resep-meta, .resep-card .card-meta {
         font-size: 0.78rem !important;
         color: #B87C5A;
         display: flex;
         flex-wrap: wrap;
-        gap: 0.75rem !important; /* Jarak antar badge kalori dan waktu dibuat lebih longgar */
+        gap: 0.75rem !important; 
         align-items: center;
+        justify-content: flex-start !important; /* 🔥 MEMAKSA BADGE INFO DI KIRI */
     }
 
-    /* Area Tombol Aksi */
+    /* Area Tombol Aksi (DIPERBAIKI AGAR RATA KIRI) */
     .resep-actions {
-        padding: 0 1.25rem 1.25rem !important; /* Padding disamakan dengan resep-detail agar sejajar sempurna */
+        padding: 0 1.25rem 1.25rem !important; 
         background: transparent;
+        display: flex !important;
+        justify-content: flex-start !important; /* 🔥 MEMAKSA PEMBUNGKUS TOMBOL DI KIRI */
     }
 
-    /* Tombol Pilih Resep */
+    /* Tombol Pilih Resep (DIPERBAIKI AGAR UKURAN PAS & RATA KIRI) */
     .resep-arrow-wrap {
-        width: 100%;
-        padding: 0.75rem 1rem !important; /* Tebal padding tombol dinaikkan agar klik-able dan terlihat premium */
+        width: auto !important; /* 🔥 UBAH DARI 100% MENJADI AUTO AGAR LEBARNYA PAS DENGAN TEKS KIRI */
+        padding: 0.75rem 1.25rem !important; /* Padding disesuaikan agar proporsional */
         background: #FFF4EE;
-        border-radius: 0.875rem !important; /* Sudut tombol disesuaikan dengan kelembutan card */
-        justify-content: center;
-        display: flex;
+        border-radius: 0.875rem !important; 
+        display: inline-flex !important;
         align-items: center;
+        justify-content: flex-start !important; /* 🔥 KONTEN DI DALAM TOMBOL TETAP DI KIRI */
         gap: 0.5rem !important;
         border: 1px solid #F0E8E4;
         transition: all 0.2s ease !important;
