@@ -227,78 +227,80 @@
 
         {{-- Form / sudah ulasan --}}
         @auth
-            @if(!$sudahUlasan)
-                <div class="dr-ulasan-form-card">
-                    <p class="dr-ulasan-form-title font-semibold">Tulis Ulasanmu</p>
-                    <form action="{{ route('ulasan.store', $resep->id) }}" method="POST"
-                          enctype="multipart/form-data" class="dr-ulasan-form" id="drUlasanForm">
-                        @csrf
-                        <div class="dr-star-input" id="starInput">
-                            @for($i = 1; $i <= 5; $i++)
-                                <span class="material-icons-round dr-star-pick" data-val="{{ $i }}">star_border</span>
-                            @endfor
-                        </div>
-                        <input type="hidden" name="rating" id="ratingInput" value="0">
-                        <textarea name="description" class="dr-ulasan-textarea"
-                                  placeholder="Bagaimana pengalamanmu memasak resep ini?" rows="3"></textarea>
-                        <div class="dr-photo-upload" id="photoUploadArea">
-                            <span class="material-icons-round">add_photo_alternate</span>
-                            <span class="dr-photo-upload-text">Tambah foto (opsional, maks. 3)</span>
-                            <input type="file" name="photos[]" id="photoInput"
-                                   accept="image/*" multiple class="hidden-input">
-                        </div>
-                        <div class="dr-photo-previews" id="photoPreviews"></div>
-                        <button type="submit" class="dr-ulasan-submit font-semibold" id="btnKirimUlasan">
-                            <span class="material-icons-round">send</span>
-                            Kirim Ulasan
-                        </button>
-                    </form>
-                </div>
-            @else
-                {{-- Tampilkan ulasan sendiri + tombol edit/hapus --}}
-                <div class="dr-my-ulasan-card">
-                    <div class="dr-my-ulasan-top">
-                        <span class="dr-my-ulasan-badge font-semibold">
-                            <span class="material-icons-round">verified</span>
-                            Ulasanmu
-                        </span>
-                        <div class="dr-my-ulasan-actions">
-                            <a href="{{ route('ulasan.edit', [$resep->id, $myFeedback->id]) }}"
-                               class="dr-ulasan-action-btn dr-ulasan-edit">
-                                <span class="material-icons-round">edit</span>
-                                Edit
-                            </a>
-                            <form action="{{ route('ulasan.destroy', [$resep->id, $myFeedback->id]) }}"
-                                  method="POST" id="drDeleteForm">
-                                @csrf @method('DELETE')
-                                <button type="button" class="dr-ulasan-action-btn dr-ulasan-delete"
-                                        onclick="drConfirmDelete()">
-                                    <span class="material-icons-round">delete</span>
-                                    Hapus
-                                </button>
-                            </form>
-                        </div>
+            @if(Auth::id() !== $resep->user_id)
+                @if(!$sudahUlasan)
+                    <div class="dr-ulasan-form-card">
+                        <p class="dr-ulasan-form-title font-semibold">Tulis Ulasanmu</p>
+                        <form action="{{ route('ulasan.store', $resep->id) }}" method="POST"
+                              enctype="multipart/form-data" class="dr-ulasan-form" id="drUlasanForm">
+                            @csrf
+                            <div class="dr-star-input" id="starInput">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <span class="material-icons-round dr-star-pick" data-val="{{ $i }}">star_border</span>
+                                @endfor
+                            </div>
+                            <input type="hidden" name="rating" id="ratingInput" value="0">
+                            <textarea name="description" class="dr-ulasan-textarea"
+                                      placeholder="Bagaimana pengalamanmu memasak resep ini?" rows="3"></textarea>
+                            <div class="dr-photo-upload" id="photoUploadArea">
+                                <span class="material-icons-round">add_photo_alternate</span>
+                                <span class="dr-photo-upload-text">Tambah foto (opsional, maks. 3)</span>
+                                <input type="file" name="photos[]" id="photoInput"
+                                       accept="image/*" multiple class="hidden-input">
+                            </div>
+                            <div class="dr-photo-previews" id="photoPreviews"></div>
+                            <button type="submit" class="dr-ulasan-submit font-semibold" id="btnKirimUlasan">
+                                <span class="material-icons-round">send</span>
+                                Kirim Ulasan
+                            </button>
+                        </form>
                     </div>
-                    <div class="dr-my-stars">
-                        @for($i=1;$i<=5;$i++)
-                            <span class="material-icons-round {{ $i<=$myFeedback->rating ? 'dr-star-on' : 'dr-star-off' }}">
-                                {{ $i<=$myFeedback->rating ? 'star' : 'star_border' }}
+                @else
+                    {{-- Tampilkan ulasan sendiri + tombol edit/hapus --}}
+                    <div class="dr-my-ulasan-card">
+                        <div class="dr-my-ulasan-top">
+                            <span class="dr-my-ulasan-badge font-semibold">
+                                <span class="material-icons-round">verified</span>
+                                Ulasanmu
                             </span>
-                        @endfor
-                        <span class="dr-my-date">{{ $myFeedback->created_at->diffForHumans() }}</span>
-                    </div>
-                    @if($myFeedback->description)
-                        <p class="dr-my-desc">{{ $myFeedback->description }}</p>
-                    @endif
-                    @if($myFeedback->photos && $myFeedback->photos->isNotEmpty())
-                        <div class="dr-ulasan-photos">
-                            @foreach($myFeedback->photos as $photo)
-                                <img src="{{ Storage::url($photo->path) }}" alt="Foto ulasan"
-                                     class="dr-ulasan-photo" onclick="openPhotoModal(this.src)">
-                            @endforeach
+                            <div class="dr-my-ulasan-actions">
+                                <a href="{{ route('ulasan.edit', [$resep->id, $myFeedback->id]) }}"
+                                   class="dr-ulasan-action-btn dr-ulasan-edit">
+                                    <span class="material-icons-round">edit</span>
+                                    Edit
+                                </a>
+                                <form action="{{ route('ulasan.destroy', [$resep->id, $myFeedback->id]) }}"
+                                      method="POST" id="drDeleteForm">
+                                    @csrf @method('DELETE')
+                                    <button type="button" class="dr-ulasan-action-btn dr-ulasan-delete"
+                                            onclick="drConfirmDelete()">
+                                        <span class="material-icons-round">delete</span>
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    @endif
-                </div>
+                        <div class="dr-my-stars">
+                            @for($i=1;$i<=5;$i++)
+                                <span class="material-icons-round {{ $i<=$myFeedback->rating ? 'dr-star-on' : 'dr-star-off' }}">
+                                    {{ $i<=$myFeedback->rating ? 'star' : 'star_border' }}
+                                </span>
+                            @endfor
+                            <span class="dr-my-date">{{ $myFeedback->created_at->diffForHumans() }}</span>
+                        </div>
+                        @if($myFeedback->description)
+                            <p class="dr-my-desc">{{ $myFeedback->description }}</p>
+                        @endif
+                        @if($myFeedback->photos && $myFeedback->photos->isNotEmpty())
+                            <div class="dr-ulasan-photos">
+                                @foreach($myFeedback->photos as $photo)
+                                    <img src="{{ Storage::url($photo->path) }}" alt="Foto ulasan"
+                                         class="dr-ulasan-photo" onclick="openPhotoModal(this.src)">
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endif
             @endif
         @else
             <a href="{{ route('auth.sign-in') }}" class="dr-login-prompt">
@@ -346,6 +348,72 @@
                                          class="dr-ulasan-photo" onclick="openPhotoModal(this.src)">
                                 @endforeach
                             </div>
+                        @endif
+
+                        {{-- Tampilkan Balasan jika ada --}}
+                        @if($fb->reply_text)
+                            <div class="dr-ulasan-reply-box">
+                                <div class="dr-ulasan-reply-header">
+                                    <div class="dr-ulasan-reply-user">
+                                        <img src="{{ $resep->user->profile_photo
+                                            ? Storage::url($resep->user->profile_photo)
+                                            : asset('assets/images/Image_DummyProfile.png') }}"
+                                             alt="{{ $resep->user->name ?? 'Pembuat Resep' }}"
+                                             class="dr-ulasan-reply-avatar">
+                                        <div class="dr-ulasan-reply-info">
+                                            <span class="dr-ulasan-reply-name font-semibold">
+                                                {{ $resep->user->name ?? 'Pembuat Resep' }}
+                                                <span class="dr-ulasan-reply-badge font-bold">Penulis</span>
+                                            </span>
+                                            <span class="dr-ulasan-reply-date">{{ $fb->replied_at ? $fb->replied_at->diffForHumans() : '' }}</span>
+                                        </div>
+                                    </div>
+                                    @if(Auth::check() && Auth::id() === $resep->user_id)
+                                        <div class="dr-ulasan-reply-actions">
+                                            <button type="button" class="dr-reply-action-btn dr-reply-edit"
+                                                    onclick="toggleReplyForm({{ $fb->id }})">
+                                                <span class="material-icons-round">edit</span>
+                                                Edit
+                                            </button>
+                                            <form action="{{ route('ulasan.reply.destroy', [$resep->id, $fb->id]) }}"
+                                                  method="POST" class="inline-form"
+                                                  onsubmit="return confirm('Hapus balasan ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dr-reply-action-btn dr-reply-delete">
+                                                    <span class="material-icons-round">delete</span>
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
+                                <p class="dr-ulasan-reply-text">{{ $fb->reply_text }}</p>
+                            </div>
+                        @endif
+
+                        {{-- Form Balas / Edit Balasan (Hanya untuk pemilik resep) --}}
+                        @if(Auth::check() && Auth::id() === $resep->user_id)
+                            <div class="dr-reply-form-container" id="reply-form-{{ $fb->id }}" style="display: none;">
+                                <form action="{{ route('ulasan.reply.store', [$resep->id, $fb->id]) }}" method="POST" class="dr-reply-form">
+                                    @csrf
+                                    <textarea name="reply_text" rows="2" class="dr-reply-textarea"
+                                              placeholder="Tulis balasan untuk ulasan ini..." required>{{ $fb->reply_text }}</textarea>
+                                    <div class="dr-reply-form-buttons">
+                                        <button type="button" class="dr-reply-btn-cancel font-semibold" onclick="toggleReplyForm({{ $fb->id }})">Batal</button>
+                                        <button type="submit" class="dr-reply-btn-submit font-semibold">Kirim Balasan</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            @if(!$fb->reply_text)
+                                <div class="dr-reply-action-trigger" id="reply-trigger-{{ $fb->id }}">
+                                    <button type="button" class="dr-reply-trigger-btn font-semibold" onclick="toggleReplyForm({{ $fb->id }})">
+                                        <span class="material-icons-round">reply</span>
+                                        Balas Ulasan
+                                    </button>
+                                </div>
+                            @endif
                         @endif
                     </div>
                 @endforeach

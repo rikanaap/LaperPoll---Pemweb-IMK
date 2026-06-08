@@ -15,11 +15,14 @@ class Feedback extends Model
         'resep_id',
         'user_id',
         'rating',
-        'description'
+        'description',
+        'reply_text',
+        'replied_at'
     ];
 
     protected $casts = [
         'rating' => 'decimal:1',
+        'replied_at' => 'datetime',
     ];
 
 

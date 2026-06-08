@@ -177,4 +177,57 @@ class UlasanController extends Controller
         $avg = $resep->feedbacks()->avg('rating') ?? 0;
         $resep->update(['current_star' => round($avg, 1)]);
     }
+
+    // ── STORE / UPDATE BALASAN ───────────────────────────────────────────────
+    public function storeReply(Request $request, $resepId, $feedbackId)
+    {
+        $resep = Resep::findOrFail($resepId);
+
+        // Hanya pemilik resep yang bisa membalas
+        if (Auth::id() !== $resep->user_id) {
+            abort(403, 'Hanya pembuat resep yang dapat membalas ulasan.');
+        }
+
+        $request->validate([
+            'reply_text' => 'required|string|max:1000',
+        ], [
+            'reply_text.required' => 'Balasan tidak boleh kosong.',
+            'reply_text.max' => 'Balasan maksimal 1000 karakter.',
+        ]);
+
+        $feedback = Feedback::where('id', $feedbackId)
+                            ->where('resep_id', $resepId)
+                            ->firstOrFail();
+
+        $feedback->update([
+            'reply_text' => $request->reply_text,
+            'replied_at' => now(),
+        ]);
+
+        return redirect()->route('detail.resep', $resepId)
+            ->with('success', 'Balasan berhasil dikirim!');
+    }
+
+    // ── DESTROY BALASAN ──────────────────────────────────────────────────────
+    public function destroyReply($resepId, $feedbackId)
+    {
+        $resep = Resep::findOrFail($resepId);
+
+        // Hanya pemilik resep yang bisa menghapus balasan
+        if (Auth::id() !== $resep->user_id) {
+            abort(403, 'Hanya pembuat resep yang dapat menghapus balasan.');
+        }
+
+        $feedback = Feedback::where('id', $feedbackId)
+                            ->where('resep_id', $resepId)
+                            ->firstOrFail();
+
+        $feedback->update([
+            'reply_text' => null,
+            'replied_at' => null,
+        ]);
+
+        return redirect()->route('detail.resep', $resepId)
+            ->with('success', 'Balasan berhasil dihapus.');
+    }
 }

@@ -305,3 +305,18 @@ if (drUlasanForm) {
         }
     });
 }
+
+// ─── TOGGLE REPLY FORM ───────────────────────────────────────────────────────
+window.toggleReplyForm = function(feedbackId) {
+    const formContainer = document.getElementById(`reply-form-${feedbackId}`);
+    const triggerContainer = document.getElementById(`reply-trigger-${feedbackId}`);
+    if (formContainer) {
+        if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+            formContainer.style.display = 'block';
+            if (triggerContainer) triggerContainer.style.display = 'none';
+        } else {
+            formContainer.style.display = 'none';
+            if (triggerContainer) triggerContainer.style.display = '';
+        }
+    }
+};

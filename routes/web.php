@@ -122,6 +122,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ulasan/{resepId}/edit/{feedbackId}',      [UlasanController::class, 'edit'])->name('ulasan.edit');
     Route::patch('/ulasan/{resepId}/update/{feedbackId}',  [UlasanController::class, 'update'])->name('ulasan.update');
     Route::delete('/ulasan/{resepId}/delete/{feedbackId}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
+    Route::post('/resep/{resepId}/ulasan/{feedbackId}/reply', [UlasanController::class, 'storeReply'])->name('ulasan.reply.store');
+    Route::delete('/resep/{resepId}/ulasan/{feedbackId}/reply', [UlasanController::class, 'destroyReply'])->name('ulasan.reply.destroy');
 
     // ── FAVORIT ───────────────────────────────────────────────────────────────
     Route::post('/favorit/toggle/{id}', [FavoriteController::class, 'toggle'])->name('favorit.toggle');
