@@ -1,11 +1,16 @@
 <a href="{{ route('detail.resep', $resep->id) }}" style="text-decoration:none;color:inherit;">
     <div class="p-[0.5rem] gap-[0.5rem] min-w-[7rem] max-w-[7rem] max-h-[10rem] md:max-h-[18.5rem] md:min-w-[15rem] md:max-w-[15rem] md:p-[1rem] items-start flex-col flex rounded-[0.5rem] border-[0.67px] border-solid border-[#F2E2D9] bg-white">
         @php
-        $thumbnailUrl = !blank($resep->thumbnail)
-        ? asset($resep->thumbnail)
-        : ($resep->attachments->first()
-        ? asset($resep->attachments->first()->path)
-        : 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop');
+        $thumbnailUrl = 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=160&fit=crop';
+
+        if (!blank($resep->thumbnail) && Storage::exists($resep->thumbnail)) {
+        $thumbnailUrl = asset($resep->thumbnail);
+        } elseif (!$resep->attachments->isEmpty()) {
+        $firstAttachment = $resep->attachments->first();
+        if (!blank($firstAttachment->path) && Storage::exists($firstAttachment->path)) {
+        $thumbnailUrl = asset($firstAttachment->path);
+        }
+        }
         @endphp
 
         <img src="{{ $thumbnailUrl }}" alt="" class="w-full aspect-square rounded-[0.5rem] object-cover">
