@@ -24,27 +24,6 @@
 
     <div id="selectedRasaContainer" class="selected-chips"></div>
 
-    {{-- Info kecocokan --}}
-    <!-- <div class="sidebar-match-info">
-        <div class="sidebar-match-info__label">Total Rasa Dipilih</div>
-        <div class="sidebar-match-info__row">
-            <div class="sidebar-match-info__value" id="totalRasaCount">0</div>
-            <div class="sidebar-match-info__sub">rasa favorit</div>
-        </div>
-    </div> -->
-
-    {{-- Tips --}}
-    <!-- <div class="sidebar-tips">
-        <h4 class="sidebar-tips__title">
-            <span class="material-icons-round">lightbulb</span>
-            Tips
-        </h4>
-        <ul class="sidebar-tips__list">
-            <li>Makin banyak rasa = makin akurat</li>
-            <li>Klik "Kembali" untuk ubah pilihan</li>
-            <li>Cek % kecocokan di setiap card</li>
-        </ul>
-    </div> -->
 </div>
         </aside>
 

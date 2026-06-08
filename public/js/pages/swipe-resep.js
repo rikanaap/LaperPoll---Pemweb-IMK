@@ -108,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
             card.dataset.rasaId  = rasa.id;
             card.setAttribute('role', 'article');
             card.setAttribute('aria-label', `Rasa: ${rasa.title}`);
-            // Nonaktifkan klik default agar card tidak bisa di-navigate
             card.style.cursor = 'grab';
             card.innerHTML = `
                 <div class="swipe-card__icon-wrapper" aria-hidden="true">
@@ -184,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const done = state.currentLiked.length >= MAX_LIKED || state.cards.length === 1;
 
-        removeCard(rasa.id);
+        removeCard(rasa.id); 
 
         if (done) {
             state.redirecting = true;
@@ -214,6 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const ids = state.currentLiked.map(r => r.id).join(',');
         window.location.href = `${window.swipeConfig.redirectUrl}?filters=${ids}`;
     }
+
+
 
     function bindActionButtons() {
         el.likeBtn?.addEventListener('click', () => {

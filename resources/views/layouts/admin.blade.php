@@ -88,7 +88,7 @@
                 </div>
             </div> -->
 
-            {{-- ✅ Tombol logout --}}
+           
             <form method="POST" action="{{ route('auth.logout') }}">
                 @csrf
                 <button type="submit" class="sidebar__logout">

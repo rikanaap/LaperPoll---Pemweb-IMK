@@ -166,7 +166,7 @@ class ResepSeeder extends Seeder
                 'calorie'        => 180,
                 'current_star'   => 4.5,
                 'views_count'    => 95,
-                'thumbnail'      => 'images/reseps/tempe_mendoan.jpg',
+                'thumbnail'      => 'assets/images/reseps/tempe_mendoan.jpg',
                 'main_filter_id' => 2,
                 'is_published'   => true,
             ],

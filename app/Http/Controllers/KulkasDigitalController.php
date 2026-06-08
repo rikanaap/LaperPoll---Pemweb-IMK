@@ -95,22 +95,31 @@ class KulkasDigitalController extends Controller
             $bahan     = $items->first()->bahan;
             $hasExpiry = $bahan->expired_expectancy_day !== null;
 
+           
+           $stokTotal   = $stokGram[$bahan->id] ?? 0;
             $statusFinal = 'expired';
+
             foreach ($items as $item) {
                 if (!$item->expired_date) {
-                    $statusFinal = 'tersedia';
+                    $statusFinal = ($stokTotal > 0 && $stokTotal < 15)
+                        ? 'hampir-habis'
+                        : 'tersedia';
                     break;
                 }
+
                 $diff = Carbon::now()->startOfDay()
                     ->diffInDays($item->expired_date->startOfDay(), false);
 
                 if ($diff > 3) {
-                    $statusFinal = 'tersedia';
+                    $statusFinal = ($stokTotal > 0 && $stokTotal < 15)
+                        ? 'hampir-habis'
+                        : 'tersedia';
                     break;
                 } elseif ($diff > 0) {
                     $statusFinal = 'hampir-habis';
                 }
             }
+
 
             // FIX: cek apakah ada setidaknya SATU pembelian yang sudah expired
             // Ini dipakai untuk menampilkan tanda peringatan di card meskipun
