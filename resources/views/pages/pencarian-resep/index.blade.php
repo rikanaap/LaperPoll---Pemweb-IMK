@@ -118,4 +118,7 @@
 
 @push('scripts')
     <script src="{{ asset('js/pages/pencarian-resep.js') }}"></script>
+    <script>
+         const APP_URL = "{{ config('app.url') }}";
+    </script>
 @endpush
