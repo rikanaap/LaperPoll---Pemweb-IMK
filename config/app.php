@@ -53,10 +53,12 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'force_https' => true, 
 
+    
     /*
     |--------------------------------------------------------------------------
-    | Application Timezone
+    | Application Timezonea
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default timezone for your application, which

@@ -57,6 +57,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--accent-normal);
 }
 
 .profile:active {
@@ -169,4 +170,11 @@
 }
 .navbar-hamburger-btn.open .navbar-hamburger-lines span:nth-child(3) {
     transform: translateY(-6px) rotate(-45deg);
+}
+
+.navbar a,
+.navbar a:hover,
+.navbar a:focus,
+.navbar a:active {
+    text-decoration: none;
 }

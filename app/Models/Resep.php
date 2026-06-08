@@ -40,10 +40,10 @@ class Resep extends Model
 
     // app/Models/Resep.php — tambahkan method ini
 
-    public function getThumbnailUrlAttribute(): string
+public function getThumbnailUrlAttribute(): string
 {
     return $this->thumbnail
-        ? Storage::url($this->thumbnail)
+        ? asset('storage/' . $this->thumbnail)
         : asset('assets/images/Image_DummyResep.png');
 }
 
