@@ -877,9 +877,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── EXPIRED SIDEBAR STYLE ────────────────────────────────────────
+    // Tambah class has-expired ke sidebar item expired kalau memang ada bahan expired
+    function initExpiredSidebarStyle() {
+        const expiredItems = document.querySelectorAll('.kd-sidebar-item-expired');
+        if (!expiredItems.length) return;
+        // Cek apakah ada card dengan status expired atau has_expired_item
+        const hasExpired = document.querySelectorAll(
+            '#kdGridView .kd-grid-card[data-status="expired"], #kdList .kd-card[data-status="expired"]'
+        ).length > 0;
+        // Cek juga expired banner — kalau muncul berarti ada
+        const bannerDesktop = document.getElementById('kdExpiredBannerDesktop');
+        const bannerMobile  = document.getElementById('kdExpiredBanner');
+        const anyExpired    = hasExpired || !!bannerDesktop || !!bannerMobile;
+        expiredItems.forEach(item => {
+            if (anyExpired) item.classList.add('has-expired');
+        });
+    }
+
     // ── INIT ──────────────────────────────────────────────────────────
     updateChipCounts();
     updateSidebarCounts();
+    initExpiredSidebarStyle();
 
     if (isDesktop() && detailPanel) {
         const content = detailPanel.querySelector('.kd-detail-content');

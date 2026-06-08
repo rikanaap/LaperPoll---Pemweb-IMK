@@ -246,17 +246,13 @@
                     <span class="kd-sidebar-item-count font-jakarta">{{ $grouped->where('status', 'hampir-habis')->count() }}</span>
                 </div>
 
-                @if($totalExpiredAlert > 0)
-                <div class="kd-sidebar-item" data-filter="expired" style="color: #991B1B;">
+                <div class="kd-sidebar-item kd-sidebar-item-expired" data-filter="expired">
                     <div class="kd-sidebar-item-left">
-                        <span class="material-icons-round kd-sidebar-icon" style="color: #DC2626;">cancel</span>
+                        <span class="material-icons-round kd-sidebar-icon">cancel</span>
                         <span class="kd-sidebar-item-label font-jakarta">Expired</span>
                     </div>
-                    <span class="kd-sidebar-item-count font-jakarta" style="background:#FEE2E2; color:#991B1B;">
-                        {{ $expiredCount }}
-                    </span>
+                    <span class="kd-sidebar-item-count font-jakarta">{{ $expiredCount }}</span>
                 </div>
-                @endif
             </nav>
 
             <a href="{{ route('kulkas.tambah') }}" class="kd-sidebar-add-btn font-jakarta">
@@ -285,7 +281,7 @@
                 </div>
             </div>
 
-            {{-- FIX: Expired banner untuk tablet & desktop --}}
+            {{-- Expired banner untuk tablet & desktop --}}
             @if($totalExpiredAlert > 0)
             <div class="kd-expired-banner kd-expired-banner-desktop" id="kdExpiredBannerDesktop">
                 <span class="material-icons-round">warning_amber</span>
