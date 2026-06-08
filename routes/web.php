@@ -175,6 +175,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/resep/tambah', [TambahResepController::class, 'index'])->name('resep.tambah');
     Route::post('/resep/store', [TambahResepController::class, 'store'])->name('resep.store');
     Route::post('/resep/clear', [TambahResepController::class, 'clearForm'])->name('resep.clear');
+    Route::post('/bahan/store',          [TambahResepController::class, 'store_bahan'])->name('resep.bahan.store');
+    Route::post('/filter/store',           [TambahResepController::class, 'store_filter'])->name('resep.filter.store');
 });
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────

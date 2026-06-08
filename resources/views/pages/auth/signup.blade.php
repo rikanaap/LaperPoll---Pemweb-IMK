@@ -10,7 +10,9 @@
 
 @section('content')
 <div class="auth-section flex flex-col">
-    <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
+    <a href="{{ route('landing.index') }}">
+        <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
+    </a>
 
     <!-- SIGNUP FORM -->
     <form method="POST" action="{{ route('auth.register') }}" id="signupFormEl" novalidate>

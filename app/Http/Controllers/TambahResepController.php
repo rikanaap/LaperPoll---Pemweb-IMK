@@ -142,4 +142,28 @@ class TambahResepController extends Controller
             ->withCookie(Cookie::forget('form_attachments'))
             ->back();
     }
+
+    // BahanController@store
+    public function store_bahan(Request $request)
+    {
+        $bahan = Bahan::create($request->validate([
+            'nama' => 'required',
+            'kategori' => 'required',
+            'expired_expectancy_day' => 'required|numeric',
+        ]));
+
+        return response()->json($bahan);
+    }
+
+    // FilterController@store
+    public function store_filter(Request $request)
+    {
+        $filter = Filter::create($request->validate([
+            'title' => 'required',
+            'level' => 'required',
+            'description' => 'required',
+        ]));
+
+        return response()->json($filter);
+    }
 }

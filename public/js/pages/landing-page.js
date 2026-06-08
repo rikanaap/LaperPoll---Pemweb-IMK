@@ -2,8 +2,18 @@ document.querySelectorAll('#faq-card').forEach(card => {
     card.addEventListener('click', () => {
         const answer = card.querySelector('.faq-answer');
         const icon = card.querySelector('.faq-icon');
+        const isHidden = answer.classList.contains('hidden');
 
-        if (answer.classList.contains('hidden')) {
+        // Close semua card lain
+        document.querySelectorAll('#faq-card').forEach(otherCard => {
+            if (otherCard !== card) {
+                otherCard.querySelector('.faq-answer').classList.add('hidden');
+                otherCard.querySelector('.faq-icon').textContent = 'keyboard_arrow_down';
+            }
+        });
+
+        // Toggle card yang diklik
+        if (isHidden) {
             answer.classList.remove('hidden');
             icon.textContent = 'keyboard_arrow_up';
         } else {

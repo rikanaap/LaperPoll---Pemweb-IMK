@@ -11,18 +11,19 @@
 @endpush
 
 @section('content')
-<div class="auth-section flex flex-col">
-    <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
-
+<d class="auth-section flex flex-col">
+    <a href="{{ route('landing.index') }}">
+        <img src="{{ asset('assets/images/Logo_Laperpoll.png') }}" alt="Logo Laperpoll" class="logo">
+    </a>
     <form method="post" action="{{ route('auth.login') }}">
         @csrf
         <div class="form flex flex-col">
             @if ($errors->any())
-                <div class="auth-error-box">
-                    @foreach ($errors->all() as $error)
-                        <p class="auth-error-msg font-jakarta text-body">{{ $error }}</p>
-                    @endforeach
-                </div>
+            <div class="auth-error-box">
+                @foreach ($errors->all() as $error)
+                <p class="auth-error-msg font-jakarta text-body">{{ $error }}</p>
+                @endforeach
+            </div>
             @endif
             <div class="auth-text flex flex-col">
                 <h1 class="font-jakarta text-h4 font-bold">Sign In</h1>
@@ -70,10 +71,10 @@
             </a>
         </div>
     </form>
-</div>
-@endsection
+    </div>
+    @endsection
 
-@push('scripts')
-<script src="{{ asset('js/global.js') }}"></script>
-<script src="{{ asset('js/pages/auth.js') }}"></script>
-@endpush
+    @push('scripts')
+    <script src="{{ asset('js/global.js') }}"></script>
+    <script src="{{ asset('js/pages/auth.js') }}"></script>
+    @endpush

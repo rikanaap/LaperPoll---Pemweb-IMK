@@ -38,7 +38,7 @@
                 <a href="{{ route('auth.sign-in') }}">
                     <div class="flex flex-col gap-[0.5rem] justify-center items-center">
                         <div class="resep-logo-locked w-[2.8rem] h-[2.8rem] rounded-[0.5rem]] md:w-[6rem] md:h-[6rem]">
-                            <span class="material-icons-round !text-2 !md:text-[3rem] text-accent-dark">lock</span>
+                            <span class="material-icons-round !text-2 md:!text-[3rem] text-accent-dark">lock</span>
                         </div>
                         <p class="font-jakarta text-[0.4rem]/[120%] font-semibold text-accent-dark-active md:text-[0.8rem]">{{ $feature['name'] }}</p>
                     </div>
@@ -76,7 +76,7 @@
     <!-- Resep Hari Ini -->
     <div id="hari-ini-section" class="flex flex-col items-start self-stretch pl-[1.5rem] pr-[0.75rem] gap-[0.4rem]">
         <div class="flex justify-between items-center self-stretch">
-            <h1 class="font-poppins text-[0.7rem]/120% text-orange-normal-active font-medium md:text-[2rem] md:font-light">Resep Hari Ini</h1>
+            <h1 class="font-poppins text-[0.7rem]/120% text-orange-normal-active font-medium md:text-[2rem] md:font-light">Resep {{ $resep_hari_caption  }}</h1>
             <a href="{{ route('main-menu.index', ['m' => 'hari_ini']) }}" class="px-[0.25rem] py-[0.4rem] rounded-[0.25rem] bg-orange-light-active text-accent-normal font-poppins text-[0.6rem]/[120%] font-medium md:text-[1rem] md:font-normal md:px-[1rem] md:py-[0.4rem]">Lihat Semua</a>
         </div>
         <div class="flex flex-row items-center gap-[0.3rem] overflow-x-scroll w-full">
@@ -121,7 +121,7 @@
                     <x-svg-comp name="fork" class="absolute top-10 right-0 z-10 w-[16px] h-[34px]"></x-svg-comp>
                     <x-svg-comp name="spoon" class="absolute bottom-10 left-0 z-10 w-[16px] h-[31px]"></x-svg-comp>
                     <div class="flex flex-col gap-[0.3rem] w-full h-fit">
-                        <div class="rotate-[-3deg] flex w-[15rem] md:w-[25rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
+                        <a href="{{  route('profile.public', ['id' => $comments[0]['id'] ] ) }}" class="rotate-[-3deg] flex w-[15rem] md:w-[25rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
                             <img src="{{ asset('assets/images/Image_DummyProfile.png') }}" alt="Profil Foto" class="w-[2.25rem] h-[2.25rem] aspect-square content-center items-center rounded-[3rem] border-[1px] border-solid border-[#EC4448]">
                             <div class="flex flex-col content-center gap-[0.2rem] w-full">
                                 <div class="flex w-full items-center justify-between">
@@ -136,8 +136,8 @@
                                 </div>
                                 <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal md:text-[0.7rem]">{{ $comments[0]['comment'] }}</p>
                             </div>
-                        </div>
-                        <div class=" rotate-[3deg] flex w-[15rem] md:w-[25rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
+                        </a>
+                        <a href="{{  route('profile.public', ['id' => $comments[1]['id'] ] ) }}" class=" rotate-[3deg] flex w-[15rem] md:w-[25rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
                             <img src="{{ asset('assets/images/Image_DummyProfile.png') }}" alt="Profil Foto" class="w-[2.25rem] h-[2.25rem] aspect-square content-center items-center rounded-[3rem] border-[1px] border-solid border-[#EC4448]">
                             <div class="flex flex-col content-center gap-[0.2rem] w-full">
                                 <div class="flex w-full items-center justify-between">
@@ -152,8 +152,8 @@
                                 </div>
                                 <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal md:text-[0.7rem]">{{ $comments[1]['comment'] }}</p>
                             </div>
-                        </div>
-                        <div class=" rotate-[-3deg] flex w-[15rem] md:w-[25rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
+                        </a>
+                        <a href="{{  route('profile.public', ['id' => $comments[2]['id'] ] ) }}" class=" rotate-[-3deg] flex w-[15rem] md:w-[25rem] p-[0.62rem] gap-[0.62rem] rounded-[0.3rem] border-[1px] border-solid border-[#F7C9B0] bg-white">
                             <img src="{{ asset('assets/images/Image_DummyProfile.png') }}" alt="Profil Foto" class="w-[2.25rem] h-[2.25rem] aspect-square content-center items-center rounded-[3rem] border-[1px] border-solid border-[#EC4448]">
                             <div class="flex flex-col content-center gap-[0.2rem] w-full">
                                 <div class="flex w-full items-center justify-between">
@@ -168,7 +168,7 @@
                                 </div>
                                 <p class="self-stretch text-black font-jakarta text-justify text-[0.45rem]/[120%] font-normal md:text-[0.7rem]">{{ $comments[2]['comment'] }}</p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
