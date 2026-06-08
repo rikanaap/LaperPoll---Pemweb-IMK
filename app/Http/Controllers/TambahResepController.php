@@ -150,7 +150,7 @@ class TambahResepController extends Controller
             ->back();
     }
 
-    // BahanController@store
+     // BahanController@store
     public function store_bahan(Request $request)
     {
         $bahan = Bahan::create($request->validate([

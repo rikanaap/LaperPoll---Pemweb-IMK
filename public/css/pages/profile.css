@@ -260,6 +260,54 @@ button.stat-bubble {
 .resep-meta-item  { display: flex; align-items: center; gap: 0.1rem; font-size: 0.58rem; color: var(--primary-darker); }
 .resep-meta-item .material-icons-round { font-size: 0.72rem; color: var(--primary-darker); }
 
+/* ── RESEP CARD WRAPPER (menggantikan resep-card-link sebagai grid item) ── */
+.resep-card-wrapper { position: relative; }
+
+/* ── TOMBOL EDIT RESEP DI CARD ── */
+.resep-edit-btn {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    border: 1.5px solid rgba(230,81,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.18s ease, transform 0.18s ease, background 0.15s, border-color 0.15s;
+    z-index: 5;
+}
+.resep-edit-btn .material-icons-round {
+    font-size: 0.85rem;
+    color: var(--orange-normal);
+}
+.resep-card-wrapper:hover .resep-edit-btn,
+.resep-card-wrapper:focus-within .resep-edit-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+.resep-edit-btn:hover {
+    background: var(--orange-normal);
+    border-color: var(--orange-normal);
+}
+.resep-edit-btn:hover .material-icons-round {
+    color: white;
+}
+
+/* Touch device: always show edit btn */
+@media (hover: none) {
+    .resep-edit-btn {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 /* Empty state */
 .empty-resep {
     display: flex;
